@@ -1,5 +1,5 @@
 // GET: datos para el usuario con sesión (con sus restricciones). PUT: reemplaza la base (solo administradores).
-import { handler, send, readBody, current, sb, scopeGz, zlib } from "../lib/core.js";
+import { handler, send, readBody, current, sb, scopeGz, zlib, logAct } from "../lib/core.js";
 export default handler(async (req, res) => {
   const me = await current(req);
   if (!me) return send(res, 401, { error: "Sin sesión" });
@@ -18,5 +18,6 @@ export default handler(async (req, res) => {
   const filas = m.cols.d.length;
   await sb("datos?on_conflict=id", { method: "POST", prefer: "resolution=merge-duplicates,return=minimal", body: { id: 1, gz: b.gz, archivo: String(b.archivo || "").slice(0, 200), filas, desde: String(b.desde || ""), hasta: String(b.hasta || ""), por: me.usuario, actualizado: new Date().toISOString() } });
   await sb("cargas", { method: "POST", prefer: "return=minimal", body: { por: me.usuario, archivo: String(b.archivo || "").slice(0, 200), modo: String(b.modo || ""), nuevas: Number(b.nuevas) || 0, filas } });
+  await logAct(me.usuario, "Carga de datos", `${String(b.archivo || "").slice(0, 120)} · ${b.modo || ""} · ${Number(b.nuevas) || 0} filas nuevas`);
   send(res, 200, { ok: true, filas });
 });
