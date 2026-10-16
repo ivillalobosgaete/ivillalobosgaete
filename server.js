@@ -11,7 +11,7 @@ try { // carga .env si existe (pruebas locales)
     const m = l.match(/^\s*([A-Z_]+)\s*=\s*(.*)\s*$/); if (m && !(m[1] in process.env)) process.env[m[1]] = m[2];
   }
 } catch {}
-const ROUTES = ["estado", "me", "login", "logout", "register", "users", "data", "cargas", "indicadores", "mapa", "ajustes", "bitacora", "vistas", "actividad"];
+const ROUTES = ["estado", "me", "login", "logout", "register", "users", "data", "cargas", "indicadores", "mapa", "ajustes", "bitacora", "vistas", "actividad", "rca", "lugar"];
 const handlers = {};
 for (const r of ROUTES) handlers[r] = (await import(`./api/${r}.js`)).default;
 const html = fs.readFileSync(path.join(dir, "index.html"));
