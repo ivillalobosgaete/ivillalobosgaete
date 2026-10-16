@@ -1,0 +1,12 @@
+{
+  "name": "estadisticas-recoleccion-captura",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Estadísticas de Recolección y Captura · Asuntos Públicos",
+  "scripts": {
+    "start": "node server.js",
+    "hash": "node tools/hash.js"
+  },
+  "engines": { "node": ">=18" }
+}
