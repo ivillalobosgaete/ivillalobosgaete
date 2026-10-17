@@ -117,6 +117,7 @@ Después del primer ingreso puedes borrar `ADMIN_PASSWORD` de Vercel: el adminis
 
 ## Gráficos
 
+- Google Maps interactivo (opcional): crea una clave de Maps JavaScript API en Google Cloud, restríngela a tu dominio y agrégala en Vercel como variable de entorno `GOOGLE_MAPS_KEY`. Sin la clave, el mapa usa OpenStreetMap.
 - Mapa de caletas (Resumen): mapa con la ubicación de cada caleta, mancha de calor y círculos según toneladas, vista mapa o satélite, ranking de caletas y Google Maps insertado con la caleta elegida. Las coordenadas vienen de las columnas Latitud y Longitud del Excel si existen; si no, se usan ubicaciones de referencia (algunas aproximadas).
 - Todos los gráficos muestran un recuadro «Interpretación» que se recalcula con los filtros: qué muestran los datos y qué implica para la gestión o la negociación.
 - Cada gráfico tiene una línea de lectura con la conclusión principal y variaciones respecto del año anterior.

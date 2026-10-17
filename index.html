@@ -3476,6 +3476,22 @@ let LEAF=null;const MAPS={};const GM={i:null};
 const loadScript=src=>new Promise((res,rej)=>{const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s)});
 function loadLeaflet(){if(LEAF)return LEAF;LEAF=(async()=>{const l=document.createElement("link");l.rel="stylesheet";l.href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";document.head.appendChild(l);
   await loadScript("https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js");try{await loadScript("https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js")}catch(e){}return window.L||null})().catch(()=>null);return LEAF}
+
+/* Google Maps (cuando el administrador configura GOOGLE_MAPS_KEY en Vercel) */
+const GK={key:null,p:null,fail:false,g:null};
+async function gKey(){if(GK.key!==null)return GK.key;if(typeof api!=="function"){GK.key="";return""}try{const r=await api("gmaps");GK.key=(r&&r.key)||""}catch(e){GK.key=""}return GK.key}
+function loadGoogle(key){if(GK.p)return GK.p;GK.p=new Promise(res=>{window.gm_authFailure=()=>{GK.fail=true;Object.keys(GMAPS).forEach(k=>delete GMAPS[k]);const b=$("#mapZones");if(b)b.dataset.k="";if(LAST&&S.tab==="resumen")mapa2(LAST.A)};
+  window.__gmInit=()=>res(window.google&&window.google.maps?window.google:null);const s=document.createElement("script");s.src=`https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&v=weekly&language=es&region=CL&callback=__gmInit`;s.async=true;s.onerror=()=>res(null);document.head.appendChild(s);setTimeout(()=>res(window.google&&window.google.maps?window.google:null),15000)});return GK.p}
+const GMAPS={};
+function gZone(g,id,z,mx,A,sat){const gm=g.maps;let M=GMAPS[id];
+  if(!M){const el=$("#"+id);const map=new gm.Map(el,{mapTypeId:sat?"hybrid":"roadmap",streetViewControl:false,fullscreenControl:true,mapTypeControl:false,gestureHandling:"cooperative",clickableIcons:false});const b=new gm.LatLngBounds();z.pts.forEach(p=>b.extend({lat:p.lat,lng:p.lon}));map.fitBounds(b,60);
+    gm.event.addListenerOnce(map,"idle",()=>{if(map.getZoom()>11)map.setZoom(11)});M=GMAPS[id]={map,objs:[],iw:new gm.InfoWindow()}}
+  M.map.setMapTypeId(sat?"hybrid":"roadmap");M.objs.forEach(o=>o.setMap(null));M.objs=[];const sel=S.f.cal;
+  z.pts.slice().sort((a,b)=>a.v-b.v).forEach(p=>{const k2=mx?p.v/mx:0,col=p.v>0?heatCol(k2):"#c9d5d9",dim=sel.size&&!sel.has(p.i),pos={lat:p.lat,lng:p.lon};
+    if(p.v>0&&!dim){const base=2500+9000*Math.sqrt(k2);[3,2,1.3].forEach((f,j)=>M.objs.push(new gm.Circle({map:M.map,center:pos,radius:base*f,strokeOpacity:0,fillColor:col,fillOpacity:[.12,.18,.26][j],clickable:false})))}
+    const r=6+14*Math.sqrt(k2),lab=calLab(p.name)+(p.v>0?` · ${vTxt(p.v)}`:"");
+    const mk=new gm.Marker({map:M.map,position:pos,title:p.name,zIndex:Math.round(1000*k2)+1,icon:{path:gm.SymbolPath.CIRCLE,scale:r,fillColor:col,fillOpacity:dim?.3:.95,strokeColor:p.i===GM.i?"#0d2328":"#ffffff",strokeWeight:p.i===GM.i?3:2,labelOrigin:new gm.Point(1.4+lab.length*3.1/r,0)},label:{text:lab,fontSize:"11px",fontWeight:"700",color:sat?"#ffffff":"#0d2328"}});
+    mk.addListener("click",()=>{M.iw.setContent(popMap(p));M.iw.open({map:M.map,anchor:mk})});M.objs.push(mk)})}
 const calLab=n=>n.replace(/\s*\(.*\)$/,"").replace(/ Iv Reg$/i,"");
 function mapData(A){const R=S.R,m=R.m,nm=A.nMonths,zones=new Map(),all=[];
   m.C.forEach((c,i)=>{const g=geoOf(c);if(!g)return;const z=regLabel(c[3]);if(!zones.has(z))zones.set(z,{name:z,raw:c[3],pts:[]});
@@ -3488,12 +3504,14 @@ const popMap=p=>`<div class="mpop"><b>${esc(p.name)}</b><br>${vTxt(p.v)} · ${t0
 async function mapa2(A){const box=$("#mapZones");if(!box||!S.R)return;const {list,mx,all}=mapData(A);
   $("#lMapa").innerHTML=`<span class="cs">Menos</span><span class="hbar">${HEAT.map(c=>`<i style="background:${c}"></i>`).join("")}</span><span class="cs">Más ${esc(MEAS[S.measure].lbl.toLowerCase())}</span><span class="cs">· borde punteado = ubicación aproximada</span>`;
   if(!list.length){box.innerHTML=`<div class="empty">No hay caletas con ubicación conocida. Agrega las columnas Latitud y Longitud al Excel.</div>`;setC("cMapaC","");gmPanel(A,all,mx);return}
-  const L=canLeaflet()?await loadLeaflet():null;const sat=ST2.get("mapT","m")==="s";
-  const want=list.map(z=>z.name).join("|")+(L?"L":"S");
+  const sat=ST2.get("mapT","m")==="s";const key=GK.fail?"":await gKey();const G=key?await loadGoogle(key):null;const useG=!!G&&!GK.fail;
+  const L=useG?null:canLeaflet()?await loadLeaflet():null;
+  const want=list.map(z=>z.name).join("|")+(useG?"G":L?"L":"S");
   if(box.dataset.k!==want){box.dataset.k=want;Object.keys(MAPS).forEach(k=>{try{MAPS[k].map.remove()}catch(e){}delete MAPS[k]});
-    box.innerHTML=list.map((z,k)=>`<div class="mapp"><h4>${esc(z.name)}</h4><div class="${L?"lf":"sf"}" id="mz${k}"></div></div>`).join("")}
+    Object.keys(GMAPS).forEach(k=>delete GMAPS[k]);box.innerHTML=list.map((z,k)=>`<div class="mapp"><h4>${esc(z.name)}</h4><div class="${useG||L?"lf":"sf"}" id="mz${k}"></div></div>`).join("")}
   list.forEach((z,k)=>{const id="mz"+k;
-    if(L){let M=MAPS[id];
+    if(useG){try{gZone(G,id,z,mx,A,sat)}catch(e){console.error(e)}}
+    else if(L){let M=MAPS[id];
       if(!M){const map=L.map(id,{scrollWheelZoom:false,zoomControl:true});const b=L.latLngBounds(z.pts.map(p=>[p.lat,p.lon]));map.fitBounds(b.pad(.3),{maxZoom:11});M=MAPS[id]={map,layer:L.layerGroup().addTo(map),base:null,sat:null}}
       if(M.sat!==sat){if(M.base)M.map.removeLayer(M.base);M.base=sat?L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:17,attribution:"Imágenes © Esri"}):L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",{maxZoom:17,subdomains:"abcd",attribution:"© OpenStreetMap · © CARTO",referrerPolicy:"strict-origin-when-cross-origin"});M.base.addTo(M.map);M.base.bringToBack();M.sat=sat}
       M.map.invalidateSize();M.layer.clearLayers();const sel=S.f.cal;
@@ -3503,7 +3521,7 @@ async function mapa2(A){const box=$("#mapZones");if(!box||!S.R)return;const {lis
         L.circleMarker([p.lat,p.lon],{radius:r,color:p.i===GM.i?"#0d2328":"#fff",weight:p.i===GM.i?3:2,fillColor:col,fillOpacity:dim?.25:.95,dashArray:p.aprox?"3 3":null}).bindTooltip(tipMap(p,A),{direction:"top",offset:[0,-r]}).bindPopup(popMap(p)).addTo(M.layer);
         L.marker([p.lat,p.lon],{interactive:false,icon:L.divIcon({className:"mlab",html:`<span>${esc(calLab(p.name))}${p.v>0?` · ${vTxt(p.v)}`:""}</span>`,iconSize:null,iconAnchor:[-r-4,8]})}).addTo(M.layer)})}
     else svgMap(id,z,mx,A)});
-  $("#mapSub").textContent=(L?(sat?"Imágenes satelitales © Esri":"Mapa base © OpenStreetMap · © CARTO")+" · ":"Mapa esquemático (en esta versión no se pueden cargar mapas externos; usa los enlaces a Google Maps) · ")+`Color, tamaño y mancha de calor según ${MEAS[S.measure].lbl.toLowerCase()} (${MEAS[S.measure].u}) · clic en una caleta para verla en Google Maps o filtrar el dashboard.`;
+  $("#mapSub").textContent=(useG?"Mapa © Google · ":L?(sat?"Imágenes satelitales © Esri":"Mapa base © OpenStreetMap · © CARTO")+" · ":"Mapa esquemático (en esta versión no se pueden cargar mapas externos; usa los enlaces a Google Maps) · ")+`Color, tamaño y mancha de calor según ${MEAS[S.measure].lbl.toLowerCase()} (${MEAS[S.measure].u}) · clic en una caleta para verla en Google Maps o filtrar el dashboard.`;
   gmPanel(A,all,mx);
   const tot=all.reduce((s,p)=>s+p.t,0),rk=all.filter(p=>p.t>0).sort((a,b)=>b.t-a.t);
   if(rk.length&&tot){const t3=rk.slice(0,3),s3=t3.reduce((s,p)=>s+p.t,0)/tot*100,coms=[...new Set(t3.map(p=>p.com))];const zt=list.map(z=>({n:z.name,t:z.pts.reduce((s,p)=>s+p.t,0)})).sort((a,b)=>b.t-a.t);
