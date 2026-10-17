@@ -18,10 +18,11 @@ function filtrarBase(gzB64, ocultas) {
 }
 
 // La columna "aplica" (¿aplica a Asuntos Públicos Norte?) se agregó después: si aún no existe, se guarda lo demás.
-let _aplica = null;
+let _aplica = null, _aplicaT = 0;
 async function columnaAplica() {
-  if (_aplica !== null) return _aplica;
+  if (_aplica === true || (_aplica === false && Date.now() - _aplicaT < 60000)) return _aplica;
   try { await sb("rca_estado?select=aplica&limit=1"); _aplica = true; } catch { _aplica = false; }
+  _aplicaT = Date.now();
   return _aplica;
 }
 
