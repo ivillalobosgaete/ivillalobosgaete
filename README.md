@@ -117,6 +117,7 @@ Después del primer ingreso puedes borrar `ADMIN_PASSWORD` de Vercel: el adminis
 
 ## Gráficos
 
+- Todos los gráficos muestran un recuadro «Interpretación» que se recalcula con los filtros: qué muestran los datos y qué implica para la gestión o la negociación.
 - Cada gráfico tiene una línea de lectura con la conclusión principal y variaciones respecto del año anterior.
 - Resumen: evolución mensual por zona con el mismo mes del año anterior (o vista total), proyección con banda de rango probable, control de anomalías por caleta (± 2 desviaciones estándar), captura por caleta en barras con variación, años en toneladas o en % con el año en curso marcado, ranking de caletas entre los dos últimos años completos, dependencia de una especie, compañías en barras, pescadores por sexo con participación de mujeres por año y brecha de género por caleta o grupo.
 - Pescadores: curva de concentración por zona con índice de Gini, pescadores que entran, se mantienen y salen cada año, y regularidad frente a volumen por pescador (clic abre la ficha).
