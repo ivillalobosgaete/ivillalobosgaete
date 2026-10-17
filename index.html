@@ -884,6 +884,36 @@ i.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:
 .rgq{font-weight:700;display:inline-flex;align-items:center}
 table.rgh td:first-child{white-space:normal}
 @media (max-width:560px){table.rgc .mbar,table.rgk .sg-bar{display:none}}
+/* ===== Mapa de caletas ===== */
+.mapz{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.mapp{position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#e4f1f5;min-width:0}
+.mapp h4{position:absolute;z-index:500;top:10px;left:50px;margin:0;background:rgba(255,255,255,.94);border-radius:999px;padding:5px 12px;font-size:.8rem;font-weight:800;color:var(--ink);box-shadow:0 2px 8px rgba(5,48,59,.15);pointer-events:none}
+.mapp .sf h4{left:10px}
+.mapp .lf{height:400px;position:relative;z-index:0}
+.mapp .sf svg{display:block;width:100%;height:auto}
+.mlab span{display:inline-block;white-space:nowrap;font:700 11px Manrope,"Segoe UI",sans-serif;color:#0d2328;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff}
+.hbar{display:inline-flex;border-radius:999px;overflow:hidden;vertical-align:middle;margin:0 6px}
+.hbar i{display:block;width:18px;height:10px}
+.mpop{font:13px Manrope,"Segoe UI",sans-serif;line-height:1.4}
+.mpop-b{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.gmw{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:14px;margin-top:6px}
+.gmh{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:6px}
+.gmh .cs,.gmh b{text-transform:none;letter-spacing:0;font-size:.82rem;color:var(--ink)}
+#gmList{display:grid;gap:4px;max-height:420px;overflow:auto}
+.gmi{display:grid;grid-template-columns:20px 12px minmax(0,1fr) auto;gap:8px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:6px 9px;cursor:pointer;color:var(--ink)}
+.gmi:hover{background:var(--brand-08)}
+.gmi.on{border-color:var(--brand);box-shadow:inset 3px 0 0 var(--brand);background:var(--brand-08)}
+.gmi .gmr{font-size:.72rem;color:var(--muted);font-weight:800}
+.gmi i{width:12px;height:12px;border-radius:50%}
+.gmi .gmn{display:grid;font-weight:700;font-size:.84rem;min-width:0}
+.gmi .gmn .cs{font-weight:400;font-size:.72rem}
+.gmi b{font-size:.82rem;white-space:nowrap}
+#gmFrame{width:100%;height:380px;border:1px solid var(--line);border-radius:12px;display:block}
+#gmFrame[hidden]{display:none}
+.gmb{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start;margin-top:8px}
+@media (max-width:820px){.mapz{grid-template-columns:minmax(0,1fr)}.mapp .lf{height:320px}.gmw{grid-template-columns:minmax(0,1fr)}#gmList{max-height:260px}#gmFrame{height:300px}}
+.mapp .leaflet-container svg,.mapp .leaflet-container canvas{max-width:none!important;width:auto!important;height:auto!important;display:block}
+.mapp .leaflet-container img{max-width:none!important}
 /*C2E*/</style>
 </head>
 <body>
@@ -3432,6 +3462,89 @@ if(typeof renderRcaInv==="function"){const _ri=renderRcaInv;renderRcaInv=functio
 function iInv(){const B=RC.base,adm=S.perm.admin,card=$("#gInv")&&$("#gInv").closest(".card");if(!card)return;const rs=B.rcas.filter(r=>(adm||!RC.hidden.has(r.id))&&(!RC.f.emp||r.empresa===RC.f.emp)&&(!RC.f.tipo||r.tipo===RC.f.tipo)&&r.monto>0);if(!rs.length)return;
   const T=rs.reduce((s,r)=>s+r.monto,0),top=rs.slice().sort((a,b)=>b.monto-a.monto),k=top.slice(0,3).reduce((s,r)=>s+r.monto,0);const em=new Map();rs.forEach(r=>em.set(r.empresa,(em.get(r.empresa)||0)+r.monto));const e1=[...em].sort((a,b)=>b[1]-a[1])[0];
   ensureC(card,"cInvC");setC("cInvC",`La RCA de mayor inversión es <b>${esc(top[0].rca)}/${top[0].anio||"s/f"}</b> (${esc(top[0].proyecto.slice(0,80))}), con el ${t0(top[0].monto/T*100)} % del total; las 3 mayores suman el ${t0(k/T*100)} %.${em.size>1?` ${esc(e1[0])} concentra el ${t0(e1[1]/T*100)} % de la inversión.`:""} Los proyectos de mayor inversión suelen tener más compromisos ambientales y sociales asociados, por lo que conviene priorizar su seguimiento.`)}
+/* ================= Mapa de caletas: actividad según toneladas + Google Maps ================= */
+// [lat, lon, aproximada]. Si el Excel trae columnas Latitud y Longitud para una caleta, se usan esas.
+const GEO={"michilla":[-22.7251,-70.2794,0],"el cobre":[-24.255,-70.522,1],"maitencillo iv reg":[-31.275,-71.64,1],"puerto oscuro":[-31.42,-71.597,1],"puerto manso":[-31.495,-71.578,1],"huentelauquen":[-31.6,-71.558,1],"chigualoco":[-31.7512,-71.5073,0],"san pedro los vilos":[-31.912,-71.513,0],"las conchas":[-31.945,-71.513,1],"cascabeles":[-31.99,-71.52,1],"totoralillo sur(totoralillo)":[-32.0364,-71.5255,0],"pichidangui":[-32.1333,-71.5333,0]};
+const COAST={norte:[[-22.3,-70.235],[-22.5,-70.26],[-22.72,-70.29],[-22.9,-70.31],[-23.06,-70.38],[-23.1,-70.45],[-23.04,-70.5],[-23.02,-70.53],[-23.15,-70.59],[-23.3,-70.62],[-23.45,-70.6],[-23.52,-70.5],[-23.6,-70.42],[-23.65,-70.4],[-23.76,-70.47],[-23.95,-70.5],[-24.1,-70.51],[-24.255,-70.535],[-24.45,-70.55],[-24.7,-70.56]],
+  sur:[[-31.05,-71.66],[-31.27,-71.652],[-31.42,-71.607],[-31.5,-71.588],[-31.6,-71.567],[-31.75,-71.518],[-31.86,-71.52],[-31.9,-71.523],[-31.93,-71.508],[-31.99,-71.53],[-32.04,-71.535],[-32.13,-71.543],[-32.22,-71.52],[-32.35,-71.48]]};
+const HEAT=["#fde9b4","#f9c15a","#f2902a","#dc5a1e","#a8241a"];
+const heatCol=k=>HEAT[Math.min(4,Math.floor(Math.sqrt(Math.max(0,k))*5))];
+const NSV="http://www.w3.org/2000/svg";
+function geoOf(c){if(c[5]!=null&&c[6]!=null&&isFinite(c[5])&&isFinite(c[6]))return[+c[5],+c[6],0];return GEO[norm(c[0]).trim()]||null}
+const canLeaflet=()=>typeof api==="function"||!!window.__STANDALONE;
+let LEAF=null;const MAPS={};const GM={i:null};
+const loadScript=src=>new Promise((res,rej)=>{const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s)});
+function loadLeaflet(){if(LEAF)return LEAF;LEAF=(async()=>{const l=document.createElement("link");l.rel="stylesheet";l.href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";document.head.appendChild(l);
+  await loadScript("https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js");try{await loadScript("https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js")}catch(e){}return window.L||null})().catch(()=>null);return LEAF}
+const calLab=n=>n.replace(/\s*\(.*\)$/,"").replace(/ Iv Reg$/i,"");
+function mapData(A){const R=S.R,m=R.m,nm=A.nMonths,zones=new Map(),all=[];
+  m.C.forEach((c,i)=>{const g=geoOf(c);if(!g)return;const z=regLabel(c[3]);if(!zones.has(z))zones.set(z,{name:z,raw:c[3],pts:[]});
+    const p={i,name:c[0],com:c[1],comp:c[4],lat:g[0],lon:g[1],aprox:!!g[2],t:A.cal[i],fis:A.calFis[i].size,muj:A.calMuj[i].size,v:V(A.cal[i],A.calFis[i],nm)};zones.get(z).pts.push(p);all.push(p)});
+  const list=[...zones.values()].sort((a,b)=>String(a.raw).localeCompare(String(b.raw)));const mx=Math.max(0,...all.map(p=>p.v));return{list,mx,all}}
+const gmUrl=(p,emb)=>emb?`https://maps.google.com/maps?q=${p.lat},${p.lon}&t=${ST2.get("mapT","m")==="s"?"k":"m"}&z=13&hl=es&output=embed`:`https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lon}`;
+const vTxt=v=>S.measure==="total"?t0(v)+" t":tt(v)+" "+MEAS[S.measure].short;
+const tipMap=(p,A)=>`<b>${esc(p.name)}</b> (${esc(p.com)}) · ${esc(p.comp)}<br>${tipAll(p.t,A.calFis[p.i],A.nMonths,A.q)}<br>${t0(p.muj)} mujeres${p.aprox?`<br><span style="opacity:.75">Ubicación aproximada</span>`:""}`;
+const popMap=p=>`<div class="mpop"><b>${esc(p.name)}</b><br>${vTxt(p.v)} · ${t0(p.fis)} pescadores<div class="mpop-b"><button type="button" class="btn small" data-gmsel="${p.i}">Ver en Google Maps</button><button type="button" class="btn ghost small" data-gmfil="${p.i}">Filtrar dashboard</button></div></div>`;
+async function mapa2(A){const box=$("#mapZones");if(!box||!S.R)return;const {list,mx,all}=mapData(A);
+  $("#lMapa").innerHTML=`<span class="cs">Menos</span><span class="hbar">${HEAT.map(c=>`<i style="background:${c}"></i>`).join("")}</span><span class="cs">Más ${esc(MEAS[S.measure].lbl.toLowerCase())}</span><span class="cs">· borde punteado = ubicación aproximada</span>`;
+  if(!list.length){box.innerHTML=`<div class="empty">No hay caletas con ubicación conocida. Agrega las columnas Latitud y Longitud al Excel.</div>`;setC("cMapaC","");gmPanel(A,all,mx);return}
+  const L=canLeaflet()?await loadLeaflet():null;const sat=ST2.get("mapT","m")==="s";
+  const want=list.map(z=>z.name).join("|")+(L?"L":"S");
+  if(box.dataset.k!==want){box.dataset.k=want;Object.keys(MAPS).forEach(k=>{try{MAPS[k].map.remove()}catch(e){}delete MAPS[k]});
+    box.innerHTML=list.map((z,k)=>`<div class="mapp"><h4>${esc(z.name)}</h4><div class="${L?"lf":"sf"}" id="mz${k}"></div></div>`).join("")}
+  list.forEach((z,k)=>{const id="mz"+k;
+    if(L){let M=MAPS[id];
+      if(!M){const map=L.map(id,{scrollWheelZoom:false,zoomControl:true});const b=L.latLngBounds(z.pts.map(p=>[p.lat,p.lon]));map.fitBounds(b.pad(.3),{maxZoom:11});M=MAPS[id]={map,layer:L.layerGroup().addTo(map),base:null,sat:null}}
+      if(M.sat!==sat){if(M.base)M.map.removeLayer(M.base);M.base=sat?L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:17,attribution:"Imágenes © Esri"}):L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",{maxZoom:17,subdomains:"abcd",attribution:"© OpenStreetMap · © CARTO",referrerPolicy:"strict-origin-when-cross-origin"});M.base.addTo(M.map);M.base.bringToBack();M.sat=sat}
+      M.map.invalidateSize();M.layer.clearLayers();const sel=S.f.cal;
+      if(L.heatLayer){const hp=z.pts.filter(p=>p.v>0&&!(sel.size&&!sel.has(p.i))).map(p=>[p.lat,p.lon,Math.max(.15,mx?p.v/mx:0)]);if(hp.length){const h=L.heatLayer(hp,{radius:42,blur:32,maxZoom:10,max:1,minOpacity:.3,gradient:{.15:HEAT[0],.35:HEAT[1],.55:HEAT[2],.75:HEAT[3],1:HEAT[4]}}).addTo(M.layer);const cv=h._canvas,op=cv&&cv.parentNode;if(op&&op.firstChild!==cv)op.insertBefore(cv,op.firstChild)}}
+      z.pts.slice().sort((a,b)=>b.v-a.v).forEach(p=>{const k2=mx?p.v/mx:0,r=6+18*Math.sqrt(k2),col=p.v>0?heatCol(k2):"#c9d5d9",dim=sel.size&&!sel.has(p.i);
+        if(!L.heatLayer&&p.v>0)L.circleMarker([p.lat,p.lon],{radius:r*2,stroke:false,fillColor:col,fillOpacity:dim?.05:.22,interactive:false}).addTo(M.layer);
+        L.circleMarker([p.lat,p.lon],{radius:r,color:p.i===GM.i?"#0d2328":"#fff",weight:p.i===GM.i?3:2,fillColor:col,fillOpacity:dim?.25:.95,dashArray:p.aprox?"3 3":null}).bindTooltip(tipMap(p,A),{direction:"top",offset:[0,-r]}).bindPopup(popMap(p)).addTo(M.layer);
+        L.marker([p.lat,p.lon],{interactive:false,icon:L.divIcon({className:"mlab",html:`<span>${esc(calLab(p.name))}${p.v>0?` · ${vTxt(p.v)}`:""}</span>`,iconSize:null,iconAnchor:[-r-4,8]})}).addTo(M.layer)})}
+    else svgMap(id,z,mx,A)});
+  $("#mapSub").textContent=(L?(sat?"Imágenes satelitales © Esri":"Mapa base © OpenStreetMap · © CARTO")+" · ":"Mapa esquemático (en esta versión no se pueden cargar mapas externos; usa los enlaces a Google Maps) · ")+`Color, tamaño y mancha de calor según ${MEAS[S.measure].lbl.toLowerCase()} (${MEAS[S.measure].u}) · clic en una caleta para verla en Google Maps o filtrar el dashboard.`;
+  gmPanel(A,all,mx);
+  const tot=all.reduce((s,p)=>s+p.t,0),rk=all.filter(p=>p.t>0).sort((a,b)=>b.t-a.t);
+  if(rk.length&&tot){const t3=rk.slice(0,3),s3=t3.reduce((s,p)=>s+p.t,0)/tot*100,coms=[...new Set(t3.map(p=>p.com))];const zt=list.map(z=>({n:z.name,t:z.pts.reduce((s,p)=>s+p.t,0)})).sort((a,b)=>b.t-a.t);
+    setC("cMapaC",`La mayor actividad está en <b>${esc(calLab(rk[0].name))}</b> (${t0(rk[0].t/tot*100)} % de las toneladas). Las 3 caletas más activas (${t3.map(p=>esc(calLab(p.name))).join(", ")}) suman el ${t0(s3)} % y están en ${coms.map(esc).join(" y ")}${zt.length>1?`; ${esc(shortZ(zt[0].n))} concentra el ${t0(zt[0].t/tot*100)} % del volumen`:""}. Las manchas más intensas señalan dónde una faena, veda o acuerdo tendría mayor impacto en la pesca local.${all.some(p=>p.aprox)?" Algunas ubicaciones son aproximadas: puedes corregirlas agregando Latitud y Longitud al Excel.":""}`)}else setC("cMapaC","")}
+function gmPanel(A,all,mx){const box=$("#gmList"),fr=$("#gmFrame"),lk=$("#gmOpen");if(!box)return;const rk=all.slice().sort((a,b)=>b.v-a.v);
+  if(!rk.length){box.innerHTML="";return}if(GM.i==null||!rk.some(p=>p.i===GM.i))GM.i=(S.f.cal.size===1&&rk.some(p=>p.i===[...S.f.cal][0]))?[...S.f.cal][0]:rk[0].i;
+  box.innerHTML=rk.map((p,j)=>`<button type="button" class="gmi${p.i===GM.i?" on":""}" data-gmsel="${p.i}"><span class="gmr">${j+1}</span><i style="background:${p.v>0?heatCol(mx?p.v/mx:0):"#c9d5d9"}"></i><span class="gmn">${esc(calLab(p.name))}<span class="cs">${esc(p.com)}${p.aprox?" · aprox.":""}</span></span><b>${p.v>0?vTxt(p.v):"—"}</b></button>`).join("");
+  const p=rk.find(x=>x.i===GM.i);$("#gmTitle").innerHTML=`<b>${esc(p.name)}</b> <span class="cs">${esc(p.com)} · ${vTxt(p.v)} · ${t0(p.fis)} pescadores${p.aprox?" · ubicación aproximada":""}</span>`;
+  lk.href=gmUrl(p,false);const emb=canLeaflet();fr.hidden=!emb;$("#gmNo").hidden=emb;if(emb){const u=gmUrl(p,true);if(fr.dataset.u!==u){fr.dataset.u=u;fr.src=u}}
+  $("#gmFil").dataset.gmfil=p.i;$("#gmFil").textContent=S.f.cal.has(p.i)?"Quitar filtro de esta caleta":"Filtrar dashboard por esta caleta"}
+function svgMap(id,z,mx,A){const host=$("#"+id);host.innerHTML="";const svg=document.createElementNS(NSV,"svg");host.appendChild(svg);
+  const W=Math.max(300,Math.round(host.getBoundingClientRect().width||520)),H=Math.round(Math.min(420,Math.max(320,W*.75)));
+  const lats=z.pts.map(p=>p.lat),lons=z.pts.map(p=>p.lon);let la0=Math.min(...lats),la1=Math.max(...lats),lo0=Math.min(...lons),lo1=Math.max(...lons);
+  const cosl=Math.cos((la0+la1)/2*Math.PI/180);let spanX=(lo1-lo0)*cosl,spanY=la1-la0;const pad=Math.max(spanX,spanY)*.35+.08;
+  let cx=(lo0+lo1)/2,cy=(la0+la1)/2,sx=spanX+pad*2,sy=spanY+pad*2;if(sx/sy<W/H)sx=sy*W/H;else sy=sx*H/W;
+  const X=lon=>((lon-cx)*cosl/sx+.5)*W,Y=lat=>(.5-(lat-cy)/sy)*H;clear(svg,W,H);
+  E("rect",{x:0,y:0,width:W,height:H,fill:"#e4f1f5"},svg);
+  const coast=(z.raw&&/^II\s/i.test(z.raw))?COAST.norte:COAST.sur;const pts=coast.map(([la,lo])=>[X(lo),Y(la)]);const east=W+10;
+  E("path",{d:"M"+pts.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join("L")+`L${east},${pts[pts.length-1][1].toFixed(1)}L${east},${pts[0][1].toFixed(1)}Z`,fill:"#f4f1ea",stroke:"#b9cdd3","stroke-width":1.2},svg);
+  const step=sy>1.2?.5:.25;for(let la=Math.ceil((cy-sy/2)/step)*step;la<cy+sy/2;la+=step){const y=Y(la);E("line",{x1:0,x2:W,y1:y,y2:y,stroke:"#c9dbe0","stroke-dasharray":"2 4"},svg);E("text",{x:4,y:y-3,style:"font-size:9.5px;fill:#7f9298"},svg).textContent=`${Math.abs(la).toFixed(2).replace(".",",")}° S`}
+  const sel=S.f.cal;
+  z.pts.slice().sort((a,b)=>b.v-a.v).forEach(p=>{const k=mx?p.v/mx:0,r=6+18*Math.sqrt(k),col=p.v>0?heatCol(k):"#c9d5d9",x=X(p.lon),y=Y(p.lat),dim=sel.size&&!sel.has(p.i);const g=E("g",{class:dim?"dim":""},svg);
+    if(p.v>0){const gid="hg"+id+p.i;const df=E("defs",{},g),rg=E("radialGradient",{id:gid},df);E("stop",{offset:"0%","stop-color":col,"stop-opacity":.6},rg);E("stop",{offset:"100%","stop-color":col,"stop-opacity":0},rg);E("circle",{cx:x,cy:y,r:r*2.6,fill:`url(#${gid})`},g)}
+    E("circle",{cx:x,cy:y,r,fill:col,stroke:p.i===GM.i?"#0d2328":"#fff","stroke-width":p.i===GM.i?3:2,"stroke-dasharray":p.aprox?"3 2":null},g);
+    const t=E("text",{x:x+r+5,y:y+4,style:"font-size:11px;font-weight:700;fill:#0d2328;paint-order:stroke;stroke:#fff;stroke-width:3px"},g);t.textContent=calLab(p.name)+(p.v>0?` · ${vTxt(p.v)}`:"");
+    hover(g,()=>tipMap(p,A)+"<br><span class='cs'>Clic para verla en Google Maps</span>",()=>{GM.i=p.i;mapa2(LAST.A);const f=$("#gmBox");if(f)f.scrollIntoView({behavior:"smooth",block:"nearest"})})})}
+document.addEventListener("click",ev=>{const s=ev.target.closest("[data-gmsel]");if(s){GM.i=+s.dataset.gmsel;if(LAST)mapa2(LAST.A);const f=$("#gmBox");if(f&&s.closest(".mpop"))f.scrollIntoView({behavior:"smooth",block:"nearest"});return}
+  const f=ev.target.closest("[data-gmfil]");if(f){toggle("cal",+f.dataset.gmfil,false)}});
+function buildMap(){const pane=document.querySelector('[data-pane="resumen"]');if(!pane||$("#cMapa"))return;
+  const d=document.createElement("details");d.className="sec";d.dataset.sec="map";d.open=UIP.get("sec.map","1")==="1";
+  d.innerHTML=`<summary><span class="sec-t">Mapa de caletas</span><span class="sec-s">Ubicación de las caletas, mapa de calor según toneladas y Google Maps</span><span class="sec-c" aria-hidden="true"></span></summary>
+  <div class="sec-b"><div class="viz"><div class="card w12 c2" id="cMapa"><div class="tbar"><h3>Mapa de actividad por caleta${help("Cada caleta se ubica en el mapa. El color, el tamaño del círculo y la mancha de calor muestran el nivel de actividad según las toneladas (o la medida elegida arriba). Responde a todos los filtros y al período.")}</h3>${segH("mapT",[["m","Mapa"],["s","Satélite"]],ST2.get("mapT","m"),"Tipo de mapa")}</div>
+    <p class="concl" id="cMapaC"></p><div class="hlegend" id="lMapa" style="align-items:center"></div><div class="mapz" id="mapZones"></div><p class="cs fnote" id="mapSub"></p>
+    <div class="gmw" id="gmBox"><div class="gml"><div class="gmh">Caletas por nivel de actividad</div><div id="gmList"></div></div>
+      <div class="gmf"><div class="gmh">Google Maps · <span id="gmTitle"></span></div><iframe id="gmFrame" title="Ubicación de la caleta en Google Maps" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      <div class="empty" id="gmNo" hidden>Esta versión no permite insertar Google Maps. Usa el botón para abrir la ubicación en una pestaña nueva.</div>
+      <div class="row gmb"><a class="btn small" id="gmOpen" target="_blank" rel="noopener">Abrir en Google Maps ↗</a><button type="button" class="btn ghost small" id="gmFil">Filtrar dashboard por esta caleta</button></div></div></div>
+    ${MENU}</div></div></div>`;
+  d.addEventListener("toggle",()=>{UIP.set("sec.map",d.open?"1":"0");if(d.open&&LAST&&S.tab==="resumen")renderPane()});
+  const first=pane.querySelector("details.sec");pane.insertBefore(d,first||pane.firstChild)}
+
 /* ---------- Conexión con el render ---------- */
 const _renderPane=renderPane;
 renderPane=function(){if(!LAST||!S.R)return _renderPane();const t=S.tab;CUR={X:null,D:null};
@@ -3440,11 +3553,12 @@ renderPane=function(){if(!LAST||!S.R)return _renderPane();const t=S.tab;CUR={X:n
   try{if(t==="resumen"){if(isOpen("soc")){compBars(A);sexBox(A);gap()}if(isOpen("esp")){slope();dependencia()}if(isOpen("act"))anomalias()}
     if(t==="pescadores"){cohort();scatter(A)}
     if(t==="especies"){calEsp(A);catBars(A);valor(A)}}catch(e){console.error(e)}
+  try{if(t==="resumen"&&isOpen("map"))mapa2(A)}catch(e){console.error(e)}
   try{if(t==="resumen"){if(isOpen("zon"))iZonas(A);if(isOpen("act")){iMesExtra(A);iProj();iCalHeat();iHeat(A)}if(isOpen("esp")){iEsp(A);iComuna(A)}iDepGap()}
     if(t==="pescadores")iPesc(A);if(t==="especies"){iEspTab(A);iImpl()}}catch(e){console.error(e)}};
 document.addEventListener("click",ev=>{const b=ev.target.closest(".c2seg button[data-v]");if(!b)return;const k=b.closest(".c2seg").dataset.c2k;ST2.set(k,b.dataset.v);b.parentNode.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
   if(k.startsWith("rg")){RC.gx=RC.gx||{};RC.gx[k]=b.dataset.v;renderRcaGx();return}if(LAST)renderPane()});
-build();{const sn=document.getElementById("scNote");if(sn)sn.classList.add("concl")}
+build();buildMap();{const sn=document.getElementById("scNote");if(sn)sn.classList.add("concl")}
 const subs={act:"Evolución mensual por zona, proyección, mapa por caleta y mes, estacionalidad y anomalías",esp:"Especies, captura por caleta con variación, años, comunas, ranking y dependencia",soc:"Pescadores por sexo, compañías y brecha de género"};
 Object.entries(subs).forEach(([k,v])=>{const e=document.querySelector(`details.sec[data-sec="${k}"] .sec-s`);if(e)e.textContent=v});
 

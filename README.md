@@ -117,6 +117,7 @@ Después del primer ingreso puedes borrar `ADMIN_PASSWORD` de Vercel: el adminis
 
 ## Gráficos
 
+- Mapa de caletas (Resumen): mapa con la ubicación de cada caleta, mancha de calor y círculos según toneladas, vista mapa o satélite, ranking de caletas y Google Maps insertado con la caleta elegida. Las coordenadas vienen de las columnas Latitud y Longitud del Excel si existen; si no, se usan ubicaciones de referencia (algunas aproximadas).
 - Todos los gráficos muestran un recuadro «Interpretación» que se recalcula con los filtros: qué muestran los datos y qué implica para la gestión o la negociación.
 - Cada gráfico tiene una línea de lectura con la conclusión principal y variaciones respecto del año anterior.
 - Resumen: evolución mensual por zona con el mismo mes del año anterior (o vista total), proyección con banda de rango probable, control de anomalías por caleta (± 2 desviaciones estándar), captura por caleta en barras con variación, años en toneladas o en % con el año en curso marcado, ranking de caletas entre los dos últimos años completos, dependencia de una especie, compañías en barras, pescadores por sexo con participación de mujeres por año y brecha de género por caleta o grupo.
