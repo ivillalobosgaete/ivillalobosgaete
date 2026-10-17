@@ -1,5 +1,5 @@
 // Capas públicas del Geoportal de Subpesca (IDE_PUBLICO): AMERB y caletas pesqueras artesanales; y ECMPO (Subpesca, vía IDE de la SMA).
-// Se consultan desde el servidor (sin problemas de CORS) y se guardan en memoria 12 horas. Requiere sesión.
+// Se consultan desde el servidor (sin problemas de CORS) y se actualizan todos los días (máximo 12 horas en memoria). Requiere sesión.
 import { handler, send, current } from "../lib/core.js";
 const BASE = process.env.GEO_BASE || "https://geoportal.subpesca.cl/server/rest/services/IDE_PUBLICO/";
 // ECMPO (espacios costeros marinos de pueblos originarios): capa pública de Subpesca publicada en la IDE de la SMA.
@@ -44,7 +44,9 @@ export default handler(async (req, res) => {
   const bq = String(new URL(req.url, "http://x").searchParams.get("b") || "");
   const boxes = bq.split(";").map((t) => t.split(",").map(Number)).filter((a) => a.length === 4 && a.every((v) => isFinite(v) && Math.abs(v) <= 180)).slice(0, 6);
   const key = regs.join(",") + "|" + boxes.map((b) => b.map((v) => v.toFixed(2)).join(",")).join(";");
-  if (cache.data && cache.key === key && Date.now() - cache.t < 12 * 3600e3) return send(res, 200, cache.data);
+  // Actualización diaria: se vuelve a consultar al cambiar el día (hora de Chile) o tras 12 horas.
+  const hoy = new Date().toLocaleDateString("en-CA", { timeZone: "America/Santiago" });
+  if (cache.data && cache.key === key && cache.dia === hoy && Date.now() - cache.t < 12 * 3600e3) return send(res, 200, cache.data);
   const inR = `IN (${regs.join(",") || "2,4"})`;
   const data = { amerb: [], caletas: [], ecmpo: [], fuente: "Geoportal Subpesca (IDE público)", obtenido: new Date().toISOString(), errores: [] };
   await Promise.all([
@@ -71,6 +73,6 @@ export default handler(async (req, res) => {
       } catch (e) { data.errores.push(`Caletas: ${e.message}`); }
     })(),
   ]);
-  if (data.amerb.length || data.caletas.length || data.ecmpo.length) cache = { t: Date.now(), key, data };
+  if (data.amerb.length || data.caletas.length || data.ecmpo.length) cache = { t: Date.now(), key, data, dia: hoy };
   send(res, 200, data);
 });
