@@ -117,6 +117,7 @@ Después del primer ingreso puedes borrar `ADMIN_PASSWORD` de Vercel: el adminis
 
 ## Gráficos
 
+- Cruces AMERB, planes de manejo y desembarque: desembarque en meses de veda según su explicación (alga varada, AMERB o plan aprobado, sin explicación), dependencia de recursos bajo manejo por caleta y superficie de AMERB decretadas frente a pescadores activos.
 - Planes de manejo de recursos bentónicos (Geoportal Subpesca, actualización diaria): cada plan de las zonas del dashboard con su estado (aprobado, establecido en elaboración, sin resolución), especies, superficie, resoluciones y caletas que cubre.
 - Actualización de datos externos: AMERB, caletas oficiales y ECMPO se vuelven a consultar cada día (hora de Chile); los indicadores económicos del Banco Central una vez al día. Las vedas oficiales se revisan a diario con una tarea programada que avisa si Subpesca publica cambios.
 - ECMPO (espacios costeros marinos de pueblos originarios): el sitio consulta la capa pública de Subpesca publicada en la IDE de la SMA y muestra, para las zonas del dashboard, cada ECMPO con su comunidad solicitante, estado, superficie, decreto y caleta más cercana.
