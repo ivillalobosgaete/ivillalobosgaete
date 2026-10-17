@@ -887,6 +887,11 @@ table.rgh td:first-child{white-space:normal}
 @media (max-width:560px){table.rgc .mbar,table.rgk .sg-bar{display:none}}
 details.sec[data-sec="cla"] #claves>h3{display:none}
 details.sec[data-sec="cla"] #claves{margin:0}
+table.nmx{width:100%;border-collapse:separate;border-spacing:2px;font-size:.8rem}
+table.nmx th{font-size:.68rem;text-transform:uppercase;color:var(--muted);padding:4px 6px;text-align:left}
+table.nmx th.r,table.nmx td.r{text-align:right}
+table.nmx td{padding:5px 6px;border-radius:5px;white-space:nowrap}
+table.nmx tfoot td{border-top:2px solid var(--line);background:var(--brand-08)}
 /* ===== Mapa de caletas ===== */
 .mapz{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .mapp{position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#e4f1f5;min-width:0}
@@ -1118,6 +1123,7 @@ tr.vr-now td{background:#fff5f4}
             <div class="field"><label for="nPrice">Precio de playa ($ por kg, opcional)</label><input id="nPrice" type="number" min="0" step="10" placeholder="Ej. 3500"></div>
           </div>
           <div class="pgroup"><span class="plabel">Meses a comparar</span><div class="pgroup" id="nMo"></div></div>
+          <div class="pgroup dgrp"><span class="plabel">Fechas</span><span class="dfield"><label for="nD0" class="cs">Desde</label><input type="date" lang="es-CL" id="nD0" aria-label="Desde la fecha"></span><span class="dfield"><label for="nD1" class="cs">Hasta</label><input type="date" lang="es-CL" id="nD1" aria-label="Hasta la fecha"></span><span class="dfield"><label for="nDOne" class="cs">o un día</label><input type="date" lang="es-CL" id="nDOne" aria-label="Un día puntual"></span><button type="button" class="vbtn" id="nDClr" hidden>Quitar fechas</button><span class="cs pmhint">Opcional: acota el cálculo a un tramo de fechas o a un día, además de los años y meses elegidos.</span></div>
         </div>
         <div class="neg-res" id="nKpis"></div>
         <div class="callout" id="nText"></div>
@@ -2808,7 +2814,8 @@ function hdrStart(){if(!HDR.t){hdrTick();HDR.t=setInterval(hdrTick,1000)}if(!HDR
 hdrStart();
 
 /* ================= Negociación ================= */
-const N={mo:new Set([0,1,2,3,4,5,6,7,8,9,10,11])};
+const N={mo:new Set([0,1,2,3,4,5,6,7,8,9,10,11]),d0:null,d1:null};
+const negDayOut=(R,ym)=>{if(N.d0==null&&N.d1==null)return false;const y=R.y0+Math.floor(ym/12),m=ym%12;const a=Math.round((Date.UTC(y,m,1)-BASE)/DAY),b=Math.round((Date.UTC(y,m+1,0)-BASE)/DAY);return(N.d0!=null&&b<N.d0)||(N.d1!=null&&a>N.d1)};
 function buildNeg(){
   const R=S.R,m=R.m;const tot=new Float64Array(m.E.length);for(let i=0;i<R.n;i++)tot[R.e[i]]+=R.q[i];
   const idx=m.E.map((e,i)=>i).filter(i=>tot[i]>0).sort((a,b)=>m.E[a][1].localeCompare(m.E[b][1],"es"));
@@ -2817,16 +2824,23 @@ function buildNeg(){
   $("#nLug").innerHTML=`<option value="all">Todas</option><optgroup label="Comunas">${R.coms.map((c,i)=>`<option value="c${i}">${esc(c)}</option>`).join("")}</optgroup><optgroup label="Caletas">${m.C.map((c,i)=>`<option value="k${i}">${esc(c[0])}</option>`).join("")}</optgroup>`;
   const lastFull=R.lastYM%12===11?R.y1:R.y1-1;const ys=[];for(let y=R.y0;y<=R.y1;y++)ys.push(y);
   $("#nY0").innerHTML=ys.map(y=>`<option>${y}</option>`).join("");$("#nY1").innerHTML=ys.map(y=>`<option>${y}</option>`).join("");$("#nY0").value=R.y0;$("#nY1").value=R.y1;
+  {const iso=d=>new Date(BASE+d*DAY).toISOString().slice(0,10);["nD0","nD1","nDOne"].forEach(id=>{const x=$("#"+id);if(x){x.min=iso(R.minD);x.max=iso(R.maxD)}});if(typeof nDSync==="function")nDSync()}
   $("#nMo").innerHTML=`<button type="button" class="pill" data-mall="1" aria-pressed="${N.mo.size===12}">Todos</button>`+MES.map((s,i)=>`<button type="button" class="pill" data-m="${i}" aria-pressed="${N.mo.has(i)}">${s[0].toUpperCase()+s.slice(1)}</button>`).join("");
 }
 ["nEsp","nLug","nY0","nY1","nPrice"].forEach(id=>$("#"+id).addEventListener(id==="nPrice"?"input":"change",()=>renderNeg()));
+function nDSync(){const a=$("#nD0");if(!a)return;const iso=d=>d==null?"":new Date(BASE+d*DAY).toISOString().slice(0,10);a.value=iso(N.d0);$("#nD1").value=iso(N.d1);$("#nDOne").value=N.d0!=null&&N.d0===N.d1?iso(N.d0):"";$("#nDClr").hidden=N.d0==null&&N.d1==null}
+{const ix=s=>{if(!s)return null;const t=Date.parse(s+"T00:00:00Z");return isFinite(t)?Math.round((t-BASE)/DAY):null};
+  $("#nD0").addEventListener("change",ev=>{N.d0=ix(ev.target.value);if(N.d0!=null&&N.d1!=null&&N.d0>N.d1)N.d1=N.d0;nDSync();renderNeg()});
+  $("#nD1").addEventListener("change",ev=>{N.d1=ix(ev.target.value);if(N.d0!=null&&N.d1!=null&&N.d0>N.d1)N.d0=N.d1;nDSync();renderNeg()});
+  $("#nDOne").addEventListener("change",ev=>{N.d0=N.d1=ix(ev.target.value);nDSync();renderNeg()});
+  $("#nDClr").addEventListener("click",()=>{N.d0=N.d1=null;nDSync();renderNeg()})}
 $("#nMo").addEventListener("click",ev=>{const all=ev.target.closest("button[data-mall]");if(all){const full=N.mo.size===12;N.mo=new Set(full?[new Date().getMonth()]:[0,1,2,3,4,5,6,7,8,9,10,11]);$("#nMo").querySelectorAll("button[data-m]").forEach(x=>x.setAttribute("aria-pressed",N.mo.has(+x.dataset.m)));all.setAttribute("aria-pressed",String(N.mo.size===12));renderNeg();return}
   const b=ev.target.closest("button[data-m]");if(!b)return;const m=+b.dataset.m;if(N.mo.size===12){N.mo=new Set([m])}else{N.mo.has(m)?N.mo.delete(m):N.mo.add(m);if(!N.mo.size)N.mo.add(m)}$("#nMo").querySelectorAll("button[data-m]").forEach(x=>x.setAttribute("aria-pressed",N.mo.has(+x.dataset.m)));const ab=$("#nMo [data-mall]");if(ab)ab.setAttribute("aria-pressed",String(N.mo.size===12));renderNeg()});
 function negCalc(esp,lug,y0,y1,months){
   const R=S.R,yN=y1-y0+1,res={};months.forEach(m=>res[m]={t:new Float64Array(yN),f:Array.from({length:yN},()=>new Set()),avail:new Uint8Array(yN)});
-  for(let y=0;y<yN;y++)months.forEach(m=>{const ym=(y+y0-R.y0)*12+m;res[m].avail[y]=ym>=R.firstYM&&ym<=R.lastYM?1:0});
+  for(let y=0;y<yN;y++)months.forEach(m=>{const ym=(y+y0-R.y0)*12+m;res[m].avail[y]=ym>=R.firstYM&&ym<=R.lastYM&&!negDayOut(R,ym)?1:0});
   const fis=new Map();
-  for(let i=0;i<R.n;i++){if(esp>=0&&R.e[i]!==esp)continue;const y=R.yr[i]+R.y0;if(y<y0||y>y1)continue;const m=R.mo[i];if(!res[m])continue;
+  for(let i=0;i<R.n;i++){if(esp>=0&&R.e[i]!==esp)continue;if(N.d0!=null&&R.d[i]<N.d0)continue;if(N.d1!=null&&R.d[i]>N.d1)continue;const y=R.yr[i]+R.y0;if(y<y0||y>y1)continue;const m=R.mo[i];if(!res[m])continue;
     if(lug[0]==="c"&&R.com[i]!==+lug.slice(1))continue;if(lug[0]==="k"&&R.c[i]!==+lug.slice(1))continue;
     const q=R.q[i]/1000;res[m].t[y-y0]+=q;res[m].f[y-y0].add(R.p[i]);const f=fis.get(R.p[i])||{q:0,months:new Set(),cal:R.c[i]};f.q+=q;f.months.add(y+"-"+m);fis.set(R.p[i],f)}
   const out=months.map(m=>{const r=res[m];const ys=[];for(let y=0;y<yN;y++)if(r.avail[y])ys.push({y:y+y0,t:r.t[y],f:r.f[y].size});
@@ -2839,7 +2853,8 @@ function negCalc(esp,lug,y0,y1,months){
 function renderNeg(){
   if(!S.R)return;const R=S.R,m=R.m;const esp=+$("#nEsp").value,lug=$("#nLug").value;let y0=+$("#nY0").value,y1=+$("#nY1").value;if(y0>y1)[y0,y1]=[y1,y0];
   const months=[...N.mo].sort((a,b)=>a-b),price=+$("#nPrice").value||0;const {out,fis}=negCalc(esp,lug,y0,y1,months);
-  const en=esp>=0?m.E[esp][1]:"Todas las especies",lugT=lug==="all"?"todas las caletas":lug[0]==="c"?"la comuna de "+R.coms[+lug.slice(1)]:"la caleta "+m.C[+lug.slice(1)][0];
+  const nDt=d=>{const s=new Date(BASE+d*DAY).toISOString().slice(0,10);return s.slice(8,10)+"-"+s.slice(5,7)+"-"+s.slice(0,4)};const dRng=N.d0!=null&&N.d0===N.d1?` (solo el ${nDt(N.d0)})`:N.d0!=null||N.d1!=null?` (fechas: ${N.d0!=null?nDt(N.d0):"inicio"} al ${N.d1!=null?nDt(N.d1):"fin"})`:"";
+  const en=(esp>=0?m.E[esp][1]:"Todas las especies")+dRng,lugT=lug==="all"?"todas las caletas":lug[0]==="c"?"la comuna de "+R.coms[+lug.slice(1)]:"la caleta "+m.C[+lug.slice(1)][0];
   const allAvg=out.reduce((a,b)=>a+b.avg,0)/out.length,allF=out.reduce((a,b)=>a+b.avgF,0)/out.length,allPer=out.filter(o=>o.perF>0);const per=allPer.length?allPer.reduce((a,b)=>a+b.perF,0)/allPer.length:0;
   const best=out.reduce((a,b)=>b.avg>a.avg?b:a,out[0]);
   const totT=out.reduce((a,o)=>a+o.ys.reduce((s,y)=>s+y.t,0),0);const allP=new Set();
@@ -3548,7 +3563,24 @@ function iDepGap(){iImpl();if(isOpen("esp"))addTo("cDepC","Esas caletas son las 
   if(isOpen("soc"))addTo("cGapC","Las brechas grandes suelen reflejar que las mujeres se concentran en recursos de menor volumen (como la recolección de orilla), no necesariamente menor dedicación.");
   if(isOpen("act"))addTo("cAnomC","Los meses inusualmente bajos recientes conviene verificarlos con la caleta: pueden deberse a vedas, marejadas, conflictos o problemas de registro.")}
 /* Negociación */
-if(typeof renderNeg==="function"){const _rn=renderNeg;renderNeg=function(){_rn.apply(this,arguments);try{iNeg()}catch(e){console.error(e)}try{vedaMark()}catch(e){}}}
+if(typeof renderNeg==="function"){const _rn=renderNeg;renderNeg=function(){_rn.apply(this,arguments);try{iNeg()}catch(e){console.error(e)}try{negMx()}catch(e){console.error(e)}try{vedaMark()}catch(e){}}}
+/* Extracción promedio por mes y por año (calculadora para negociación) */
+function negMx(){const R=S.R;if(!R)return;let card=$("#nMxCard");if(!card){const ref=$("#nTbl")&&$("#nTbl").closest(".card");if(!ref)return;card=document.createElement("div");card.className="card w12 c2";card.id="nMxCard";
+    card.innerHTML=`<div class="tbar"><h3>Extracción promedio por mes y por año${help("Toneladas extraídas en cada mes de cada año, con los mismos filtros de la calculadora (especie, lugar, años, meses y fechas). La columna «Promedio mensual» divide el total del año por los meses con datos; la fila «Promedio por mes» promedia cada mes entre los años con datos.")}</h3></div><p class="concl" id="nMxC"></p><div class="tbl" id="nMx" style="border:0"></div>${MENU}`;ref.after(card)}
+  const esp=+$("#nEsp").value,lug=$("#nLug").value;let y0=+$("#nY0").value,y1=+$("#nY1").value;if(y0>y1)[y0,y1]=[y1,y0];const months=[...N.mo].sort((a,b)=>a-b),yN=y1-y0+1;
+  const T=Array.from({length:yN},()=>new Float64Array(12));
+  for(let i=0;i<R.n;i++){if(esp>=0&&R.e[i]!==esp)continue;const y=R.yr[i]+R.y0;if(y<y0||y>y1)continue;const mo=R.mo[i];if(!N.mo.has(mo))continue;if(N.d0!=null&&R.d[i]<N.d0)continue;if(N.d1!=null&&R.d[i]>N.d1)continue;
+    if(lug[0]==="c"&&R.com[i]!==+lug.slice(1))continue;if(lug[0]==="k"&&R.c[i]!==+lug.slice(1))continue;T[y-y0][mo]+=R.q[i]/1000}
+  const av=(y,mo)=>{const ym=(y-R.y0)*12+mo;return ym>=R.firstYM&&ym<=R.lastYM&&!negDayOut(R,ym)};
+  const rows=[];for(let k=0;k<yN;k++){const y=y0+k,ms=months.filter(mo=>av(y,mo));if(!ms.length)continue;const need=months.filter(mo=>!negDayOut(R,(y-R.y0)*12+mo)).length;const tot=ms.reduce((s,mo)=>s+T[k][mo],0);rows.push({y,k,ms,tot,avg:tot/ms.length,full:ms.length===need})}
+  const el=$("#nMx");if(!rows.length){el.innerHTML=`<div class="empty">Sin datos con estos filtros.</div>`;setC("nMxC","");return}
+  const colAvg=months.map(mo=>{const ys=rows.filter(r=>av(r.y,mo));return ys.length?ys.reduce((s,r)=>s+T[r.k][mo],0)/ys.length:null});
+  const mx=Math.max(...rows.flatMap(r=>months.map(mo=>T[r.k][mo])))||1;const cell=v=>`style="background:${v>0?`rgba(42,120,214,${(.06+.8*Math.sqrt(v/mx)).toFixed(2)})`:"transparent"};color:${Math.sqrt(v/mx)>.6?"#fff":"inherit"}"`;
+  const fullRows=rows.filter(r=>r.full),anual=fullRows.length?fullRows.reduce((s,r)=>s+r.tot,0)/fullRows.length:null,mensual=rows.reduce((s,r)=>s+r.tot,0)/rows.reduce((s,r)=>s+r.ms.length,0);
+  el.innerHTML=`<table class="nmx"><thead><tr><th>Año</th>${months.map(mo=>`<th class="r">${MES[mo]}</th>`).join("")}<th class="r">Total del año</th><th class="r">Promedio mensual</th></tr></thead><tbody>${rows.map(r=>`<tr><td><b>${r.y}${r.full?"":"*"}</b></td>${months.map(mo=>av(r.y,mo)?`<td class="r" ${cell(T[r.k][mo])}>${T[r.k][mo]>0?tt(T[r.k][mo]):"0"}</td>`:`<td class="r cs">·</td>`).join("")}<td class="r"><b>${tt(r.tot)}</b></td><td class="r"><b>${tt(r.avg)}</b></td></tr>`).join("")}</tbody>
+    <tfoot><tr class="avg"><td><b>Promedio por mes</b></td>${colAvg.map(v=>`<td class="r"><b>${v==null?"·":tt(v)}</b></td>`).join("")}<td class="r"><b>${anual==null?"—":tt(anual)}</b><div class="cs">promedio anual</div></td><td class="r"><b>${tt(mensual)}</b><div class="cs">promedio mensual</div></td></tr></tfoot></table>${rows.some(r=>!r.full)?`<p class="cs fnote">* Año con meses sin datos (año en curso): no se usa para el promedio anual.</p>`:""}`;
+  const best=months.map((mo,j)=>[mo,colAvg[j]]).filter(x=>x[1]!=null).sort((a,b)=>b[1]-a[1]);const en=esp>=0?R.m.E[esp][1]:"todas las especies";
+  setC("nMxC",`Para <b>${esc(en)}</b>, se extraen en promedio <b>${anual==null?"—":tt(anual)+" t por año"}</b>${(N.d0!=null||N.d1!=null)&&anual!=null?" (dentro del tramo de fechas)":""}${anual==null?" (no hay años completos con estos filtros)":fullRows.length<rows.length?` (${fullRows.length} años completos)`:""} y <b>${tt(mensual)} t por mes</b>.${best.length>1?` El mes de mayor extracción promedio es ${MESL[best[0][0]]} (${tt(best[0][1])} t) y el de menor, ${MESL[best[best.length-1][0]]} (${tt(best[best.length-1][1])} t).`:""} Estos promedios son una base objetiva para calcular compensaciones por mes o por año.`)}
 function iNeg(){const R=S.R;if(!R||!N||!N.mo||!N.mo.size){I("gNeg","cNegC","");return}const esp=+$("#nEsp").value,lug=$("#nLug").value;let y0=+$("#nY0").value,y1=+$("#nY1").value;if(y0>y1)[y0,y1]=[y1,y0];const months=[...N.mo].sort((a,b)=>a-b);
   const {out}=negCalc(esp,lug,y0,y1,months);const yN=y1-y0+1,tot=new Float64Array(yN);out.forEach(o=>o.ys.forEach(r=>tot[r.y-y0]+=r.t));const ys=[...tot].map((v,i)=>({y:y0+i,v}));const full=ys.filter(x=>{const ym=(x.y-R.y0)*12+months[months.length-1];return ym<=R.lastYM});
   if(full.length<2||!full.some(x=>x.v>0)){I("gNeg","cNegC","Con un solo año (o sin datos) no es posible interpretar la tendencia; amplía el rango de años.");return}

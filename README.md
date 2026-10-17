@@ -117,6 +117,7 @@ Después del primer ingreso puedes borrar `ADMIN_PASSWORD` de Vercel: el adminis
 
 ## Gráficos
 
+- Calculadora para negociación: además de especie, lugar, años y meses, permite acotar por fechas (desde/hasta o un día) y muestra la tabla «Extracción promedio por mes y por año» con totales, promedio anual y promedio mensual.
 - Filtros de período: años, meses (un mes solo compara ese mes en todos los años), desde/hasta mes y Fechas: desde una fecha hasta otra, o un día puntual. Se guardan en las vistas.
 - Cruces AMERB, planes de manejo y desembarque: desembarque en meses de veda según su explicación (alga varada, AMERB o plan aprobado, sin explicación), dependencia de recursos bajo manejo por caleta y superficie de AMERB decretadas frente a pescadores activos.
 - Planes de manejo de recursos bentónicos (Geoportal Subpesca, actualización diaria): cada plan de las zonas del dashboard con su estado (aprobado, establecido en elaboración, sin resolución), especies, superficie, resoluciones y caletas que cubre.
