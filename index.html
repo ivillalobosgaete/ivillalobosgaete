@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<title>Estadísticas de Recolección y Captura</title>
+<title>Plataforma Gestión Relacionamiento con Pesca Artesanal · AAPP Norte</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
 <style>
@@ -1075,7 +1075,7 @@ tr.vr-now td{background:#fff5f4}
 <section id="gate" class="gut">
   <div class="gcard" id="gateCard">
     <span class="eyebrow">Asuntos Públicos</span>
-    <h1>Estadísticas de Recolección y Captura</h1>
+    <h1>Plataforma Gestión Relacionamiento con Pesca Artesanal · AAPP Norte</h1>
     <div class="spinner" aria-hidden="true"></div>
     <p style="text-align:center">Verificando tu acceso…</p>
   </div>
@@ -1084,7 +1084,7 @@ tr.vr-now td{background:#fff5f4}
 <div id="app" hidden>
   <header class="top gut">
     <div class="brand">
-      <h1>Estadísticas de Recolección y Captura · Asuntos Públicos</h1>
+      <h1>Plataforma Gestión Relacionamiento con Pesca Artesanal · AAPP Norte</h1>
       <div class="tmeta"><span class="tsub" id="stamp"></span><span class="tnow"><span id="tLoc"></span><span id="tClock"></span></span></div>
     </div>
     <div class="top-r">
@@ -1501,7 +1501,7 @@ async function api(path,opts={}){
 }
 const ROLE_LBL={administrador:"Administrador",visualizador:"Visualizador"};
 let RANGE="";
-function gate(html){$("#gate").hidden=false;$("#app").hidden=true;$("#gateCard").innerHTML=`<span class="eyebrow">Asuntos Públicos</span><h1>Estadísticas de Recolección y Captura</h1>`+html+`<p class="cs" id="gateRange">${RANGE?esc(RANGE):""}</p>`}
+function gate(html){$("#gate").hidden=false;$("#app").hidden=true;$("#gateCard").innerHTML=`<span class="eyebrow">AAPP Norte</span><h1>Plataforma Gestión Relacionamiento con Pesca Artesanal</h1>`+html+`<p class="cs" id="gateRange">${RANGE?esc(RANGE):""}</p>`}
 async function boot(){
   try{const e=await api("estado");if(e&&e.desde)RANGE=`Datos desde el ${e.desde} hasta el ${e.hasta}`}catch(e){}
   try{const me=await api("me");if(me&&me.user){S.acct=me.user;setPerm(me.user);await enter();return}}catch(e){}
@@ -2309,7 +2309,7 @@ function buildReport(){const {pass,A,prev}=LAST,R=S.R,m=R.m;renderClaves(A);cons
   const items=computeAlerts();const cd=compData(pass,prev,A.hasPrev);const PZ=piCompute(pass,"p","t");const pj=projData();
   const now=new Date();const gen=now.toLocaleDateString("es-CL")+" "+now.toLocaleTimeString("es-CL",{hour:"2-digit",minute:"2-digit"});
   const regs=$("#claves .regs");
-  return`<div class="rep"><div class="rh"><span class="k">Asuntos Públicos · Reporte ejecutivo</span><h1>Estadísticas de Recolección y Captura</h1><span>Período: <b>${esc(per)}</b>${flt?` · ${esc(flt)}`:""}</span><span style="font-size:11px">Datos del ${dstr(R.minD)} al ${dstr(R.maxD)} · generado el ${esc(gen)} por ${esc(S.acct.usuario)}</span></div>
+  return`<div class="rep"><div class="rh"><span class="k">AAPP Norte · Reporte ejecutivo</span><h1>Plataforma Gestión Relacionamiento con Pesca Artesanal</h1><span>Período: <b>${esc(per)}</b>${flt?` · ${esc(flt)}`:""}</span><span style="font-size:11px">Datos del ${dstr(R.minD)} al ${dstr(R.maxD)} · generado el ${esc(gen)} por ${esc(S.acct.usuario)}</span></div>
   <div class="kp">${k.map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join("")}</div>${val!==null?`<p class="cs">* Valor estimado en pesos: ${priceNote(A.esp.entries())}. Las especies sin precio base no suman valor.</p>`:""}
   <h2>Comparación de zonas</h2><table>${compTable(cd)}</table>
   <h2>Alertas · ${esc(ALR.ml)} frente a ${esc(ALR.mp)}</h2>${alertsHtml(items,12)}
@@ -2322,7 +2322,7 @@ function buildReport(){const {pass,A,prev}=LAST,R=S.R,m=R.m;renderClaves(A);cons
 async function openReport(){if(!LAST)return;if(S.perm.admin)await bitLoad();$("#repBody").innerHTML=`<style>${REP_CSS}</style>`+buildReport();$("#repModal").hidden=false;ST.log("Reporte ejecutivo",periodText()||"Todo el período")}
 $("#btnReport").onclick=openReport;$("#repClose").onclick=()=>$("#repModal").hidden=true;
 $("#repPrint").onclick=()=>{document.body.classList.add("printing");try{window.print()}catch(e){toast("Tu navegador no permitió imprimir aquí. Usa Descargar y ábrelo para imprimir.")}setTimeout(()=>document.body.classList.remove("printing"),500)};
-$("#repDl").onclick=async()=>{const html=`<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reporte ejecutivo · Asuntos Públicos</title><style>body{margin:0;padding:24px;background:#fff}${REP_CSS}</style></head><body>${buildReport()}</body></html>`;
+$("#repDl").onclick=async()=>{const html=`<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reporte ejecutivo · AAPP Norte</title><style>body{margin:0;padding:24px;background:#fff}${REP_CSS}</style></head><body>${buildReport()}</body></html>`;
   try{await saveFile("reporte_ejecutivo_"+todayISO()+".html",html,"text/html")}catch(e){if(e&&e.code!=="cancelled")toast("No se pudo descargar el reporte.")}};
 
 /* ================= Vistas guardadas ================= */
