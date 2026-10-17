@@ -2253,14 +2253,14 @@ $("#bitPend").addEventListener("click",async ev=>{const ok=ev.target.closest("[d
 /* ================= Escenarios de negociación ================= */
 const SC={args:null};
 function renderScen(fis,y0,y1,esp,months){SC.args=[fis,y0,y1,esp,months];const yN=y1-y0+1,m=S.R.m;const base=[...fis].map(([p,f])=>({p,kg:f.q/yN*1000}));
-  const pk=+$("#nPrice").value||priceOf(esp)||0;$("#scA").placeholder=pk?String(pk):"Ej. 3500";
+  const pk=+$("#nPrice").value||(esp>=0?priceOf(esp):0)||0;$("#scA").placeholder=pk?String(pk):"Ej. 3500";
   const A=+$("#scA").value||pk,B=+$("#scB").value||0,Cf=+$("#scCf").value||0,Ck=+$("#scCk").value||0;
   const defs=[["A","Según volumen histórico",f=>f.kg*A,A?`$ ${t0(A)} por kg × kilos promedio por año`:"Falta el precio por kg"],["B","Monto fijo por pescador",()=>B,B?`$ ${t0(B)} a cada pescador`:"Falta el monto fijo"],["C","Mixto",f=>Cf+f.kg*Ck,Cf||Ck?`$ ${t0(Cf)} fijo + $ ${t0(Ck)} por kg`:"Faltan los montos"]];
   const res=defs.map(([id,t,fn,d])=>{const v=base.map(fn).sort((a,b)=>b-a),tot=v.reduce((a,b)=>a+b,0),k=Math.max(1,Math.round(v.length*.1));return{id,t,d,tot,n:v.length,max:v[0]||0,min:v[v.length-1]||0,med:v.length?v[Math.floor(v.length/2)]:0,top:tot?v.slice(0,k).reduce((a,b)=>a+b,0)/tot*100:0,ok:tot>0}});
   $("#scTbl").innerHTML=`<thead><tr><th>Escenario</th><th class="r">Costo total</th><th class="r">Beneficiarios</th><th class="r">Mínimo</th><th class="r">Mediana</th><th class="r">Máximo</th><th class="r">Se lleva el 10 % mayor</th></tr></thead><tbody>${res.map(r=>`<tr><td><b>${r.id} · ${r.t}</b><br><span class="cs">${esc(r.d)}</span></td>${r.ok?`<td class="r"><b>${money(r.tot)}</b></td><td class="r">${t0(r.n)}</td><td class="r">${money(r.min)}</td><td class="r">${money(r.med)}</td><td class="r">${money(r.max)}</td><td class="r">${t0(r.top)} %</td>`:`<td colspan="6" class="cs">Completa los montos para calcular</td>`}</tr>`).join("")}</tbody>`;
   const ok=res.filter(r=>r.ok),svg=$("#gScen"),W=vw("gScen",640),H=16+ok.length*34;clear(svg,W,H);
   if(ok.length){const mx=Math.max(...ok.map(r=>r.tot)),L=170,Rr=W-110;ok.forEach((r,j)=>{const y=12+j*34,w=Math.max(2,(Rr-L)*r.tot/mx);E("text",{x:0,y:y+17,"font-weight":700},svg).textContent=`${r.id} · ${r.t}`;E("path",{d:rrH(L,y+4,w,20,5),fill:["var(--s1)","var(--s2)","var(--s3)"][["A","B","C"].indexOf(r.id)]},svg);E("text",{x:L+w+6,y:y+18},svg).textContent=money(r.tot)})}
-  $("#scNote").innerHTML=ok.length>1?(()=>{const s=[...ok].sort((a,b)=>a.tot-b.tot);return`El escenario más económico es <b>${s[0].id}</b> (${money(s[0].tot)}) y el más costoso <b>${s[s.length-1].id}</b> (${money(s[s.length-1].tot)}). El A premia a quienes más extraen (el 10 % mayor se lleva el ${t0((res[0]||{}).top||0)} %); el B reparte igual entre todos, incluidos quienes desembarcan poco.`})():`Base: ${t0(base.length)} pescadores con desembarque de <b>${esc(m.E[esp][1])}</b> en los meses y años elegidos; se usa su promedio de kilos por año.`}
+  $("#scNote").innerHTML=ok.length>1?(()=>{const s=[...ok].sort((a,b)=>a.tot-b.tot);return`El escenario más económico es <b>${s[0].id}</b> (${money(s[0].tot)}) y el más costoso <b>${s[s.length-1].id}</b> (${money(s[s.length-1].tot)}). El A premia a quienes más extraen (el 10 % mayor se lleva el ${t0((res[0]||{}).top||0)} %); el B reparte igual entre todos, incluidos quienes desembarcan poco.`})():`Base: ${t0(base.length)} pescadores con desembarque de <b>${esc(esp>=0?m.E[esp][1]:"todas las especies")}</b> en los meses y años elegidos; se usa su promedio de kilos por año.`}
 ["scA","scB","scCf","scCk"].forEach(id=>$("#"+id).addEventListener("input",()=>{if(SC.args)renderScen(...SC.args)}));
 
 /* ================= Revisión de calidad al cargar ================= */
@@ -2792,24 +2792,25 @@ function hdrStart(){if(!HDR.t){hdrTick();HDR.t=setInterval(hdrTick,1000)}if(!HDR
 hdrStart();
 
 /* ================= Negociación ================= */
-const N={mo:new Set([7])};
+const N={mo:new Set([0,1,2,3,4,5,6,7,8,9,10,11])};
 function buildNeg(){
   const R=S.R,m=R.m;const tot=new Float64Array(m.E.length);for(let i=0;i<R.n;i++)tot[R.e[i]]+=R.q[i];
   const idx=m.E.map((e,i)=>i).filter(i=>tot[i]>0).sort((a,b)=>m.E[a][1].localeCompare(m.E[b][1],"es"));
-  const prevEsp=$("#nEsp").value;$("#nEsp").innerHTML=idx.map(i=>`<option value="${i}">${esc(m.E[i][1])}</option>`).join("");
-  const pul=idx.find(i=>/pulpo/i.test(m.E[i][1]));$("#nEsp").value=prevEsp&&idx.includes(+prevEsp)?prevEsp:(pul??idx[0]);
+  const prevEsp=$("#nEsp").value;$("#nEsp").innerHTML=`<option value="-1">Todas las especies</option>`+idx.map(i=>`<option value="${i}">${esc(m.E[i][1])}</option>`).join("");
+  $("#nEsp").value=prevEsp&&(prevEsp==="-1"||idx.includes(+prevEsp))?prevEsp:"-1";
   $("#nLug").innerHTML=`<option value="all">Todas</option><optgroup label="Comunas">${R.coms.map((c,i)=>`<option value="c${i}">${esc(c)}</option>`).join("")}</optgroup><optgroup label="Caletas">${m.C.map((c,i)=>`<option value="k${i}">${esc(c[0])}</option>`).join("")}</optgroup>`;
   const lastFull=R.lastYM%12===11?R.y1:R.y1-1;const ys=[];for(let y=R.y0;y<=R.y1;y++)ys.push(y);
-  $("#nY0").innerHTML=ys.map(y=>`<option>${y}</option>`).join("");$("#nY1").innerHTML=ys.map(y=>`<option>${y}</option>`).join("");$("#nY0").value=R.y0;$("#nY1").value=Math.max(R.y0,lastFull);
-  $("#nMo").innerHTML=MES.map((s,i)=>`<button type="button" class="pill" data-m="${i}" aria-pressed="${N.mo.has(i)}">${s[0].toUpperCase()+s.slice(1)}</button>`).join("");
+  $("#nY0").innerHTML=ys.map(y=>`<option>${y}</option>`).join("");$("#nY1").innerHTML=ys.map(y=>`<option>${y}</option>`).join("");$("#nY0").value=R.y0;$("#nY1").value=R.y1;
+  $("#nMo").innerHTML=`<button type="button" class="pill" data-mall="1" aria-pressed="${N.mo.size===12}">Todos</button>`+MES.map((s,i)=>`<button type="button" class="pill" data-m="${i}" aria-pressed="${N.mo.has(i)}">${s[0].toUpperCase()+s.slice(1)}</button>`).join("");
 }
 ["nEsp","nLug","nY0","nY1","nPrice"].forEach(id=>$("#"+id).addEventListener(id==="nPrice"?"input":"change",()=>renderNeg()));
-$("#nMo").addEventListener("click",ev=>{const b=ev.target.closest("button[data-m]");if(!b)return;const m=+b.dataset.m;N.mo.has(m)?N.mo.delete(m):N.mo.add(m);if(!N.mo.size)N.mo.add(m);b.setAttribute("aria-pressed",N.mo.has(m));renderNeg()});
+$("#nMo").addEventListener("click",ev=>{const all=ev.target.closest("button[data-mall]");if(all){const full=N.mo.size===12;N.mo=new Set(full?[new Date().getMonth()]:[0,1,2,3,4,5,6,7,8,9,10,11]);$("#nMo").querySelectorAll("button[data-m]").forEach(x=>x.setAttribute("aria-pressed",N.mo.has(+x.dataset.m)));all.setAttribute("aria-pressed",String(N.mo.size===12));renderNeg();return}
+  const b=ev.target.closest("button[data-m]");if(!b)return;const m=+b.dataset.m;if(N.mo.size===12){N.mo=new Set([m])}else{N.mo.has(m)?N.mo.delete(m):N.mo.add(m);if(!N.mo.size)N.mo.add(m)}$("#nMo").querySelectorAll("button[data-m]").forEach(x=>x.setAttribute("aria-pressed",N.mo.has(+x.dataset.m)));const ab=$("#nMo [data-mall]");if(ab)ab.setAttribute("aria-pressed",String(N.mo.size===12));renderNeg()});
 function negCalc(esp,lug,y0,y1,months){
   const R=S.R,yN=y1-y0+1,res={};months.forEach(m=>res[m]={t:new Float64Array(yN),f:Array.from({length:yN},()=>new Set()),avail:new Uint8Array(yN)});
   for(let y=0;y<yN;y++)months.forEach(m=>{const ym=(y+y0-R.y0)*12+m;res[m].avail[y]=ym>=R.firstYM&&ym<=R.lastYM?1:0});
   const fis=new Map();
-  for(let i=0;i<R.n;i++){if(R.e[i]!==esp)continue;const y=R.yr[i]+R.y0;if(y<y0||y>y1)continue;const m=R.mo[i];if(!res[m])continue;
+  for(let i=0;i<R.n;i++){if(esp>=0&&R.e[i]!==esp)continue;const y=R.yr[i]+R.y0;if(y<y0||y>y1)continue;const m=R.mo[i];if(!res[m])continue;
     if(lug[0]==="c"&&R.com[i]!==+lug.slice(1))continue;if(lug[0]==="k"&&R.c[i]!==+lug.slice(1))continue;
     const q=R.q[i]/1000;res[m].t[y-y0]+=q;res[m].f[y-y0].add(R.p[i]);const f=fis.get(R.p[i])||{q:0,months:new Set(),cal:R.c[i]};f.q+=q;f.months.add(y+"-"+m);fis.set(R.p[i],f)}
   const out=months.map(m=>{const r=res[m];const ys=[];for(let y=0;y<yN;y++)if(r.avail[y])ys.push({y:y+y0,t:r.t[y],f:r.f[y].size});
@@ -2822,7 +2823,7 @@ function negCalc(esp,lug,y0,y1,months){
 function renderNeg(){
   if(!S.R)return;const R=S.R,m=R.m;const esp=+$("#nEsp").value,lug=$("#nLug").value;let y0=+$("#nY0").value,y1=+$("#nY1").value;if(y0>y1)[y0,y1]=[y1,y0];
   const months=[...N.mo].sort((a,b)=>a-b),price=+$("#nPrice").value||0;const {out,fis}=negCalc(esp,lug,y0,y1,months);
-  const en=m.E[esp][1],lugT=lug==="all"?"todas las caletas":lug[0]==="c"?"la comuna de "+R.coms[+lug.slice(1)]:"la caleta "+m.C[+lug.slice(1)][0];
+  const en=esp>=0?m.E[esp][1]:"Todas las especies",lugT=lug==="all"?"todas las caletas":lug[0]==="c"?"la comuna de "+R.coms[+lug.slice(1)]:"la caleta "+m.C[+lug.slice(1)][0];
   const allAvg=out.reduce((a,b)=>a+b.avg,0)/out.length,allF=out.reduce((a,b)=>a+b.avgF,0)/out.length,allPer=out.filter(o=>o.perF>0);const per=allPer.length?allPer.reduce((a,b)=>a+b.perF,0)/allPer.length:0;
   const best=out.reduce((a,b)=>b.avg>a.avg?b:a,out[0]);
   const totT=out.reduce((a,o)=>a+o.ys.reduce((s,y)=>s+y.t,0),0);const allP=new Set();
@@ -2830,7 +2831,7 @@ function renderNeg(){
   $("#nKpis").innerHTML=[
     ["Toneladas totales",`${tt(totT)} <small>t</small>`,`${months.map(x=>MES[x]).join(", ")} · ${y0}–${y1} · ${t0(totT*1000)} kg`],
     ["Pescadores totales",t0(totP),`con desembarque en ${lug==="all"?"todas las caletas":"el lugar elegido"} entre ${y0} y ${y1} (cualquier especie y mes)`],
-    ["Pescadores activos totales",t0(fis.size),`con desembarque de ${esc(m.E[esp][1])} en los meses elegidos`],
+    ["Pescadores activos totales",t0(fis.size),`con desembarque de ${esc(esp>=0?m.E[esp][1]:"cualquier especie")} en los meses elegidos`],
     price?["Valor estimado por mes",`$ ${t0(allAvg*1000*price)}`,`por pescador: $ ${t0(per*1000*price)}`]:["Mes más alto",best&&best.avg>0?MESL[best.m]:"—",best&&best.avg>0?`${tt(best.avg)} t en promedio`:"Sin registros"]
   ].map(([k,v,d])=>`<div class="kpi"><span class="k">${k}</span><span class="v">${v}</span><span class="d">${d}</span></div>`).join("");
   const lines=out.map(o=>o.withData?`en <b>${MESL[o.m]}</b> se desembarcan en promedio <b>${tt(o.avg)} t</b> (${t0(o.avg*1000)} kg), con ${t1(o.avgF)} pescadores activos y ${tt(o.perF)} t por pescador; el máximo fue ${tt(o.max.t)} t en ${o.max.y} y el mínimo ${tt(o.min.t)} t en ${o.min.y}`:`en <b>${MESL[o.m]}</b> no hay desembarques registrados en ese período`);
@@ -2840,13 +2841,17 @@ function renderNeg(){
     <tr class="avg"><td><b>Promedio</b><span class="cs"> por mes</span></td><td class="r">${tt(sT/n)}</td><td class="r">${t1(sF/n)}</td><td class="r">${tt(sP/n)}</td><td class="r">${mxs.length?tt(mxs.reduce((a,o)=>a+o.max.t,0)/mxs.length):"—"}</td><td class="r">${mns.length?tt(mns.reduce((a,o)=>a+o.min.t,0)/mns.length):"—"}</td></tr></tfoot>`})();
   // gráfico
   const svg=$("#gNeg"),W=vw("gNeg",620),H=250,L=46,Rr=W-8,T=18,B=H-26;clear(svg,W,H);const yN=y1-y0+1;
-  $("#nLeg").innerHTML=months.length<=6?months.map((x,i)=>`<span><i style="background:${COLS[i]}"></i>${MESL[x]}</span>`).join(""):"";
+  $("#nLeg").innerHTML=months.length<=6?months.map((x,i)=>`<span><i style="background:${COLS[i]}"></i>${MESL[x]}</span>`).join(""):`<span><i style="background:${COLS[0]}"></i>Total de los ${months.length===12?"12 meses":months.length+" meses elegidos"} por año</span>`;
+  if(months.length>6){const tot=new Float64Array(yN),cnt=new Uint8Array(yN);out.forEach(o=>o.ys.forEach(r=>{tot[r.y-y0]+=r.t;cnt[r.y-y0]++}));const mx2=niceMax(Math.max(.001,...tot)),sc2=v=>B-(v/mx2)*(B-T);yAxis(svg,L,Rr,sc2,mx2,tt);const gw2=(Rr-L)/yN;
+    for(let y=0;y<yN;y++){const v=tot[y],x=L+y*gw2+gw2*.18,w=gw2*.64,part=cnt[y]<months.length;E("text",{x:x+w/2,y:B+16,"text-anchor":"middle"},svg).textContent=String(y0+y)+(part?"*":"");if(v>0){E("path",{d:rr(x,sc2(v),w,B-sc2(v),4),fill:COLS[0],"fill-opacity":part?.55:1},svg);E("text",{x:x+w/2,y:sc2(v)-5,"text-anchor":"middle",class:"val",style:"font-size:10.5px"},svg).textContent=tt(v)}
+      hover(E("rect",{x:L+y*gw2,y:T,width:gw2,height:B-T,fill:"transparent"},svg),()=>`<b>${y0+y}${part?" (año incompleto: "+cnt[y]+" de "+months.length+" meses con datos)":""}</b><br>${tt(v)} t en los meses elegidos`)}
+    E("line",{x1:L,x2:Rr,y1:B,y2:B,stroke:"var(--ink-2)"},svg)}else{
   const vals=out.map(o=>{const a=new Float64Array(yN);o.ys.forEach(r=>a[r.y-y0]=r.t);return a});const mx=niceMax(Math.max(.001,...vals.flatMap(a=>[...a]))),sc=v=>B-(v/mx)*(B-T);yAxis(svg,L,Rr,sc,mx,tt);
   const gw=(Rr-L)/yN,k=Math.min(months.length,6),bw=gw*.78/k;
   for(let y=0;y<yN;y++){E("text",{x:L+y*gw+gw/2,y:B+16,"text-anchor":"middle"},svg).textContent=String(y0+y);
     out.slice(0,6).forEach((o,j)=>{const v=vals[j][y];const x=L+y*gw+gw*.11+j*bw;if(v>0)E("path",{d:rr(x+1,sc(v),bw-2,B-sc(v),3),fill:COLS[j]},svg);
       hover(E("rect",{x,y:T,width:bw,height:B-T,fill:"transparent"},svg),()=>`<b>${MESL[o.m]} ${y0+y}</b><br>${tt(v)} t`)})}
-  E("line",{x1:L,x2:Rr,y1:B,y2:B,stroke:"var(--ink-2)"},svg);
+  E("line",{x1:L,x2:Rr,y1:B,y2:B,stroke:"var(--ink-2)"},svg)}
   // pescadores
   const fr=[...fis].sort((a,b)=>b[1].q-a[1].q);
   $("#nFis").innerHTML=`<thead><tr><th>Pescador</th><th class="r">RPA</th><th>Caleta</th><th class="r">Toneladas</th><th class="r">Meses con desembarque</th><th class="r">Promedio por mes activo (kg)</th></tr></thead><tbody>`+(fr.slice(0,40).map(([p,f])=>`<tr><td>${esc(m.P[p][1])}</td><td class="r">${m.P[p][0]}</td><td>${esc(m.C[f.cal][0])}</td><td class="r">${tt(f.q)}</td><td class="r">${f.months.size}</td><td class="r">${t0(f.q/f.months.size*1000)}</td></tr>`).join("")||`<tr><td colspan="6" class="empty">Sin pescadores con desembarque en esos meses</td></tr>`)+"</tbody>"+(fr.length?(()=>{const n=fr.length,q=fr.reduce((a,[,f])=>a+f.q,0),ms=fr.reduce((a,[,f])=>a+f.months.size,0),pm=fr.reduce((a,[,f])=>a+f.q/f.months.size*1000,0);
@@ -3534,7 +3539,7 @@ function iNeg(){const R=S.R;if(!R||!N||!N.mo||!N.mo.size){I("gNeg","cNegC","");r
   const avg=full.reduce((s,x)=>s+x.v,0)/full.length,sd=Math.sqrt(full.reduce((s,x)=>s+(x.v-avg)**2,0)/(full.length-1)),cv=avg?sd/avg*100:0,hi=full.reduce((a,b)=>b.v>a.v?b:a),lo=full.reduce((a,b)=>b.v<a.v?b:a),last=full[full.length-1],d=dPct(last.v,avg);
   const bm=out.filter(o=>o.withData).sort((a,b)=>b.avg-a.avg);if(bm.length)I("nTbl","cNTblC",bm.length>1?`<b>${cap(MESL[bm[0].m])}</b> es el mes con más desembarque promedio (${tt(bm[0].avg)} t) y ${MESL[bm[bm.length-1].m]} el de menos (${tt(bm[bm.length-1].avg)} t). Para una compensación, los meses de mayor promedio pesan más en el monto total.`:`En ${MESL[bm[0].m]} se desembarcan en promedio ${tt(bm[0].avg)} t por año, con ${t1(bm[0].avgF)} pescadores activos.`);
   {const {fis}=negCalc(esp,lug,y0,y1,months);const q=[...fis.values()].map(f=>f.q).sort((a,b)=>b-a),T=q.reduce((a,b)=>a+b,0),k=Math.max(1,Math.round(q.length*.1));if(q.length)I("nFis","cNFisC",`<b>${t0(q.length)}</b> pescadores desembarcaron en esos meses; el 10 % con más volumen (${k}) concentra el ${t0(T?q.slice(0,k).reduce((a,b)=>a+b,0)/T*100:0)} % de las toneladas. Si la compensación se calcula por volumen, ese grupo recibirá la mayor parte.`);else I("nFis","cNFisC","")}
-  I("gNeg","cNegC",`En los meses elegidos, el desembarque de <b>${esc(S.R.m.E[esp][1])}</b> varió entre ${tt(lo.v)} t (${lo.y}) y ${tt(hi.v)} t (${hi.y}), con un promedio de ${tt(avg)} t por año. ${last.y} quedó <span class="dl ${dCls(d)}">${dTxt(d)}</span> respecto del promedio. ${cv>40?"La variación entre años es alta: conviene negociar sobre el promedio de varios años y no sobre un año puntual.":"La variación entre años es moderada: el promedio es una referencia razonable para negociar."}`)}
+  I("gNeg","cNegC",`En los meses elegidos, el desembarque de <b>${esc(esp>=0?S.R.m.E[esp][1]:"todas las especies")}</b> varió entre ${tt(lo.v)} t (${lo.y}) y ${tt(hi.v)} t (${hi.y}), con un promedio de ${tt(avg)} t por año. ${last.y} quedó <span class="dl ${dCls(d)}">${dTxt(d)}</span> respecto del promedio. ${cv>40?"La variación entre años es alta: conviene negociar sobre el promedio de varios años y no sobre un año puntual.":"La variación entre años es moderada: el promedio es una referencia razonable para negociar."}`)}
 /* Exigencias: inversión */
 if(typeof renderRcaInv==="function"){const _ri=renderRcaInv;renderRcaInv=function(){_ri.apply(this,arguments);try{iInv()}catch(e){console.error(e)}}}
 function iInv(){const B=RC.base,adm=S.perm.admin,card=$("#gInv")&&$("#gInv").closest(".card");if(!card)return;const rs=B.rcas.filter(r=>(adm||!RC.hidden.has(r.id))&&(!RC.f.emp||r.empresa===RC.f.emp)&&(!RC.f.tipo||r.tipo===RC.f.tipo)&&r.monto>0);if(!rs.length)return;
