@@ -88,8 +88,19 @@ function parsePescador(html) {
   return {
     estado: est.v, inscripcion: fecha(val(rows, ["Fecha Inscripción", "Fecha de Inscripción"])), oficina: val(rows, ["Oficina"]),
     caleta: val(rows, ["Caleta Base", "Caleta"]), comuna: val(rows, ["Comuna CONARA", "Comuna"]), region: val(rows, ["Región", "Region"]),
-    categorias: [...cats].slice(0, 8), dgtm: dgtm.slice(0, 6), emb: emb.slice(0, 20),
+    categorias: [...cats].slice(0, 8), dgtm: dgtm.slice(0, 6), emb: [...emb, ...reemplazos(rows).filter((x) => !emb.some((e) => nrm(e.nombre) === nrm(x.nombre)))].slice(0, 40),
   };
+}
+// Naves de la tabla de reemplazos/sucesiones (pueden no figurar en la lista de embarcaciones inscritas).
+function reemplazos(rows) {
+  for (let r = 0; r < rows.length; r++) {
+    const H = rows[r].map(nrm), iF = H.findIndex((c) => c === "folio" || c.startsWith("n rpa") || c.startsWith("nº rpa")), iN = H.findIndex((c) => c === "nave" || c.startsWith("nombre embarcacion") || c === "embarcacion"), iM = H.findIndex((c) => c.startsWith("matricula"));
+    if (iN < 0 || iM < 0) continue;
+    const out = [];
+    for (let k = r + 1; k < rows.length; k++) { const X = rows[k]; if (!X[iN] || X.length < H.length - 1) break; if (/^[A-Z0-9ÁÉÍÓÚÑ .\-]{2,}$/i.test(X[iN])) out.push({ cod: iF >= 0 && /^\d{3,}$/.test((X[iF] || "").trim()) ? X[iF].trim() : "", nombre: X[iN], matricula: X[iM] || "", estado: "Reemplazada", tipo: "Reemplazo / sucesión" }); }
+    if (out.length) return out;
+  }
+  return [];
 }
 function parseEmbarcacion(html) {
   const rows = filas(html);
@@ -106,12 +117,13 @@ function parseEmbarcacion(html) {
 async function consultar(num) {
   const p = parsePescador(await bajar(`${BASE()}regpescadores_publico/verAction.php?num=${encodeURIComponent(num)}`));
   // Detalle (matrícula, caleta, vencimiento) de todas las embarcaciones inscritas (hasta 10, primero las activas).
-  const act = [...p.emb].sort((a, b) => (/inactiv/i.test(a.estado) ? 1 : 0) - (/inactiv/i.test(b.estado) ? 1 : 0)).slice(0, 10);
-  await Promise.all(act.map(async (e) => {
-    try { Object.assign(e, parseEmbarcacion(await bajar(`${BASE()}regembarcaciones_publico/verAction.php?num=${encodeURIComponent(e.cod)}`)), { cod: e.cod, tipo: e.tipo, estado: e.estado || "" }); }
+  // Todas las embarcaciones (activas, inactivas, caducadas, reemplazadas): se lee la ficha de cada una que tenga código.
+  const act = p.emb.filter((e) => e.cod).slice(0, 30);
+  await pool(act, 4, async (e) => {
+    try { const f = parseEmbarcacion(await bajar(`${BASE()}regembarcaciones_publico/verAction.php?num=${encodeURIComponent(e.cod)}`)); const ef = f.estado; Object.assign(e, f, { cod: e.cod, tipo: e.tipo, estado: e.estado || ef || "", estadoFicha: ef && nrm(ef) !== nrm(e.estado) ? ef : "", nombre: e.nombre || f.nombre }); }
     catch (er) { e.error = "No se pudo leer la ficha de la embarcación"; }
-  }));
-  return { ...p, ver: 2, fuente: `${BASE()}regpescadores_publico/verAction.php?num=${num}`, obtenido: new Date().toISOString() };
+  });
+  return { ...p, ver: 3, fuente: `${BASE()}regpescadores_publico/verAction.php?num=${num}`, obtenido: new Date().toISOString() };
 }
 
 async function pool(items, n, fn) { const out = []; let i = 0; await Promise.all(Array.from({ length: n }, async () => { while (i < items.length) { const k = i++; out[k] = await fn(items[k]); } })); return out; }
@@ -136,7 +148,7 @@ export default handler(async (req, res) => {
   catch (e) { if (tableMissing(e)) falta = true; else throw e; }
   const datos = {}, errores = {}, nuevos = [];
   const stale = u.searchParams.get("stale") === "1";
-  for (const c of cache || []) if ((c.dia === dia || stale) && !forzar && (stale || (c.datos && c.datos.ver === 2))) datos[c.rpa] = c.dia === dia ? c.datos : { ...c.datos, desactualizado: true };
+  for (const c of cache || []) if ((c.dia === dia || stale) && !forzar && (stale || (c.datos && c.datos.ver === 3))) datos[c.rpa] = c.dia === dia ? c.datos : { ...c.datos, desactualizado: true };
   const pend = nums.filter((n) => !datos[n]);
   await pool(pend, 4, async (n) => {
     try {
