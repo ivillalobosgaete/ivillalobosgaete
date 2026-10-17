@@ -666,6 +666,11 @@ button.sgk{cursor:pointer}.sgk.on{outline:2px solid var(--brand)}
 .fi .duda{font-size:.7rem;font-weight:800;border-radius:999px;padding:2px 8px;background:#fde8e7;color:#9b2c25;border:1px solid #f3c2bf}
 .fi-duda{font-size:.8rem;color:#9b2c25;background:#fdf1f0;border-radius:8px;padding:4px 8px}
 
+.apc{font-size:.72rem;font-weight:800;border-radius:999px;padding:2px 9px}.apc.si{background:#e3f1fb;color:#164f7a;border:1px solid #b9d9f0}.apc.no{background:#f1f0ee;color:#5f5a52;border:1px solid #dcd8d1}
+.fi-ap{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--surface);font-size:.84rem;color:var(--ink)}
+.apb.on{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.apnote{margin:0;font-size:.86rem;background:#eef6fc;border:1px solid #cfe4f5;border-radius:10px;padding:8px 12px;color:#1d3b55}
+
 #nTbl tfoot td,#nFis tfoot td{border-top:2px solid var(--line);background:var(--brand-08)}#nTbl tfoot tr.avg td,#nFis tfoot tr.avg td{border-top:1px solid var(--line);background:var(--surface)}
 
 .tnow{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;font-size:.8rem;margin-top:3px;color:#4a2400}
@@ -858,7 +863,8 @@ button.sgk{cursor:pointer}.sgk.on{outline:2px solid var(--brand)}
             <aside class="card rca-list" id="rcaList" aria-label="Resoluciones de calificación ambiental"></aside>
             <div class="rca-main">
               <div class="card" id="rcaDetail" hidden></div>
-              <div class="rca-bar"><span id="rcaCount"></span><div class="rca-bar-r"><div class="seg" id="rcaModo" role="group" aria-label="Vista"><button type="button" data-modo="fichas" aria-pressed="true">Fichas</button><button type="button" data-modo="resumenes" aria-pressed="false">Resúmenes de RCA</button><button type="button" data-modo="seguimiento" aria-pressed="false">Seguimiento</button><button type="button" data-modo="inversion" aria-pressed="false">Montos de inversión</button></div><button type="button" class="btn ghost small" id="rcaDescBtn" hidden>Apartado de descartadas</button></div></div>
+              <div class="rca-bar"><span id="rcaCount"></span><div class="rca-bar-r"><div class="seg" id="rcaModo" role="group" aria-label="Vista"><button type="button" data-modo="fichas" aria-pressed="true">Fichas</button><button type="button" data-modo="resumenes" aria-pressed="false">Resúmenes de RCA</button><button type="button" data-modo="seguimiento" aria-pressed="false">Seguimiento</button><button type="button" data-modo="inversion" aria-pressed="false">Montos de inversión</button></div><button type="button" class="btn ghost small apb" id="rcaApSi" hidden>Aplican a AP Norte</button><button type="button" class="btn ghost small apb" id="rcaApNo" hidden>No aplican</button><button type="button" class="btn ghost small" id="rcaDescBtn" hidden>Apartado de descartadas</button></div></div>
+              <p class="apnote" id="rcaApNote" hidden></p>
               <p class="warnbox" id="rcaDescNote" hidden>Apartado de descartadas: aquí quedan las fichas que descartaste, con quién y cuándo. Puedes reconsiderarlas con <b>Restaurar para revisar</b> o asignándoles directamente una categoría. Los usuarios nunca ven este apartado.</p>
               <div class="card rca-bulk" id="rcaBulk" hidden></div>
               <div id="rcaRes" class="rca-res"></div>
@@ -1041,7 +1047,7 @@ button.sgk{cursor:pointer}.sgk.on{outline:2px solid var(--brand)}
   <div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="ynTitle" aria-describedby="ynMsg" style="width:min(460px,100%)">
     <h2 id="ynTitle">¿Estás seguro?</h2>
     <p style="margin:0" id="ynMsg"></p>
-    <div class="row"><button class="btn ghost" id="ynNo" type="button">No</button><button class="btn" id="ynOk" type="button">Sí</button></div>
+    <div class="row"><button class="btn ghost" id="ynCancel" type="button" hidden>Responder después</button><span style="flex:1"></span><button class="btn ghost" id="ynNo" type="button">No</button><button class="btn" id="ynOk" type="button">Sí</button></div>
   </div>
 </div>
 <div id="tip" hidden></div>
@@ -1507,8 +1513,8 @@ function E(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setA
 function clear(svg,w,h){svg.innerHTML="";svg.setAttribute("viewBox",`0 0 ${w} ${h}`);return svg}
 const tip=$("#tip");
 /* Confirmación Sí / No para catalogar y eliminar */
-function askYN(msg,o={}){const{title="¿Estás seguro?",si="Sí",no="No",danger=false}=o;return new Promise(res=>{const m=$("#ynModal"),ok=$("#ynOk"),ca=$("#ynNo");$("#ynTitle").textContent=title;$("#ynMsg").innerHTML=msg;ok.textContent=si;ca.textContent=no;ok.className="btn"+(danger?" danger":"");m.hidden=false;setTimeout(()=>ok.focus(),30);
-  const done=v=>{m.hidden=true;ok.onclick=ca.onclick=null;document.removeEventListener("keydown",kd);res(v)};const kd=e=>{if(e.key==="Escape")done(false)};document.addEventListener("keydown",kd);ok.onclick=()=>done(true);ca.onclick=()=>done(false)})}
+function askYN(msg,o={}){const{title="¿Estás seguro?",si="Sí",no="No",danger=false,cancel=""}=o;return new Promise(res=>{const m=$("#ynModal"),ok=$("#ynOk"),ca=$("#ynNo");$("#ynTitle").textContent=title;$("#ynMsg").innerHTML=msg;ok.textContent=si;ca.textContent=no;ok.className="btn"+(danger?" danger":"");const cx=$("#ynCancel");if(cx){cx.hidden=!cancel;cx.textContent=cancel}m.hidden=false;setTimeout(()=>ok.focus(),30);
+  const done=v=>{m.hidden=true;ok.onclick=ca.onclick=null;if(cx)cx.onclick=null;document.removeEventListener("keydown",kd);res(v)};const kd=e=>{if(e.key==="Escape")done(cancel?null:false)};document.addEventListener("keydown",kd);ok.onclick=()=>done(true);ca.onclick=()=>done(false);if(cx)cx.onclick=()=>done(null)})}
 function hover(node,html,onClick){
   node.addEventListener("pointermove",ev=>{tip.innerHTML=html();tip.hidden=false;let x=ev.clientX+14,y=ev.clientY+14;const w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>innerWidth-8)x=ev.clientX-w-14;if(y+h>innerHeight-8)y=ev.clientY-h-14;tip.style.left=x+"px";tip.style.top=y+"px"});
   node.addEventListener("pointerleave",()=>tip.hidden=true);
@@ -2069,7 +2075,7 @@ $("#pieSave").onclick=async()=>{const b=$("#pieSave"),f=PI.edit;b.disabled=true;
 const RCST={
   async load(){const r=await api("rca");if(r.falta)throw new Error("Falta crear las tablas de RCA en Supabase: vuelve a ejecutar supabase/schema.sql.");
     const base=r.gz?JSON.parse(new TextDecoder().decode(await gunzip(b64d(r.gz)))):null;
-    return{base,meta:r.meta||null,estado:new Map((r.estado||[]).map(e=>[e.id,{c:e.c,h:!!e.h,n:e.n||""}])),hidden:new Set(r.ocultas||[]),seg:new Map((r.seg||[]).map(x=>[x.gid,{it:x.items||[],ts:x.actualizado||"",u:x.por||""}])),hist:r.hist||[]}},
+    return{base,meta:r.meta||null,estado:new Map((r.estado||[]).map(e=>[e.id,{c:e.c,h:!!e.h,n:e.n||"",...(typeof e.ap==="boolean"?{ap:e.ap}:{})}])),hidden:new Set(r.ocultas||[]),seg:new Map((r.seg||[]).map(x=>[x.gid,{it:x.items||[],ts:x.actualizado||"",u:x.por||""}])),hist:r.hist||[]}},
   saveBase:(gz,meta)=>api("rca",{method:"PUT",body:{gz:b64e(gz),...meta}}),
   saveEstado:items=>api("rca",{method:"POST",body:{accion:"estado",items}}),
   setVisible:(rca,visible)=>api("rca",{method:"POST",body:{accion:"visibilidad",rca,visible}}),
@@ -2081,7 +2087,10 @@ const RC={base:null,meta:null,st:new Map(),hidden:new Set(),loaded:false,warn:""
 const RC_PER=25,RC_DESC=-2;
 const rcCats=()=>[...(RC.base?RC.base.cats:["Compromiso ambiental voluntario","Medida","Plan de seguimiento o vigilancia","Exigencia o condición"]),"Otro"];
 const rcCatLbl=c=>c===RC_DESC?"Descartado":c==null?"Sin categorizar":(c===1?"Medida (mitigación, reparación o compensación)":rcCats()[c]||"Otro");
-function rcDescBtn(){const dv=RC.f.vista==="descartadas";const db=$("#rcaDescBtn");if(db){db.hidden=!S.perm.admin;const nd=[...RC.st.values()].filter(x=>x.c===RC_DESC).length;db.textContent=dv?"← Volver a las fichas":`Apartado de descartadas (${t0(nd)})`;db.classList.toggle("on",dv)}$("#rcaDescNote").hidden=!dv}
+function rcApBtns(){const adm=S.perm.admin,v=RC.f.vista;let si=0,no=0;RC.st.forEach(x=>{if(x.c!=null&&x.c!==RC_DESC){if(x.ap===true)si++;else if(x.ap===false)no++}});
+  const a=$("#rcaApSi"),b=$("#rcaApNo");if(a){a.hidden=!adm;a.textContent=`Aplican a AP Norte (${t0(si)})`;a.classList.toggle("on",v==="aplican")}if(b){b.hidden=!adm;b.textContent=`No aplican (${t0(no)})`;b.classList.toggle("on",v==="noaplican")}
+  const n=$("#rcaApNote");if(n){n.hidden=!(v==="aplican"||v==="noaplican"||v==="apsin");n.innerHTML=v==="aplican"?"<b>Compromisos, medidas y exigencias de medio humano que aplican a Asuntos Públicos Norte.</b> Aquí quedan todas las fichas categorizadas que marcaste como aplicables. Puedes cambiar la respuesta en cada ficha.":v==="noaplican"?"<b>Compromisos y medidas que no aplican a Asuntos Públicos Norte.</b> Quedan aquí para consulta y revisión; puedes cambiar la respuesta en cada ficha.":"<b>Categorizadas sin definir si aplican a Asuntos Públicos Norte.</b> Responde en cada ficha con el selector «¿Aplica a AP Norte?»."}}
+function rcDescBtn(){rcApBtns();const dv=RC.f.vista==="descartadas";const db=$("#rcaDescBtn");if(db){db.hidden=!S.perm.admin;const nd=[...RC.st.values()].filter(x=>x.c===RC_DESC).length;db.textContent=dv?"← Volver a las fichas":`Apartado de descartadas (${t0(nd)})`;db.classList.toggle("on",dv)}$("#rcaDescNote").hidden=!dv}
 function rcGoDesc(on){RC.f.vista=on?"descartadas":"";RC.modo="fichas";RC.page=0;rcSyncSel();renderRca();$("#rcaRes").scrollIntoView({behavior:"smooth",block:"start"})}
 function rcToastUndo(msg,undo){const t=$("#toast");t.innerHTML=`<span>${esc(msg)}</span> <button type="button" class="tbtn">Deshacer</button>`;t.hidden=false;clearTimeout(toast.h);
   t.querySelector(".tbtn").onclick=()=>{undo();t.hidden=true};toast.h=setTimeout(()=>t.hidden=true,6000)}
@@ -2104,7 +2113,7 @@ function rcRows(){const B=RC.base,adm=S.perm.admin,F=RC.f,mt=rcMatcher(RC.q),v=F
     const s=RC.st.get(f[1]),c=s?s.c:null,vis=rcVisible(s);
     if(c===RC_DESC&&v!=="descartadas")continue;
     if(v==="habilitadas"&&!vis)continue;if(v==="revisar"&&c!=null)continue;if(v==="categorizadas"&&(c==null||c===RC_DESC))continue;
-    if(v==="descartadas"&&c!==RC_DESC)continue;if(v==="dudas"&&!f[11])continue;if(v==="nohab"&&(c==null||c===RC_DESC||(s&&s.h)))continue;
+    if(v==="descartadas"&&c!==RC_DESC)continue;if(v==="dudas"&&!f[11])continue;if(v==="aplican"&&!(s&&s.ap===true&&c!=null&&c!==RC_DESC))continue;if(v==="noaplican"&&!(s&&s.ap===false&&c!=null&&c!==RC_DESC))continue;if(v==="apsin"&&!(c!=null&&c!==RC_DESC&&(!s||s.ap==null)))continue;if(v==="nohab"&&(c==null||c===RC_DESC||(s&&s.h)))continue;
     if(F.cat!==""){const cc=+F.cat;if(adm?c!==cc:(!vis||c!==cc))continue}
     if(adm&&F.sug!==""&&f[6]!==+F.sug)continue;
     if(mt&&!mt(RC.idx[i]))continue;out.push(i)}
@@ -2114,7 +2123,7 @@ function rcRows(){const B=RC.base,adm=S.perm.admin,F=RC.f,mt=rcMatcher(RC.q),v=F
 function rcBuildSelects(){const B=RC.base,adm=S.perm.admin,vis=B.rcas.filter(r=>adm||!RC.hidden.has(r.id));
   const emps=[...new Set(vis.map(r=>r.empresa))].sort();$("#rcEmp").innerHTML=`<option value="">Todas las compañías</option>`+emps.map(e=>`<option>${esc(e)}</option>`).join("");
   $("#rcTipo").innerHTML=`<option value="">DIA y EIA</option>`+[...new Set(vis.map(r=>r.tipo).filter(Boolean))].sort().map(t=>`<option>${esc(t)}</option>`).join("");
-  $("#rcVista").innerHTML=adm?[["todas","Todas las fichas (sin descartadas)"],["revisar","Por revisar (sin categoría)"],["categorizadas","Categorizadas"],["nohab","Categorizadas no habilitadas"],["habilitadas","Habilitadas para usuarios"],["dudas","Con dudas de numeración"],["descartadas","Apartado de descartadas"]].map(([v,l])=>`<option value="${v}">${l}</option>`).join("")
+  $("#rcVista").innerHTML=adm?[["todas","Todas las fichas (sin descartadas)"],["revisar","Por revisar (sin categoría)"],["categorizadas","Categorizadas"],["nohab","Categorizadas no habilitadas"],["habilitadas","Habilitadas para usuarios"],["aplican","Aplican a Asuntos Públicos Norte (medio humano)"],["noaplican","No aplican a Asuntos Públicos Norte"],["apsin","Categorizadas sin definir si aplican a AP Norte"],["dudas","Con dudas de numeración"],["descartadas","Apartado de descartadas"]].map(([v,l])=>`<option value="${v}">${l}</option>`).join("")
     :`<option value="habilitadas">Compromisos y exigencias habilitados</option><option value="buscar">Buscar en el texto completo de las RCA</option>`;
   $("#rcCat").innerHTML=`<option value="">Todas las categorías</option>`+rcCats().map((c,i)=>`<option value="${i}">${esc(rcCatLbl(i))}</option>`).join("");
   $("#rcTema").innerHTML=`<option value="">Todos los temas</option>`+B.tags.map((t,i)=>`<option value="${i}">${esc(t)}</option>`).join("");
@@ -2187,13 +2196,14 @@ function renderRcaRes(){document.querySelectorAll("#rcaModo button").forEach(b=>
     const txt=open?f[5]:f[5].slice(0,640)+"…";const showCat=adm||vis;
     return`<article class="fi ${showCat?rcCatCls(c):""}${s.h&&adm?" hab":""}" data-id="${esc(f[1])}">
       <div class="fi-h">${adm?`<input type="checkbox" class="fi-sel" aria-label="Seleccionar ficha" ${RC.sel.has(f[1])?"checked":""}>`:""}<span class="fi-rca">RCA ${esc(r.rca)}/${r.anio||"s/f"}</span><span class="fi-emp">${esc(r.empresa.replace("Compañía ",""))}</span><b class="fi-num">${esc(f[2]||"Encabezado")}</b><span class="cs">${rcPag(f)}</span>${f[11]?`<span class="duda" title="${esc(f[11])}">Revisar numeración</span>`:""}<span style="flex:1"></span>
-        ${showCat&&c!=null?`<span class="cc ${rcCatCls(c)}">${esc(rcCatLbl(c))}</span>`:""}${adm&&c==null&&f[6]>=0?`<span class="sug">Sugerido: ${esc(cats[f[6]])}</span>`:""}${adm&&vis?`<span class="vis">Visible</span>`:""}</div>
+        ${showCat&&c!=null?`<span class="cc ${rcCatCls(c)}">${esc(rcCatLbl(c))}</span>`:""}${adm&&c==null&&f[6]>=0?`<span class="sug">Sugerido: ${esc(cats[f[6]])}</span>`:""}${(adm||vis)&&c!=null&&c!==RC_DESC&&s.ap===true?`<span class="apc si">Aplica a AP Norte</span>`:""}${adm&&c!=null&&c!==RC_DESC&&s.ap===false?`<span class="apc no">No aplica a AP Norte</span>`:""}${adm&&vis?`<span class="vis">Visible</span>`:""}</div>
       <div class="fi-sec">${esc(r.proyecto)}${f[3]?` › ${esc(f[3])}`:""}</div>${f[11]&&adm?`<div class="fi-duda">Duda para revisión: ${esc(f[11])}</div>`:""}
       <div class="fi-t">${rcHi(txt,RC.q).replace(/\n/g,"<br>")}</div>
       <div class="fi-f">${B.tipos&&f[8]!=null?`<span class="tg tt">${esc(B.tipos[f[8]].replace(/ \(.*\)$/,""))}</span>`:""}${f[7].map(t=>`<span class="tg">${esc(B.tags[t])}</span>`).join("")}${f[5].length>=700?`<button type="button" class="lnk fi-more">${open?"Ver menos":"Ver texto completo"}</button>`:""}</div>
       ${rcSgCardHtml(f)}
       ${adm&&c===RC_DESC?`<div class="fi-desc"><span>Descartada${s.por?` por <b>${esc(s.por)}</b>`:""}${s.fecha?` el ${new Date(s.fecha).toLocaleDateString("es-CL")}`:""}.</span><button type="button" class="btn small fi-rest">Restaurar para revisar</button></div>`:""}
       ${adm?`<div class="fi-a"><select class="fi-cat" aria-label="Categoría"><option value="">Sin categorizar</option>${cats.map((x,k)=>`<option value="${k}" ${c===k?"selected":""}>${esc(rcCatLbl(k))}</option>`).join("")}<option value="${RC_DESC}" ${c===RC_DESC?"selected":""}>Descartado</option></select>
+        <select class="fi-ap" aria-label="¿Aplica a Asuntos Públicos Norte?" ${c==null||c===RC_DESC?"disabled":""}><option value="">¿Aplica a AP Norte?</option><option value="1" ${s.ap===true?"selected":""}>Aplica a AP Norte</option><option value="0" ${s.ap===false?"selected":""}>No aplica a AP Norte</option></select>
         <label class="fi-hl"><input type="checkbox" class="fi-hab" ${s.h?"checked":""} ${c==null||c===RC_DESC?"disabled":""}> Visible para usuarios</label>
         <input class="fi-nota" maxlength="300" placeholder="Nota interna (opcional)" value="${esc(s.n||"")}"><span class="fi-ok cs"></span></div>`:""}
     </article>`}).join(""):`<div class="card"><p class="cs" style="margin:0">${!adm&&(RC.f.vista||"habilitadas")==="habilitadas"&&!rcCounts().hab?"Aún no hay compromisos ni exigencias habilitados. Puedes elegir <b>Buscar en el texto completo de las RCA</b>.":"No hay fichas con estos filtros."}</p></div>`;
@@ -2202,9 +2212,9 @@ function renderRcaRes(){document.querySelectorAll("#rcaModo button").forEach(b=>
 function renderRcaBulk(){const el=$("#rcaBulk");if(!S.perm.admin){el.hidden=true;return}el.hidden=false;const n=RC.sel.size;
   el.innerHTML=`<span class="cs"><b>${t0(n)}</b> seleccionada${n===1?"":"s"}</span><button class="btn ghost small" type="button" data-b="page">Seleccionar esta página</button><button class="btn ghost small" type="button" data-b="all">Seleccionar todas (${t0((RC.rows||[]).length)})</button>${n?`<button class="btn ghost small" type="button" data-b="none">Quitar selección</button>
    <select id="rcBulkCat" aria-label="Categoría para las seleccionadas">${rcCats().map((x,k)=>`<option value="${k}">${esc(rcCatLbl(k))}</option>`).join("")}</select><button class="btn small" type="button" data-b="cat">Asignar categoría</button><button class="btn ghost small" type="button" data-b="hab">Hacer visibles</button><button class="btn ghost small" type="button" data-b="nohab">Ocultar</button><button class="btn ghost small" type="button" data-b="desc">Descartar</button><button class="btn ghost small" type="button" data-b="clear">Quitar categoría</button>`:""}`}
-function rcSet(id,patch){const s={...(RC.st.get(id)||{}),...patch,por:S.acct.usuario,fecha:new Date().toISOString()};if(s.c==null||s.c===RC_DESC)s.h=false;
+function rcSet(id,patch){const s={...(RC.st.get(id)||{}),...patch,por:S.acct.usuario,fecha:new Date().toISOString()};if(s.c==null||s.c===RC_DESC){s.h=false;delete s.ap}
   if(s.c==null&&!s.n){RC.st.delete(id)}else RC.st.set(id,s);RC.dirty.add(id);clearTimeout(RC.saveT);RC.saveT=setTimeout(rcFlush,700)}
-async function rcFlush(){if(!RC.dirty.size)return;const ids=[...RC.dirty];RC.dirty.clear();const items=ids.map(id=>{const s=RC.st.get(id);return{id,c:s?s.c??null:null,h:!!(s&&s.h),n:s&&s.n||""}});
+async function rcFlush(){if(!RC.dirty.size)return;const ids=[...RC.dirty];RC.dirty.clear();const items=ids.map(id=>{const s=RC.st.get(id);return{id,c:s?s.c??null:null,h:!!(s&&s.h),n:s&&s.n||"",ap:s&&typeof s.ap==="boolean"?s.ap:null}});
   try{await RCST.saveEstado(items);document.querySelectorAll(".fi-ok").forEach(e=>{if(ids.includes(e.closest(".fi").dataset.id))e.textContent="Guardado"});ST.log("Exigencias ambientales",`Actualizó ${items.length} ficha${items.length>1?"s":""}`)}
   catch(e){ids.forEach(id=>RC.dirty.add(id));toast(e&&e.message||"No se pudo guardar. Se reintentará.");clearTimeout(RC.saveT);RC.saveT=setTimeout(rcFlush,5000)}
   renderRcaKpis()}
@@ -2214,9 +2224,13 @@ $("#rcaRes").addEventListener("change",async ev=>{const card=ev.target.closest("
   if(ev.target.classList.contains("fi-cat")){const v=ev.target.value,prev=(RC.st.get(id)||{}).c??null,nc=v===""?null:+v,num=card.querySelector(".fi-num").textContent;
     const ok=await askYN(nc===RC_DESC?`¿Descartar la ficha <b>${esc(num)}</b>? Quedará en el apartado de descartadas.`:nc==null?`¿Quitar la categoría de la ficha <b>${esc(num)}</b>?`:`¿Catalogar la ficha <b>${esc(num)}</b> como <b>${esc(rcCatLbl(nc))}</b>?`,{title:nc===RC_DESC?"Descartar ficha":nc==null?"Quitar categoría":"Catalogar ficha",danger:nc===RC_DESC});
     if(!ok){ev.target.value=prev==null?"":String(prev);return}rcSet(id,{c:nc});
+    if(nc!=null&&nc!==RC_DESC&&RC.f.vista!=="descartadas"){await rcAskAP([id],num);if(rcApOut(id)){rcRemoveCard(card);renderRcaKpis();return}}
     const inDesc=RC.f.vista==="descartadas";
     if((nc===RC_DESC&&!inDesc)||(inDesc&&nc!==RC_DESC)){rcRemoveCard(card);renderRcaKpis();
-      rcToastUndo(nc===RC_DESC?"Ficha descartada. Quedó en el apartado de descartadas.":"Ficha restaurada.",()=>{rcSet(id,{c:prev});renderRcaRes();renderRcaKpis()});return}const s=RC.st.get(id)||{};card.className=`fi ${rcCatCls(s.c??null)}${s.h?" hab":""}`;const hb=card.querySelector(".fi-hab");hb.disabled=s.c==null||s.c===RC_DESC;hb.checked=!!s.h;const sw=card.querySelector(".fi-sgw");if(sw){const ff=RC.base.f.find(x=>x[1]===id);if(ff)sw.outerHTML=rcSgCardHtml(ff)}card.querySelector(".fi-ok").textContent="Guardando…";return}
+      rcToastUndo(nc===RC_DESC?"Ficha descartada. Quedó en el apartado de descartadas.":"Ficha restaurada.",()=>{rcSet(id,{c:prev});renderRcaRes();renderRcaKpis()});return}const s=RC.st.get(id)||{};card.className=`fi ${rcCatCls(s.c??null)}${s.h?" hab":""}`;const hb=card.querySelector(".fi-hab");hb.disabled=s.c==null||s.c===RC_DESC;hb.checked=!!s.h;const aps=card.querySelector(".fi-ap");if(aps){aps.disabled=hb.disabled;aps.value=s.ap===true?"1":s.ap===false?"0":""}const sw=card.querySelector(".fi-sgw");if(sw){const ff=RC.base.f.find(x=>x[1]===id);if(ff)sw.outerHTML=rcSgCardHtml(ff)}card.querySelector(".fi-ok").textContent="Guardando…";return}
+  if(ev.target.classList.contains("fi-ap")){const v=ev.target.value,prev=(RC.st.get(id)||{}).ap,nv=v===""?null:v==="1";const num=card.querySelector(".fi-num").textContent;
+    if(!await askYN(nv==null?`¿Dejar sin definir si la ficha <b>${esc(num)}</b> aplica a Asuntos Públicos Norte?`:nv?`¿Confirmas que la ficha <b>${esc(num)}</b> <b>aplica</b> a Asuntos Públicos Norte? Pasará al apartado de compromisos de medio humano que aplican.`:`¿Confirmas que la ficha <b>${esc(num)}</b> <b>no aplica</b> a Asuntos Públicos Norte? Pasará al apartado de los que no aplican.`,{title:"Aplica a Asuntos Públicos Norte"})){ev.target.value=prev===true?"1":prev===false?"0":"";return}
+    rcSet(id,{ap:nv==null?undefined:nv});if(nv==null){const x=RC.st.get(id);if(x){delete x.ap}}card.querySelector(".fi-ok").textContent="Guardando…";if(rcApOut(id)){rcRemoveCard(card);renderRcaKpis();return}rcApCard(id);rcApBtns();return}
   if(ev.target.classList.contains("fi-hab")){const on=ev.target.checked;if(!await askYN(on?"¿Hacer visible esta ficha para los usuarios?":"¿Ocultar esta ficha a los usuarios?",{title:on?"Habilitar para usuarios":"Ocultar a usuarios"})){ev.target.checked=!on;return}rcSet(id,{h:ev.target.checked});card.classList.toggle("hab",ev.target.checked);card.querySelector(".fi-ok").textContent="Guardando…"}});
 $("#rcaRes").addEventListener("focusout",ev=>{if(!ev.target.classList.contains("fi-nota"))return;const id=ev.target.closest(".fi").dataset.id;const s=RC.st.get(id)||{};const v=ev.target.value.trim();if((s.n||"")!==v){rcSet(id,{n:v});ev.target.closest(".fi").querySelector(".fi-ok").textContent="Guardando…"}});
 $("#rcaRes").addEventListener("click",async ev=>{const rs=ev.target.closest(".fi-rest");if(rs){const card=rs.closest(".fi"),id=card.dataset.id;if(!await askYN("¿Restaurar esta ficha descartada? Volverá a quedar por revisar.",{title:"Restaurar ficha"}))return;rcSet(id,{c:null});rcRemoveCard(card);renderRcaKpis();rcToastUndo("Ficha restaurada: quedó por revisar.",()=>{rcSet(id,{c:RC_DESC});renderRcaRes();renderRcaKpis()});return}
@@ -2232,6 +2246,7 @@ $("#rcaBulk").addEventListener("click",async ev=>{const b=ev.target.closest("[da
   else if(a==="none"){RC.sel.clear()}
   else{const ids=[...RC.sel];ids.forEach(id=>{if(a==="cat")rcSet(id,{c:+$("#rcBulkCat").value});else if(a==="hab"){const s=RC.st.get(id);if(s&&s.c!=null&&s.c!==RC_DESC)rcSet(id,{h:true})}else if(a==="nohab")rcSet(id,{h:false});else if(a==="desc")rcSet(id,{c:RC_DESC});else if(a==="clear")rcSet(id,{c:null})});
     const prevs=ids.map(id=>[id,(RC.st.get(id)||{}).c??null]);RC.sel.clear();
+    if(a==="cat")await rcAskAP(ids);
     if(a==="desc")rcToastUndo(`${t0(ids.length)} ficha${ids.length>1?"s":""} descartada${ids.length>1?"s":""}. Quedaron en el apartado de descartadas.`,()=>{prevs.forEach(([id,c])=>rcSet(id,{c}));renderRcaRes();renderRcaKpis()});
     else toast(`${t0(ids.length)} ficha${ids.length>1?"s":""} actualizada${ids.length>1?"s":""}.`)}
   renderRcaRes();renderRcaKpis()});
@@ -2251,10 +2266,10 @@ $("#rcaFile").addEventListener("change",async ev=>{const file=ev.target.files[0]
   catch(e){toast(e&&e.message||"No se pudo cargar el archivo.")}});
 $("#rcaCsv").onclick=async()=>{const B=RC.base;if(!B)return;
   if(RC.modo==="seguimiento"){try{await saveFile("seguimiento_compromisos.csv","\ufeff"+rcSgCsv().join("\r\n"),"text/csv;charset=utf-8");ST.log("Exportar CSV",`Seguimiento de compromisos: ${(RC.sgAll||[]).length}`)}catch(e){if(e&&e.code!=="cancelled")toast("No se pudo descargar el archivo.")}return}const adm=S.perm.admin,rows=RC.rows||[];
-  const H=["Compañía","RCA","Año","Proyecto","Numeral","Páginas","Sección","Categoría","Visible para usuarios","Tipo de texto","Temas","Texto"].concat(adm?["Nota","Duda de numeración"]:[]);
+  const H=["Compañía","RCA","Año","Proyecto","Numeral","Páginas","Sección","Categoría","Aplica a AP Norte","Visible para usuarios","Tipo de texto","Temas","Texto"].concat(adm?["Nota","Duda de numeración"]:[]);
   const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
   const lines=[H.join(";")].concat(rows.map(i=>{const f=B.f[i],r=B.rcas[f[0]],s=RC.st.get(f[1])||{},vis=rcVisible(s);const cat=adm||vis?rcCatLbl(s.c??null):"";
-    return[r.empresa,r.rca,r.anio||"",r.proyecto,f[2],rcPag(f).replace("pág. ","").replace("págs. ",""),f[3],cat,adm?(s.h?"Sí":"No"):"",B.tipos&&f[8]!=null?B.tipos[f[8]]:"",f[7].map(t=>B.tags[t]).join(", "),f[5]].concat(adm?[s.n||"",f[11]||""]:[]).map(q).join(";")}));
+    return[r.empresa,r.rca,r.anio||"",r.proyecto,f[2],rcPag(f).replace("pág. ","").replace("págs. ",""),f[3],cat,(adm||vis)&&s.c!=null&&s.c!==RC_DESC?(s.ap===true?"Sí":s.ap===false?(adm?"No":""):""):"",adm?(s.h?"Sí":"No"):"",B.tipos&&f[8]!=null?B.tipos[f[8]]:"",f[7].map(t=>B.tags[t]).join(", "),f[5]].concat(adm?[s.n||"",f[11]||""]:[]).map(q).join(";")}));
   try{await saveFile("exigencias_ambientales.csv","﻿"+lines.join("\r\n"),"text/csv;charset=utf-8");ST.log("Exportar CSV",`Exigencias ambientales: ${rows.length} fichas`)}catch(e){if(e&&e.code!=="cancelled")toast("No se pudo descargar el archivo.")}};
 
 $("#rcaList").addEventListener("toggle",ev=>{const d=ev.target.closest("details.rl-g");if(!d||!RC.og)return;d.open?RC.og.add(d.dataset.emp):RC.og.delete(d.dataset.emp)},true);
@@ -2390,6 +2405,19 @@ function renderRcaInv(){const B=RC.base,adm=S.perm.admin;$("#rcaBulk").hidden=tr
     E("path",{d:rrH(L,y+4,w,rh-8,4),fill:col(r.empresa)},svg);E("text",{x:L+w+6,y:y+rh/2+4,class:"val"},svg).textContent=fm(r.monto);
     hover(E("rect",{x:0,y,width:W,height:rh,fill:"transparent"},svg),()=>`<b>RCA ${esc(r.rca)}/${r.anio||"s/f"}</b> · ${esc(r.tipo)}<br>${esc(r.proyecto)}<br>${esc(r.empresa)}<br><b>${esc((r.resumen&&r.resumen.inversion)||fm(r.monto))}</b><br><span class="cs">${t1(r.monto/T*100)} % del total · clic para abrir</span>`,()=>{RC.modo="fichas";RC.f.rca=r.id;RC.page=0;rcSyncSel();renderRca();$("#rcaDetail").scrollIntoView({behavior:"smooth",block:"start"})})})}
 $("#rcaRes").addEventListener("click",ev=>{const o=ev.target.closest("[data-io]"),e=ev.target.closest("[data-ie]");if(!o&&!e)return;RC.inv=RC.inv||{};if(o)RC.inv.ord=o.dataset.io;if(e)RC.inv.esc=e.dataset.ie;renderRcaInv()});
+
+/* ¿Aplica a Asuntos Públicos Norte? (después de catalogar) */
+async function rcAskAP(ids,num){const n=ids.length;const r=await askYN(n===1?`¿La ficha <b>${esc(num||"")}</b> aplica a <b>Asuntos Públicos Norte</b>?<br><span class="cs">Si aplica, pasa al apartado de compromisos, medidas y exigencias de medio humano que aplican. Si no, al apartado de los que no aplican.</span>`:`¿Las ${t0(n)} fichas aplican a <b>Asuntos Públicos Norte</b>?<br><span class="cs">La respuesta se aplica a todas las fichas seleccionadas.</span>`,{title:"¿Aplica a Asuntos Públicos Norte?",si:"Sí, aplica",no:"No aplica",cancel:"Responder después"});
+  if(r===null||r===undefined){toast("Quedó sin definir si aplica a AP Norte. Puedes responder luego en la ficha.");return null}
+  ids.forEach(id=>{const s=RC.st.get(id);if(s&&s.c!=null&&s.c!==RC_DESC)rcSet(id,{ap:r})});
+  ids.forEach(rcApCard);
+  toast(r?(n===1?"Ficha agregada al apartado «Aplican a AP Norte».":`${t0(n)} fichas agregadas al apartado «Aplican a AP Norte».`):(n===1?"Ficha enviada al apartado «No aplican a AP Norte».":`${t0(n)} fichas enviadas al apartado «No aplican a AP Norte».`));rcApBtns();return r}
+function rcApOut(id){const v=RC.f.vista,s=RC.st.get(id)||{};return(v==="aplican"&&s.ap!==true)||(v==="noaplican"&&s.ap!==false)||(v==="apsin"&&s.ap!=null)}
+function rcGoAp(v){RC.f.vista=RC.f.vista===v?"":v;if(RC.f.vista){RC.f.tema="";RC.f.txt="";RC.f.cat="";RC.f.sug="";RC.q=""}RC.modo="fichas";RC.page=0;rcSyncSel();renderRca();$("#rcaRes").scrollIntoView({behavior:"smooth",block:"start"})}
+$("#rcaApSi").onclick=()=>rcGoAp("aplican");$("#rcaApNo").onclick=()=>rcGoAp("noaplican");
+function rcApCard(id){const card=rcCard(id);if(!card)return;const s=RC.st.get(id)||{};card.querySelectorAll(".apc").forEach(e=>e.remove());
+  const ok=s.c!=null&&s.c!==RC_DESC;const sel=card.querySelector(".fi-ap");if(sel){sel.disabled=!ok;sel.value=s.ap===true?"1":s.ap===false?"0":""}
+  if(ok&&typeof s.ap==="boolean"){const ref=card.querySelector(".fi-h .cc")||card.querySelector(".fi-h .sug");const x=document.createElement("span");x.className="apc "+(s.ap?"si":"no");x.textContent=s.ap?"Aplica a AP Norte":"No aplica a AP Norte";if(ref)ref.after(x);else card.querySelector(".fi-h").appendChild(x)}}
 
 /* ================= Encabezado: lugar, fecha y hora ================= */
 const HDR={t:null,loc:""};

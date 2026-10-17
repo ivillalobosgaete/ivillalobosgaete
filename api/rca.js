@@ -17,6 +17,14 @@ function filtrarBase(gzB64, ocultas) {
   return zlib.gzipSync(Buffer.from(JSON.stringify({ ...o, rcas, f, g }))).toString("base64");
 }
 
+// La columna "aplica" (¿aplica a Asuntos Públicos Norte?) se agregó después: si aún no existe, se guarda lo demás.
+let _aplica = null;
+async function columnaAplica() {
+  if (_aplica !== null) return _aplica;
+  try { await sb("rca_estado?select=aplica&limit=1"); _aplica = true; } catch { _aplica = false; }
+  return _aplica;
+}
+
 export default handler(async (req, res) => {
   const me = await current(req);
   if (!me) return send(res, 401, { error: "Sin sesión" });
@@ -27,7 +35,7 @@ export default handler(async (req, res) => {
     try {
       [base, estado, vis] = await Promise.all([
         sb("rca_base?id=eq.1&select=gz,archivo,rcas,fichas,generado,por,actualizado"),
-        sb("rca_estado?select=id,categoria,habilitado,nota"),
+        sb("rca_estado?select=*"),
         sb("rca_visibilidad?select=rca,visible"),
       ]);
     } catch (e) { if (tableMissing(e)) return send(res, 200, { falta: true }); throw e; }
@@ -42,12 +50,12 @@ export default handler(async (req, res) => {
     if (!b) return send(res, 200, { gz: null, estado: [], ocultas: [] });
     const meta = { archivo: b.archivo, rcas: b.rcas, fichas: b.fichas, generado: b.generado, actualizado: b.actualizado };
     if (admin) return send(res, 200, {
-      gz: b.gz, meta, estado: (estado || []).map((e) => ({ id: e.id, c: e.categoria, h: e.habilitado, n: e.nota || "" })), ocultas: [...ocultas],
+      gz: b.gz, meta, estado: (estado || []).map((e) => ({ id: e.id, c: e.categoria, h: e.habilitado, n: e.nota || "", ap: typeof e.aplica === "boolean" ? e.aplica : null })), ocultas: [...ocultas],
       seg: seg || [],
       hist: (hist || []).map((h) => ({ g: h.gid, i: h.item, t: h.verificador, p: h.pct, o: h.obs || "", u: h.usuario, f: h.fecha })),
     });
     const rcaDe = (id) => String(id).replace(/-\d+$/, "");
-    const pub = (estado || []).filter((e) => e.habilitado && e.categoria !== null && e.categoria !== DESCARTADO && !ocultas.has(rcaDe(e.id))).map((e) => ({ id: e.id, c: e.categoria, h: true }));
+    const pub = (estado || []).filter((e) => e.habilitado && e.categoria !== null && e.categoria !== DESCARTADO && !ocultas.has(rcaDe(e.id))).map((e) => ({ id: e.id, c: e.categoria, h: true, ap: e.aplica === true ? true : null }));
     const hab = new Set(pub.map((e) => e.id));
     // Usuarios: solo el avance de compromisos con alguna ficha habilitada, sin observaciones internas.
     const segPub = (seg || []).filter((x) => (Array.isArray(x.fichas) ? x.fichas : []).some((id) => hab.has(id)))
@@ -102,6 +110,7 @@ export default handler(async (req, res) => {
     if (b.accion === "estado") {
       const items = (Array.isArray(b.items) ? b.items : []).slice(0, 5000);
       const up = [], del = [];
+      const conAplica = await columnaAplica();
       for (const it of items) {
         const id = String(it.id || "").slice(0, 60); if (!id) continue;
         const c = it.c === null || it.c === undefined || it.c === "" ? null : Number(it.c);
@@ -109,7 +118,9 @@ export default handler(async (req, res) => {
         if (!valid) continue;
         const nota = String(it.n || "").slice(0, 300);
         if (c === null && !nota) { del.push(id); continue; }
-        up.push({ id, categoria: c, habilitado: c !== null && c !== DESCARTADO && !!it.h, nota, por: me.usuario, actualizado: new Date().toISOString() });
+        const fila = { id, categoria: c, habilitado: c !== null && c !== DESCARTADO && !!it.h, nota, por: me.usuario, actualizado: new Date().toISOString() };
+        if (conAplica) fila.aplica = c !== null && c !== DESCARTADO && typeof it.ap === "boolean" ? it.ap : null;
+        up.push(fila);
       }
       if (up.length) await sb("rca_estado?on_conflict=id", { method: "POST", prefer: "resolution=merge-duplicates,return=minimal", body: up });
       for (let i = 0; i < del.length; i += 100) await sb(`rca_estado?id=in.(${del.slice(i, i + 100).map((x) => `"${x.replace(/"/g, "")}"`).join(",")})`, { method: "DELETE", prefer: "return=minimal" });

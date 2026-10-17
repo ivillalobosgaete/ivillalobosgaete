@@ -113,6 +113,9 @@ create table if not exists public.rca_estado (
   actualizado timestamptz not null default now()
 );
 
+-- ¿Aplica a Asuntos Públicos Norte? (respuesta del administrador después de catalogar)
+alter table public.rca_estado add column if not exists aplica boolean;
+
 create table if not exists public.rca_visibilidad (
   rca         text primary key,
   visible     boolean not null default true,
