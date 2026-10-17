@@ -1213,7 +1213,7 @@ tr.vr-now td{background:#fff5f4}
         <div id="rcaBody" style="display:grid;gap:14px" hidden>
           <div class="rca-kpis" id="rcaKpis"></div>
           <div class="card rca-filters">
-            <div class="rca-search"><input type="search" id="rcQ" placeholder='Buscar palabras clave: pesca, caleta, comunidad, "plan de seguimiento"… (usa -palabra para excluir)' aria-label="Buscar en las RCA"><button class="btn ghost small" id="rcaClear" type="button">Limpiar filtros</button></div>
+            <div class="rca-search"><input type="search" id="rcQ" placeholder='Palabras exactas: pesca, caleta, "plan de seguimiento"… (deben estar todas; -palabra excluye)' aria-label="Buscar en las RCA"><button class="btn ghost small" id="rcaClear" type="button">Limpiar filtros</button></div>
             <div class="rca-scope" id="rcScope" hidden></div>
             <div class="rca-quick" id="rcQuick"></div>
             <div class="rca-sel">
@@ -2505,7 +2505,9 @@ const rcPag=f=>f[10]&&f[10]!==f[4]?`págs. ${f[4]}–${f[10]}`:`pág. ${f[4]}`;
 function rcIndex(){RC.idx=RC.base?RC.base.f.map(f=>norm(f[5]+" "+f[2]+" "+f[3])):null}
 const ACC={a:"aáàäâ",e:"eéèëê",i:"iíìïî",o:"oóòöô",u:"uúùüû",n:"nñ",c:"cç"};
 function rcTerms(q){const t=[];String(q||"").replace(/"([^"]+)"|(\S+)/g,(m,ph,w)=>{const s=norm(ph||w).trim();if(s&&s!=="-")t.push(s);return""});return t}
-function rcMatcher(q){const pos=[],neg=[];rcTerms(q).forEach(t=>t.startsWith("-")&&t.length>1?neg.push(t.slice(1)):pos.push(t));if(!pos.length&&!neg.length)return null;return s=>pos.every(t=>s.includes(t))&&!neg.some(t=>s.includes(t))}
+function rcMatcher(q){const pos=[],neg=[];rcTerms(q).forEach(t=>t.startsWith("-")&&t.length>1?neg.push(t.slice(1)):pos.push(t));if(!pos.length&&!neg.length)return null;const P=pos.map(rcRe),Ng=neg.map(rcRe);return s=>P.every(r=>r.test(s))&&!Ng.some(r=>r.test(s))}
+/* Coincidencia exacta: cada palabra clave debe aparecer completa (no como parte de otra palabra); entre comillas, la frase exacta. Mayúsculas y tildes no importan. */
+function rcRe(t){return new RegExp("(^|[^a-z0-9])"+t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&").replace(/\s+/g,"[^a-z0-9]+")+"(?=$|[^a-z0-9])")}
 /* Sin resaltado: las palabras buscadas no se marcan en el texto. */
 function rcHi(text){return esc(text)}
 function rcRows(){const B=RC.base,adm=S.perm.admin,F=RC.f,mt=rcMatcher(RC.q),v=F.vista||(adm?"todas":"buscar"),out=[];
@@ -2519,7 +2521,7 @@ function rcRows(){const B=RC.base,adm=S.perm.admin,F=RC.f,mt=rcMatcher(RC.q),v=F
     if(F.cat!==""){const cc=+F.cat;if(adm?c!==cc:(!vis||c!==cc))continue}
     if(adm&&F.sug!==""&&f[6]!==+F.sug)continue;
     if(mt&&!mt(RC.idx[i]))continue;out.push(i)}
-  if(mt){const terms=rcTerms(RC.q).filter(t=>!t.startsWith("-"));const sc=new Map();out.forEach(i=>{const s=RC.idx[i];let n=0;terms.forEach(t=>{let k=s.indexOf(t);while(k>=0&&n<40){n++;k=s.indexOf(t,k+t.length)}});
+  if(mt){const terms=rcTerms(RC.q).filter(t=>!t.startsWith("-"));const sc=new Map();out.forEach(i=>{const s=RC.idx[i];let n=0;terms.forEach(t=>{const re=new RegExp(rcRe(t).source,"g");while(re.exec(s)&&n<40)n++});
       const st=RC.st.get(B.f[i][1]);sc.set(i,n+(B.f[i][6]>=0?3:0)+(st&&st.c!=null&&st.c!==RC_DESC?2:0)+(/^(vistos|encabezado)/i.test(B.f[i][3])?-5:0))});out.sort((a,b)=>sc.get(b)-sc.get(a)||a-b)}
   return out}
 function rcBuildSelects(){const B=RC.base,adm=S.perm.admin,vis=B.rcas.filter(r=>adm||!RC.hidden.has(r.id));
@@ -2829,7 +2831,7 @@ function rcApCard(id){const card=rcCard(id);if(!card)return;const s=RC.st.get(id
   if(ok&&typeof s.ap==="boolean"){const ref=card.querySelector(".fi-h .cc")||card.querySelector(".fi-h .sug");const x=document.createElement("span");x.className="apc "+(s.ap?"si":"no");x.textContent=s.ap?"Aplica a AP Norte":"No aplica a AP Norte";if(ref)ref.after(x);else card.querySelector(".fi-h").appendChild(x)}}
 
 /* ---------- Pantalla más ordenada: fichas plegadas, más filtros, temas y lista ocultable ---------- */
-function rcUiSync(){rcScopeBar();{const qk=$("#rcQuick");if(qk)qk.hidden=!S.perm.admin}const qi=$("#rcQ");if(qi)qi.placeholder=S.perm.admin?'Buscar palabras clave: pesca, caleta, comunidad, "plan de seguimiento"… (usa -palabra para excluir)':'Buscar palabras clave en todas las RCA: pesca, caleta, comunidad, "mano de obra local"…';const F=RC.f;const nm=[F.tipo,F.cat,F.tema,F.txt,F.sug].filter(v=>v!=="").length;const b=$("#rcMoreBtn");
+function rcUiSync(){rcScopeBar();{const qk=$("#rcQuick");if(qk)qk.hidden=!S.perm.admin}const qi=$("#rcQ");if(qi)qi.placeholder=S.perm.admin?'Palabras exactas: pesca, caleta, "plan de seguimiento"… (deben estar todas; -palabra excluye)':'Palabras exactas en todas las RCA: pesca, caleta, "mano de obra local"… (deben estar todas)';const F=RC.f;const nm=[F.tipo,F.cat,F.tema,F.txt,F.sug].filter(v=>v!=="").length;const b=$("#rcMoreBtn");
   if(b){b.textContent=(RC.more?"Menos filtros ▴":"Más filtros ▾")+(nm?` (${nm})`:"");b.setAttribute("aria-expanded",String(RC.more))}const m=$("#rcMore");if(m)m.hidden=!RC.more;
   const q=$("#rcQuick");if(q)q.classList.toggle("open",RC.qx);const w=document.querySelector(".rca-wrap");if(w)w.classList.toggle("nolist",RC.nolist);
   const lt=$("#rcaListTog");if(lt)lt.textContent=RC.nolist?"Mostrar lista de RCA":"Ocultar lista de RCA";
