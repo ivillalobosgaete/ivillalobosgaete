@@ -834,7 +834,24 @@ details.nelig{border:1px solid var(--line);border-radius:10px;padding:8px 12px;m
 .top h1{white-space:normal!important;overflow:visible}
 .top .tmeta,.top .tnow{justify-content:center}
 .top .top-r{justify-content:center;width:100%;max-width:780px}
-/*HDRE*//*C2S*//* ===== Gráficos 2.0 ===== */
+/*HDRE*//*DETC*/#tbl td{vertical-align:top}
+.dname{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:6px;min-width:0}.dname .lnk{text-align:left;white-space:nowrap}
+.dtog{border:1px solid var(--line);background:var(--surface);border-radius:6px;width:22px;height:22px;line-height:18px;padding:0;cursor:pointer;flex:none;font-size:.8rem;color:var(--ink-2)}
+.dtog:hover{border-color:var(--brand)}
+.dtog-s{display:inline-block;width:22px;flex:none}
+.dcell{display:inline-flex;flex-wrap:wrap;align-items:center;gap:4px 6px}
+.dchip{border:1px solid var(--line);background:var(--brand-08,#fff3e6);border-radius:999px;padding:1px 8px;font-size:.72rem;font-weight:700;cursor:pointer;color:var(--ink-2);white-space:nowrap}
+.dchip:hover,.dchip[aria-expanded="true"]{border-color:var(--brand);color:var(--ink)}
+#tbl tr.dopen>td{border-bottom-color:transparent;background:var(--brand-08,#fff8f0)}
+#tbl tr.dsub>td{background:var(--brand-08,#fff8f0);padding:4px 10px 12px 38px}
+.dsub-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px 22px;position:sticky;left:0;max-width:min(900px,calc(100vw - 70px))}
+.dl h4{margin:0 0 4px;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+.dl ol{margin:0;padding:0;list-style:none;display:grid;gap:3px}
+.dl li{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(40px,1fr) auto;gap:8px;align-items:center;font-size:.82rem}
+.dl-n{white-space:normal}.dl-n small{color:var(--muted)}
+.dl-b{height:6px;border-radius:3px;background:var(--line);overflow:hidden}.dl-b i{display:block;height:100%;background:var(--brand)}
+.dl-v{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.dl-v small{color:var(--muted);margin-left:4px}
+/*DETE*//*C2S*//* ===== Gráficos 2.0 ===== */
 .concl{margin:4px 0 8px;font-size:.86rem;line-height:1.45;color:var(--ink);font-weight:500;background:var(--brand-08,#fff6ec);border-left:3px solid var(--brand,#ff8000);border-radius:0 8px 8px 0;padding:7px 10px}
 .concl::before{content:"Interpretación";display:block;font-size:.64rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent,#a84a00);margin-bottom:2px}
 .concl:empty{display:none}
@@ -1237,7 +1254,7 @@ tr.vr-now td{background:#fff5f4}
               <label for="tGroup" class="cs" style="margin:0">Agrupar por</label>
               <select id="tGroup"><option value="p">Pescador</option><option value="pce">Pescador, caleta y especie</option></select>
               <input type="search" id="tSearch" placeholder="Buscar nombre, RPA, caleta…" aria-label="Buscar en la tabla">
-              <button class="btn ghost small" id="tCsv" type="button">Exportar CSV</button>
+              <button class="btn ghost small" id="tExp" type="button">Desplegar todo</button><button class="btn ghost small" id="tCsv" type="button">Exportar CSV</button>
             </div>
           </div>
           <div class="tbl"><table id="tbl"><thead></thead><tbody></tbody></table></div>
@@ -2082,26 +2099,31 @@ function tableRows(pass){
     const q=R.q[i];r.q+=q;if(R.x[i]>=0)r.x+=R.x[i];r.n++;r.c.set(R.c[i],(r.c.get(R.c[i])||0)+q);r.e.set(R.e[i],(r.e.get(R.e[i])||0)+q);if(R.d[i]>r.d1)r.d1=R.d[i]}
   const top=mp=>[...mp].sort((a,b)=>b[1]-a[1])[0][0];
   return[...map.values()].map(r=>{const P=m.P[r.p],ci=g==="p"?top(r.c):r.cal,ei=g==="p"?top(r.e):r.esp;
-    return{pi:r.p,name:P[1],rpa:P[0],sexo:m.sexes[P[2]],comuna:m.C[ci][1],caleta:m.C[ci][0]+(g==="p"&&r.c.size>1?` (+${r.c.size-1})`:""),especie:m.E[ei][1]+(g==="p"&&r.e.size>1?` (+${r.e.size-1})`:""),q:r.q/1000,x:r.x/1000,n:r.n,d1:r.d1}});
+    const cals=g==="p"?[...r.c].sort((a,b)=>b[1]-a[1]).map(([c,q])=>({n:m.C[c][0],co:m.C[c][1],q:q/1000})):null,esps=g==="p"?[...r.e].sort((a,b)=>b[1]-a[1]).map(([e,q])=>({n:m.E[e][1],q:q/1000})):null;
+    return{pi:r.p,name:P[1],rpa:P[0],sexo:m.sexes[P[2]],comuna:m.C[ci][1],caleta:m.C[ci][0],especie:m.E[ei][1],cals,esps,nC:cals?cals.length:1,nE:esps?esps.length:1,hay:cals?cals.map(x=>x.n+" "+x.co).join(" ")+" "+esps.map(x=>x.n).join(" "):"",q:r.q/1000,x:r.x/1000,n:r.n,d1:r.d1}});
 }
 const TCOLS=[["name","Pescador"],["rpa","RPA",1],["sexo","Sexo"],["comuna","Comuna"],["caleta","Caleta"],["especie","Especie"],["q","Desembarque (t)",1],["x","Captura calc. (t)",1],["n","Registros",1],["d1","Último registro",1]];
 function renderTable(pass){
   if(pass)TROWS=tableRows(pass);
-  const words=norm(S.q).split(/\s+/).filter(Boolean);let rows=words.length?TROWS.filter(r=>{const h=norm(`${r.name} ${r.rpa} ${r.caleta} ${r.comuna} ${r.especie}`);return words.every(w=>h.includes(w))}):TROWS.slice();
+  const words=norm(S.q).split(/\s+/).filter(Boolean);let rows=words.length?TROWS.filter(r=>{const h=norm(`${r.name} ${r.rpa} ${r.caleta} ${r.comuna} ${r.especie} ${r.hay||""}`);return words.every(w=>h.includes(w))}):TROWS.slice();
   const {k,d}=S.sort;rows.sort((a,b)=>{const x=a[k],y=b[k];return(typeof x==="number"?x-y:String(x).localeCompare(String(y),"es"))*d});
   const per=15,pages=Math.max(1,Math.ceil(rows.length/per));if(S.page>=pages)S.page=pages-1;
   $("#tbl thead").innerHTML="<tr>"+TCOLS.map(([key,lab,r])=>`<th data-k="${key}" class="sort ${r?"r":""}" ${k===key?`aria-sort="${d<0?"descending":"ascending"}"`:""} tabindex="0">${lab}</th>`).join("")+"</tr>";
-  $("#tbl tbody").innerHTML=rows.slice(S.page*per,S.page*per+per).map(r=>`<tr><td><button class="lnk" data-p="${r.pi}">${esc(r.name)}</button></td><td class="r"><a href="${RPA_URL+r.rpa}" target="_blank" rel="noopener">${r.rpa}</a></td><td>${esc(r.sexo)}</td><td>${esc(r.comuna)}</td><td>${esc(r.caleta)}</td><td>${esc(r.especie)}</td><td class="r">${t1(r.q)}</td><td class="r">${t1(r.x)}</td><td class="r">${t0(r.n)}</td><td class="r">${dstr(r.d1)}</td></tr>`).join("")||`<tr><td colspan="10" class="empty">Sin registros con estos filtros</td></tr>`;
+  if(!S.tOpen)S.tOpen=new Set();const dl=(L,lab,tot,co)=>`<div class="dl"><h4>${lab} <span class="cs">(${L.length})</span></h4><ol>${L.map(x=>`<li><span class="dl-n">${esc(x.n)}${co&&x.co?` <small>${esc(x.co)}</small>`:""}</span><span class="dl-b"><i style="width:${tot?Math.max(2,x.q/tot*100):0}%"></i></span><span class="dl-v">${t1(x.q)} t <small>${t1(tot?x.q/tot*100:0)} %</small></span></li>`).join("")}</ol></div>`;
+  const more=(r,n,w,lab)=>n>1?`<button type="button" class="dchip" data-x="${r.pi}" aria-expanded="${S.tOpen.has(r.pi)}">+${n-1} ${lab}</button>`:"";
+  $("#tbl tbody").innerHTML=rows.slice(S.page*per,S.page*per+per).map(r=>{const op=S.tOpen.has(r.pi),ex=r.cals&&(r.nC>1||r.nE>1);return`<tr class="${op&&ex?"dopen":""}"><td><span class="dname">${ex?`<button type="button" class="dtog" data-x="${r.pi}" aria-expanded="${op}" aria-label="Ver caletas y especies">${op?"▾":"▸"}</button>`:`<span class="dtog-s"></span>`}<button class="lnk" data-p="${r.pi}">${esc(r.name)}</button></span></td><td class="r"><a href="${RPA_URL+r.rpa}" target="_blank" rel="noopener">${r.rpa}</a></td><td>${esc(r.sexo)}</td><td>${esc(r.comuna)}</td><td><span class="dcell">${esc(r.caleta)}${more(r,r.nC,0,r.nC-1===1?"caleta":"caletas")}</span></td><td><span class="dcell">${esc(r.especie)}${more(r,r.nE,0,r.nE-1===1?"especie":"especies")}</span></td><td class="r">${t1(r.q)}</td><td class="r">${t1(r.x)}</td><td class="r">${t0(r.n)}</td><td class="r">${dstr(r.d1)}</td></tr>${op&&ex?`<tr class="dsub"><td colspan="10"><div class="dsub-g">${dl(r.cals,"Caletas",r.q,1)}${dl(r.esps,"Especies",r.q,0)}</div></td></tr>`:""}`}).join("")||`<tr><td colspan="10" class="empty">Sin registros con estos filtros</td></tr>`;
+  const ea=$("#tExp");if(ea){ea.hidden=S.group!=="p";const vis=rows.slice(S.page*per,S.page*per+per).filter(r=>r.nC>1||r.nE>1);const allO=vis.length&&vis.every(r=>S.tOpen.has(r.pi));ea.textContent=allO?"Contraer todo":"Desplegar todo";ea.onclick=()=>{vis.forEach(r=>allO?S.tOpen.delete(r.pi):S.tOpen.add(r.pi));renderTable()}}
   $("#pager").innerHTML=`<span>${t0(rows.length)} filas · página ${S.page+1} de ${pages}</span><button class="btn ghost small" id="pPrev" ${S.page?"":"disabled"}>Anterior</button><button class="btn ghost small" id="pNext" ${S.page<pages-1?"":"disabled"}>Siguiente</button>`;
   $("#pPrev").onclick=()=>{S.page--;renderTable()};$("#pNext").onclick=()=>{S.page++;renderTable()};
 }
 $("#tbl").addEventListener("click",ev=>{const th=ev.target.closest("th");if(th){const k=th.dataset.k;S.sort=S.sort.k===k?{k,d:-S.sort.d}:{k,d:["q","x","n","d1"].includes(k)?-1:1};renderTable();return}
+  const tg=ev.target.closest(".dtog,.dchip");if(tg){const id=+tg.dataset.x;S.tOpen.has(id)?S.tOpen.delete(id):S.tOpen.add(id);renderTable();return}
   const b=ev.target.closest(".lnk");if(b){toggle("p",+b.dataset.p,false);setTab("resumen")}});
 $("#tbl").addEventListener("keydown",ev=>{if(ev.key==="Enter"&&ev.target.tagName==="TH")ev.target.click()});
 $("#tSearch").addEventListener("input",ev=>{S.q=ev.target.value;S.page=0;renderTable()});
 $("#tGroup").addEventListener("change",ev=>{S.group=ev.target.value;S.page=0;renderTable(LAST.pass)});
 $("#tCsv").onclick=async()=>{
-  const lines=[TCOLS.map(c=>c[1]).join(";")].concat(TROWS.map(r=>TCOLS.map(([k])=>{let v=r[k];if(k==="d1")v=dstr(v);else if(typeof v==="number"&&k!=="rpa"&&k!=="n")v=String(Math.round(v*1000)/1000).replace(".",",");return`"${String(v).replace(/"/g,'""')}"`}).join(";")));
+  const lines=[TCOLS.map(c=>c[1]).join(";")].concat(TROWS.map(r=>TCOLS.map(([k])=>{let v=r[k];if(k==="caleta"&&r.cals)v=r.cals.map(x=>x.n).join(" | ");else if(k==="especie"&&r.esps)v=r.esps.map(x=>x.n).join(" | ");if(k==="d1")v=dstr(v);else if(typeof v==="number"&&k!=="rpa"&&k!=="n")v=String(Math.round(v*1000)/1000).replace(".",",");return`"${String(v).replace(/"/g,'""')}"`}).join(";")));
   const blob=new Blob(["\ufeff"+lines.join("\r\n")],{type:"text/csv;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="detalle_pescadores.csv";ST.log("Exportar CSV",`${TROWS.length} filas`);document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)};
 
 /* ---------- Buscador de pescador ---------- */
