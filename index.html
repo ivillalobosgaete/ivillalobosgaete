@@ -1622,6 +1622,9 @@ let rzT=null,rzW=innerWidth;addEventListener("resize",()=>{if(Math.abs(innerWidt
 const IND_DEF=[["dolar","Dólar observado"],["euro","Euro"],["uf","UF"],["utm","UTM"],["libra_cobre","Cobre (libra)"],["ipc","IPC mensual"],["tpm","TPM (tasa de política monetaria)"]];
 const fmtInd=(k,v)=>k==="libra_cobre"?"US$ "+t2(v):(k==="ipc"||k==="tpm")?t2(v)+" %":k==="dolar"||k==="euro"?"$ "+t2(v):"$ "+t2(v);
 async function fetchMindicador(){
+  const dia=new Date().toLocaleDateString("en-CA",{timeZone:"America/Santiago"});try{const c=JSON.parse(localStorage.getItem("ind.dia")||"null");if(c&&c.dia===dia&&c.data)return c.data}catch(e){}
+  const r0=await fetchMindicador0();if(r0){try{localStorage.setItem("ind.dia",JSON.stringify({dia,data:r0}))}catch(e){}}return r0}
+async function fetchMindicador0(){
   const out=[];await Promise.all(IND_DEF.map(async([k,n])=>{try{const r=await fetch("https://mindicador.cl/api/"+k);const j=await r.json();const s=j.serie||[];if(s.length)out.push({k,nombre:n,valor:s[0].valor,fecha:s[0].fecha,prev:s[1]?s[1].valor:null})}catch(e){}}));
   return out.length?{items:out,fuente:"mindicador.cl"}:null;
 }
