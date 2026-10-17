@@ -38,6 +38,20 @@ async function ecmpo(boxes) {
   }
   return [...seen.values()];
 }
+// Planes de manejo de recursos bentónicos (Subpesca), filtrados por los recuadros de las zonas del dashboard.
+async function planes(boxes) {
+  const seen = new Map();
+  for (const b of boxes) {
+    const u = `${BASE}SRMPUB_PLANESMANEJO_REC_BENTONICOS/MapServer/0/query?where=1%3D1&geometry=${encodeURIComponent(b.join(","))}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=true&outSR=4326&geometryPrecision=4&maxAllowableOffset=0.004&f=geojson`;
+    const r = await fetch(u, { signal: AbortSignal.timeout(20000), headers: { "User-Agent": "Mozilla/5.0 (dashboard Asuntos Publicos)" } });
+    if (!r.ok) throw new Error("Geoportal " + r.status);
+    const j = await r.json(); if (j.error) throw new Error(j.error.message || "Geoportal");
+    for (const f of j.features || []) { const p = f.properties || {}; const id = pick(p, ".C_PLANMANEJO") ?? pick(p, ".OBJECTID"); if (seen.has(id) || !f.geometry) continue;
+      seen.set(id, { id, n: pick(p, ".NOMBRE") || "", com: pick(p, ".COMUNA") || "", ha: pick(p, ".SUPERFICIE"), esp: pick(p, ".ESPECIES") || "", dist: pick(p, ".DISTRIBUCIONESPECIES") || "", tipo: pick(p, ".TIPOPLANMANEJO") || "",
+        nEst: pick(p, ".N_RESPESQ") || "", fEst: fdate(pick(p, ".F_RESPESQ")), nApr: pick(p, ".N_RESOLSSP") || "", fApr: fdate(pick(p, ".F_RESOLSSP")), nMod: pick(p, ".N_RESULTMOD") || "", fMod: fdate(pick(p, ".F_RESULTMOD")), g: f.geometry }); }
+  }
+  return [...seen.values()];
+}
 export default handler(async (req, res) => {
   if (!(await current(req))) return send(res, 401, { error: "Sin sesión" });
   const regs = String((req.query && req.query.r) || new URL(req.url, "http://x").searchParams.get("r") || "2,4").split(",").map((x) => parseInt(x, 10)).filter((n) => n > 0 && n < 20).slice(0, 6);
@@ -48,7 +62,7 @@ export default handler(async (req, res) => {
   const hoy = new Date().toLocaleDateString("en-CA", { timeZone: "America/Santiago" });
   if (cache.data && cache.key === key && cache.dia === hoy && Date.now() - cache.t < 12 * 3600e3) return send(res, 200, cache.data);
   const inR = `IN (${regs.join(",") || "2,4"})`;
-  const data = { amerb: [], caletas: [], ecmpo: [], fuente: "Geoportal Subpesca (IDE público)", obtenido: new Date().toISOString(), errores: [] };
+  const data = { amerb: [], caletas: [], ecmpo: [], planes: [], fuente: "Geoportal Subpesca (IDE público)", obtenido: new Date().toISOString(), errores: [] };
   await Promise.all([
     (async () => {
       for (const [layer, tipo] of [[0, "Decretada"], [1, "Solicitud"], [2, "Rechazada"]]) {
@@ -64,6 +78,10 @@ export default handler(async (req, res) => {
       try { data.ecmpo = await ecmpo(boxes); } catch (e) { data.errores.push(`ECMPO: ${e.message}`); }
     })(),
     (async () => {
+      if (!boxes.length) return;
+      try { data.planes = await planes(boxes); } catch (e) { data.errores.push(`Planes de manejo: ${e.message}`); }
+    })(),
+    (async () => {
       try {
         const fs = await query("SRMPUB_CALETAS_PESQUERAS", 0, `${C}PART_SSP_T_CALETAS.C_REGION ${inR}`);
         const by = new Map();
@@ -73,6 +91,6 @@ export default handler(async (req, res) => {
       } catch (e) { data.errores.push(`Caletas: ${e.message}`); }
     })(),
   ]);
-  if (data.amerb.length || data.caletas.length || data.ecmpo.length) cache = { t: Date.now(), key, data, dia: hoy };
+  if (data.amerb.length || data.caletas.length || data.ecmpo.length || data.planes.length) cache = { t: Date.now(), key, data, dia: hoy };
   send(res, 200, data);
 });
