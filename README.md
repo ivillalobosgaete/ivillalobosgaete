@@ -183,3 +183,10 @@ Lo normal es que un administrador use el botón **Contraseña** en la pestaña A
 1. Copia `.env.example` como `.env` y completa los valores.
 2. Agrega `COOKIE_INSECURE=1` para poder usar http://localhost sin HTTPS.
 3. Ejecuta `npm start` y abre http://localhost:3000.
+
+### Calculadora para negociación: línea base y beneficiarios
+- **Consulta rápida**: toneladas por año de la especie, meses y lugar elegidos (p. ej., pulpo en agosto 2021–2025), con total y promedio.
+- **Línea base para negociar**: promedio, mediana, promedio sin el año más alto y más bajo, piso (mínimo) y techo (máximo), calculados con años completos.
+- **Excluir meses de veda**: los meses en veda no se cuentan como extracción perdida.
+- **Criterios de beneficiarios**: meses, años y toneladas mínimas, y opción de pescadores históricos (al menos 3 de los últimos 5 años completos).
+- **Beneficiarios por organización**: pescadores, toneladas y montos por escenario.

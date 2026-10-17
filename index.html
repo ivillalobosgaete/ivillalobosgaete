@@ -827,6 +827,7 @@ section[data-pane]{gap:16px!important}
 
 .cmx{position:absolute;top:10px;right:48px;z-index:4;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:5px 10px;font-weight:700;color:var(--ink-2);cursor:pointer}
 .dgrp{flex-wrap:wrap;align-items:flex-end}.dfield{display:inline-flex;flex-direction:column;gap:2px}.dfield input{border:1px solid var(--line);border-radius:8px;padding:4px 8px;background:var(--surface);font:inherit;font-size:.85rem;color:var(--ink)}.pmhint{flex-basis:100%;font-size:.74rem}
+details.nelig{border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-top:8px;background:var(--surface)}details.nelig summary{cursor:pointer;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}.nelig-b{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px;align-items:end}.nelig-b .nant{grid-column:1/-1}
 /*C2S*//* ===== Gráficos 2.0 ===== */
 .concl{margin:4px 0 8px;font-size:.86rem;line-height:1.45;color:var(--ink);font-weight:500;background:var(--brand-08,#fff6ec);border-left:3px solid var(--brand,#ff8000);border-radius:0 8px 8px 0;padding:7px 10px}
 .concl::before{content:"Interpretación";display:block;font-size:.64rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent,#a84a00);margin-bottom:2px}
@@ -892,6 +893,20 @@ table.nmx th{font-size:.68rem;text-transform:uppercase;color:var(--muted);paddin
 table.nmx th.r,table.nmx td.r{text-align:right}
 table.nmx td{padding:5px 6px;border-radius:5px;white-space:nowrap}
 table.nmx tfoot td{border-top:2px solid var(--line);background:var(--brand-08)}
+.nquick{border:1px solid var(--line);border-left:4px solid var(--s1);border-radius:12px;padding:10px 12px;background:var(--surface);margin:8px 0}
+.nq-h{font-size:.86rem;margin-bottom:6px}
+.nq-y{display:flex;flex-wrap:wrap;gap:6px}
+.nq-i{display:grid;border:1px solid var(--line);border-radius:10px;padding:4px 10px;min-width:84px;background:var(--brand-08)}
+.nq-i small{font-size:.7rem;color:var(--muted);font-weight:700}
+.nq-i b{font-size:1rem}
+.nq-i.part{opacity:.7}
+.nq-i.tot{background:#e8f1fb;border-color:#b9d3f0}
+.nbase .nb{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.nb-i{border:1px solid var(--line);border-radius:10px;padding:8px 10px;display:grid;gap:2px;background:var(--surface)}
+.nb-i span{font-size:.72rem;font-weight:800;text-transform:uppercase;color:var(--muted)}
+.nb-i b{font-size:1.25rem}
+.nb-i small{font-size:.74rem;color:var(--muted)}
+.nb-i.hl{border-color:var(--s2);background:#e9f7f1}
 /* ===== Mapa de caletas ===== */
 .mapz{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .mapp{position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#e4f1f5;min-width:0}
@@ -1124,6 +1139,12 @@ tr.vr-now td{background:#fff5f4}
           </div>
           <div class="pgroup"><span class="plabel">Meses a comparar</span><div class="pgroup" id="nMo"></div></div>
           <div class="pgroup dgrp"><span class="plabel">Fechas</span><span class="dfield"><label for="nD0" class="cs">Desde</label><input type="date" lang="es-CL" id="nD0" aria-label="Desde la fecha"></span><span class="dfield"><label for="nD1" class="cs">Hasta</label><input type="date" lang="es-CL" id="nD1" aria-label="Hasta la fecha"></span><span class="dfield"><label for="nDOne" class="cs">o un día</label><input type="date" lang="es-CL" id="nDOne" aria-label="Un día puntual"></span><button type="button" class="vbtn" id="nDClr" hidden>Quitar fechas</button><span class="cs pmhint">Opcional: acota el cálculo a un tramo de fechas o a un día, además de los años y meses elegidos.</span></div>
+          <div class="pgroup"><span class="plabel">Línea base</span><label class="amtog"><input type="checkbox" id="nNoVeda"> Excluir meses de veda (no cuentan como extracción perdida)</label></div>
+          <details class="nelig" id="nElig"><summary><b>Criterios de beneficiarios</b> <span class="cs" id="nEligS">Sin criterios: entran todos los pescadores con desembarque.</span></summary><div class="nelig-b">
+            <div class="field"><label for="nMinM">Mínimo de meses con desembarque</label><input id="nMinM" type="number" min="0" step="1" placeholder="0"></div>
+            <div class="field"><label for="nMinY">Mínimo de años con desembarque</label><input id="nMinY" type="number" min="0" step="1" placeholder="0"></div>
+            <div class="field"><label for="nMinT">Toneladas mínimas en el período</label><input id="nMinT" type="number" min="0" step="0.1" placeholder="0"></div>
+            <label class="amtog nant"><input type="checkbox" id="nAnt"> Solo pescadores históricos: con desembarque en al menos 3 de los últimos 5 años completos</label></div></details>
         </div>
         <div class="neg-res" id="nKpis"></div>
         <div class="callout" id="nText"></div>
@@ -2814,7 +2835,12 @@ function hdrStart(){if(!HDR.t){hdrTick();HDR.t=setInterval(hdrTick,1000)}if(!HDR
 hdrStart();
 
 /* ================= Negociación ================= */
-const N={mo:new Set([0,1,2,3,4,5,6,7,8,9,10,11]),d0:null,d1:null};
+const N={mo:new Set([0,1,2,3,4,5,6,7,8,9,10,11]),d0:null,d1:null,noVeda:false,minM:0,minY:0,minT:0,ant:false,elOut:0};
+function negZone(lug){const m=S.R.m;if(lug[0]==="k")return m.C[+lug.slice(1)][3];if(lug[0]==="c"){const cm=S.R.coms[+lug.slice(1)],c=m.C.find(x=>x[1]===cm);return c?c[3]:undefined}return undefined}
+function negElig(fis){const R=S.R,lastFull=R.lastYM%12===11?R.y1:R.y1-1;let hist=null;
+  if(N.ant){hist=new Map();for(let i=0;i<R.n;i++){const y=R.yr[i]+R.y0;if(y>lastFull||y<lastFull-4)continue;let s=hist.get(R.p[i]);if(!s){s=new Set();hist.set(R.p[i],s)}s.add(y)}}
+  let out=0;for(const [p,f] of [...fis]){const yrs=new Set([...f.months].map(x=>String(x).split("-")[0]));
+    if((N.minM&&f.months.size<N.minM)||(N.minY&&yrs.size<N.minY)||(N.minT&&f.q<N.minT)||(hist&&((hist.get(p)||new Set()).size<3))){fis.delete(p);out++}}N.elOut=out;return fis}
 const negDayOut=(R,ym)=>{if(N.d0==null&&N.d1==null)return false;const y=R.y0+Math.floor(ym/12),m=ym%12;const a=Math.round((Date.UTC(y,m,1)-BASE)/DAY),b=Math.round((Date.UTC(y,m+1,0)-BASE)/DAY);return(N.d0!=null&&b<N.d0)||(N.d1!=null&&a>N.d1)};
 function buildNeg(){
   const R=S.R,m=R.m;const tot=new Float64Array(m.E.length);for(let i=0;i<R.n;i++)tot[R.e[i]]+=R.q[i];
@@ -2828,6 +2854,8 @@ function buildNeg(){
   $("#nMo").innerHTML=`<button type="button" class="pill" data-mall="1" aria-pressed="${N.mo.size===12}">Todos</button>`+MES.map((s,i)=>`<button type="button" class="pill" data-m="${i}" aria-pressed="${N.mo.has(i)}">${s[0].toUpperCase()+s.slice(1)}</button>`).join("");
 }
 ["nEsp","nLug","nY0","nY1","nPrice"].forEach(id=>$("#"+id).addEventListener(id==="nPrice"?"input":"change",()=>renderNeg()));
+$("#nNoVeda").addEventListener("change",ev=>{N.noVeda=ev.target.checked;renderNeg()});$("#nAnt").addEventListener("change",ev=>{N.ant=ev.target.checked;renderNeg()});
+[["nMinM","minM"],["nMinY","minY"],["nMinT","minT"]].forEach(([id,k])=>$("#"+id).addEventListener("input",ev=>{N[k]=Math.max(0,+ev.target.value||0);clearTimeout(N._t);N._t=setTimeout(renderNeg,250)}));
 function nDSync(){const a=$("#nD0");if(!a)return;const iso=d=>d==null?"":new Date(BASE+d*DAY).toISOString().slice(0,10);a.value=iso(N.d0);$("#nD1").value=iso(N.d1);$("#nDOne").value=N.d0!=null&&N.d0===N.d1?iso(N.d0):"";$("#nDClr").hidden=N.d0==null&&N.d1==null}
 {const ix=s=>{if(!s)return null;const t=Date.parse(s+"T00:00:00Z");return isFinite(t)?Math.round((t-BASE)/DAY):null};
   $("#nD0").addEventListener("change",ev=>{N.d0=ix(ev.target.value);if(N.d0!=null&&N.d1!=null&&N.d0>N.d1)N.d1=N.d0;nDSync();renderNeg()});
@@ -2838,9 +2866,9 @@ $("#nMo").addEventListener("click",ev=>{const all=ev.target.closest("button[data
   const b=ev.target.closest("button[data-m]");if(!b)return;const m=+b.dataset.m;if(N.mo.size===12){N.mo=new Set([m])}else{N.mo.has(m)?N.mo.delete(m):N.mo.add(m);if(!N.mo.size)N.mo.add(m)}$("#nMo").querySelectorAll("button[data-m]").forEach(x=>x.setAttribute("aria-pressed",N.mo.has(+x.dataset.m)));const ab=$("#nMo [data-mall]");if(ab)ab.setAttribute("aria-pressed",String(N.mo.size===12));renderNeg()});
 function negCalc(esp,lug,y0,y1,months){
   const R=S.R,yN=y1-y0+1,res={};months.forEach(m=>res[m]={t:new Float64Array(yN),f:Array.from({length:yN},()=>new Set()),avail:new Uint8Array(yN)});
-  for(let y=0;y<yN;y++)months.forEach(m=>{const ym=(y+y0-R.y0)*12+m;res[m].avail[y]=ym>=R.firstYM&&ym<=R.lastYM&&!negDayOut(R,ym)?1:0});
+  for(let y=0;y<yN;y++)months.forEach(m=>{const ym=(y+y0-R.y0)*12+m;res[m].avail[y]=ym>=R.firstYM&&ym<=R.lastYM&&!negDayOut(R,ym)&&!(N.noVeda&&esp>=0&&window.__vedaMes&&window.__vedaMes(esp,y+y0,m,negZone(lug)))?1:0});
   const fis=new Map();
-  for(let i=0;i<R.n;i++){if(esp>=0&&R.e[i]!==esp)continue;if(N.d0!=null&&R.d[i]<N.d0)continue;if(N.d1!=null&&R.d[i]>N.d1)continue;const y=R.yr[i]+R.y0;if(y<y0||y>y1)continue;const m=R.mo[i];if(!res[m])continue;
+  for(let i=0;i<R.n;i++){if(esp>=0&&R.e[i]!==esp)continue;if(N.d0!=null&&R.d[i]<N.d0)continue;if(N.d1!=null&&R.d[i]>N.d1)continue;const y=R.yr[i]+R.y0;if(y<y0||y>y1)continue;const m=R.mo[i];if(!res[m])continue;if(N.noVeda&&window.__vedaRec&&window.__vedaRec(i))continue;
     if(lug[0]==="c"&&R.com[i]!==+lug.slice(1))continue;if(lug[0]==="k"&&R.c[i]!==+lug.slice(1))continue;
     const q=R.q[i]/1000;res[m].t[y-y0]+=q;res[m].f[y-y0].add(R.p[i]);const f=fis.get(R.p[i])||{q:0,months:new Set(),cal:R.c[i]};f.q+=q;f.months.add(y+"-"+m);fis.set(R.p[i],f)}
   const out=months.map(m=>{const r=res[m];const ys=[];for(let y=0;y<yN;y++)if(r.avail[y])ys.push({y:y+y0,t:r.t[y],f:r.f[y].size});
@@ -2852,7 +2880,7 @@ function negCalc(esp,lug,y0,y1,months){
 }
 function renderNeg(){
   if(!S.R)return;const R=S.R,m=R.m;const esp=+$("#nEsp").value,lug=$("#nLug").value;let y0=+$("#nY0").value,y1=+$("#nY1").value;if(y0>y1)[y0,y1]=[y1,y0];
-  const months=[...N.mo].sort((a,b)=>a-b),price=+$("#nPrice").value||0;const {out,fis}=negCalc(esp,lug,y0,y1,months);
+  const months=[...N.mo].sort((a,b)=>a-b),price=+$("#nPrice").value||0;const {out,fis}=negCalc(esp,lug,y0,y1,months);negElig(fis);
   const nDt=d=>{const s=new Date(BASE+d*DAY).toISOString().slice(0,10);return s.slice(8,10)+"-"+s.slice(5,7)+"-"+s.slice(0,4)};const dRng=N.d0!=null&&N.d0===N.d1?` (solo el ${nDt(N.d0)})`:N.d0!=null||N.d1!=null?` (fechas: ${N.d0!=null?nDt(N.d0):"inicio"} al ${N.d1!=null?nDt(N.d1):"fin"})`:"";
   const en=(esp>=0?m.E[esp][1]:"Todas las especies")+dRng,lugT=lug==="all"?"todas las caletas":lug[0]==="c"?"la comuna de "+R.coms[+lug.slice(1)]:"la caleta "+m.C[+lug.slice(1)][0];
   const allAvg=out.reduce((a,b)=>a+b.avg,0)/out.length,allF=out.reduce((a,b)=>a+b.avgF,0)/out.length,allPer=out.filter(o=>o.perF>0);const per=allPer.length?allPer.reduce((a,b)=>a+b.perF,0)/allPer.length:0;
@@ -3570,9 +3598,9 @@ function negMx(){const R=S.R;if(!R)return;let card=$("#nMxCard");if(!card){const
   const esp=+$("#nEsp").value,lug=$("#nLug").value;let y0=+$("#nY0").value,y1=+$("#nY1").value;if(y0>y1)[y0,y1]=[y1,y0];const months=[...N.mo].sort((a,b)=>a-b),yN=y1-y0+1;
   const T=Array.from({length:yN},()=>new Float64Array(12));
   for(let i=0;i<R.n;i++){if(esp>=0&&R.e[i]!==esp)continue;const y=R.yr[i]+R.y0;if(y<y0||y>y1)continue;const mo=R.mo[i];if(!N.mo.has(mo))continue;if(N.d0!=null&&R.d[i]<N.d0)continue;if(N.d1!=null&&R.d[i]>N.d1)continue;
-    if(lug[0]==="c"&&R.com[i]!==+lug.slice(1))continue;if(lug[0]==="k"&&R.c[i]!==+lug.slice(1))continue;T[y-y0][mo]+=R.q[i]/1000}
-  const av=(y,mo)=>{const ym=(y-R.y0)*12+mo;return ym>=R.firstYM&&ym<=R.lastYM&&!negDayOut(R,ym)};
-  const rows=[];for(let k=0;k<yN;k++){const y=y0+k,ms=months.filter(mo=>av(y,mo));if(!ms.length)continue;const need=months.filter(mo=>!negDayOut(R,(y-R.y0)*12+mo)).length;const tot=ms.reduce((s,mo)=>s+T[k][mo],0);rows.push({y,k,ms,tot,avg:tot/ms.length,full:ms.length===need})}
+    if(lug[0]==="c"&&R.com[i]!==+lug.slice(1))continue;if(lug[0]==="k"&&R.c[i]!==+lug.slice(1))continue;if(N.noVeda&&window.__vedaRec&&window.__vedaRec(i))continue;T[y-y0][mo]+=R.q[i]/1000}
+  const zn=negZone(lug);const av=(y,mo)=>{const ym=(y-R.y0)*12+mo;return ym>=R.firstYM&&ym<=R.lastYM&&!negDayOut(R,ym)&&!(N.noVeda&&esp>=0&&window.__vedaMes&&window.__vedaMes(esp,y,mo,zn))};
+  const rows=[];for(let k=0;k<yN;k++){const y=y0+k,ms=months.filter(mo=>av(y,mo));if(!ms.length)continue;const need=months.filter(mo=>!negDayOut(R,(y-R.y0)*12+mo)&&!(N.noVeda&&esp>=0&&window.__vedaMes&&window.__vedaMes(esp,y,mo,zn))).length;const tot=ms.reduce((s,mo)=>s+T[k][mo],0);rows.push({y,k,ms,tot,avg:tot/ms.length,full:ms.length===need})}
   const el=$("#nMx");if(!rows.length){el.innerHTML=`<div class="empty">Sin datos con estos filtros.</div>`;setC("nMxC","");return}
   const colAvg=months.map(mo=>{const ys=rows.filter(r=>av(r.y,mo));return ys.length?ys.reduce((s,r)=>s+T[r.k][mo],0)/ys.length:null});
   const mx=Math.max(...rows.flatMap(r=>months.map(mo=>T[r.k][mo])))||1;const cell=v=>`style="background:${v>0?`rgba(42,120,214,${(.06+.8*Math.sqrt(v/mx)).toFixed(2)})`:"transparent"};color:${Math.sqrt(v/mx)>.6?"#fff":"inherit"}"`;
@@ -3580,7 +3608,36 @@ function negMx(){const R=S.R;if(!R)return;let card=$("#nMxCard");if(!card){const
   el.innerHTML=`<table class="nmx"><thead><tr><th>Año</th>${months.map(mo=>`<th class="r">${MES[mo]}</th>`).join("")}<th class="r">Total del año</th><th class="r">Promedio mensual</th></tr></thead><tbody>${rows.map(r=>`<tr><td><b>${r.y}${r.full?"":"*"}</b></td>${months.map(mo=>av(r.y,mo)?`<td class="r" ${cell(T[r.k][mo])}>${T[r.k][mo]>0?tt(T[r.k][mo]):"0"}</td>`:`<td class="r cs">·</td>`).join("")}<td class="r"><b>${tt(r.tot)}</b></td><td class="r"><b>${tt(r.avg)}</b></td></tr>`).join("")}</tbody>
     <tfoot><tr class="avg"><td><b>Promedio por mes</b></td>${colAvg.map(v=>`<td class="r"><b>${v==null?"·":tt(v)}</b></td>`).join("")}<td class="r"><b>${anual==null?"—":tt(anual)}</b><div class="cs">promedio anual</div></td><td class="r"><b>${tt(mensual)}</b><div class="cs">promedio mensual</div></td></tr></tfoot></table>${rows.some(r=>!r.full)?`<p class="cs fnote">* Año con meses sin datos (año en curso): no se usa para el promedio anual.</p>`:""}`;
   const best=months.map((mo,j)=>[mo,colAvg[j]]).filter(x=>x[1]!=null).sort((a,b)=>b[1]-a[1]);const en=esp>=0?R.m.E[esp][1]:"todas las especies";
-  setC("nMxC",`Para <b>${esc(en)}</b>, se extraen en promedio <b>${anual==null?"—":tt(anual)+" t por año"}</b>${(N.d0!=null||N.d1!=null)&&anual!=null?" (dentro del tramo de fechas)":""}${anual==null?" (no hay años completos con estos filtros)":fullRows.length<rows.length?` (${fullRows.length} años completos)`:""} y <b>${tt(mensual)} t por mes</b>.${best.length>1?` El mes de mayor extracción promedio es ${MESL[best[0][0]]} (${tt(best[0][1])} t) y el de menor, ${MESL[best[best.length-1][0]]} (${tt(best[best.length-1][1])} t).`:""} Estos promedios son una base objetiva para calcular compensaciones por mes o por año.`)}
+  setC("nMxC",`Para <b>${esc(en)}</b>, se extraen en promedio <b>${anual==null?"—":tt(anual)+" t por año"}</b>${(N.d0!=null||N.d1!=null)&&anual!=null?" (dentro del tramo de fechas)":""}${anual==null?" (no hay años completos con estos filtros)":fullRows.length<rows.length?` (${fullRows.length} años completos)`:""} y <b>${tt(mensual)} t por mes</b>.${best.length>1?` El mes de mayor extracción promedio es ${MESL[best[0][0]]} (${tt(best[0][1])} t) y el de menor, ${MESL[best[best.length-1][0]]} (${tt(best[best.length-1][1])} t).`:""} Estos promedios son una base objetiva para calcular compensaciones por mes o por año.`);
+  try{negExtras(esp,lug,y0,y1,months,rows,T,fullRows)}catch(e){console.error(e)}}
+function negExtras(esp,lug,y0,y1,months,rows,T,fullRows){const R=S.R,m=R.m,en=esp>=0?m.E[esp][1]:"Todas las especies";
+  const lugT=lug==="all"?"todas las caletas":lug[0]==="c"?"comuna de "+R.coms[+lug.slice(1)]:"caleta "+m.C[+lug.slice(1)][0];
+  const mTxt=months.length===12?"todos los meses":months.length<=4?months.map(x=>MESL[x]).join(", "):months.length+" meses";
+  /* Consulta rápida */
+  let q=$("#nQuick");if(!q){q=document.createElement("div");q.id="nQuick";q.className="nquick";const k=$("#nKpis");k.parentNode.insertBefore(q,k)}
+  const tq=rows.reduce((s,r)=>s+r.tot,0);
+  q.innerHTML=`<div class="nq-h"><b>Consulta:</b> ${esc(en)} · ${esc(mTxt)} · ${esc(lugT)}${N.d0!=null||N.d1!=null?" · fechas acotadas":""}${N.noVeda?" · sin meses de veda":""}</div><div class="nq-y">${rows.map(r=>`<span class="nq-i${r.full?"":" part"}"><small>${r.y}${r.full?"":"*"}</small><b>${tt(r.tot)} t</b></span>`).join("")}<span class="nq-i tot"><small>Total</small><b>${tt(tq)} t</b></span><span class="nq-i tot"><small>Promedio por año</small><b>${tt(rows.length?tq/rows.length:0)} t</b></span></div>`;
+  /* Línea base */
+  let bc=$("#nBaseCard");if(!bc){bc=document.createElement("div");bc.id="nBaseCard";bc.className="card c2 nbase";const t=$("#nText");t.after(bc)}
+  const v=fullRows.map(r=>({y:r.y,t:r.tot})).sort((a,b)=>a.t-b.t);
+  if(v.length<2){bc.innerHTML=`<div class="tbar"><h3>Línea base para negociar</h3></div><p class="cs" style="margin:0">Se necesitan al menos dos años completos con estos filtros para calcular la línea base.</p>`}else{
+    const n=v.length,avg=v.reduce((s,x)=>s+x.t,0)/n,med=n%2?v[(n-1)/2].t:(v[n/2-1].t+v[n/2].t)/2,trim=n>=4?v.slice(1,-1).reduce((s,x)=>s+x.t,0)/(n-2):null,lo=v[0],hi=v[n-1];
+    const tile=(l,val,sub,cls)=>`<div class="nb-i ${cls||""}"><span>${l}</span><b>${tt(val)} t</b><small>${sub}</small></div>`;
+    bc.innerHTML=`<div class="tbar"><h3>Línea base para negociar${help("Toneladas por año en los meses elegidos, calculadas solo con años completos. La mediana y el promedio sin extremos reducen el efecto de años atípicos; el mínimo y el máximo históricos sirven como piso y techo razonables.")}</h3></div>
+      <div class="nb">${tile("Promedio anual",avg,`${n} años completos`)}${tile("Mediana",med,"el año del medio","hl")}${trim!=null?tile("Promedio sin extremos",trim,`sin ${hi.y} ni ${lo.y}`,"hl"):""}${tile("Piso (mínimo)",lo.t,`año ${lo.y}`)}${tile("Techo (máximo)",hi.t,`año ${hi.y}`)}</div>
+      <p class="concl" id="nBaseC"></p>`;
+    const dif=Math.abs(avg-med)/avg*100;setC("nBaseC",`Para ${esc(en)} en ${esc(mTxt)}, la extracción anual va de ${tt(lo.t)} t (${lo.y}) a ${tt(hi.t)} t (${hi.y}). ${dif>10?`El promedio (${tt(avg)} t) se aleja ${t0(dif)} % de la mediana (${tt(med)} t) por años atípicos: conviene negociar sobre la mediana${trim!=null?" o el promedio sin extremos":""}, que son más difíciles de objetar.`:`El promedio (${tt(avg)} t) y la mediana (${tt(med)} t) son parecidos, así que cualquiera es una base sólida.`}${N.noVeda?" Los meses de veda no se cuentan.":""}`)}
+  /* Criterios de beneficiarios y organizaciones */
+  const {fis}=negCalc(esp,lug,y0,y1,months);const tot0=fis.size;negElig(fis);const crit=N.minM||N.minY||N.minT||N.ant;
+  const es=$("#nEligS");if(es)es.innerHTML=crit?`<b>${t0(fis.size)}</b> de ${t0(tot0)} pescadores cumplen los criterios; <span class="vdn">${t0(tot0-fis.size)} quedan fuera</span>.`:`Sin criterios: entran los ${t0(tot0)} pescadores con desembarque.`;
+  let oc=$("#nOrgCard");if(!oc){oc=document.createElement("div");oc.id="nOrgCard";oc.className="card w12 c2";const ref=$("#nFis")&&$("#nFis").closest(".card");if(ref)ref.after(oc);else return}
+  const yN=y1-y0+1,pk=+$("#nPrice").value||(esp>=0?priceOf(esp):0)||0,A=+($("#scA")||{}).value||pk,B=+($("#scB")||{}).value||0,Cf=+($("#scCf")||{}).value||0,Ck=+($("#scCk")||{}).value||0;
+  const om=new Map();fis.forEach((f,p)=>{const k=orgOf(p)||"Sin organización informada";const o=om.get(k)||{n:0,q:0,kg:0,a:0,b:0,c:0,cal:new Set()};const kg=f.q/yN*1000;o.n++;o.q+=f.q;o.kg+=kg;o.a+=kg*A;o.b+=B;o.c+=Cf+kg*Ck;o.cal.add(m.C[f.cal][0]);om.set(k,o)});
+  const rowsO=[...om].sort((a,b)=>b[1].q-a[1].q);const T2=rowsO.reduce((s,[,o])=>s+o.q,0);
+  oc.innerHTML=`<details class="amd" ${ST2.get("nOrgOpen","0")==="1"?"open":""}><summary><span class="amd-t"><b>Beneficiarios por organización</b> <span class="cs">${t0(rowsO.length)} organizaciones · ${t0(fis.size)} pescadores${crit?" que cumplen los criterios":""}</span></span></summary>
+    <div class="tbl"><table class="rgc"><thead><tr><th>Organización</th><th class="r">Pescadores</th><th class="r">Toneladas</th><th class="r">% del total</th><th class="r">Kilos promedio por año</th><th>Caletas</th>${A?`<th class="r">Escenario A</th>`:""}${B?`<th class="r">Escenario B</th>`:""}${Cf||Ck?`<th class="r">Escenario C</th>`:""}</tr></thead><tbody>${rowsO.map(([k,o])=>`<tr><td><b>${esc(k)}</b></td><td class="r">${t0(o.n)}</td><td class="r">${tt(o.q)}</td><td class="r">${t1(T2?o.q/T2*100:0)} %</td><td class="r">${t0(o.kg)}</td><td style="white-space:normal">${[...o.cal].slice(0,4).map(esc).join(", ")}${o.cal.size>4?"…":""}</td>${A?`<td class="r">${money(o.a)}</td>`:""}${B?`<td class="r">${money(o.b)}</td>`:""}${Cf||Ck?`<td class="r">${money(o.c)}</td>`:""}</tr>`).join("")}</tbody></table></div>
+    <p class="cs fnote">La organización proviene del Excel o de lo asignado en Poder e interés. Los escenarios usan los montos ingresados en «Escenarios de compensación».</p></details>`;
+  oc.querySelector("details").addEventListener("toggle",ev=>ST2.set("nOrgOpen",ev.target.open?"1":"0"))}
 function iNeg(){const R=S.R;if(!R||!N||!N.mo||!N.mo.size){I("gNeg","cNegC","");return}const esp=+$("#nEsp").value,lug=$("#nLug").value;let y0=+$("#nY0").value,y1=+$("#nY1").value;if(y0>y1)[y0,y1]=[y1,y0];const months=[...N.mo].sort((a,b)=>a-b);
   const {out}=negCalc(esp,lug,y0,y1,months);const yN=y1-y0+1,tot=new Float64Array(yN);out.forEach(o=>o.ys.forEach(r=>tot[r.y-y0]+=r.t));const ys=[...tot].map((v,i)=>({y:y0+i,v}));const full=ys.filter(x=>{const ym=(x.y-R.y0)*12+months[months.length-1];return ym<=R.lastYM});
   if(full.length<2||!full.some(x=>x.v>0)){I("gNeg","cNegC","Con un solo año (o sin datos) no es posible interpretar la tendencia; amplía el rango de años.");return}
@@ -3856,6 +3913,10 @@ document.addEventListener("click",async ev=>{const o=ev.target.closest("[data-vo
 /* ¿El registro i cae dentro de una veda vigente en su fecha y zona? */
 function enVeda(i){const R=S.R,code=String(R.m.E[R.e[i]][0]),z=R.regRaw[R.reg[i]],dt=new Date(BASE+R.d[i]*DAY),day=dt.toISOString().slice(0,10),mo=dt.getUTCMonth();
   return(CFG.vedas||[]).some(v=>!VOFF(v)&&(v.esp||[]).map(String).includes(code)&&(!v.zona||v.zona===z)&&mIn(mo,+v.desde,+v.hasta)&&vigOk(v,day))}
+
+/* Usado por la calculadora para negociación: excluir desembarques y meses en veda */
+window.__vedaRec=i=>{try{return enVeda(i)}catch(e){return false}};
+window.__vedaMes=(esp,y,mo,zone)=>{const code=String(S.R.m.E[esp][0]),day=`${y}-${String(mo+1).padStart(2,"0")}-15`;return(CFG.vedas||[]).some(v=>!VOFF(v)&&(v.esp||[]).map(String).includes(code)&&(!v.zona||(zone!==undefined&&v.zona===zone))&&mIn(mo,+v.desde,+v.hasta)&&vigOk(v,day))};
 
 /* ---------- Conexión con el render ---------- */
 const _renderPane=renderPane;
