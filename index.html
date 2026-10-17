@@ -1626,7 +1626,7 @@ function start(model){
   S.model=model;S.R=prepare(model);
   const keep=S.f&&Object.keys(S.f).length;S.f={};S.R.F.forEach(f=>S.f[f.id]=new Set());if(!keep){S.from=S.to=null}S.page=0;
   buildSlicers();buildPeriod();buildNeg();
-  const inf=S.info||{};$("#stamp").innerHTML=`Datos desde el <b>${dstr(S.R.minD)}</b> hasta el <b>${dstr(S.R.maxD)}</b> · ${t0(S.R.n)} registros${inf.archivo?" · "+esc(inf.archivo):""}`;
+  const inf=S.info||{};$("#stamp").innerHTML=`Datos desde el <b>${dstr(S.R.minD)}</b> hasta el <b>${dstr(S.R.maxD)}</b> · ${t0(S.R.n)} registros`;
   render();Promise.all([cfgLoad(),piLoad()]).then(()=>{if(LAST&&S.tab!=="admin"&&S.tab!=="negociacion")renderPane()});vLoad();
 }
 
@@ -2516,6 +2516,7 @@ const RCST={
     return{base,meta:r.meta||null,estado:new Map((r.estado||[]).map(e=>[e.id,{c:e.c,h:!!e.h,n:e.n||"",...(typeof e.ap==="boolean"?{ap:e.ap}:{}),...(Array.isArray(e.comp)&&e.comp.length?{comp:e.comp}:{}),...(e.pe?{pe:true}:{})}])),hidden:new Set(r.ocultas||[]),seg:new Map((r.seg||[]).map(x=>[x.gid,{it:x.items||[],ts:x.actualizado||"",u:x.por||""}])),hist:r.hist||[]}},
   saveBase:(gz,meta)=>api("rca",{method:"PUT",body:{gz:b64e(gz),...meta}}),
   saveEstado:items=>api("rca",{method:"POST",body:{accion:"estado",items}}),
+  reset:()=>api("rca",{method:"POST",body:{accion:"reiniciar",confirmar:"REINICIAR"}}),
   setVisible:(rca,visible)=>api("rca",{method:"POST",body:{accion:"visibilidad",rca,visible}}),
   saveSeg:(gid,rec,cambios,fichas)=>api("rca",{method:"POST",body:{accion:"seg",gid,fichas,items:rec.it,cambios}})
 };
@@ -2537,7 +2538,7 @@ function rcRemoveCard(card){card.classList.add("gone");setTimeout(()=>{card.remo
 const rcCatCls=c=>c===RC_DESC?"cx":c==null?"cn":"c"+c;
 const rcVisible=s=>!!(s&&s.h&&s.c!=null&&s.c!==RC_DESC);
 async function rcLoad(force){if(RC.loaded&&!force)return;try{const r=await RCST.load();RC.base=r.base;RC.meta=r.meta;RC.st=r.estado;RC.hidden=r.hidden;RC.seg=r.seg||new Map();RC.hist=r.hist||[];RC.sgDraft=new Map();RC.warn="";rcIndex();rcGroups();rcMigrar()}catch(e){RC.warn=e&&e.message||"No se pudieron leer las RCA."}RC.loaded=true;RC.built=false}
-const rcPag=f=>f[10]&&f[10]!==f[4]?`págs. ${f[4]}–${f[10]}`:`pág. ${f[4]}`;
+const rcPag=f=>f[10]&&f[10]!==f[4]?`ref. págs. ${f[4]}–${f[10]}`:`ref. pág. ${f[4]}`;
 function rcIndex(){RC.idx=RC.base?RC.base.f.map(f=>norm(f[5]+" "+f[2]+" "+f[3])):null}
 const ACC={a:"aáàäâ",e:"eéèëê",i:"iíìïî",o:"oóòöô",u:"uúùüû",n:"nñ",c:"cç"};
 function rcTerms(q){const t=[];String(q||"").replace(/"([^"]+)"|(\S+)/g,(m,ph,w)=>{const s=norm(ph||w).trim();if(s&&s!=="-")t.push(s);return""});return t}
@@ -4287,12 +4288,20 @@ const RC_VUSR=[["validadas","Todos los compromisos validados"],...RSEC.map(([k,l
 $("#rcaCsv").onclick=async()=>{const B=RC.base;if(!B)return;
   if(RC.modo==="seguimiento"){try{await saveFile("seguimiento_compromisos.csv","﻿"+rcSgCsv().join("\r\n"),"text/csv;charset=utf-8");ST.log("Exportar CSV",`Seguimiento de compromisos: ${(RC.sgAll||[]).length}`)}catch(e){if(e&&e.code!=="cancelled")toast("No se pudo descargar el archivo.")}return}
   const adm=S.perm.admin,rows=RC.rows||[],q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
-  const H=["Apartado","Compañía","RCA","Año","Proyecto","Numeral","Páginas","Sección","Tipo","Aplica a AP Norte","Componentes ambientales","Relación directa con pesca","Tipo de texto","Temas","Texto"].concat(adm?["Nota","Duda de numeración"]:[]);
+  const H=["Apartado","Compañía","RCA","Año","Proyecto","Considerando (identificación)","Páginas (solo referencia)","Sección","Tipo","Aplica a AP Norte","Componentes ambientales","Relación directa con pesca","Tipo de texto","Temas","Texto"].concat(adm?["Nota","Duda de numeración"]:[]);
   const lines=[H.join(";")].concat(rows.map(i=>{const f=B.f[i],r=B.rcas[f[0]],s=RC.st.get(f[1])||{},sec=rcSecOf(s),val=sec!=="rev"&&sec!=="desc",ok=adm||val;
-    return[secLbl(sec),r.empresa,r.rca,r.anio||"",r.proyecto,f[2],rcPag(f).replace("pág. ","").replace("págs. ",""),f[3],ok&&s.c!=null&&s.c!==RC_DESC?rcCatLbl(s.c):"",ok&&typeof s.ap==="boolean"?(s.ap?"Sí":"No"):"",ok?(s.comp||[]).map(k=>RCOMP[k]?RCOMP[k][0]:"").join(", "):"",ok&&val?(s.pe?"Sí":"No"):"",B.tipos&&f[8]!=null?B.tipos[f[8]]:"",f[7].map(t=>B.tags[t]).join(", "),f[5]].concat(adm?[s.n||"",f[11]||""]:[]).map(q).join(";")}));
+    return[secLbl(sec),r.empresa,r.rca,r.anio||"",r.proyecto,f[2],(f[10]&&f[10]!==f[4]?f[4]+"–"+f[10]:String(f[4])),f[3],ok&&s.c!=null&&s.c!==RC_DESC?rcCatLbl(s.c):"",ok&&typeof s.ap==="boolean"?(s.ap?"Sí":"No"):"",ok?(s.comp||[]).map(k=>RCOMP[k]?RCOMP[k][0]:"").join(", "):"",ok&&val?(s.pe?"Sí":"No"):"",B.tipos&&f[8]!=null?B.tipos[f[8]]:"",f[7].map(t=>B.tags[t]).join(", "),f[5]].concat(adm?[s.n||"",f[11]||""]:[]).map(q).join(";")}));
   try{await saveFile("exigencias_ambientales.csv","﻿"+lines.join("\r\n"),"text/csv;charset=utf-8");ST.log("Exportar CSV",`Exigencias ambientales: ${rows.length} fichas`)}catch(e){if(e&&e.code!=="cancelled")toast("No se pudo descargar el archivo.")}};
 /* Antes de «Seleccionar esta página / todas», recalcula las filas (pudieron salir fichas ya validadas o descartadas) */
 $("#rcaBulk").addEventListener("click",ev=>{if(ev.target.closest("[data-b]")&&RC.base)RC.rows=rcRows()},true);
+
+/* Reinicio de la identificación: la base nueva identifica cada ficha por su número de considerando.
+   Si quedan clasificaciones de la identificación anterior, se ofrece borrarlas (con confirmación). */
+async function rcCheckReinicio(){if(!S.perm.admin||!RC.base||!RC.base.reinicio||RC.reinAsk)return;rcFiMap();
+  const old=[...RC.st.keys()].filter(id=>!RC.fi.has(id)),seg=[...RC.seg.keys()].filter(id=>!RC.fi.has(id));if(!old.length&&!seg.length)return;RC.reinAsk=true;
+  const ok=await askYN(`La base cargada <b>reinicia desde cero la identificación</b>: cada ficha se identifica por su número de considerando (las páginas quedan solo como referencia).<br><br>Hay <b>${t0(old.length)}</b> clasificaciones${seg.length?` y <b>${t0(seg.length)}</b> registros de seguimiento`:""} de la identificación anterior que ya no corresponden a ninguna ficha.<br><br>¿Estás seguro de borrarlas y empezar desde cero? <b>No se puede deshacer.</b>`,{title:"Reiniciar la identificación",danger:true,si:"Sí, borrar y empezar de cero",no:"Ahora no"});
+  if(!ok)return;try{if(RCST.reset)await RCST.reset();RC.st=new Map();RC.seg=new Map();RC.hist=[];RC.dr=new Map();RC.sel.clear();RC.f.vista="rev";ST.log("Exigencias ambientales","Reinició desde cero la identificación");toast("Listo: todas las fichas quedaron en «Por revisar».");rcSyncSel();renderRca()}catch(e){toast(e&&e.message||"No se pudo reiniciar.")}}
+{const _rl=rcLoad;rcLoad=async function(){await _rl.apply(this,arguments);setTimeout(()=>{rcCheckReinicio().catch(e=>console.error(e))},400)}}
 
 })();
 

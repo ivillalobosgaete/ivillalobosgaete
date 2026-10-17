@@ -202,3 +202,8 @@ alter table public.rca_estado add column if not exists pesca boolean not null de
 ```
 
 Si faltan estas columnas, la plataforma lo avisa en la pestaña Exigencias ambientales.
+
+### Identificación de exigencias por número de considerando (reinicio 17-10-2026)
+- La base `RCA_Operaciones_Norte_base.json.gz` (versión 3) identifica cada ficha por su **número de considerando** (por ejemplo, «Considerando 12.1.23», «Resuelvo 1°»), sin importar cuántas páginas abarque. Las páginas se muestran solo como referencia.
+- Mejoras en los escaneos: corrige números mal leídos y, cuando el número es ilegible, lo asigna por orden y lo marca como duda. Las observaciones ciudadanas quedan como fichas propias dentro de su considerando.
+- Al cargar esta base, la plataforma ofrece (con confirmación) **borrar las clasificaciones anteriores y empezar desde cero**. En Vercel esto borra las filas de `rca_estado` y `rca_seguimiento`.

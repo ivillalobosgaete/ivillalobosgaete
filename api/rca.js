@@ -92,6 +92,14 @@ export default handler(async (req, res) => {
       await logAct(me.usuario, "Exigencias ambientales", `RCA ${rca} ${b.visible ? "visible" : "oculta"} para usuarios`);
       return send(res, 200, { ok: true });
     }
+    if (b.accion === "reiniciar") {
+      // Reinicio de la identificación: borra todas las clasificaciones y el avance de seguimiento (las fichas cambiaron de identificador).
+      if (b.confirmar !== "REINICIAR") return send(res, 400, { error: "Falta la confirmación." });
+      await sb("rca_estado?id=not.is.null", { method: "DELETE", prefer: "return=minimal" });
+      try { await sb("rca_seguimiento?gid=not.is.null", { method: "DELETE", prefer: "return=minimal" }); } catch (e) { if (!tableMissing(e)) throw e; }
+      await logAct(me.usuario, "Exigencias ambientales", "Reinició desde cero la identificación de exigencias (borró clasificaciones y seguimiento)");
+      return send(res, 200, { ok: true });
+    }
     if (b.accion === "seg") {
       const gid = String(b.gid || "").slice(0, 60);
       if (!gid) return send(res, 400, { error: "Falta el compromiso." });
