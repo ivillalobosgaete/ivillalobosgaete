@@ -851,7 +851,7 @@ details.nelig{border:1px solid var(--line);border-radius:10px;padding:8px 12px;m
 .dl-n{white-space:normal}.dl-n small{color:var(--muted)}
 .dl-b{height:6px;border-radius:3px;background:var(--line);overflow:hidden}.dl-b i{display:block;height:100%;background:var(--brand)}
 .dl-v{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.dl-v small{color:var(--muted);margin-left:4px}
-/*DETE*//*C2S*//* ===== Gráficos 2.0 ===== */
+/*DETE*//*XECC*/.xec{max-height:640px;overflow:auto}.xec thead th{position:sticky;top:0;z-index:2;background:var(--surface,#fff);white-space:normal;min-width:92px;vertical-align:bottom;line-height:1.2}.xec th:first-child,.xec td:first-child{position:sticky;left:0;z-index:1;background:var(--surface,#fff)}.xec thead th:first-child{z-index:3}.xec td:first-child{box-shadow:1px 0 0 var(--line)}@media(max-width:700px){.xec th:first-child,.xec td:first-child{max-width:130px;min-width:110px;white-space:normal}.xec td:first-child b{font-size:.8rem}.xec thead th{min-width:76px}}/*XECE*//*C2S*//* ===== Gráficos 2.0 ===== */
 .concl{margin:4px 0 8px;font-size:.86rem;line-height:1.45;color:var(--ink);font-weight:500;background:var(--brand-08,#fff6ec);border-left:3px solid var(--brand,#ff8000);border-radius:0 8px 8px 0;padding:7px 10px}
 .concl::before{content:"Interpretación";display:block;font-size:.64rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent,#a84a00);margin-bottom:2px}
 .concl:empty{display:none}
@@ -1140,7 +1140,7 @@ tr.vr-now td{background:#fff5f4}
       <section data-pane="especies" style="display:grid;gap:14px" hidden>
         <div class="viz">
           <div class="card w12"><div class="tbar"><h3>Calendario de vedas</h3><span class="cs">Meses en veda (sombreados) y toneladas desembarcadas en cada mes del período</span></div><div class="tbl" id="vedaCal" style="border:0"></div></div>
-          <div class="card w12"><h3>Especie × caleta</h3><div class="cs">Toneladas · 12 especies principales del período</div><div class="tbl" id="xEspCal" style="border:0"></div></div>
+          <div class="card w12"><div class="tbar"><h3>Especie × caleta</h3><div class="l"><input type="search" id="xEspQ" placeholder="Buscar especie o caleta" aria-label="Buscar especie o caleta"></div></div><div class="cs" id="xEspSub">Toneladas · todas las especies del período</div><div class="tbl xec" id="xEspCal" style="border:0"></div></div>
           <div class="card w6"><h3>Variación por especie</h3><div class="cs" id="varSub">Mismo período, año anterior</div><svg id="gVar"></svg></div>
           <div class="card w6"><h3>Productividad por caleta</h3><div class="cs">Toneladas por pescador activo en el período</div><svg id="gProd"></svg></div>
           <div class="card w6"><h3>Participación de mujeres por caleta</h3><div class="cs">% de pescadores activos que son mujeres</div><svg id="gMuj"></svg></div>
@@ -2064,14 +2064,20 @@ function yearBars(id,vals,unit,fmt){
 function topFis(A){const R=S.R;const it=[...A.pq].sort((a,b)=>b[1]-a[1]).slice(0,20).map(([p,v])=>({id:p,label:R.m.P[p][1],v,sub:"RPA "+R.m.P[p][0],tip:`${t1(v)} t · ${t1(A.q?v/A.q*100:0)} % del total`}));hbar("gTop",it,"p",1000,240,{maxc:34,rh:22})}
 /* ---------- Especies y caletas ---------- */
 function xEspCal(pass,A){
-  const R=S.R,m=R.m;const top=m.E.map((e,i)=>({i,n:e[1],v:A.esp[i]})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v).slice(0,12);
+  const R=S.R,m=R.m;const top=m.E.map((e,i)=>({i,n:e[1],v:A.esp[i]})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
   const cals=m.C.map((c,i)=>({i,n:c[0],v:A.cal[i]})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
   if(!top.length){$("#xEspCal").innerHTML=`<div class="empty">Sin datos con estos filtros</div>`;return}
   const M=new Map();for(let i=0;i<R.n;i++){if(!pass[i])continue;const k=R.e[i]*1000+R.c[i];M.set(k,(M.get(k)||0)+R.q[i]/1000)}
   let mx=0;M.forEach(v=>{if(v>mx)mx=v});
-  $("#xEspCal").innerHTML=`<table><thead><tr><th>Especie</th>${cals.map(c=>`<th class="r" title="${esc(c.n)}">${esc(c.n.length>14?c.n.slice(0,13)+"…":c.n)}</th>`).join("")}<th class="r">Total</th></tr></thead><tbody>`+
-    top.map(e=>`<tr><td><b>${esc(e.n)}</b></td>${cals.map(c=>{const v=M.get(e.i*1000+c.i)||0;const k=mx?v/mx:0;return`<td class="r" style="background:${v?`rgba(42,120,214,${(.06+.9*Math.sqrt(k)).toFixed(2)})`:"transparent"};color:${Math.sqrt(k)>.55?"#fff":"inherit"}">${v?tt(v):"·"}</td>`}).join("")}<td class="r"><b>${tt(e.v)}</b></td></tr>`).join("")+`</tbody></table>`;
+  $("#xEspCal").innerHTML=`<table><thead><tr><th>Especie</th>${cals.map(c=>`<th class="r" data-c="${esc(c.n)}">${esc(c.n)}</th>`).join("")}<th class="r">Total</th></tr></thead><tbody>`+
+    top.map(e=>`<tr data-e="${esc(e.n)}"><td><b>${esc(e.n)}</b></td>${cals.map(c=>{const v=M.get(e.i*1000+c.i)||0;const k=mx?v/mx:0;return`<td class="r" style="background:${v?`rgba(42,120,214,${(.06+.9*Math.sqrt(k)).toFixed(2)})`:"transparent"};color:${Math.sqrt(k)>.55?"#fff":"inherit"}">${v?tt(v):"·"}</td>`}).join("")}<td class="r"><b>${tt(e.v)}</b></td></tr>`).join("")+`</tbody></table>`;
+  $("#xEspSub").textContent=`Toneladas · las ${t0(top.length)} especies con desembarque en el período, en ${t0(cals.length)} caletas · ordenadas de mayor a menor`;xEspFilter();
 }
+function xEspFilter(){const q=norm(($("#xEspQ")||{}).value||"");const t=$("#xEspCal table");if(!t)return;const ths=[...t.querySelectorAll("thead th")];const cm=q?ths.map((th,j)=>j>0&&th.dataset.c&&norm(th.dataset.c).includes(q)):null;const anyC=cm&&cm.some(Boolean);
+  t.querySelectorAll("tbody tr").forEach(tr=>{tr.hidden=!!q&&!anyC&&!norm(tr.dataset.e||"").includes(q)});
+  ths.forEach((th,j)=>{const hide=anyC&&j>0&&th.dataset.c&&!cm[j];th.hidden=hide;t.querySelectorAll(`tbody tr>td:nth-child(${j+1})`).forEach(td=>td.hidden=hide)});
+  if(anyC)t.querySelectorAll("tbody tr").forEach(tr=>{tr.hidden=![...tr.children].some((td,j)=>cm[j]&&td.textContent.trim()!=="·")})}
+$("#xEspQ").addEventListener("input",xEspFilter);
 function varEsp(A){
   const R=S.R,svg=$("#gVar"),W=vw("gVar",520);
   if(!A.hasPrev){clear(svg,W,90);E("text",{x:W/2,y:40,"text-anchor":"middle"},svg).textContent="Elige uno o más años (o un rango de meses) arriba";E("text",{x:W/2,y:60,"text-anchor":"middle"},svg).textContent="para comparar con el mismo período del año anterior.";$("#varSub").textContent="Mismo período, año anterior";return}
@@ -3618,7 +3624,7 @@ function iEspTab(A){const R=S.R,m=R.m,X=CUR.X;
     for(let i=0;i<R2.n;i++){if(!pass[i])continue;const code=String(R2.m.E[R2.e[i]][0]);if(!codes.has(code))continue;const q=R2.q[i]/1000;tt2+=q;if(enVeda(i)){tv+=q;if(R2.k[i]===kr)tvR+=q;byE.set(R2.e[i],(byE.get(R2.e[i])||0)+q)}}
     const top=[...byE].sort((a,b)=>b[1]-a[1])[0];
     I("vedaCal","cVedaC",tt2?(tv>0?`De las especies con veda, el <b>${t1(tv/tt2*100)} %</b> del desembarque (${t0(tv)} t) se registró dentro de una veda vigente para su fecha y zona${top?`, principalmente ${esc(R2.m.E[top[0]][1])}`:""}. ${tvR>0?`El ${t0(tvR/tv*100)} % de ese volumen es recolección de orilla, que en los huiros suele corresponder a alga varada, permitida por el decreto. `:""}El resto puede deberse a extracción en áreas de manejo (AMERB) o a errores de registro: conviene revisarlo antes de usar esas cifras.`:"No se registran desembarques dentro de vedas vigentes para su fecha y zona."):"Las especies con veda no tienen desembarques con estos filtros.")}
-  const top=m.E.map((e,i)=>[i,A.esp[i]]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,12);
+  const top=m.E.map((e,i)=>[i,A.esp[i]]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
   if(top.length){const info=top.map(([e,t])=>{let mx=0,mc=-1,n=0;X.calEsp.forEach((mp,c)=>{const v=mp.get(e)||0;if(v>0)n++;if(v>mx){mx=v;mc=c}});return{e,t,n,sh:mx/t*100,c:mc}});const conc=info.filter(x=>x.sh>=80).sort((a,b)=>b.t-a.t);const wide=info.slice().sort((a,b)=>b.n-a.n)[0];
     I("xEspCal","cXEspC",`<b>${esc(m.E[wide.e][1])}</b> es la especie más extendida (presente en ${wide.n} caletas).${conc.length?` ${conc.slice(0,3).map(x=>`${esc(m.E[x.e][1])} (${t0(x.sh)} % en ${esc(m.C[x.c][0])})`).join(", ")} se concentra${conc.length>1?"n":""} en una sola caleta: medidas sobre esa especie afectarán sobre todo a esa caleta.`:" Ninguna de las principales especies depende de una sola caleta."}`)}else I("xEspCal","cXEspC","");
   if(!A.hasPrev)I("gVar","cVarC","Elige uno o más años o un rango de meses en el panel de filtros para ver qué especies suben o bajan frente al mismo período del año anterior.");
