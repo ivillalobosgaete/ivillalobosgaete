@@ -1,7 +1,9 @@
-// Capas públicas del Geoportal de Subpesca (IDE_PUBLICO): AMERB y caletas pesqueras artesanales.
+// Capas públicas del Geoportal de Subpesca (IDE_PUBLICO): AMERB y caletas pesqueras artesanales; y ECMPO (Subpesca, vía IDE de la SMA).
 // Se consultan desde el servidor (sin problemas de CORS) y se guardan en memoria 12 horas. Requiere sesión.
 import { handler, send, current } from "../lib/core.js";
 const BASE = process.env.GEO_BASE || "https://geoportal.subpesca.cl/server/rest/services/IDE_PUBLICO/";
+// ECMPO (espacios costeros marinos de pueblos originarios): capa pública de Subpesca publicada en la IDE de la SMA.
+const ECMPO = process.env.ECMPO_URL || "https://ideserver.sma.gob.cl/arcgis/rest/services/IDE/Otras_bajo_proteccion/MapServer/4/query";
 const T = "REP_SUBPESCA2.ADM_URB.RRBB_SSP_T_AMERB.", C = "REP_SUBPESCA2.ADM_DDP.";
 let cache = { t: 0, key: "", data: null };
 async function query(svc, layer, where, extra = "") {
@@ -17,13 +19,34 @@ async function query(svc, layer, where, extra = "") {
 }
 const pick = (p, suf) => { for (const k in p) if (k.endsWith(suf)) return p[k]; return null; };
 const fdate = (v) => (v ? new Date(v).toISOString().slice(0, 10) : "");
+function ringCentroid(rings) {
+  let best = null, bestA = 0;
+  for (const r of rings || []) { let a = 0, x = 0, y = 0; for (let i = 0, j = r.length - 1; i < r.length; j = i++) { const f = r[j][0] * r[i][1] - r[i][0] * r[j][1]; a += f; x += (r[j][0] + r[i][0]) * f; y += (r[j][1] + r[i][1]) * f; }
+    if (Math.abs(a) > bestA && a !== 0) { bestA = Math.abs(a); best = [y / (3 * a), x / (3 * a)]; } }
+  if (!best && rings && rings[0] && rings[0].length) { const r = rings[0]; best = [r.reduce((s, p) => s + p[1], 0) / r.length, r.reduce((s, p) => s + p[0], 0) / r.length]; }
+  return best;
+}
+async function ecmpo(boxes) {
+  const seen = new Map();
+  for (const b of boxes) {
+    const u = `${ECMPO}?where=1%3D1&geometry=${encodeURIComponent(b.join(","))}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=true&outSR=4326&maxAllowableOffset=0.002&f=json`;
+    const r = await fetch(u, { signal: AbortSignal.timeout(15000), headers: { "User-Agent": "Mozilla/5.0 (dashboard Asuntos Publicos)" } });
+    if (!r.ok) throw new Error("IDE SMA " + r.status);
+    const j = await r.json(); if (j.error) throw new Error(j.error.message || "IDE SMA");
+    for (const f of j.features || []) { const a = f.attributes || {}; const id = a.OBJECTID; if (seen.has(id)) continue; const c = ringCentroid(f.geometry && f.geometry.rings);
+      seen.set(id, { n: a.NOMBRE || "", sol: a.SOLICITANT || "", nat: a.NATURALEZA || "", est: a.ESTADO || "", ha: a.SUP_HA, com: a.COMUNA_ || "", reg: a.REGION_ || "", ning: a.N_INGRESOC || "", fing: fdate(a.F_INGRESOC), dec: a.N_DECRETOM || "", fdec: fdate(a.F_DECRETOM), fpm: fdate(a.F_APRUEBAP), lat: c ? c[0] : null, lon: c ? c[1] : null }); }
+  }
+  return [...seen.values()];
+}
 export default handler(async (req, res) => {
   if (!(await current(req))) return send(res, 401, { error: "Sin sesión" });
   const regs = String((req.query && req.query.r) || new URL(req.url, "http://x").searchParams.get("r") || "2,4").split(",").map((x) => parseInt(x, 10)).filter((n) => n > 0 && n < 20).slice(0, 6);
-  const key = regs.join(",");
+  const bq = String(new URL(req.url, "http://x").searchParams.get("b") || "");
+  const boxes = bq.split(";").map((t) => t.split(",").map(Number)).filter((a) => a.length === 4 && a.every((v) => isFinite(v) && Math.abs(v) <= 180)).slice(0, 6);
+  const key = regs.join(",") + "|" + boxes.map((b) => b.map((v) => v.toFixed(2)).join(",")).join(";");
   if (cache.data && cache.key === key && Date.now() - cache.t < 12 * 3600e3) return send(res, 200, cache.data);
   const inR = `IN (${regs.join(",") || "2,4"})`;
-  const data = { amerb: [], caletas: [], fuente: "Geoportal Subpesca (IDE público)", obtenido: new Date().toISOString(), errores: [] };
+  const data = { amerb: [], caletas: [], ecmpo: [], fuente: "Geoportal Subpesca (IDE público)", obtenido: new Date().toISOString(), errores: [] };
   await Promise.all([
     (async () => {
       for (const [layer, tipo] of [[0, "Decretada"], [1, "Solicitud"], [2, "Rechazada"]]) {
@@ -35,6 +58,10 @@ export default handler(async (req, res) => {
       }
     })(),
     (async () => {
+      if (!boxes.length) return;
+      try { data.ecmpo = await ecmpo(boxes); } catch (e) { data.errores.push(`ECMPO: ${e.message}`); }
+    })(),
+    (async () => {
       try {
         const fs = await query("SRMPUB_CALETAS_PESQUERAS", 0, `${C}PART_SSP_T_CALETAS.C_REGION ${inR}`);
         const by = new Map();
@@ -44,6 +71,6 @@ export default handler(async (req, res) => {
       } catch (e) { data.errores.push(`Caletas: ${e.message}`); }
     })(),
   ]);
-  if (data.amerb.length || data.caletas.length) cache = { t: Date.now(), key, data };
+  if (data.amerb.length || data.caletas.length || data.ecmpo.length) cache = { t: Date.now(), key, data };
   send(res, 200, data);
 });

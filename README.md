@@ -117,6 +117,7 @@ Después del primer ingreso puedes borrar `ADMIN_PASSWORD` de Vercel: el adminis
 
 ## Gráficos
 
+- ECMPO (espacios costeros marinos de pueblos originarios): el sitio consulta la capa pública de Subpesca publicada en la IDE de la SMA y muestra, para las zonas del dashboard, cada ECMPO con su comunidad solicitante, estado, superficie, decreto y caleta más cercana.
 - Áreas de manejo (AMERB) y caletas oficiales: el sitio consulta las capas públicas del Geoportal de Subpesca (`/api/geo`, guardadas 12 horas). Muestra el resumen de AMERB por estado del trámite (con plan de manejo vigente, plan en elaboración o revisión, otro estado, solicitud en trámite, rechazada o caducada), una tabla de AMERB cercanas a cada caleta y el registro oficial de pescadores, embarcaciones y organizaciones por caleta.
 - Vedas oficiales precargadas (pulpo del norte, huiros de Coquimbo y Antofagasta, loco), con su decreto. Aviso emergente una vez al día y franja roja con las especies en veda vigente y las próximas 30 días; las especies en veda se marcan en rojo en gráficos, tablas, filtros y calculadora. En Administración › Vedas se pueden desactivar las oficiales o agregar otras.
 - Caletas y áreas de manejo (Resumen): ranking de caletas por actividad con el registro oficial de pescadores, y tabla de AMERB cercanas a cada caleta por estado del trámite.
