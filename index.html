@@ -1814,7 +1814,7 @@ function renderKpis(A){
     ["Promedio por pescador",nF?`${t1(A.q/nF)} <small>t</small>`:"—",deltaHtml(nF?A.q/nF:0,pf,on)||`<span class="d">en el período</span>`,"scale",spP],
     ["Captura calculada",`${t0(A.x)} <small>t</small>`,`<span class="d">Desembarque × factor de conversión</span>`,"calc",""],
     ["Mes de mayor captura",bv>0?ymLabel(bi):"—",`<span class="d">${bv>0?t0(bv)+" t ese mes":"Sin datos"}</span>`,"cal",""],
-    (hasPrices()?(()=>{const v=A.esp.reduce((a,t,e)=>a+t*1000*priceOf(e),0),pv=A.P.esp.reduce((a,t,e)=>a+t*1000*priceOf(e),0);return["Valor estimado",money(v),deltaHtml(v,pv,on)||`<span class="d">a precio de playa por especie</span>`,"coin",""]})():["% del total de la base",`${t1(share)} <small>%</small>`,`<div class="meter" aria-hidden="true"><i style="width:${Math.min(100,share)}%"></i></div>`,"pie",""])
+    (hasPrices()?(()=>{const v=A.esp.reduce((a,t,e)=>a+t*1000*priceOf(e),0),pv=A.P.esp.reduce((a,t,e)=>a+t*1000*priceOf(e),0);return["Valor estimado",money(v),(deltaHtml(v,pv,on)||"")+`<span class="d">${priceNote(A.esp.entries())}</span>`,"coin",""]})():["% del total de la base",`${t1(share)} <small>%</small>`,`<div class="meter" aria-hidden="true"><i style="width:${Math.min(100,share)}%"></i></div>`,"pie",""])
   ].map(([k,v,d,ic,sp],j)=>`<div class="kpi${j===0?" hero":""}"><div class="kh">${icon(ic)}<span class="k">${k}</span></div><span class="v">${v}</span>${d}${sp}</div>`).join("");
 }
 function regLabel(r){const s=String(r).trim();if(/^II\s+REGI/i.test(s))return"Asuntos Públicos Norte";if(/^IV\s+REGI/i.test(s))return"Asuntos Públicos Los Pelambres";return regName(s)}
@@ -1851,7 +1851,7 @@ function renderClaves(A){
     if(mq.length)F.push(fact("people","Mujer con más desembarque",esc(pn(mq[0][0])),`${tt(mq[0][1])} t`));
     F.push(fact("people","Mujeres activas",`${t0(g.muj.size)} de ${t0(g.fis.size)}`,`${t1(g.fis.size?g.muj.size/g.fis.size*100:0)} % de los pescadores`));
     F.push(fact("calc","Captura calculada",`${t0(g.x)} t`,`${t0(g.rows)} registros de desembarque`));
-    if(hasPrices()){const v=[...g.esp].reduce((a,[e,t])=>a+t*1000*priceOf(e),0);F.push(fact("coin","Valor estimado",money(v),"a precio de playa por especie"))}
+    if(hasPrices()){const v=[...g.esp].reduce((a,[e,t])=>a+t*1000*priceOf(e),0);F.push(fact("coin","Valor estimado",money(v),priceNote(g.esp)))}
     if(A.hasPrev&&g.pq>0){const d=pct(g.q,g.pq);L.push(`El desembarque ${d>=0?"subió":"bajó"} <b>${t1(Math.abs(d))} %</b> frente al mismo período del año anterior (${t0(g.pq)} t).`);
       const ch=[...new Set([...g.esp.keys(),...g.pesp.keys()])].map(e=>({n:m.E[e][1],d:(g.esp.get(e)||0)-(g.pesp.get(e)||0)})).filter(x=>Math.abs(x.d)>0.05).sort((a,b)=>b.d-a.d);
       if(ch.length){const up=ch[0],dn=ch[ch.length-1];const t=[];if(up.d>0)t.push(`la especie que más creció fue <b>${esc(up.n)}</b> (+${tt(up.d)} t)`);if(dn.d<0)t.push(`la que más cayó, <b>${esc(dn.n)}</b> (${tt(dn.d)} t)`);if(t.length){const x=t.join("; ");L.push(x.charAt(0).toUpperCase()+x.slice(1)+".")}}}
@@ -2142,6 +2142,8 @@ async function cfgLoad(force){if(CFG.loaded&&!force)return;try{const o=await ST.
 async function cfgSave(){await ST.saveAjustes({precios:CFG.precios,vedas:CFG.vedas,alertas:CFG.alertas})}
 const priceOf=e=>+CFG.precios[S.R.m.E[e][0]]||0;
 const hasPrices=()=>Object.values(CFG.precios).some(v=>+v>0);
+const priceCov=it=>{let t=0,tp=0,n=0,N=0;for(const [e,q] of it){if(!(q>0))continue;N++;t+=q;if(priceOf(e)>0){n++;tp+=q}}return{n,N,p:t?tp/t*100:0}};
+const priceNote=it=>{const c=priceCov(it);return`Solo especies con precio base por kilo: ${c.n} de ${c.N} especies (${t1(c.p)} % de las toneladas)`};
 const money=v=>{const a=Math.abs(v)/1e6;return a>=1?"$ "+(a>=100?t0(v/1e6):t1(v/1e6))+" millones":"$ "+t0(v)};
 const mIn=(m,a,b)=>a<=b?m>=a&&m<=b:m>=a||m<=b;
 function vedaOf(code,mo,regRaw){return CFG.vedas.find(v=>(v.esp||[]).map(String).includes(String(code))&&mIn(mo,+v.desde,+v.hasta)&&(regRaw===undefined||!v.zona||v.zona===regRaw))}
@@ -2196,7 +2198,7 @@ function compData(pass,prev,hasPrev){const R=S.R,m=R.m,Z=zoneAgg(pass,prev),tot=
   const top=g=>[...g.esp].sort((a,b)=>b[1]-a[1])[0];
   const rows=[["Desembarque",g=>`<b>${t0(g.q)}</b> t`],["Participación del total",g=>t1(tot?g.q/tot*100:0)+" %"]];
   if(hasPrev)rows.push(["Variación frente al año anterior",g=>{const d=g.pq>0?pct(g.q,g.pq):null;return d===null?"—":`<span class="delta ${Math.abs(d)<.5?"flat":d>0?"up":"down"}">${d>0?"▲":d<0?"▼":"•"} ${t1(Math.abs(d))} %</span>`}]);
-  if(hasPrices())rows.push(["Valor estimado (precio de playa)",g=>money(g.val)]);
+  if(hasPrices())rows.push(["Valor estimado (solo especies con precio base por kilo)",g=>`${money(g.val)}<br><span class="cs">${t1(priceCov(g.esp).p)} % de las toneladas con precio</span>`]);
   rows.push(["Pescadores activos",g=>t0(g.fis.size)],["Mujeres",g=>`${t0(g.muj.size)} (${t1(g.fis.size?g.muj.size/g.fis.size*100:0)} %)`],["Toneladas por pescador",g=>t1(g.fis.size?g.q/g.fis.size:0)],
     ["Meses con desembarque",g=>t0(g.ym.size)],["Caletas activas",g=>t0(g.cal.size)],["Especies distintas",g=>t0(g.esp.size)],
     ["Recurso principal",g=>{const t=top(g);return t?`${esc(m.E[t[0]][1])} <span class="cs">${t1(t[1]/g.q*100)} %</span>`:"—"}],
@@ -2239,12 +2241,12 @@ const REP_CSS=`.rep{font-family:Manrope,"Segoe UI",Arial,sans-serif;color:#24170
 @media print{.rep .reg,.rep table,.rep .kp{break-inside:avoid}}`;
 function buildReport(){const {pass,A,prev}=LAST,R=S.R,m=R.m;renderClaves(A);const per=periodText()||"Todo el período",flt=filterText();
   const nf=A.fis.size,val=hasPrices()?A.esp.reduce((a,t,e)=>a+t*1000*priceOf(e),0):null;
-  const k=[[t0(A.q)+" t","Desembarque"],[t0(nf),"Pescadores activos"],[t1(nf?A.q/nf:0)+" t","Por pescador"],...(A.hasPrev?[[(d=>`${d>=0?"+":""}${t1(d)} %`)(pct(A.q,A.P.q)),"Frente al año anterior"]]:[]),...(val!==null?[[money(val),"Valor estimado"]]:[]),[t0(A.x)+" t","Captura calculada"]];
+  const k=[[t0(A.q)+" t","Desembarque"],[t0(nf),"Pescadores activos"],[t1(nf?A.q/nf:0)+" t","Por pescador"],...(A.hasPrev?[[(d=>`${d>=0?"+":""}${t1(d)} %`)(pct(A.q,A.P.q)),"Frente al año anterior"]]:[]),...(val!==null?[[money(val),"Valor estimado*"]]:[]),[t0(A.x)+" t","Captura calculada"]];
   const items=computeAlerts();const cd=compData(pass,prev,A.hasPrev);const PZ=piCompute(pass,"p","t");const pj=projData();
   const now=new Date();const gen=now.toLocaleDateString("es-CL")+" "+now.toLocaleTimeString("es-CL",{hour:"2-digit",minute:"2-digit"});
   const regs=$("#claves .regs");
   return`<div class="rep"><div class="rh"><span class="k">Asuntos Públicos · Reporte ejecutivo</span><h1>Estadísticas de Recolección y Captura</h1><span>Período: <b>${esc(per)}</b>${flt?` · ${esc(flt)}`:""}</span><span style="font-size:11px">Datos del ${dstr(R.minD)} al ${dstr(R.maxD)} · generado el ${esc(gen)} por ${esc(S.acct.usuario)}</span></div>
-  <div class="kp">${k.map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join("")}</div>
+  <div class="kp">${k.map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join("")}</div>${val!==null?`<p class="cs">* Valor estimado en pesos: ${priceNote(A.esp.entries())}. Las especies sin precio base no suman valor.</p>`:""}
   <h2>Comparación de zonas</h2><table>${compTable(cd)}</table>
   <h2>Alertas · ${esc(ALR.ml)} frente a ${esc(ALR.mp)}</h2>${alertsHtml(items,12)}
   <h2>Claves por zona</h2><div class="regs">${regs?regs.innerHTML:""}</div>
@@ -2388,7 +2390,7 @@ function piCompute(pass,mode=PI.mode,base=PI.base){
 async function renderPoder(pass){
   const box=$("#piZones");if(!PI.loaded||(S.perm.admin&&!BIT.loaded)){box.innerHTML=`<div class="card"><div class="spinner"></div></div>`;await Promise.all([piLoad(),bitLoad()]);if(S.tab!=="poder")return}
   $("#piWarn").hidden=!PI.warn;$("#piWarn").textContent=PI.warn;$("#piBase").disabled=!hasPrices();if(!hasPrices()&&PI.base==="v"){PI.base="t";$("#piBase").value="t"}
-  $("#piBaseNote").hidden=hasPrices();renderBitPend();
+  $("#piBaseNote").hidden=false;$("#piBaseNote").textContent=hasPrices()?"(valor: solo especies con precio base por kilo)":"(valor: requiere precios en Administración)";renderBitPend();
   const Zs=piCompute(pass||LAST.pass);
   if(!Zs.length){box.innerHTML=`<div class="card"><p class="cs">No hay desembarques con estos filtros.</p></div>`;return}
   box.innerHTML=Zs.map(Z=>piZone(Z)).join("");
@@ -3274,7 +3276,7 @@ function build(){
   const ev=paneViz("especies");
   add(ev,mkCard("cCalEsp","w12","Calendario de capturas por especie","Toneladas promedio por mes calendario en el período (15 especies principales). Las celdas con trama corresponden a meses en veda. El mes de mayor captura de cada especie va en negrita. Clic en una especie para filtrar.",
     `<div class="tbl" id="calEsp" style="border:0"></div>`,segH("ceV",[["fila","Intensidad por especie"],["comun","Escala común"]],ST2.get("ceV","fila"),"Escala de color")),ev&&ev.firstElementChild);
-  add(ev,mkCard("cValor","w12","Valor económico estimado","Toneladas × precio de playa por kilo de cada especie (configurado en Administración › Precios). Compara el peso de cada especie en volumen y en valor.",`<div id="valBox"></div>`));
+  add(ev,mkCard("cValor","w12","Valor económico estimado","Toneladas × precio base por kilo de cada especie (configurado en Administración › Precios). Solo se valorizan las especies que tienen precio base; las demás no suman pesos. Compara el peso de cada especie en volumen y en valor.",`<div id="valBox"></div>`));
 }
 
 /* ---------- 1. Evolución mensual: pequeños múltiplos por zona con el año anterior ---------- */
@@ -3530,7 +3532,7 @@ function valor(A){const R=S.R,m=R.m,X=CUR.X,box=$("#valBox"),card=$("#cValor");
   E("line",{x1:mid-4,x2:mid-4,y1:T,y2:H-4,stroke:"var(--line)"},svg);
   const ic=m.C.map((c,i)=>i).filter(i=>vC[i]>0).sort((a,b)=>vC[b]-vC[a]);
   hbar("gValC",ic.map(i=>{const nf=A.calFis[i].size;return{id:i,label:m.C[i][0],v:vC[i]/1e6,color:CC(m.C[i][4]),sub:`${money(nf?vC[i]/nf:0)} por pescador (${nf} activos)`,tip:`${money(vC[i])} · ${t1(VT?vC[i]/VT*100:0)} % del valor<br>${money(nf?vC[i]/nf:0)} por pescador activo`}}),"cal",520,130,{fmt:v=>t0(v),unit:" MM",right:70});
-  const top=ie[0],gain=ie.filter(i=>vE[i]/VT>A.esp[i]/A.q*1.5)[0];setC("cValorC",`Valor estimado del período: <b>${money(VT)}</b> (${money(A.fis.size?VT/A.fis.size:0)} por pescador activo)`+(top!=null?` · ${esc(m.E[top][1])} aporta el ${t0(vE[top]/VT*100)} % del valor`:"")+(gain!=null&&gain!==top?` · ${esc(m.E[gain][1])} pesa mucho más en valor que en volumen`:""))}
+  const top=ie[0],gain=ie.filter(i=>vE[i]/VT>A.esp[i]/A.q*1.5)[0];setC("cValorC",`<i>${priceNote(A.esp.entries())}.</i> Valor estimado del período: <b>${money(VT)}</b> (${money(A.fis.size?VT/A.fis.size:0)} por pescador activo)`+(top!=null?` · ${esc(m.E[top][1])} aporta el ${t0(vE[top]/VT*100)} % del valor`:"")+(gain!=null&&gain!==top?` · ${esc(m.E[gain][1])} pesa mucho más en valor que en volumen`:""))}
 
 
 /* ================= Interpretación en cada gráfico ================= */
