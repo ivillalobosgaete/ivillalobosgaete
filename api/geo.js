@@ -26,11 +26,11 @@ export default handler(async (req, res) => {
   const data = { amerb: [], caletas: [], fuente: "Geoportal Subpesca (IDE público)", obtenido: new Date().toISOString(), errores: [] };
   await Promise.all([
     (async () => {
-      for (const [layer, tipo] of [[0, "Decretada"], [1, "Solicitud"]]) {
+      for (const [layer, tipo] of [[0, "Decretada"], [1, "Solicitud"], [2, "Rechazada"]]) {
         try {
           const fs = await query("SRMPUB_AMERB", layer, `${T}C_REGION ${inR}`, "&maxAllowableOffset=0.0003");
           fs.forEach((f) => { const p = f.properties || {}; if (!f.geometry) return;
-            data.amerb.push({ tipo, n: pick(p, ".NOMBRE") || "", org: pick(p, ".ORGANIZACION") || "", esp: pick(p, ".ESPECIES") || "", ha: pick(p, ".SUPERFICIE"), est: pick(p, ".DETALLEESTADO") || "", pm: pick(p, ".ESTADO_PM") || "", vig: pick(p, ".VIGENCIA") || "", dec: pick(p, ".N_MINECON") || "", fdec: fdate(pick(p, ".F_MINECON")), reg: pick(p, ".C_REGION"), g: f.geometry }); });
+            data.amerb.push({ tipo, n: pick(p, ".NOMBRE") || "", org: pick(p, ".ORGANIZACION") || "", esp: pick(p, ".ESPECIES") || "", ha: pick(p, ".SUPERFICIE"), est: pick(p, ".DETALLEESTADO") || "", pm: pick(p, ".ESTADO_PM") || "", ce: pick(p, ".C_ESTADOAMERB"), fing: fdate(pick(p, ".F_ING_SSP")), frenov: fdate(pick(p, ".F_DECRETORENOV")), vig: pick(p, ".VIGENCIA") || "", dec: pick(p, ".N_MINECON") || "", fdec: fdate(pick(p, ".F_MINECON")), reg: pick(p, ".C_REGION"), g: f.geometry }); });
         } catch (e) { data.errores.push(`AMERB ${tipo}: ${e.message}`); }
       }
     })(),
