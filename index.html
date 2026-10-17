@@ -912,6 +912,30 @@ table.rgh td:first-child{white-space:normal}
 @media (max-width:820px){.mapz{grid-template-columns:minmax(0,1fr)}.mapp .lf{height:320px}}
 .mapp .leaflet-container svg,.mapp .leaflet-container canvas{max-width:none!important;width:auto!important;height:auto!important;display:block}
 .mapp .leaflet-container img{max-width:none!important}
+/* ===== Vedas vigentes ===== */
+.vdban{display:flex;gap:10px;align-items:center;width:100%;text-align:left;border:1px solid #f1b5ae;background:#fdecea;color:#5c1a14;border-radius:12px;padding:9px 12px;margin:0 0 12px;cursor:pointer;font-size:.88rem;line-height:1.4}
+.vdban[hidden]{display:none}
+.vdban:hover{background:#fbe0dc}
+.vdb-ic{flex:none;width:22px;height:22px;border-radius:50%;background:#c0392b;color:#fff;display:inline-grid;place-items:center;font-weight:900;font-size:.85rem}
+.vdb-go{margin-left:auto;font-weight:800;color:#c0392b;white-space:nowrap;font-size:.8rem}
+.vdn{color:#c0392b!important;font-weight:800}
+.vdt{fill:#c0392b!important;font-weight:800}
+.vdtag{display:inline-block;margin-left:6px;background:#c0392b;color:#fff;border-radius:999px;padding:0 7px;font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:.03em;vertical-align:1px}
+.vdof{display:inline-block;background:var(--brand-08);color:var(--accent,#a84a00);border-radius:999px;padding:0 7px;font-size:.66rem;font-weight:800;text-transform:uppercase}
+.vdof.own{background:#e8f1fb;color:#1f5fa8}
+tr.vdoff td{opacity:.5}
+.vdwarn{margin:4px 0 8px;background:#fdecea;border-left:3px solid #c0392b;border-radius:0 8px 8px 0;padding:7px 10px;font-size:.86rem;color:#5c1a14}
+.vdwarn[hidden]{display:none}
+.vdpop{position:fixed;inset:0;background:rgba(20,10,5,.45);display:grid;place-items:center;z-index:3000;padding:16px}
+.vdpop[hidden]{display:none}
+.vdm{background:var(--surface,#fff);border-radius:16px;max-width:820px;width:100%;max-height:88vh;overflow:auto;padding:18px 20px;box-shadow:0 20px 60px rgba(0,0,0,.25);border-top:5px solid #c0392b}
+.vdm-h{display:flex;gap:10px;align-items:center}.vdm-h h3{margin:0}
+.vdm table{width:100%;border-collapse:collapse;font-size:.84rem}.vdm th,.vdm td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.vdm th{font-size:.68rem;text-transform:uppercase;color:var(--muted)}
+.vdm td,.vdm th{white-space:normal!important;min-width:0!important}
+.vdm td:first-child{width:46%}
+@media (max-width:560px){.vdm{padding:14px}.vdm table{font-size:.78rem}}
+@media (max-width:560px){.vdm thead{display:none}.vdm table,.vdm tbody,.vdm tr,.vdm td{display:block;width:auto!important}.vdm tr{border-bottom:1px solid var(--line);padding:6px 0}.vdm td{border:0;padding:2px 4px}}
 /*C2E*/</style>
 </head>
 <body>
@@ -3423,8 +3447,10 @@ function iPesc(A){const R=S.R,m=R.m;const arr=[...A.pq.values()],N=arr.length,T=
   addTo("cCohC","Una rotación alta indica que la base de beneficiarios cambia año a año: conviene usar listas actualizadas y criterios de antigüedad.")}
 function iEspTab(A){const R=S.R,m=R.m,X=CUR.X;
   if(!CFG.vedas.length)I("vedaCal","cVedaC","No hay vedas registradas, por lo que no se puede contrastar el desembarque con los períodos de veda. "+(S.perm.admin?"Agrégalas en Administración › Vedas y temporadas.":"Un administrador puede agregarlas."));
-  else{let tv=0,tt2=0;const zone=S.f.reg.size===1?R.regRaw[[...S.f.reg][0]]:undefined;const codes=new Set(CFG.vedas.flatMap(v=>(v.esp||[]).map(String)));m.E.forEach((e,i)=>{if(!codes.has(String(e[0])))return;for(let mo=0;mo<12;mo++){const v=X.espMo[i][mo];tt2+=v;if(vedaOf(e[0],mo,zone))tv+=v}});
-    I("vedaCal","cVedaC",tt2?`De las especies con veda, el ${t1(tv/tt2*100)} % del desembarque (${t0(tv)} t) ocurre en meses de veda. ${tv>0?"Puede corresponder a vedas por zona, permisos especiales o errores de registro: conviene revisarlo antes de usar esas cifras.":"No se registran desembarques en meses de veda."}`:"Las especies con veda no tienen desembarques con estos filtros.")}
+  else{const R2=S.R,pass=LAST.pass,codes=new Set(CFG.vedas.flatMap(v=>(v.esp||[]).map(String)));let tt2=0,tv=0,tvR=0;const kr=R2.m.cats.findIndex(c=>/recolector/i.test(c));const byE=new Map();
+    for(let i=0;i<R2.n;i++){if(!pass[i])continue;const code=String(R2.m.E[R2.e[i]][0]);if(!codes.has(code))continue;const q=R2.q[i]/1000;tt2+=q;if(enVeda(i)){tv+=q;if(R2.k[i]===kr)tvR+=q;byE.set(R2.e[i],(byE.get(R2.e[i])||0)+q)}}
+    const top=[...byE].sort((a,b)=>b[1]-a[1])[0];
+    I("vedaCal","cVedaC",tt2?(tv>0?`De las especies con veda, el <b>${t1(tv/tt2*100)} %</b> del desembarque (${t0(tv)} t) se registró dentro de una veda vigente para su fecha y zona${top?`, principalmente ${esc(R2.m.E[top[0]][1])}`:""}. ${tvR>0?`El ${t0(tvR/tv*100)} % de ese volumen es recolección de orilla, que en los huiros suele corresponder a alga varada, permitida por el decreto. `:""}El resto puede deberse a extracción en áreas de manejo (AMERB) o a errores de registro: conviene revisarlo antes de usar esas cifras.`:"No se registran desembarques dentro de vedas vigentes para su fecha y zona."):"Las especies con veda no tienen desembarques con estos filtros.")}
   const top=m.E.map((e,i)=>[i,A.esp[i]]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,12);
   if(top.length){const info=top.map(([e,t])=>{let mx=0,mc=-1,n=0;X.calEsp.forEach((mp,c)=>{const v=mp.get(e)||0;if(v>0)n++;if(v>mx){mx=v;mc=c}});return{e,t,n,sh:mx/t*100,c:mc}});const conc=info.filter(x=>x.sh>=80).sort((a,b)=>b.t-a.t);const wide=info.slice().sort((a,b)=>b.n-a.n)[0];
     I("xEspCal","cXEspC",`<b>${esc(m.E[wide.e][1])}</b> es la especie más extendida (presente en ${wide.n} caletas).${conc.length?` ${conc.slice(0,3).map(x=>`${esc(m.E[x.e][1])} (${t0(x.sh)} % en ${esc(m.C[x.c][0])})`).join(", ")} se concentra${conc.length>1?"n":""} en una sola caleta: medidas sobre esa especie afectarán sobre todo a esa caleta.`:" Ninguna de las principales especies depende de una sola caleta."}`)}else I("xEspCal","cXEspC","");
@@ -3447,7 +3473,7 @@ function iDepGap(){iImpl();if(isOpen("esp"))addTo("cDepC","Esas caletas son las 
   if(isOpen("soc"))addTo("cGapC","Las brechas grandes suelen reflejar que las mujeres se concentran en recursos de menor volumen (como la recolección de orilla), no necesariamente menor dedicación.");
   if(isOpen("act"))addTo("cAnomC","Los meses inusualmente bajos recientes conviene verificarlos con la caleta: pueden deberse a vedas, marejadas, conflictos o problemas de registro.")}
 /* Negociación */
-if(typeof renderNeg==="function"){const _rn=renderNeg;renderNeg=function(){_rn.apply(this,arguments);try{iNeg()}catch(e){console.error(e)}}}
+if(typeof renderNeg==="function"){const _rn=renderNeg;renderNeg=function(){_rn.apply(this,arguments);try{iNeg()}catch(e){console.error(e)}try{vedaMark()}catch(e){}}}
 function iNeg(){const R=S.R;if(!R||!N||!N.mo||!N.mo.size){I("gNeg","cNegC","");return}const esp=+$("#nEsp").value,lug=$("#nLug").value;let y0=+$("#nY0").value,y1=+$("#nY1").value;if(y0>y1)[y0,y1]=[y1,y0];const months=[...N.mo].sort((a,b)=>a-b);
   const {out}=negCalc(esp,lug,y0,y1,months);const yN=y1-y0+1,tot=new Float64Array(yN);out.forEach(o=>o.ys.forEach(r=>tot[r.y-y0]+=r.t));const ys=[...tot].map((v,i)=>({y:y0+i,v}));const full=ys.filter(x=>{const ym=(x.y-R.y0)*12+months[months.length-1];return ym<=R.lastYM});
   if(full.length<2||!full.some(x=>x.v>0)){I("gNeg","cNegC","Con un solo año (o sin datos) no es posible interpretar la tendencia; amplía el rango de años.");return}
@@ -3536,6 +3562,78 @@ function buildMap(){const pane=document.querySelector('[data-pane="resumen"]');i
   d.addEventListener("toggle",()=>{UIP.set("sec.map",d.open?"1":"0");if(d.open&&LAST&&S.tab==="resumen")renderPane()});
   const first=pane.querySelector("details.sec");pane.insertBefore(d,first||pane.firstChild)}
 
+/* ================= Vedas oficiales precargadas + alertas de veda vigente ================= */
+const COQ="IV REGION COQUIMBO",ANT="II REGION ANTOFAGASTA";
+const VOF=[
+  {id:"pulpo-v1",esp:["485"],zona:"",desde:10,hasta:1,tipo:"Veda biológica",norma:"D. Ex. 254/2000",nota:"Regiones I a IV. Prohíbe captura, comercialización, transporte, procesamiento y almacenamiento.",vig:["2000-06-29",""]},
+  {id:"pulpo-v2",esp:["485"],zona:"",desde:5,hasta:6,tipo:"Veda biológica",norma:"D. Ex. 254/2000",nota:"Regiones I a IV. Prohíbe captura, comercialización, transporte, procesamiento y almacenamiento.",vig:["2000-06-29",""]},
+  {id:"hnegro-c1",esp:["141"],zona:COQ,desde:0,hasta:1,tipo:"Veda extractiva",norma:"D. Ex. 0EXE202400204",nota:"Coquimbo 2025–2030. Excepto alga varada (con cuota) y AMERB, reservas o ECMPO con plan de manejo.",vig:["2025-01-01","2030-12-31"]},
+  {id:"hnegro-c2",esp:["141"],zona:COQ,desde:3,hasta:7,tipo:"Veda extractiva",norma:"D. Ex. 0EXE202400204",nota:"Coquimbo 2025–2030. Excepto alga varada (con cuota) y AMERB, reservas o ECMPO con plan de manejo.",vig:["2025-01-01","2030-12-31"]},
+  {id:"hnegro-c3",esp:["141"],zona:COQ,desde:9,hasta:10,tipo:"Veda extractiva",norma:"D. Ex. 0EXE202400204",nota:"Coquimbo 2025–2030. Excepto alga varada (con cuota) y AMERB, reservas o ECMPO con plan de manejo.",vig:["2025-01-01","2030-12-31"]},
+  {id:"hpalo-c",esp:["142"],zona:COQ,desde:5,hasta:6,tipo:"Veda extractiva",norma:"D. Ex. 0EXE202400204",nota:"Coquimbo 2025–2030. Excepto alga varada y AMERB, reservas o ECMPO con plan de manejo.",vig:["2025-01-01","2030-12-31"]},
+  {id:"hflot-c",esp:["145"],zona:COQ,desde:0,hasta:11,tipo:"Veda extractiva",norma:"D. Ex. 0EXE202400204",nota:"Huiro flotador, todo el año, Coquimbo 2025–2030. Excepto alga varada y AMERB con plan de manejo.",vig:["2025-01-01","2030-12-31"]},
+  {id:"huiros-a",esp:["141","142","145"],zona:ANT,desde:0,hasta:11,tipo:"Veda extractiva",norma:"D. Ex. 202400131",nota:"Arica, Tarapacá y Antofagasta, 10 años desde el 22-10-2024. Revisar en el decreto las excepciones (varado, AMERB).",vig:["2024-10-22","2034-10-21"]},
+  {id:"loco",esp:["455"],zona:"",desde:0,hasta:11,tipo:"Veda extractiva",norma:"D. Ex. 7/2026",nota:"Arica a Aysén hasta 2028. Excepto AMERB con plan de manejo vigente para loco.",vig:["2026-01-01","2028-12-31"]}];
+const VOFF=v=>(v.esp||[]).length===1&&String(v.esp[0]).startsWith("OFF:");
+function vedasMerge(){const custom=(CFG.vedas||[]).filter(v=>!v.of);const off=new Set(custom.filter(VOFF).map(v=>String(v.esp[0]).slice(4)));CFG.vedas=[...VOF.filter(v=>!off.has(v.id)).map(v=>({...v,of:true})),...custom]}
+if(typeof cfgLoad==="function"){const _cl=cfgLoad;cfgLoad=async function(){const r=await _cl.apply(this,arguments);vedasMerge();return r}}
+if(typeof cfgSave==="function"){const _cs=cfgSave;cfgSave=async function(){const all=CFG.vedas;CFG.vedas=all.filter(v=>!v.of);try{return await _cs.apply(this,arguments)}finally{CFG.vedas=all}}}
+if(typeof CFG==="object"&&CFG.loaded)vedasMerge();
+const isoDay=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const vigOk=(v,day)=>!v.vig||((!v.vig[0]||day>=v.vig[0])&&(!v.vig[1]||day<=v.vig[1]));
+const espName=c=>{const e=S.R&&S.R.m.E.find(x=>String(x[0])===String(c));return e?e[1]:null};
+/* Vedas vigentes hoy y próximas (30 días), solo de especies presentes en la base */
+function vedasHoy(){const d=new Date(),day=isoDay(d),mo=d.getMonth(),R=S.R;if(!R)return{now:[],next:[]};const zones=new Set(R.regRaw);const now=[],next=[];
+  (CFG.vedas||[]).forEach(v=>{if(VOFF(v)||!vigOk(v,day))return;if(v.zona&&!zones.has(v.zona))return;(v.esp||[]).forEach(c=>{const n=espName(c);if(!n)return;
+    const item={c:String(c),n,zona:v.zona,v};if(mIn(mo,+v.desde,+v.hasta)){const end=new Date(d.getFullYear()+(+v.hasta<mo?1:0),+v.hasta+1,0);item.hasta=end;now.push(item)}
+    else{const st=new Date(d.getFullYear()+(+v.desde<mo?1:0),+v.desde,1);const days=Math.ceil((st-d)/864e5);if(days<=30){item.desde=st;item.days=days;next.push(item)}}})});
+  const dedup=a=>{const m=new Map();a.forEach(x=>{const k=x.c+"|"+x.zona;if(!m.has(k))m.set(k,x)});return[...m.values()]};return{now:dedup(now),next:dedup(next)}}
+const zTxt=z=>z?regLabel(z):"todas las zonas";
+const fD=d=>d.getDate()+" de "+MESL[d.getMonth()];
+const VH={codes:new Set()};
+function vedaUI(){const H=vedasHoy();const zf=S.f.reg.size===1?S.R.regRaw[[...S.f.reg][0]]:null;VH.codes=new Set(H.now.filter(x=>!zf||!x.zona||x.zona===zf).map(x=>x.c));VH.H=H;
+  let ban=$("#vdBan");const pane=document.querySelector('[data-pane="resumen"]');if(!ban&&pane){ban=document.createElement("button");ban.type="button";ban.id="vdBan";ban.className="vdban";pane.insertBefore(ban,pane.firstChild);ban.onclick=()=>vedaPop(true)}
+  if(ban){ban.hidden=!H.now.length&&!H.next.length;ban.innerHTML=`<span class="vdb-ic" aria-hidden="true">!</span><span><b>${H.now.length?"Veda vigente hoy:":"Próxima veda:"}</b> ${H.now.map(x=>`<span class="vdn">${esc(x.n)}</span> <span class="cs">(${esc(zTxt(x.zona))})</span>`).join(" · ")}${H.next.length?`${H.now.length?" · ":""}<span class="cs">Próximas: ${H.next.map(x=>`${esc(x.n)} desde el ${fD(x.desde)}`).join(" · ")}</span>`:""}</span><span class="vdb-go">Ver detalle</span>`}
+  vedaMark();vedaPop(false)}
+function vedaPop(force){const H=VH.H||vedasHoy();if(!H.now.length&&!H.next.length){if(force)toast("No hay vedas vigentes hoy para las especies de la base.");return}
+  const key="vdpop."+isoDay(new Date());if(!force){try{if(localStorage.getItem(key))return}catch(e){}}
+  let m=$("#vdPop");if(!m){m=document.createElement("div");m.id="vdPop";m.className="overlay vdpop";m.hidden=true;document.body.appendChild(m);m.addEventListener("click",ev=>{if(ev.target===m||ev.target.closest("[data-vdx]")){m.hidden=true;try{localStorage.setItem(key,"1")}catch(e){}}
+    if(ev.target.closest("[data-vdgo]")){m.hidden=true;try{localStorage.setItem(key,"1")}catch(e){}if(typeof setTab==="function")setTab("especies");else{const b=document.querySelector('button[data-tab="especies"]');if(b)b.click()}setTimeout(()=>{const v=$("#vedaCal");if(v)v.scrollIntoView({behavior:"smooth",block:"start"})},300)}})}
+  const row=(x,now)=>`<tr><td><b class="${now?"vdn":""}">${esc(x.n)}</b>${x.v.nota?`<div class="cs">${esc(x.v.nota)}</div>`:""}</td><td>${esc(zTxt(x.zona))}</td><td>${now?`hasta el ${fD(x.hasta)}`:`desde el ${fD(x.desde)} (en ${x.days} día${x.days===1?"":"s"})`}</td><td>${esc(x.v.tipo||"Veda")}${x.v.norma?`<div class="cs">${esc(x.v.norma)}</div>`:""}</td></tr>`;
+  m.innerHTML=`<div class="modal vdm" role="dialog" aria-modal="true" aria-labelledby="vdpT"><div class="vdm-h"><span class="vdb-ic" aria-hidden="true">!</span><h3 id="vdpT">Alerta de vedas · ${fD(new Date())}</h3></div>
+    ${H.now.length?`<p><b>${H.now.length} especie${H.now.length===1?"":"s"} de la base está${H.now.length===1?"":"n"} en veda hoy.</b> Durante la veda se prohíbe su extracción (y en general su comercialización y transporte), salvo las excepciones del decreto.</p><div class="tbl"><table><thead><tr><th>Especie</th><th>Zona</th><th>Vigencia</th><th>Tipo y norma</th></tr></thead><tbody>${H.now.map(x=>row(x,true)).join("")}</tbody></table></div>`:""}
+    ${H.next.length?`<p><b>Próximas vedas (30 días)</b></p><div class="tbl"><table><tbody>${H.next.map(x=>row(x,false)).join("")}</tbody></table></div>`:""}
+    <p class="cs">Fuente: decretos de la Subsecretaría de Pesca y Acuicultura cargados en la plataforma. Verifica suspensiones o cambios recientes en subpesca.cl.</p>
+    <div class="row" style="justify-content:flex-end;gap:8px"><button type="button" class="btn ghost" data-vdgo>Ver calendario de vedas</button><button type="button" class="btn" data-vdx>Entendido</button></div></div>`;
+  m.hidden=false}
+/* Marcar en rojo las especies en veda vigente en gráficos, tablas, filtros y calculadora */
+function vedaMark(){const R=S.R;if(!R)return;const names=new Map();VH.codes.forEach(c=>{const n=espName(c);if(n)names.set(n,c)});
+  const isV=t=>{if(!t)return false;t=t.replace(/\s*●\s*veda$/,"").trim();if(names.has(t))return true;if(t.endsWith("…")){const p=t.slice(0,-1);for(const n of names.keys())if(n.startsWith(p))return true}return false};
+  const g=$("#gEsp");if(g)g.querySelectorAll('text[text-anchor="end"]').forEach(t=>{if(isV(t.textContent)){t.classList.add("vdt");if(!/veda$/.test(t.textContent))t.textContent=t.textContent+" ● veda"}});
+  document.querySelectorAll("#calEsp .ce-e, #xEspCal td:first-child b, #vedaCal td:first-child b").forEach(b=>{const t=b.textContent.trim();b.classList.toggle("vdn",isV(t));if(isV(t)&&!b.querySelector(".vdtag")){const s=document.createElement("span");s.className="vdtag";s.textContent="en veda";b.appendChild(s)}});
+  document.querySelectorAll('.slicer[data-f="esp"] .opt .nm').forEach(n=>{const t=(n.firstChild&&n.firstChild.textContent||"").trim();if(isV(t)){n.classList.add("vdn");if(!n.querySelector(".vdtag")){const s=document.createElement("span");s.className="vdtag";s.textContent="veda";n.appendChild(s)}}});
+  const ne=$("#nEsp");if(ne)[...ne.options].forEach(o=>{const c=String(R.m.E[+o.value]?R.m.E[+o.value][0]:"");const base=o.textContent.replace(/ · EN VEDA$/,"");o.textContent=base+(VH.codes.has(c)?" · EN VEDA":"")});
+  const nw=$("#nVedaW");if(ne){const e=R.m.E[+ne.value];const on=e&&VH.codes.has(String(e[0]));let w=nw;if(!w){w=document.createElement("p");w.id="nVedaW";w.className="vdwarn";ne.closest(".card").querySelector("h3").after(w)}w.hidden=!on;if(on){const x=VH.H.now.find(y=>y.c===String(e[0]));w.innerHTML=`<b>${esc(e[1])} está en veda hoy</b> (${esc(zTxt(x.zona))}, hasta el ${fD(x.hasta)}). Considéralo al usar estos promedios en una negociación.`}}}
+/* Lista de vedas en Administración: oficiales (activar/desactivar) y propias (quitar) */
+if(typeof cfgRender==="function"){const _cr=cfgRender;cfgRender=function(){_cr.apply(this,arguments);try{vdListRender()}catch(e){console.error(e)}}}
+function vdListRender(){const el=$("#vdList");if(!el||!S.R)return;const m=S.R.m;const eName=c=>{const e=m.E.find(x=>String(x[0])===String(c));return e?e[1]:"Código "+c};
+  const custom=(CFG.vedas||[]).filter(v=>!v.of),off=new Set(custom.filter(VOFF).map(v=>String(v.esp[0]).slice(4)));const H=vedasHoy(),nowIds=new Set(H.now.map(x=>x.v.id).filter(Boolean));
+  const rowsO=VOF.map(v=>`<tr class="${off.has(v.id)?"vdoff":""}"><td><b>${esc(v.esp.map(eName).join(", "))}</b><div><span class="vdof">Oficial</span>${nowIds.has(v.id)&&!off.has(v.id)?` <span class="vdtag">vigente hoy</span>`:""}</div></td><td>${v.zona?esc(regLabel(v.zona)):"Todas"}</td><td>${cap(MESL[v.desde])} a ${MESL[v.hasta]}</td><td style="white-space:normal">${esc(v.tipo)} · ${esc(v.norma)}<div class="cs">${esc(v.nota)}</div></td><td><button class="btn ghost small" type="button" data-vof="${v.id}">${off.has(v.id)?"Activar":"Desactivar"}</button></td></tr>`).join("");
+  const own=custom.map((v,k)=>[v,k]).filter(([v])=>!VOFF(v));
+  const rowsC=own.map(([v,k])=>`<tr><td><b>${esc((v.esp||[]).map(eName).join(", "))}</b><div><span class="vdof own">Agregada</span></div></td><td>${v.zona?esc(regLabel(v.zona)):"Todas"}</td><td>${cap(MESL[v.desde])} a ${MESL[v.hasta]}</td><td style="white-space:normal">${esc(v.nota||"")}</td><td><button class="btn ghost small" type="button" data-vdc="${k}">Quitar</button></td></tr>`).join("");
+  el.innerHTML=`<thead><tr><th>Especie</th><th>Zona</th><th>Meses</th><th>Norma y nota</th><th></th></tr></thead><tbody>${rowsO}${rowsC}</tbody>`}
+document.addEventListener("click",async ev=>{const o=ev.target.closest("[data-vof]"),c=ev.target.closest("[data-vdc]");if(!o&&!c)return;ev.stopPropagation();
+  const custom=(CFG.vedas||[]).filter(v=>!v.of),old=CFG.vedas.slice();
+  if(o){const id=o.dataset.vof,isOff=custom.some(v=>VOFF(v)&&v.esp[0]==="OFF:"+id);const vv=VOF.find(v=>v.id===id);
+    if(!await askYN(isOff?`¿Activar la veda oficial de <b>${esc(vv.esp.map(espName).filter(Boolean).join(", "))}</b>?`:`¿Desactivar la veda oficial de <b>${esc(vv.esp.map(espName).filter(Boolean).join(", "))}</b>? Dejará de mostrarse en calendarios y alertas.`,{title:isOff?"Activar veda":"Desactivar veda",danger:!isOff}))return;
+    const nc=isOff?custom.filter(v=>!(VOFF(v)&&v.esp[0]==="OFF:"+id)):[...custom,{esp:["OFF:"+id],zona:"",desde:0,hasta:0,nota:"Veda oficial desactivada"}];CFG.vedas=nc;vedasMerge()}
+  else{if(!await askYN("¿Quitar esta veda del calendario?",{title:"Quitar veda",danger:true}))return;const k=+c.dataset.vdc;custom.splice(k,1);CFG.vedas=custom;vedasMerge()}
+  try{await cfgSave();ST.log("Ajustes","Actualizó vedas");cfgRender();toast("Vedas actualizadas.");if(LAST)render()}catch(e){CFG.vedas=old;toast(e&&e.message||"No se pudo guardar.")}},true);
+
+/* ¿El registro i cae dentro de una veda vigente en su fecha y zona? */
+function enVeda(i){const R=S.R,code=String(R.m.E[R.e[i]][0]),z=R.regRaw[R.reg[i]],dt=new Date(BASE+R.d[i]*DAY),day=dt.toISOString().slice(0,10),mo=dt.getUTCMonth();
+  return(CFG.vedas||[]).some(v=>!VOFF(v)&&(v.esp||[]).map(String).includes(code)&&(!v.zona||v.zona===z)&&mIn(mo,+v.desde,+v.hasta)&&vigOk(v,day))}
+
 /* ---------- Conexión con el render ---------- */
 const _renderPane=renderPane;
 renderPane=function(){if(!LAST||!S.R)return _renderPane();const t=S.tab;CUR={X:null,D:null};
@@ -3545,6 +3643,7 @@ renderPane=function(){if(!LAST||!S.R)return _renderPane();const t=S.tab;CUR={X:n
     if(t==="pescadores"){cohort();scatter(A)}
     if(t==="especies"){calEsp(A);catBars(A);valor(A)}}catch(e){console.error(e)}
   try{if(t==="resumen"&&isOpen("map"))mapa2(A)}catch(e){console.error(e)}
+  try{vedaUI()}catch(e){console.error(e)}
   try{if(t==="resumen"){if(isOpen("zon"))iZonas(A);if(isOpen("act")){iMesExtra(A);iProj();iCalHeat();iHeat(A)}if(isOpen("esp")){iEsp(A);iComuna(A)}iDepGap()}
     if(t==="pescadores")iPesc(A);if(t==="especies"){iEspTab(A);iImpl()}}catch(e){console.error(e)}};
 document.addEventListener("click",ev=>{const b=ev.target.closest(".c2seg button[data-v]");if(!b)return;const k=b.closest(".c2seg").dataset.c2k;ST2.set(k,b.dataset.v);b.parentNode.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
