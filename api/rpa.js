@@ -37,6 +37,8 @@ function filas(html) {
   flushRow();
   return rows;
 }
+const ETQ = new Set(["n identificacion", "n° identificacion", "nº identificacion", "fecha inscripcion", "fecha de inscripcion", "oficina", "estado", "r.u.t pescador", "rut pescador", "nombres", "apellido paterno", "apellido materno", "fecha nacimiento", "pais nacimiento", "direccion", "localidad", "comuna conara", "provincia", "region", "caleta base", "sexo", "comentario", "n de inscripcion", "n° de inscripcion", "nº de inscripcion", "nº matricula", "n° matricula", "matricula", "capitania", "nombre embarcacion", "senal distintiva", "fecha vencimiento", "clasificacion", "eslora (m)", "manga (m)", "puntal (m)", "t.r.g", "bodega (m3)", "potencia motor (hp)", "material del casco", "ano construccion", "embarcacion auxiliar", "n inscripcion", "nº inscripcion", "n° inscripcion", "tipo de armador"].map((x) => nrm(x)));
+const esEtiqueta = (x) => { const n = nrm(x).replace(/[:.]$/, ""); return ETQ.has(n) || ETQ.has(n.replace(/^n[°º]?\s*/, "n ")); };
 // Valor de una etiqueta: la celda siguiente no vacía (o el resto de la misma celda tras ":").
 function campo(rows, etiquetas, desde = 0) {
   const L = etiquetas.map(nrm);
@@ -47,8 +49,10 @@ function campo(rows, etiquetas, desde = 0) {
       const hit = L.find((l) => n === l || (n.startsWith(l + " ") && R[c].includes(":")));
       if (!hit) continue;
       if (n !== hit) { const v = R[c].slice(R[c].indexOf(":") + 1).trim(); if (v) return { v, r }; }
-      for (let k = c + 1; k < R.length; k++) if (R[k] && nrm(R[k]) !== hit) return { v: R[k], r };
-      if (rows[r + 1] && rows[r + 1][c]) return { v: rows[r + 1][c], r: r + 1 };
+      // Formato en columnas (fila de etiquetas y debajo la fila de valores): si la celda siguiente también es una etiqueta, usar la de abajo.
+      const nx = R.slice(c + 1).find((x) => x);
+      if (nx && !esEtiqueta(nx) && nrm(nx) !== hit) return { v: nx, r };
+      if (rows[r + 1] && rows[r + 1][c] && !esEtiqueta(rows[r + 1][c])) return { v: rows[r + 1][c], r: r + 1 };
     }
   }
   return { v: "", r: -1 };
@@ -123,7 +127,7 @@ async function consultar(num) {
     try { const f = parseEmbarcacion(await bajar(`${BASE()}regembarcaciones_publico/verAction.php?num=${encodeURIComponent(e.cod)}`)); const ef = f.estado; Object.assign(e, f, { cod: e.cod, tipo: e.tipo, estado: e.estado || ef || "", estadoFicha: ef && nrm(ef) !== nrm(e.estado) ? ef : "", nombre: e.nombre || f.nombre }); }
     catch (er) { e.error = "No se pudo leer la ficha de la embarcación"; }
   });
-  return { ...p, ver: 3, fuente: `${BASE()}regpescadores_publico/verAction.php?num=${num}`, obtenido: new Date().toISOString() };
+  return { ...p, ver: 4, fuente: `${BASE()}regpescadores_publico/verAction.php?num=${num}`, obtenido: new Date().toISOString() };
 }
 
 async function pool(items, n, fn) { const out = []; let i = 0; await Promise.all(Array.from({ length: n }, async () => { while (i < items.length) { const k = i++; out[k] = await fn(items[k]); } })); return out; }
@@ -148,7 +152,7 @@ export default handler(async (req, res) => {
   catch (e) { if (tableMissing(e)) falta = true; else throw e; }
   const datos = {}, errores = {}, nuevos = [];
   const stale = u.searchParams.get("stale") === "1";
-  for (const c of cache || []) if ((c.dia === dia || stale) && !forzar && (stale || (c.datos && c.datos.ver === 3))) datos[c.rpa] = c.dia === dia ? c.datos : { ...c.datos, desactualizado: true };
+  for (const c of cache || []) if ((c.dia === dia || stale) && !forzar && (stale || (c.datos && c.datos.ver === 4))) datos[c.rpa] = c.dia === dia ? c.datos : { ...c.datos, desactualizado: true };
   const pend = nums.filter((n) => !datos[n]);
   await pool(pend, 4, async (n) => {
     try {
