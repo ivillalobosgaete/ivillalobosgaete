@@ -1031,6 +1031,42 @@ tr.vdoff td{opacity:.5}
 tr.vr-nx td{background:#fffaeb}
 tr.vr-now td{background:#fff5f4}
 .vdwarn.nx{background:#fff8e1;border-left-color:#d9a300;color:#5a4300}
+.rsb{display:grid;gap:6px;margin:4px 0 2px}
+.rsb-t{display:flex;flex-wrap:wrap;gap:6px}
+.rsb-b{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-weight:700;font-size:.82rem;cursor:pointer;color:var(--ink-2)}
+.rsb-b b{background:var(--brand-08,#fff3e6);border-radius:999px;padding:0 8px;font-variant-numeric:tabular-nums}
+.rsb-b[aria-pressed="true"]{color:#fff;border-color:transparent}
+.rsb-b.k-rev[aria-pressed="true"]{background:#8a5a00}.rsb-b.k-pesca[aria-pressed="true"]{background:#1f5fa8}.rsb-b.k-apn[aria-pressed="true"]{background:#d76a00}.rsb-b.k-amb[aria-pressed="true"]{background:#16794a}.rsb-b.k-otros[aria-pressed="true"]{background:#5d6670}.rsb-b.k-desc[aria-pressed="true"]{background:#b23b32}.rsb-b.k-all[aria-pressed="true"]{background:var(--brand)}
+.rsb-b[aria-pressed="true"] b{background:rgba(255,255,255,.25);color:#fff}
+.rsb-b.k-pesca{border-left:4px solid #1f5fa8}.rsb-b.k-apn{border-left:4px solid #d76a00}.rsb-b.k-amb{border-left:4px solid #16794a}.rsb-b.k-otros{border-left:4px solid #5d6670}.rsb-b.k-desc{border-left:4px solid #b23b32}.rsb-b.k-rev{border-left:4px solid #c08a00}
+.rsb-d{font-size:.82rem;color:var(--ink-2);background:var(--brand-08,#fff8f0);border-radius:10px;padding:6px 10px}
+.secc{display:inline-block;border-radius:999px;padding:1px 9px;font-size:.72rem;font-weight:800;color:#fff;background:#5d6670}
+.secc.s-pesca{background:#1f5fa8}.secc.s-apn{background:#d76a00}.secc.s-amb{background:#16794a}.secc.s-otros{background:#5d6670}
+.fi-cmp{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;margin:4px 0}
+.fi-cmp .cmp{border:1px solid var(--line);border-radius:999px;padding:1px 8px;font-size:.74rem;background:var(--surface)}
+.fi-cmp .cmp.pe{border-color:#1f5fa8;color:#1f5fa8;font-weight:700}.fi-cmp .cmp.warn{border-color:#c08a00;color:#8a5a00;background:#fff6dd}
+.fx{display:grid;gap:8px;border-top:1px dashed var(--line);margin-top:8px;padding-top:10px}
+.fx-r{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:flex-end}
+.fx-f{display:grid;gap:3px}.fx-f>span{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.fx-f select{min-width:220px}
+.fx-seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.fx-seg button{border:0;background:var(--surface);padding:5px 14px;font-weight:700;cursor:pointer;color:var(--ink-2)}
+.fx-seg button+button{border-left:1px solid var(--line)}
+.fx-seg button[data-ap="1"][aria-pressed="true"]{background:#d76a00;color:#fff}.fx-seg button[data-ap="0"][aria-pressed="true"]{background:#5d6670;color:#fff}
+.fx-pe{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:.84rem;font-weight:600;cursor:pointer}
+.fx-pe.on{border-color:#1f5fa8;background:#e8f0fb;color:#1f5fa8}
+.fx-cl{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.fx-k{display:inline-flex;align-items:center;gap:4px;background:var(--brand-08,#fff3e6);border:1px solid var(--line);border-radius:999px;padding:2px 4px 2px 10px;font-size:.8rem}
+.fx-kx{border:0;background:transparent;cursor:pointer;font-size:1rem;line-height:1;color:var(--muted);padding:0 4px}.fx-kx:hover,.bk-kx:hover{color:#b23b32}
+.bk-kx{border:0;background:transparent;cursor:pointer;font-size:1rem;line-height:1;color:var(--muted);padding:0 4px}
+.fx-add,.bk-add{min-width:190px}
+.fx-note{font-size:.8rem;color:#8a5a00;background:#fff6dd;border-radius:8px;padding:5px 9px}
+.fx-act{align-items:center}.fx-act .fi-nota{flex:1;min-width:200px}
+.fx-dest{font-size:.82rem}
+.rca-bulk{display:grid;gap:8px}.bk-r{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.rkav{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}.rkav>span:first-child{font-weight:700;font-size:.8rem}
+.rkp{flex:1;min-width:120px;height:8px;border-radius:4px;background:var(--line);overflow:hidden}.rkp i{display:block;height:100%;background:#16794a}
+@media(max-width:700px){.fx-f select,.fx-add{min-width:0;width:100%}.fx-f{width:100%}.fx-act .btn{flex:1}}
 /*C2E*/</style>
 </head>
 <body>
@@ -2477,7 +2513,7 @@ $("#pieSave").onclick=async()=>{const b=$("#pieSave"),f=PI.edit;b.disabled=true;
 const RCST={
   async load(){const r=await api("rca");if(r.falta)throw new Error("Falta crear las tablas de RCA en Supabase: vuelve a ejecutar supabase/schema.sql.");
     const base=r.gz?JSON.parse(new TextDecoder().decode(await gunzip(b64d(r.gz)))):null;
-    return{base,meta:r.meta||null,estado:new Map((r.estado||[]).map(e=>[e.id,{c:e.c,h:!!e.h,n:e.n||"",...(typeof e.ap==="boolean"?{ap:e.ap}:{})}])),hidden:new Set(r.ocultas||[]),seg:new Map((r.seg||[]).map(x=>[x.gid,{it:x.items||[],ts:x.actualizado||"",u:x.por||""}])),hist:r.hist||[]}},
+    return{base,meta:r.meta||null,estado:new Map((r.estado||[]).map(e=>[e.id,{c:e.c,h:!!e.h,n:e.n||"",...(typeof e.ap==="boolean"?{ap:e.ap}:{}),...(Array.isArray(e.comp)&&e.comp.length?{comp:e.comp}:{}),...(e.pe?{pe:true}:{})}])),hidden:new Set(r.ocultas||[]),seg:new Map((r.seg||[]).map(x=>[x.gid,{it:x.items||[],ts:x.actualizado||"",u:x.por||""}])),hist:r.hist||[]}},
   saveBase:(gz,meta)=>api("rca",{method:"PUT",body:{gz:b64e(gz),...meta}}),
   saveEstado:items=>api("rca",{method:"POST",body:{accion:"estado",items}}),
   setVisible:(rca,visible)=>api("rca",{method:"POST",body:{accion:"visibilidad",rca,visible}}),
@@ -2562,8 +2598,8 @@ function renderRcaList(){const B=RC.base,adm=S.perm.admin,per=new Map();B.f.forE
   if(!RC.og)RC.og=new Set();if(RC.f.emp)RC.og.add(RC.f.emp);if(groups.size===1)RC.og.add([...groups.keys()][0]);const selR=RC.f.rca&&B.rcas.find(r=>r.id===RC.f.rca);if(selR)RC.og.add(selR.empresa);
   $("#rcaList").innerHTML=`<div class="rl-h"><b>Resoluciones por operación</b><span class="cs">${rs.length} RCA</span></div><input type="search" id="rlQ" class="rl-q" placeholder="Buscar RCA o proyecto" aria-label="Buscar en la lista de RCA" value="${esc(RC.rlq||"")}">`+[...groups].sort((a,b)=>a[0].localeCompare(b[0])).map(([emp,list])=>{
     list.sort((a,b)=>(b.anio||0)-(a.anio||0));const tot=list.reduce((a,r)=>{const o=per.get(r.id)||{};a.h+=o.h||0;a.c+=o.c||0;return a},{h:0,c:0});
-    return`<details class="rl-g" data-emp="${esc(emp)}" ${RC.og.has(emp)?"open":""}><summary><span class="rl-gt">${esc(emp)}</span><span class="rl-gn">${list.length}</span><span class="cs rl-gs">${adm?`${t0(tot.c)} categorizadas · `:""}${t0(tot.h)} habilitadas</span></summary>`+
-      list.map(r=>{const o=per.get(r.id)||{n:0,c:0,h:0,d:0};return`<button type="button" class="rl${RC.f.rca===r.id?" on":""}" data-rca="${esc(r.id)}"><span class="rl-t">RCA ${esc(r.rca)}/${r.anio||"s/f"} <span class="cs">${esc(r.tipo)}</span>${RC.hidden.has(r.id)?` <span class="hid">oculta</span>`:""}</span><span class="rl-p">${esc(r.proyecto)}</span><span class="cs">${t0(o.n)} fichas · ${adm?`${t0(o.c)} categorizadas · ${o.d?`${t0(o.d)} descartadas · `:""}`:""}${t0(o.h)} habilitadas</span></button>`}).join("")+`</details>`}).join("")}
+    return`<details class="rl-g" data-emp="${esc(emp)}" ${RC.og.has(emp)?"open":""}><summary><span class="rl-gt">${esc(emp)}</span><span class="rl-gn">${list.length}</span><span class="cs rl-gs">${adm?`${t0(tot.c)} en revisión o validadas · `:""}${t0(tot.h)} validadas</span></summary>`+
+      list.map(r=>{const o=per.get(r.id)||{n:0,c:0,h:0,d:0};return`<button type="button" class="rl${RC.f.rca===r.id?" on":""}" data-rca="${esc(r.id)}"><span class="rl-t">RCA ${esc(r.rca)}/${r.anio||"s/f"} <span class="cs">${esc(r.tipo)}</span>${RC.hidden.has(r.id)?` <span class="hid">oculta</span>`:""}</span><span class="rl-p">${esc(r.proyecto)}</span><span class="cs">${t0(o.n)} fichas · ${adm?`${t0(o.c)} en revisión o validadas · ${o.d?`${t0(o.d)} descartadas · `:""}`:""}${t0(o.h)} validadas</span></button>`}).join("")+`</details>`}).join("")}
 /* Áreas de influencia: localidades que la RCA menciona (sin contar los vistos); si no hay, la comuna. */
 function rcAreas(r){const a=r.areas&&r.areas.length?r.areas:(r.comuna||"").split("-").filter(Boolean).map(c=>[c,0]);
   return a.length?`<span class="ai-l">${a.map(([n,c])=>`<span class="ai"${c?` title="${c} mención${c>1?"es":""} en la RCA"`:""}>${esc(n)}</span>`).join("")}</span>`:"—"}
@@ -2606,7 +2642,7 @@ function renderRcaRes(){document.querySelectorAll("#rcaModo button").forEach(b=>
       <div class="fi-t">${rcHi(txt,RC.q).replace(/\n/g,"<br>")}</div>
       <div class="fi-f">${B.tipos&&f[8]!=null?`<span class="tg tt">${esc(B.tipos[f[8]].replace(/ \(.*\)$/,""))}</span>`:""}${f[7].map(t=>`<span class="tg">${esc(B.tags[t])}</span>`).join("")}${f[5].length>=700?`<button type="button" class="lnk fi-more">${open?"Ver menos":"Ver texto completo"}</button>`:""}</div>
       ${rcSgCardHtml(f)}
-      ${adm&&c===RC_DESC?`<div class="fi-desc"><span>Descartada${s.por?` por <b>${esc(s.por)}</b>`:""}${s.fecha?` el ${new Date(s.fecha).toLocaleDateString("es-CL")}`:""}.</span><button type="button" class="btn small fi-rest">Restaurar para revisar</button></div>`:""}
+      ${adm&&c===RC_DESC?`<div class="fi-desc"><span>Descartada${s.por?` por <b>${esc(s.por)}</b>`:""}${s.fecha?` el ${new Date(s.fecha).toLocaleDateString("es-CL")}`:""}.</span><button type="button" class="btn small fi-rest">Reevaluar</button></div>`:""}
       ${adm?`<div class="fi-a"><select class="fi-cat" aria-label="Categoría"><option value="">Sin categorizar</option>${cats.map((x,k)=>`<option value="${k}" ${c===k?"selected":""}>${esc(rcCatLbl(k))}</option>`).join("")}<option value="${RC_DESC}" ${c===RC_DESC?"selected":""}>Descartado</option></select>
         <select class="fi-ap" aria-label="¿Aplica a Asuntos Públicos Norte?" ${c==null||c===RC_DESC?"disabled":""}><option value="">¿Aplica a AP Norte?</option><option value="1" ${s.ap===true?"selected":""}>Aplica a AP Norte</option><option value="0" ${s.ap===false?"selected":""}>No aplica a AP Norte</option></select>
         <label class="fi-hl"><input type="checkbox" class="fi-hab" ${s.h?"checked":""} ${c==null||c===RC_DESC?"disabled":""}> Visible para usuarios</label>
@@ -2638,7 +2674,7 @@ $("#rcaRes").addEventListener("change",async ev=>{const card=ev.target.closest("
     rcSet(id,{ap:nv==null?undefined:nv});if(nv==null){const x=RC.st.get(id);if(x){delete x.ap}}card.querySelector(".fi-ok").textContent="Guardando…";if(rcApOut(id)){rcRemoveCard(card);renderRcaKpis();return}rcApCard(id);rcApBtns();return}
   if(ev.target.classList.contains("fi-hab")){const on=ev.target.checked;if(!await askYN(on?"¿Hacer visible esta ficha para los usuarios?":"¿Ocultar esta ficha a los usuarios?",{title:on?"Habilitar para usuarios":"Ocultar a usuarios"})){ev.target.checked=!on;return}rcSet(id,{h:ev.target.checked});card.classList.toggle("hab",ev.target.checked);card.querySelector(".fi-ok").textContent="Guardando…"}});
 $("#rcaRes").addEventListener("focusout",ev=>{if(!ev.target.classList.contains("fi-nota"))return;const id=ev.target.closest(".fi").dataset.id;const s=RC.st.get(id)||{};const v=ev.target.value.trim();if((s.n||"")!==v){rcSet(id,{n:v});ev.target.closest(".fi").querySelector(".fi-ok").textContent="Guardando…"}});
-$("#rcaRes").addEventListener("click",async ev=>{const rs=ev.target.closest(".fi-rest");if(rs){const card=rs.closest(".fi"),id=card.dataset.id;if(!await askYN("¿Restaurar esta ficha descartada? Volverá a quedar por revisar.",{title:"Restaurar ficha"}))return;rcSet(id,{c:null});rcRemoveCard(card);renderRcaKpis();rcToastUndo("Ficha restaurada: quedó por revisar.",()=>{rcSet(id,{c:RC_DESC});renderRcaRes();renderRcaKpis()});return}
+$("#rcaRes").addEventListener("click",async ev=>{const rs=ev.target.closest(".fi-rest");if(rs){const card=rs.closest(".fi"),id=card.dataset.id;if(!await askYN("¿Estás seguro de reevaluar esta ficha descartada? Volverá al apartado «Por revisar».",{title:"Reevaluar ficha",si:"Sí, reevaluar"}))return;rcSet(id,{c:null});rcRemoveCard(card);renderRcaKpis();rcToastUndo("Ficha reevaluada: volvió a «Por revisar».",()=>{rcSet(id,{c:RC_DESC});renderRcaRes();renderRcaKpis()});return}
   const vf=ev.target.closest("[data-verfichas]");if(vf){RC.modo="fichas";RC.f.rca=vf.dataset.verfichas;RC.page=0;rcSyncSel();renderRca();return}
   const m=ev.target.closest(".fi-more");if(!m)return;const id=m.closest(".fi").dataset.id;RC.open.has(id)?RC.open.delete(id):RC.open.add(id);renderRcaRes()});
 $("#rcaPager").addEventListener("click",ev=>{const b=ev.target.closest("[data-pg]");if(!b)return;RC.page=+b.dataset.pg;renderRcaRes();$("#rcaRes").scrollIntoView({behavior:"smooth",block:"start"})});
@@ -4097,6 +4133,167 @@ function rgCaletas(sel,E0){const B=RC.base,adm=S.perm.admin,el=$("#rgCal");const
   const known=new Set(m.C.map(c=>norm(c[0])));const ot=OTRAS.filter(([n])=>!known.has(norm(n))).map(([n,a])=>({n,k:match(reOf([a])).length})).filter(x=>x.k>0).sort((a,b)=>b.k-a.k);
   $("#rgCalO").innerHTML=ot.length?"Otras caletas mencionadas en estas RCA sin desembarque en la base: "+ot.map(x=>`<button type="button" class="lnk rgq2" data-q="${esc(x.n)}">${esc(x.n)} (${x.k})</button>`).join(" · "):"";
   $("#rgCalO").querySelectorAll(".rgq2").forEach(b=>b.onclick=()=>goFichas({vista:adm?"":"buscar"},'"'+b.dataset.q+'"'))}
+
+/* ================= Exigencias ambientales: validación, componentes ambientales y apartados ================= */
+const RCOMP=[["Clima y meteorología","F"],["Calidad del aire","F"],["Ruido y vibraciones","F"],["Geología y geomorfología","F"],["Suelos","F"],["Hidrología e hidrogeología","F"],["Calidad del agua","F"],["Medio marino (oceanografía, agua y sedimentos)","F"],
+  ["Flora y vegetación","B"],["Fauna terrestre","B"],["Biota marina","B"],["Ecosistemas acuáticos continentales","B"],
+  ["Dimensión geográfica","H"],["Dimensión demográfica","H"],["Dimensión antropológica","H"],["Dimensión socioeconómica","H"],["Bienestar social básico","H"],["Pueblos indígenas","H"],
+  ["Infraestructura y equipamiento","C"],["Actividades económicas","C"],["Uso del territorio","C"],
+  ["Patrimonio cultural","P"],["Paisaje","J"],["Áreas protegidas y sitios prioritarios","A"],["Riesgos para la salud de la población","S"]];
+const RGRP=[["F","Medio físico"],["B","Medio biótico"],["H","Medio humano"],["C","Medio construido"],["P","Patrimonio cultural"],["J","Paisaje"],["A","Áreas protegidas y sitios prioritarios"],["S","Salud de la población"]];
+const RSEC=[["pesca","Pesca y comunidades pescadoras","Compromisos, medidas y exigencias relacionados directamente con pescadores, sus organizaciones y la actividad pesquera de las comunidades."],
+  ["apn","AP Norte · otros componentes","Aplican a Asuntos Públicos Norte desde otros componentes: empleo local, infraestructura, patrimonio, pueblos indígenas, calidad de vida, etc."],
+  ["amb","Compromisos ambientales","Compromisos voluntarios y exigencias de medio ambiente: fauna, flora, agua, aire, medio marino, paisaje y áreas protegidas."],
+  ["otros","Otros","Compromisos validados que no aplican a Asuntos Públicos Norte ni corresponden a medio ambiente natural."]];
+const NAT=new Set(["F","B","J","A"]);
+const secLbl=k=>k==="rev"?"Por revisar":k==="desc"?"Descartadas":(RSEC.find(x=>x[0]===k)||[,""])[1];
+const secDsc=k=>k==="rev"?"Fichas aún sin validar. Revisa el tipo, si aplica a AP Norte, los componentes y la relación con pesca, y presiona Validar: la ficha pasa sola a su apartado y queda visible para los usuarios.":k==="desc"?"Fichas descartadas: no son visibles para los usuarios. Puedes reevaluarlas cuando quieras.":(RSEC.find(x=>x[0]===k)||[,,""])[2];
+function rcSecOf(s){if(!s||s.c==null)return"rev";if(s.c===RC_DESC)return"desc";if(!s.h)return"rev";if(s.pe)return"pesca";if(s.ap===true)return"apn";if(s.c===0||(s.comp||[]).some(k=>RCOMP[k]&&NAT.has(RCOMP[k][1])))return"amb";return"otros"}
+/* Sugerencia automática a partir de los temas detectados y del texto de la ficha */
+const TAG2C={0:[10,19],1:[15],2:[6],3:[1],4:[8],5:[9],6:[21],7:[22],8:[2],10:[4],11:[18],13:[19],14:[17],15:[14],16:[14],17:[16],18:[15]};
+const RE_PESCA=/\b(pescador(es|as)?|caletas?|sindicatos? de pescadores|amerb|pesca artesanal|recolector(es|as)? de orilla|algueros?|buzos? mariscador(es)?|organizaciones? de pescadores|armadores? artesanales?)\b/;
+const RE_MAR=/\b(oceanograf\w*|sedimentos? marinos?|columna de agua|medio marino)\b/;
+function rcSug(f){const t=norm(f[5]||""),c=new Map();(f[7]||[]).forEach(g=>(TAG2C[g]||[]).forEach(k=>c.set(k,(c.get(k)||0)+1)));if(RE_MAR.test(t))c.set(7,(c.get(7)||0)+2);
+  const comp=[...c].sort((a,b)=>b[1]-a[1]).slice(0,4).map(x=>x[0]).sort((a,b)=>a-b);return{comp,pe:(f[7]||[]).includes(13)||RE_PESCA.test(t),c:f[6]>=0?f[6]:null}}
+function rcFiMap(){if(RC.fiB!==RC.base){RC.fiB=RC.base;RC.fi=new Map((RC.base?RC.base.f:[]).map(f=>[f[1],f]));RC.dr=new Map()}}
+function rcDraft(id){rcFiMap();RC.dr=RC.dr||new Map();if(RC.dr.has(id))return RC.dr.get(id);const s=RC.st.get(id)||{},f=RC.fi.get(id);let d;
+  if(s.c!=null&&s.c!==RC_DESC){d={c:s.c,ap:typeof s.ap==="boolean"?s.ap:null,comp:(s.comp||[]).slice(),pe:!!s.pe,auto:false};if(!s.h&&!d.comp.length&&f){const g=rcSug(f);d.comp=g.comp;d.pe=d.pe||g.pe;d.auto=g.comp.length>0||g.pe}}
+  else{const g=f?rcSug(f):{comp:[],pe:false,c:null};d={c:g.c,ap:null,comp:g.comp,pe:g.pe,auto:true}}
+  RC.dr.set(id,d);return d}
+const rcMiss=d=>[d.c==null?"tipo":null,d.ap==null?"si aplica a AP Norte":null,!d.comp.length?"al menos un componente":null].filter(Boolean);
+const rcDest=d=>rcSecOf({c:d.c,h:true,ap:d.ap,pe:d.pe,comp:d.comp});
+function rcPanel(id){const s=RC.st.get(id)||{},d=rcDraft(id),sec=rcSecOf(s),val=sec!=="rev"&&sec!=="desc",cats=rcCats(),miss=rcMiss(d);
+  return`<div class="fx" data-id="${esc(id)}">
+  <div class="fx-r"><label class="fx-f"><span>Tipo</span><select class="fx-c"><option value="">Elegir…</option>${cats.map((x,k)=>`<option value="${k}" ${d.c===k?"selected":""}>${esc(rcCatLbl(k))}</option>`).join("")}</select></label>
+   <div class="fx-f"><span>¿Aplica a AP Norte?</span><div class="fx-seg"><button type="button" class="fx-ap" data-ap="1" aria-pressed="${d.ap===true}">Sí</button><button type="button" class="fx-ap" data-ap="0" aria-pressed="${d.ap===false}">No</button></div></div>
+   <label class="fx-pe${d.pe?" on":""}"><input type="checkbox" class="fx-pec" ${d.pe?"checked":""}> Relación directa con pesca y comunidades pescadoras</label></div>
+  <div class="fx-f fx-cw"><span>Componentes ambientales</span><div class="fx-cl">${d.comp.map(k=>`<span class="fx-k">${esc(RCOMP[k][0])}<button type="button" class="fx-kx" data-k="${k}" aria-label="Quitar ${esc(RCOMP[k][0])}">×</button></span>`).join("")}<select class="fx-add" aria-label="Agregar componente ambiental"><option value="">+ Agregar componente</option>${RGRP.map(([g,gl])=>{const o=RCOMP.map((x,k)=>[x,k]).filter(([x,k])=>x[1]===g&&!d.comp.includes(k));return o.length?`<optgroup label="${gl}">${o.map(([x,k])=>`<option value="${k}">${esc(x[0])}</option>`).join("")}</optgroup>`:""}).join("")}</select></div></div>
+  ${d.auto&&!val?`<div class="fx-note">El tipo, los componentes y la relación con pesca vienen <b>sugeridos automáticamente</b> según el texto: revísalos antes de validar.</div>`:""}
+  <div class="fx-r fx-act"><input class="fi-nota" maxlength="300" placeholder="Nota interna (opcional)" value="${esc(s.n||"")}"><span class="fi-ok cs"></span><span class="fx-dest">${miss.length?`<span class="cs">Falta: ${miss.join(", ")}</span>`:`Irá a <b class="secc s-${rcDest(d)}">${esc(secLbl(rcDest(d)))}</b>`}</span>
+   ${val?`<button type="button" class="btn ghost small fx-back">Volver a revisión</button>`:""}<button type="button" class="btn ghost small fx-desc">Descartar</button><button type="button" class="btn small fx-val" ${miss.length?"disabled":""}>${val?"Guardar cambios":"Validar"}</button></div></div>`}
+function rcPanelRefresh(id){const card=rcCard(id);if(!card)return;const p=card.querySelector(".fx");if(!p)return;const nv=p.querySelector(".fi-nota").value;p.outerHTML=rcPanel(id);const q=card.querySelector(".fx .fi-nota");if(q)q.value=nv}
+function rcInVista(id){const v=RC.f.vista||(S.perm.admin?"todas":"validadas"),sec=rcSecOf(RC.st.get(id));
+  if(v==="rev")return sec==="rev";if(v==="descartadas")return sec==="desc";if(v.startsWith("sec:"))return sec===v.slice(4);if(v==="validadas")return sec!=="rev"&&sec!=="desc";return sec!=="desc"}
+const rcSnap=id=>{const s=RC.st.get(id)||{};return{c:s.c??null,ap:s.ap,comp:s.comp,pe:s.pe,h:!!s.h}};
+function rcAfter(ids,card){const out=ids.filter(id=>!rcInVista(id));if(card&&out.length===1&&ids.length===1){rcRemoveCard(card);rcFiMap();const B=RC.base;RC.rows=(RC.rows||[]).filter(i=>B.f[i][1]!==ids[0]);RC.sel.delete(ids[0])}else renderRcaRes();renderRcaKpis()}
+function rcCompTxt(d){return d.comp.map(k=>esc(RCOMP[k][0])).join(", ")}
+function rcResume(d){return`Tipo: <b>${esc(rcCatLbl(d.c))}</b> · <b>${d.ap?"Aplica":"No aplica"}</b> a AP Norte${d.pe?" · <b>Relación directa con pesca</b>":""}<br>Componentes: ${rcCompTxt(d)}`}
+
+/* Filas según el apartado elegido. Los usuarios solo ven lo validado. */
+rcRows=function(){const B=RC.base,adm=S.perm.admin,F=RC.f,mt=rcMatcher(RC.q);let v=F.vista||(adm?"todas":"validadas");if(!adm&&!(v==="validadas"||v.startsWith("sec:")))v="validadas";rcFiMap();const out=[];
+  for(let i=0;i<B.f.length;i++){const f=B.f[i],r=B.rcas[f[0]];
+    if(!adm&&RC.hidden.has(r.id))continue;if(F.emp&&r.empresa!==F.emp)continue;if(F.rca&&r.id!==F.rca)continue;if(F.tipo&&r.tipo!==F.tipo)continue;
+    if(F.tema!==""&&!f[7].includes(+F.tema))continue;if(F.txt!==""&&f[8]!==+F.txt)continue;
+    const s=RC.st.get(f[1]),sec=rcSecOf(s),c=s?s.c:null;
+    if(!adm&&(sec==="rev"||sec==="desc"))continue;
+    if(v==="descartadas"){if(sec!=="desc")continue}else if(sec==="desc")continue;
+    if(v==="rev"&&sec!=="rev")continue;if(v==="validadas"&&sec==="rev")continue;if(v.startsWith("sec:")&&sec!==v.slice(4))continue;if(v==="dudas"&&!f[11])continue;
+    if(F.cat!==""&&c!==+F.cat)continue;if(F.comp!=null&&F.comp!==""){const cs=s&&s.comp&&s.comp.length?s.comp:(sec==="rev"&&adm?rcSug(f).comp:[]);if(!cs.includes(+F.comp))continue}
+    if(adm&&F.sug!==""&&f[6]!==+F.sug)continue;
+    if(mt&&!mt(RC.idx[i]))continue;out.push(i)}
+  if(mt){const terms=rcTerms(RC.q).filter(t=>!t.startsWith("-"));const sc=new Map();out.forEach(i=>{const s=RC.idx[i];let n=0;terms.forEach(t=>{const re=new RegExp(rcRe(t).source,"g");while(re.exec(s)&&n<40)n++});sc.set(i,n+(/^(vistos|encabezado)/i.test(B.f[i][3])?-5:0))});out.sort((a,b)=>sc.get(b)-sc.get(a)||a-b)}
+  return out};
+
+/* Barra de apartados */
+function rcSecCounts(){const B=RC.base,adm=S.perm.admin,F=RC.f,o={rev:0,pesca:0,apn:0,amb:0,otros:0,desc:0};if(!B)return o;
+  B.f.forEach(f=>{const r=B.rcas[f[0]];if(!adm&&RC.hidden.has(r.id))return;if(F.emp&&r.empresa!==F.emp)return;if(F.rca&&r.id!==F.rca)return;o[rcSecOf(RC.st.get(f[1]))]++});return o}
+function rcSecBar(){let el=$("#rcSecBar");if(!el){const vv=document.querySelector(".rca-views");if(!vv)return;el=document.createElement("div");el.id="rcSecBar";el.className="rsb";vv.parentNode.insertBefore(el,vv);
+    el.addEventListener("click",ev=>{const b=ev.target.closest("[data-sv]");if(!b)return;RC.f.vista=b.dataset.sv;RC.modo="fichas";RC.page=0;RC.sel.clear();rcSyncSel();renderRca()})}
+  if(!RC.base){el.hidden=true;return}el.hidden=false;
+  const adm=S.perm.admin,c=rcSecCounts(),v=RC.f.vista||(adm?"todas":"validadas"),nv=c.pesca+c.apn+c.amb+c.otros,on=RC.modo==="fichas";
+  const items=(adm?[["rev","rev",c.rev]]:[["validadas","all",nv]]).concat(RSEC.map(([k])=>["sec:"+k,k,c[k]])).concat(adm?[["descartadas","desc",c.desc]]:[]);
+  const cur=v==="rev"?"rev":v==="descartadas"?"desc":v.startsWith("sec:")?v.slice(4):null;
+  el.innerHTML=`<div class="rsb-t">${items.map(([val,k,n])=>`<button type="button" class="rsb-b k-${k}" data-sv="${val}" aria-pressed="${on&&v===val}"><span>${k==="all"?"Todos los validados":esc(secLbl(k))}</span><b>${t0(n)}</b></button>`).join("")}</div>${on&&cur?`<div class="rsb-d">${esc(secDsc(cur))}</div>`:""}`}
+rcDescBtn=function(){["rcaApSi","rcaApNo","rcaDescBtn"].forEach(k=>{const e=$("#"+k);if(e)e.hidden=true});const n=$("#rcaApNote");if(n)n.hidden=true;const dn=$("#rcaDescNote");if(dn)dn.hidden=true;try{rcSecBar()}catch(e){console.error(e)}};
+rcApBtns=function(){rcDescBtn()};
+
+renderRcaKpis=function(){rcDescBtn();const adm=S.perm.admin,B=RC.base;if(!B)return;const c=rcSecCounts(),nR=B.rcas.filter(r=>(adm||!RC.hidden.has(r.id))&&(!RC.f.emp||r.empresa===RC.f.emp)).length,nv=c.pesca+c.apn+c.amb+c.otros,pct=c.rev+nv?nv/(c.rev+nv)*100:0;
+  const k=adm?[[nR,"RCA"],[t0(c.rev+nv+c.desc),"Fichas"],[t0(c.rev),"Por revisar"],[t0(nv),"Validadas (visibles para usuarios)"],[t0(c.desc),"Descartadas"]]:[[nR,"RCA"],[t0(nv),"Compromisos y exigencias validados"]];
+  $("#rcaKpis").innerHTML=k.map(([v,l],j)=>`<div class="rk${j===0?" hero":""}"><b>${v}</b><span>${l}</span></div>`).join("")+(adm?`<div class="rk wide rkav"><span>Avance de la revisión</span><span class="rkp"><i style="width:${pct.toFixed(1)}%"></i></span><b>${t1(pct)} %</b><span class="cs">${t0(nv)} validadas de ${t0(c.rev+nv)} fichas no descartadas</span></div>`:"")};
+
+/* Guardado: incluye componentes y relación con pesca */
+rcFlush=async function(){if(!RC.dirty.size)return;const ids=[...RC.dirty];RC.dirty.clear();
+  const items=ids.map(id=>{const s=RC.st.get(id);return{id,c:s?s.c??null:null,h:!!(s&&s.h),n:s&&s.n||"",ap:s&&typeof s.ap==="boolean"?s.ap:null,comp:s&&Array.isArray(s.comp)?s.comp:[],pe:!!(s&&s.pe)}});
+  try{const r=await RCST.saveEstado(items);
+    if(r&&Array.isArray(r.faltan)&&r.faltan.length){RC.warn="Atención: los componentes ambientales y la relación con pesca no se están guardando en el servidor porque faltan sus columnas en Supabase. Ejecuta el SQL de «Exigencias ambientales: componentes y pesca» que está en el README.";const w=$("#rcaWarn");if(w){w.hidden=false;w.textContent=RC.warn}}
+    document.querySelectorAll(".fi-ok").forEach(e=>{const c=e.closest(".fi");if(c&&ids.includes(c.dataset.id))e.textContent="Guardado"});ST.log("Exigencias ambientales",`Actualizó ${items.length} ficha${items.length>1?"s":""}`)}
+  catch(e){ids.forEach(id=>RC.dirty.add(id));toast(e&&e.message||"No se pudo guardar. Se reintentará.");clearTimeout(RC.saveT);RC.saveT=setTimeout(rcFlush,5000)}
+  renderRcaKpis()};
+
+/* Fichas: panel de clasificación (administrador) y etiquetas de apartado y componentes */
+function rcDecorate(){const adm=S.perm.admin;rcFiMap();
+  document.querySelectorAll("#rcaRes .fi").forEach(card=>{const id=card.dataset.id,s=RC.st.get(id)||{},sec=rcSecOf(s),val=sec!=="rev"&&sec!=="desc",h=card.querySelector(".fi-h");
+    card.querySelectorAll(".fi-h .vis,.fi-h .sug").forEach(e=>e.remove());
+    if(!adm&&!val)return;
+    if(val&&h){const x=document.createElement("span");x.className="secc s-"+sec;x.textContent=secLbl(sec);h.appendChild(x)}
+    if(adm&&sec==="rev"&&s.c!=null){h.querySelectorAll(".cc").forEach(e=>e.remove());h.querySelectorAll(".apc").forEach(e=>e.remove())}
+    if(val&&(s.comp||[]).length){const r=document.createElement("div");r.className="fi-cmp";r.innerHTML=`<span class="cs">Componentes:</span>${s.comp.map(k=>RCOMP[k]?`<span class="cmp">${esc(RCOMP[k][0])}</span>`:"").join("")}${s.pe?`<span class="cmp pe">Pesca y comunidades pescadoras</span>`:""}`;const sc=card.querySelector(".fi-sec");if(sc)sc.after(r)}
+    else if(val&&adm&&!(s.comp||[]).length){const r=document.createElement("div");r.className="fi-cmp";r.innerHTML=`<span class="cmp warn">Sin componente asignado: complétalo y guarda los cambios</span>`;const sc=card.querySelector(".fi-sec");if(sc)sc.after(r)}
+    if(adm){const a=card.querySelector(".fi-a");if(a){if(sec==="desc")a.remove();else a.outerHTML=rcPanel(id)}
+      const rs=card.querySelector(".fi-rest");if(rs)rs.textContent="Reevaluar"}})}
+{const _rr=renderRcaRes;renderRcaRes=function(){_rr.apply(this,arguments);try{if(RC.modo==="fichas"&&RC.base)rcDecorate()}catch(e){console.error(e)}}}
+
+$("#rcaRes").addEventListener("change",ev=>{const p=ev.target.closest(".fx");if(!p)return;const id=p.dataset.id,d=rcDraft(id);
+  if(ev.target.classList.contains("fx-c"))d.c=ev.target.value===""?null:+ev.target.value;
+  else if(ev.target.classList.contains("fx-pec"))d.pe=ev.target.checked;
+  else if(ev.target.classList.contains("fx-add")){if(ev.target.value==="")return;const k=+ev.target.value;if(!d.comp.includes(k)){d.comp.push(k);d.comp.sort((a,b)=>a-b)}}
+  else return;d.auto=false;rcPanelRefresh(id)});
+$("#rcaRes").addEventListener("click",async ev=>{const p=ev.target.closest(".fx");if(!p)return;const id=p.dataset.id,d=rcDraft(id),card=p.closest(".fi");
+  const ap=ev.target.closest(".fx-ap");if(ap){const nv=ap.dataset.ap==="1";d.ap=d.ap===nv?null:nv;d.auto=false;rcPanelRefresh(id);return}
+  const kx=ev.target.closest(".fx-kx");if(kx){d.comp=d.comp.filter(k=>k!==+kx.dataset.k);d.auto=false;rcPanelRefresh(id);return}
+  const num=(card.querySelector(".fi-num")||{}).textContent||"",s0=rcSnap(id),was=rcSecOf(RC.st.get(id));
+  if(ev.target.closest(".fx-val")){const miss=rcMiss(d);if(miss.length){toast("Falta: "+miss.join(", ")+".");return}const dest=rcDest(d),nuevo=was==="rev";
+    if(!await askYN(`¿Estás seguro de ${nuevo?"validar":"guardar los cambios de"} la ficha <b>${esc(num)}</b>?<br><span class="cs">${rcResume(d)}</span><br><br>Quedará en el apartado <b>«${esc(secLbl(dest))}»</b> y será visible para los usuarios.`,{title:nuevo?"Validar ficha":"Guardar cambios",si:nuevo?"Sí, validar":"Sí, guardar",no:"No"}))return;
+    rcSet(id,{c:d.c,ap:d.ap,comp:d.comp.slice(),pe:!!d.pe,h:true});RC.dr.delete(id);rcAfter([id],card);
+    rcToastUndo(`Ficha ${nuevo?"validada":"actualizada"}: quedó en «${secLbl(dest)}».`,()=>{rcSet(id,s0);RC.dr.delete(id);renderRcaRes();renderRcaKpis()});return}
+  if(ev.target.closest(".fx-desc")){if(!await askYN(`¿Estás seguro de descartar la ficha <b>${esc(num)}</b>?<br><span class="cs">Pasará al apartado de descartadas y no será visible para los usuarios. Podrás reevaluarla cuando quieras.</span>`,{title:"Descartar ficha",danger:true,si:"Sí, descartar",no:"No"}))return;
+    rcSet(id,{c:RC_DESC});RC.dr.delete(id);rcAfter([id],card);rcToastUndo("Ficha descartada: quedó en el apartado de descartadas.",()=>{rcSet(id,s0);renderRcaRes();renderRcaKpis()});return}
+  if(ev.target.closest(".fx-back")){if(!await askYN(`¿Volver a revisión la ficha <b>${esc(num)}</b>?<br><span class="cs">Dejará de ser visible para los usuarios hasta que la valides de nuevo.</span>`,{title:"Volver a revisión",si:"Sí, volver a revisión",no:"No"}))return;
+    rcSet(id,{h:false});RC.dr.delete(id);rcAfter([id],card);rcToastUndo("La ficha volvió a «Por revisar».",()=>{rcSet(id,s0);renderRcaRes();renderRcaKpis()});return}});
+
+/* Acciones sobre varias fichas */
+renderRcaBulk=function(){const el=$("#rcaBulk");if(!S.perm.admin||RC.modo!=="fichas"){el.hidden=true;return}el.hidden=false;const n=RC.sel.size,b=RC.bk||(RC.bk={c:null,ap:null,comp:[],pe:false}),dv=RC.f.vista==="descartadas";
+  el.innerHTML=`<div class="bk-r"><span class="cs"><b>${t0(n)}</b> seleccionada${n===1?"":"s"}</span><button class="btn ghost small" type="button" data-b="page">Seleccionar esta página</button><button class="btn ghost small" type="button" data-b="all">Seleccionar todas (${t0((RC.rows||[]).length)})</button>${n?`<button class="btn ghost small" type="button" data-b="none">Quitar selección</button>`:""}</div>${n?(dv?`<div class="bk-r"><button class="btn small" type="button" data-bx="reev">Reevaluar seleccionadas</button></div>`:`<div class="bk-r bk-f"><select class="bk-c" aria-label="Tipo"><option value="">Tipo…</option>${rcCats().map((x,k)=>`<option value="${k}" ${b.c===k?"selected":""}>${esc(rcCatLbl(k))}</option>`).join("")}</select><select class="bk-ap" aria-label="¿Aplica a AP Norte?"><option value="">¿Aplica a AP Norte?</option><option value="1" ${b.ap===true?"selected":""}>Aplica a AP Norte</option><option value="0" ${b.ap===false?"selected":""}>No aplica a AP Norte</option></select><label class="fx-pe${b.pe?" on":""}"><input type="checkbox" class="bk-pe" ${b.pe?"checked":""}> Relación directa con pesca</label>
+    <span class="fx-cl">${b.comp.map(k=>`<span class="fx-k">${esc(RCOMP[k][0])}<button type="button" class="bk-kx" data-k="${k}" aria-label="Quitar">×</button></span>`).join("")}<select class="bk-add" aria-label="Agregar componente"><option value="">+ Componente</option>${RGRP.map(([g,gl])=>{const o=RCOMP.map((x,k)=>[x,k]).filter(([x,k])=>x[1]===g&&!b.comp.includes(k));return o.length?`<optgroup label="${gl}">${o.map(([x,k])=>`<option value="${k}">${esc(x[0])}</option>`).join("")}</optgroup>`:""}).join("")}</select></span>
+    <button class="btn small" type="button" data-bx="val" ${rcMiss(b).length?"disabled":""}>Validar seleccionadas</button><button class="btn ghost small" type="button" data-bx="desc">Descartar seleccionadas</button></div>`):""}`};
+$("#rcaBulk").addEventListener("change",ev=>{const b=RC.bk;if(!b)return;if(ev.target.classList.contains("bk-c"))b.c=ev.target.value===""?null:+ev.target.value;else if(ev.target.classList.contains("bk-ap"))b.ap=ev.target.value===""?null:ev.target.value==="1";else if(ev.target.classList.contains("bk-pe"))b.pe=ev.target.checked;else if(ev.target.classList.contains("bk-add")){if(ev.target.value==="")return;const k=+ev.target.value;if(!b.comp.includes(k)){b.comp.push(k);b.comp.sort((x,y)=>x-y)}}else return;renderRcaBulk()});
+$("#rcaBulk").addEventListener("click",async ev=>{const kx=ev.target.closest(".bk-kx");if(kx){RC.bk.comp=RC.bk.comp.filter(k=>k!==+kx.dataset.k);renderRcaBulk();return}
+  const x=ev.target.closest("[data-bx]");if(!x)return;const a=x.dataset.bx,ids=[...RC.sel],n=ids.length;if(!n)return;const fx=`${t0(n)} ficha${n>1?"s":""} seleccionada${n>1?"s":""}`,prevs=ids.map(id=>[id,rcSnap(id)]);
+  const undo=()=>{prevs.forEach(([id,s])=>rcSet(id,s));renderRcaRes();renderRcaKpis()};
+  if(a==="val"){const b=RC.bk,miss=rcMiss(b);if(miss.length){toast("Falta: "+miss.join(", ")+".");return}const dest=rcDest(b);
+    if(!await askYN(`¿Estás seguro de validar ${fx}?<br><span class="cs">${rcResume(b)}</span><br><br>Quedarán en el apartado <b>«${esc(secLbl(dest))}»</b> y serán visibles para los usuarios.`,{title:"Validar varias fichas",si:"Sí, validar",no:"No"}))return;
+    ids.forEach(id=>{rcSet(id,{c:b.c,ap:b.ap,comp:b.comp.slice(),pe:!!b.pe,h:true});if(RC.dr)RC.dr.delete(id)});RC.sel.clear();renderRcaRes();renderRcaKpis();rcToastUndo(`${fx.replace(" seleccionada","")} validada${n>1?"s":""}: quedaron en «${secLbl(dest)}».`,undo);return}
+  if(a==="desc"){if(!await askYN(`¿Estás seguro de descartar ${fx}?<br><span class="cs">No serán visibles para los usuarios. Podrás reevaluarlas cuando quieras.</span>`,{title:"Descartar varias fichas",danger:true,si:"Sí, descartar",no:"No"}))return;
+    ids.forEach(id=>{rcSet(id,{c:RC_DESC});if(RC.dr)RC.dr.delete(id)});RC.sel.clear();renderRcaRes();renderRcaKpis();rcToastUndo(`${t0(n)} ficha${n>1?"s":""} descartada${n>1?"s":""}.`,undo);return}
+  if(a==="reev"){if(!await askYN(`¿Reevaluar ${fx}? Volverán al apartado «Por revisar».`,{title:"Reevaluar fichas",si:"Sí, reevaluar",no:"No"}))return;
+    ids.forEach(id=>rcSet(id,{c:null,h:false}));RC.sel.clear();renderRcaRes();renderRcaKpis();rcToastUndo(`${t0(n)} ficha${n>1?"s":""} volvieron a «Por revisar».`,undo)}});
+
+/* Selectores: apartados en «Mostrar» y filtro por componente */
+const RC_VADM=[["rev","Por revisar"],...RSEC.map(([k,l])=>["sec:"+k,l]),["validadas","Todas las validadas"],["todas","Todas las fichas (sin descartadas)"],["dudas","Con dudas de numeración"],["descartadas","Descartadas"]];
+const RC_VUSR=[["validadas","Todos los compromisos validados"],...RSEC.map(([k,l])=>["sec:"+k,l])];
+{const _sy=rcSyncSel;rcSyncSel=function(){const adm=S.perm.admin,F=RC.f;const ok=(adm?RC_VADM:RC_VUSR).some(([v])=>v===F.vista);
+  if(!ok)F.vista=adm?({aplican:"sec:apn",categorizadas:"validadas",habilitadas:"validadas",noaplican:"validadas",apsin:"validadas",nohab:"rev"}[F.vista]||"todas"):"validadas";
+  _sy.apply(this,arguments);const cs=$("#rcCompF");if(cs)cs.value=F.comp==null?"":String(F.comp)}}
+{const _bs=rcBuildSelects;rcBuildSelects=function(){const adm=S.perm.admin;if(!RC.vInit){RC.vInit=true;if(!RC.f.vista)RC.f.vista=adm?"rev":"validadas"}
+  _bs.apply(this,arguments);$("#rcVista").innerHTML=(adm?RC_VADM:RC_VUSR).map(([v,l])=>`<option value="${v}">${esc(l)}</option>`).join("");
+  if(!$("#rcCompF")){const more=$("#rcMore");if(more){const lb=document.createElement("label");lb.innerHTML=`Componente<select id="rcCompF"></select>`;more.insertBefore(lb,more.firstChild);
+    lb.querySelector("select").addEventListener("change",ev=>{RC.f.comp=ev.target.value;RC.page=0;rcSyncSel();renderRca()})}}
+  const cs=$("#rcCompF");if(cs)cs.innerHTML=`<option value="">Todos los componentes</option>`+RGRP.map(([g,gl])=>`<optgroup label="${gl}">${RCOMP.map((x,k)=>[x,k]).filter(([x])=>x[1]===g).map(([x,k])=>`<option value="${k}">${esc(x[0])}</option>`).join("")}</optgroup>`).join("");
+  rcSyncSel()}}
+{const _r=renderRca;renderRca=async function(){await _r.apply(this,arguments);const el=$("#rcaIntro");if(el&&RC.base)el.innerHTML=S.perm.admin?`Cada RCA está dividida en fichas por numeral o considerando. En <b>Por revisar</b> clasifica cada ficha: tipo, si aplica a Asuntos Públicos Norte, componentes ambientales y si tiene relación directa con pesca y comunidades pescadoras. Al <b>validarla</b>, la ficha pasa sola a su apartado y queda visible para los usuarios; las <b>descartadas</b> nunca son visibles y se pueden reevaluar.`
+  :`Aquí están los compromisos, medidas y exigencias validados, ordenados en apartados: <b>Pesca y comunidades pescadoras</b>, <b>AP Norte · otros componentes</b>, <b>Compromisos ambientales</b> y <b>Otros</b>. Busca con palabras exactas o filtra por componente en <b>Más filtros</b>.`}}
+
+/* CSV con apartado, componentes y relación con pesca */
+$("#rcaCsv").onclick=async()=>{const B=RC.base;if(!B)return;
+  if(RC.modo==="seguimiento"){try{await saveFile("seguimiento_compromisos.csv","﻿"+rcSgCsv().join("\r\n"),"text/csv;charset=utf-8");ST.log("Exportar CSV",`Seguimiento de compromisos: ${(RC.sgAll||[]).length}`)}catch(e){if(e&&e.code!=="cancelled")toast("No se pudo descargar el archivo.")}return}
+  const adm=S.perm.admin,rows=RC.rows||[],q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
+  const H=["Apartado","Compañía","RCA","Año","Proyecto","Numeral","Páginas","Sección","Tipo","Aplica a AP Norte","Componentes ambientales","Relación directa con pesca","Tipo de texto","Temas","Texto"].concat(adm?["Nota","Duda de numeración"]:[]);
+  const lines=[H.join(";")].concat(rows.map(i=>{const f=B.f[i],r=B.rcas[f[0]],s=RC.st.get(f[1])||{},sec=rcSecOf(s),val=sec!=="rev"&&sec!=="desc",ok=adm||val;
+    return[secLbl(sec),r.empresa,r.rca,r.anio||"",r.proyecto,f[2],rcPag(f).replace("pág. ","").replace("págs. ",""),f[3],ok&&s.c!=null&&s.c!==RC_DESC?rcCatLbl(s.c):"",ok&&typeof s.ap==="boolean"?(s.ap?"Sí":"No"):"",ok?(s.comp||[]).map(k=>RCOMP[k]?RCOMP[k][0]:"").join(", "):"",ok&&val?(s.pe?"Sí":"No"):"",B.tipos&&f[8]!=null?B.tipos[f[8]]:"",f[7].map(t=>B.tags[t]).join(", "),f[5]].concat(adm?[s.n||"",f[11]||""]:[]).map(q).join(";")}));
+  try{await saveFile("exigencias_ambientales.csv","﻿"+lines.join("\r\n"),"text/csv;charset=utf-8");ST.log("Exportar CSV",`Exigencias ambientales: ${rows.length} fichas`)}catch(e){if(e&&e.code!=="cancelled")toast("No se pudo descargar el archivo.")}};
+/* Antes de «Seleccionar esta página / todas», recalcula las filas (pudieron salir fichas ya validadas o descartadas) */
+$("#rcaBulk").addEventListener("click",ev=>{if(ev.target.closest("[data-b]")&&RC.base)RC.rows=rcRows()},true);
+
 })();
 
 /*C2E*/</script>

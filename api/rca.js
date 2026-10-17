@@ -1,30 +1,35 @@
 // Exigencias ambientales: base de RCA (fichas por numeral) y su categorización.
 // GET: cualquier usuario activo. Los visualizadores reciben solo las RCA visibles y solo
-//      las categorías habilitadas (sin notas internas). PUT y POST: solo administradores.
+//      las fichas validadas, con su categoría, componentes y apartado (sin notas internas). PUT y POST: solo administradores.
 import { handler, send, readBody, current, sb, tableMissing, logAct, zlib } from "../lib/core.js";
 
 const CATS_MAX = 4;      // 0..3 categorías de la base, 4 = Otro
 const DESCARTADO = -2;
+const COMP_MAX = 24;     // componentes ambientales 0..24 (ver la lista en la página)
 
-function filtrarBase(gzB64, ocultas) {
-  if (!ocultas.size) return gzB64;
+// Usuarios: sin las RCA ocultas y, si se indica, solo con las fichas validadas (las demás no se envían).
+function filtrarBase(gzB64, ocultas, soloFichas) {
+  if (!ocultas.size && !soloFichas) return gzB64;
   const o = JSON.parse(zlib.gunzipSync(Buffer.from(gzB64, "base64")).toString("utf8"));
   const map = new Map(); const rcas = [];
   o.rcas.forEach((r, i) => { if (!ocultas.has(r.id)) { map.set(i, rcas.length); rcas.push(r); } });
-  const f = o.f.filter((x) => map.has(x[0])).map((x) => [map.get(x[0]), ...x.slice(1)]);
+  const f = o.f.filter((x) => map.has(x[0]) && (!soloFichas || soloFichas.has(x[1]))).map((x) => [map.get(x[0]), ...x.slice(1)]);
   const vivas = new Set(f.map((x) => x[1]));
   const g = Array.isArray(o.g) ? o.g.map((x) => (x && vivas.has(x[0]) ? x : null)) : o.g;
   return zlib.gzipSync(Buffer.from(JSON.stringify({ ...o, rcas, f, g }))).toString("base64");
 }
 
-// La columna "aplica" (¿aplica a Asuntos Públicos Norte?) se agregó después: si aún no existe, se guarda lo demás.
-let _aplica = null, _aplicaT = 0;
-async function columnaAplica() {
-  if (_aplica === true || (_aplica === false && Date.now() - _aplicaT < 60000)) return _aplica;
-  try { await sb("rca_estado?select=aplica&limit=1"); _aplica = true; } catch { _aplica = false; }
-  _aplicaT = Date.now();
-  return _aplica;
+// Columnas agregadas después ("aplica", "componentes", "pesca"): si aún no existen, se guarda lo demás y se avisa.
+const _cols = {};
+async function columna(nombre) {
+  const c = _cols[nombre];
+  if (c && (c.ok || Date.now() - c.t < 60000)) return c.ok;
+  let ok = false; try { await sb(`rca_estado?select=${nombre}&limit=1`); ok = true; } catch { ok = false; }
+  _cols[nombre] = { ok, t: Date.now() };
+  return ok;
 }
+const columnaAplica = () => columna("aplica");
+const compDe = (v) => (Array.isArray(v) ? [...new Set(v.map(Number).filter((k) => Number.isInteger(k) && k >= 0 && k <= COMP_MAX))].sort((a, b) => a - b) : []);
 
 export default handler(async (req, res) => {
   const me = await current(req);
@@ -51,17 +56,17 @@ export default handler(async (req, res) => {
     if (!b) return send(res, 200, { gz: null, estado: [], ocultas: [] });
     const meta = { archivo: b.archivo, rcas: b.rcas, fichas: b.fichas, generado: b.generado, actualizado: b.actualizado };
     if (admin) return send(res, 200, {
-      gz: b.gz, meta, estado: (estado || []).map((e) => ({ id: e.id, c: e.categoria, h: e.habilitado, n: e.nota || "", ap: typeof e.aplica === "boolean" ? e.aplica : null })), ocultas: [...ocultas],
+      gz: b.gz, meta, estado: (estado || []).map((e) => ({ id: e.id, c: e.categoria, h: e.habilitado, n: e.nota || "", ap: typeof e.aplica === "boolean" ? e.aplica : null, comp: compDe(e.componentes), pe: e.pesca === true })), ocultas: [...ocultas],
       seg: seg || [],
       hist: (hist || []).map((h) => ({ g: h.gid, i: h.item, t: h.verificador, p: h.pct, o: h.obs || "", u: h.usuario, f: h.fecha })),
     });
     const rcaDe = (id) => String(id).replace(/-\d+$/, "");
-    const pub = (estado || []).filter((e) => e.habilitado && e.categoria !== null && e.categoria !== DESCARTADO && !ocultas.has(rcaDe(e.id))).map((e) => ({ id: e.id, c: e.categoria, h: true, ap: e.aplica === true ? true : null }));
+    const pub = (estado || []).filter((e) => e.habilitado && e.categoria !== null && e.categoria !== DESCARTADO && !ocultas.has(rcaDe(e.id))).map((e) => ({ id: e.id, c: e.categoria, h: true, ap: typeof e.aplica === "boolean" ? e.aplica : null, comp: compDe(e.componentes), pe: e.pesca === true }));
     const hab = new Set(pub.map((e) => e.id));
     // Usuarios: solo el avance de compromisos con alguna ficha habilitada, sin observaciones internas.
     const segPub = (seg || []).filter((x) => (Array.isArray(x.fichas) ? x.fichas : []).some((id) => hab.has(id)))
       .map((x) => ({ gid: x.gid, items: (Array.isArray(x.items) ? x.items : []).map((i) => ({ t: i.t, p: i.p, f: i.f || "" })), actualizado: x.actualizado }));
-    return send(res, 200, { gz: filtrarBase(b.gz, ocultas), meta, estado: pub, ocultas: [], seg: segPub });
+    return send(res, 200, { gz: filtrarBase(b.gz, ocultas, hab), meta, estado: pub, ocultas: [], seg: segPub });
   }
 
   if (!admin) return send(res, 403, { error: "Solo un administrador puede modificar las exigencias ambientales." });
@@ -111,7 +116,7 @@ export default handler(async (req, res) => {
     if (b.accion === "estado") {
       const items = (Array.isArray(b.items) ? b.items : []).slice(0, 5000);
       const up = [], del = [];
-      const conAplica = await columnaAplica();
+      const conAplica = await columnaAplica(), conComp = await columna("componentes"), conPesca = await columna("pesca");
       for (const it of items) {
         const id = String(it.id || "").slice(0, 60); if (!id) continue;
         const c = it.c === null || it.c === undefined || it.c === "" ? null : Number(it.c);
@@ -121,12 +126,15 @@ export default handler(async (req, res) => {
         if (c === null && !nota) { del.push(id); continue; }
         const fila = { id, categoria: c, habilitado: c !== null && c !== DESCARTADO && !!it.h, nota, por: me.usuario, actualizado: new Date().toISOString() };
         if (conAplica) fila.aplica = c !== null && c !== DESCARTADO && typeof it.ap === "boolean" ? it.ap : null;
+        if (conComp) fila.componentes = compDe(it.comp);
+        if (conPesca) fila.pesca = c !== null && c !== DESCARTADO && it.pe === true;
         up.push(fila);
       }
       if (up.length) await sb("rca_estado?on_conflict=id", { method: "POST", prefer: "resolution=merge-duplicates,return=minimal", body: up });
       for (let i = 0; i < del.length; i += 100) await sb(`rca_estado?id=in.(${del.slice(i, i + 100).map((x) => `"${x.replace(/"/g, "")}"`).join(",")})`, { method: "DELETE", prefer: "return=minimal" });
       await logAct(me.usuario, "Exigencias ambientales", `Actualizó ${up.length + del.length} ficha(s)`);
-      return send(res, 200, { ok: true });
+      const faltan = [conAplica ? null : "aplica", conComp ? null : "componentes", conPesca ? null : "pesca"].filter(Boolean);
+      return send(res, 200, { ok: true, faltan });
     }
   } catch (e) { if (tableMissing(e)) return send(res, 400, { error: "Falta crear las tablas de RCA: vuelve a ejecutar supabase/schema.sql en Supabase." }); throw e; }
   return send(res, 400, { error: "Acción no válida." });

@@ -116,6 +116,10 @@ create table if not exists public.rca_estado (
 -- ¿Aplica a Asuntos Públicos Norte? (respuesta del administrador después de catalogar)
 alter table public.rca_estado add column if not exists aplica boolean;
 
+-- Componentes ambientales (números de la lista de la página) y relación directa con pesca y comunidades pescadoras
+alter table public.rca_estado add column if not exists componentes jsonb not null default '[]'::jsonb;
+alter table public.rca_estado add column if not exists pesca boolean not null default false;
+
 create table if not exists public.rca_visibilidad (
   rca         text primary key,
   visible     boolean not null default true,

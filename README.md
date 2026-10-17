@@ -141,7 +141,8 @@ Pestaña para revisar las resoluciones de calificación ambiental (RCA) de las o
 - **Medio humano y comunidades:** la base trae el tema «Medio humano, comunidades y pescadores» con seis subtemas (pescadores y caletas, pueblos indígenas, organizaciones sociales y vecinos, participación ciudadana, grupos humanos y calidad de vida, proveedores y empleo local) y el filtro **Tipo de texto** (obligación, observación ciudadana, evaluación de impactos, descripción, vistos). El botón **Compromisos con comunidades** combina ambos. Para activarlo, vuelve a cargar `RCA_Operaciones_Norte_base.json.gz`; las categorizaciones existentes se conservan.
 - **Seguimiento de cumplimiento:** cada ficha categorizada muestra sus verificadores o indicadores de cumplimiento (extraídos del texto de la RCA; el administrador puede editarlos, quitarlos o agregar otros). El administrador asigna un porcentaje de avance y una observación a cada verificador y presiona **Guardar avance**; cada cambio queda en el historial con fecha y usuario. La vista **Seguimiento** lista todos los compromisos con su avance promedio y se exporta a CSV. Los usuarios ven el avance de los compromisos habilitados, sin las observaciones. Requiere las tablas `rca_seguimiento` y `rca_seguimiento_hist` (vuelve a ejecutar `supabase/schema.sql`).
 - **Un registro por considerando:** cada considerando numerado (o subnumeral del considerando, como 12.1.26) es un solo registro con todo su texto, aunque ocupe varias páginas; se indica la página de inicio y término. Los números de página, fechas, cantidades y listas internas no abren registros. Los saltos o repeticiones de numeración quedan marcados como **Duda de numeración** (vista "Con dudas de numeración"). Al cargar la base nueva, las categorías y el avance registrados en bases anteriores pasan al considerando correspondiente.
-- **¿Aplica a Asuntos Públicos Norte?:** después de catalogar una ficha, la plataforma pregunta si aplica (Sí / No / Responder después). Las que aplican quedan en el apartado **Aplican a AP Norte** (compromisos, medidas y exigencias de medio humano) y las que no, en **No aplican**. La respuesta se puede cambiar en cada ficha. Requiere la columna `aplica` en `rca_estado` (vuelve a ejecutar `supabase/schema.sql`).
+- **Clasificación y validación (administradores):** cada ficha se clasifica con su **tipo** (compromiso voluntario, medida, plan de seguimiento, exigencia u otro), si **aplica a Asuntos Públicos Norte**, sus **componentes ambientales** (los habituales de un EIA: medio físico, biótico, humano y construido, patrimonio, paisaje, áreas protegidas y salud) y si tiene **relación directa con pesca y comunidades pescadoras**. La plataforma sugiere tipo, componentes y relación con pesca según el texto. Al **validar** (con confirmación) la ficha sale de «Por revisar» y pasa sola a su apartado; también se puede validar o descartar en bloque.
+- **Apartados:** **Pesca y comunidades pescadoras** (todo lo marcado con relación directa con pesca), **AP Norte · otros componentes**, **Compromisos ambientales** (voluntarios y de medio ambiente natural) y **Otros**. Las **descartadas** quedan en su propio apartado, nunca son visibles para los usuarios y se pueden **reevaluar** (con confirmación).
 - **Detalle de cada RCA:** N° RCA, áreas de influencia (localidades que menciona la RCA), objetivo y alcance. La vista **Montos de inversión** muestra un gráfico interactivo por RCA y compañía (escala lineal o logarítmica; clic en una barra abre la RCA).
 - **Confirmación:** catalogar, descartar, restaurar, cambiar la visibilidad o eliminar algo pide confirmación con botones Sí / No.
 - **Encabezado:** muestra el lugar aproximado de conexión (en Vercel, según la IP; endpoint `api/lugar`) y la fecha y hora actuales.
@@ -150,7 +151,7 @@ Pestaña para revisar las resoluciones de calificación ambiental (RCA) de las o
 - **Descartar:** al marcar una ficha como Descartado, desaparece al instante de la lista y queda en el **Apartado de descartadas** (botón sobre los resultados o la tarjeta "Descartadas"), con quién la descartó y cuándo. Desde ahí puedes **Restaurar para revisar** o asignarle una categoría. Cada acción se puede deshacer en el aviso que aparece abajo.
 - **Resúmenes de RCA:** cada resolución tiene un mini resumen con titular, descripción, objetivo, alcance y monto de inversión. Se ve en la ficha de la RCA y en la vista **Resúmenes de RCA**. Los resúmenes se basan en el texto de cada RCA; si el monto no aparece en la resolución, se usa el del consolidado y se indica.
 - **Lista de resoluciones:** a la izquierda, agrupada por operación (Minera Centinela, Compañía Minera Zaldívar y Minera Antucoya) en grupos desplegables.
-- **Qué ven los usuarios:** solo las fichas categorizadas que marques como **Visible para usuarios**, con su categoría. También pueden buscar palabras en el texto completo de las RCA visibles, pero sin ver categorías ni notas de lo que no habilitaste. Puedes ocultar una RCA completa desde su ficha. En la versión de Vercel este filtro lo aplica el servidor.
+- **Qué ven los usuarios:** solo las fichas **validadas**, ordenadas en los cuatro apartados, con su tipo y componentes (sin notas internas). Lo que está por revisar o descartado no se les muestra. En la versión de Vercel el servidor ni siquiera envía el texto de las fichas no validadas.
 - Las RCA escaneadas se leyeron con reconocimiento óptico (OCR) y la plataforma lo indica. Su texto puede tener errores: antes de citar, revisa el documento original o el expediente del SEIA, que tiene un enlace en la ficha de cada RCA.
 - Tablas en Supabase: `rca_base`, `rca_estado` y `rca_visibilidad` (incluidas en `supabase/schema.sql`).
 
@@ -190,3 +191,14 @@ Lo normal es que un administrador use el botón **Contraseña** en la pestaña A
 - **Excluir meses de veda**: los meses en veda no se cuentan como extracción perdida.
 - **Criterios de beneficiarios**: meses, años y toneladas mínimas, y opción de pescadores históricos (al menos 3 de los últimos 5 años completos).
 - **Beneficiarios por organización**: pescadores, toneladas y montos por escenario.
+
+### SQL de exigencias ambientales: componentes y pesca
+Para guardar los componentes ambientales y la relación con pesca, ejecuta una vez en Supabase (SQL Editor › New query › Run). Incluye la columna `aplica` por si aún no la agregaste:
+
+```sql
+alter table public.rca_estado add column if not exists aplica boolean;
+alter table public.rca_estado add column if not exists componentes jsonb not null default '[]'::jsonb;
+alter table public.rca_estado add column if not exists pesca boolean not null default false;
+```
+
+Si faltan estas columnas, la plataforma lo avisa en la pestaña Exigencias ambientales.
