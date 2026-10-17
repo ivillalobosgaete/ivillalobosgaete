@@ -117,6 +117,7 @@ Después del primer ingreso puedes borrar `ADMIN_PASSWORD` de Vercel: el adminis
 
 ## Gráficos
 
+- Áreas de manejo (AMERB) y caletas oficiales: el sitio consulta las capas públicas del Geoportal de Subpesca (`/api/geo`, guardadas 12 horas). Muestra los polígonos AMERB en el mapa, una tabla de AMERB cercanas a cada caleta y el registro oficial de pescadores, embarcaciones y organizaciones por caleta; las coordenadas oficiales reemplazan a las aproximadas.
 - Vedas oficiales precargadas (pulpo del norte, huiros de Coquimbo y Antofagasta, loco), con su decreto. Aviso emergente una vez al día y franja roja con las especies en veda vigente y las próximas 30 días; las especies en veda se marcan en rojo en gráficos, tablas, filtros y calculadora. En Administración › Vedas se pueden desactivar las oficiales o agregar otras.
 - Mapa de caletas (Resumen): mapa con la ubicación de cada caleta, mancha de calor y círculos según toneladas, vista mapa o satélite y ranking de caletas. Las coordenadas vienen de las columnas Latitud y Longitud del Excel si existen; si no, se usan ubicaciones de referencia (algunas aproximadas).
 - Todos los gráficos muestran un recuadro «Interpretación» que se recalcula con los filtros: qué muestran los datos y qué implica para la gestión o la negociación.
