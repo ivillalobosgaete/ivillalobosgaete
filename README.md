@@ -124,6 +124,8 @@ Después del primer ingreso puedes borrar `ADMIN_PASSWORD` de Vercel: el adminis
 - Exigencias ambientales › Gráficos: resumen por compañía, temas, estado de revisión (solo administradores), categorías, aplica a AP Norte, avance de cumplimiento por compañía y tema, RCA por año, tipo de contenido y cruce de caletas con las fichas RCA que las mencionan. Todo se segmenta por compañía.
 
 ## Exigencias ambientales (RCA)
+
+- Los usuarios buscan con sus propias palabras clave en el texto completo de todas las RCA visibles, sin filtros predefinidos. Pueden acotar por su cuenta en «Más filtros» (por ejemplo, solo compromisos habilitados).
 Pestaña para revisar las resoluciones de calificación ambiental (RCA) de las operaciones y ordenar sus obligaciones.
 - **Carga inicial (una vez, solo administradores):** en la pestaña **Exigencias ambientales**, presiona **Cargar base de RCA** y elige `RCA_Operaciones_Norte_base.json.gz`. Ese archivo trae las RCA divididas en fichas por numeral o considerando. Si más adelante cargas una base nueva, las categorizaciones se conservan.
 - **Medio humano y comunidades:** la base trae el tema «Medio humano, comunidades y pescadores» con seis subtemas (pescadores y caletas, pueblos indígenas, organizaciones sociales y vecinos, participación ciudadana, grupos humanos y calidad de vida, proveedores y empleo local) y el filtro **Tipo de texto** (obligación, observación ciudadana, evaluación de impactos, descripción, vistos). El botón **Compromisos con comunidades** combina ambos. Para activarlo, vuelve a cargar `RCA_Operaciones_Norte_base.json.gz`; las categorizaciones existentes se conservan.
