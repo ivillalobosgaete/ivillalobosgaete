@@ -884,6 +884,8 @@ i.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:
 .rgq{font-weight:700;display:inline-flex;align-items:center}
 table.rgh td:first-child{white-space:normal}
 @media (max-width:560px){table.rgc .mbar,table.rgk .sg-bar{display:none}}
+details.sec[data-sec="cla"] #claves>h3{display:none}
+details.sec[data-sec="cla"] #claves{margin:0}
 /* ===== Mapa de caletas ===== */
 .mapz{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .mapp{position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#e4f1f5;min-width:0}
@@ -3798,7 +3800,13 @@ renderPane=function(){if(!LAST||!S.R)return _renderPane();const t=S.tab;CUR={X:n
     if(t==="pescadores")iPesc(A);if(t==="especies"){iEspTab(A);iImpl()}}catch(e){console.error(e)}};
 document.addEventListener("click",ev=>{const b=ev.target.closest(".c2seg button[data-v]");if(!b)return;const k=b.closest(".c2seg").dataset.c2k;ST2.set(k,b.dataset.v);b.parentNode.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
   if(k.startsWith("rg")){RC.gx=RC.gx||{};RC.gx[k]=b.dataset.v;renderRcaGx();return}if(LAST)renderPane()});
-build();buildMap();{const sn=document.getElementById("scNote");if(sn)sn.classList.add("concl")}
+build();buildMap();
+/* Claves del período en sección desplegable */
+(function(){const cl=$("#claves");if(!cl||cl.closest("details.sec"))return;const d=document.createElement("details");d.className="sec";d.dataset.sec="cla";d.open=UIP.get("sec.cla","0")==="1";
+  d.innerHTML=`<summary><span class="sec-t">Claves del período</span><span class="sec-s" id="claSub">Resumen por zona: desembarque, pescadores, meses y recursos principales</span><span class="sec-c" aria-hidden="true"></span></summary><div class="sec-b"></div>`;
+  cl.parentNode.insertBefore(d,cl);d.querySelector(".sec-b").appendChild(cl);
+  d.addEventListener("toggle",()=>{UIP.set("sec.cla",d.open?"1":"0");if(d.open&&LAST&&S.tab==="resumen")renderPane()})})();
+if(typeof renderClaves==="function"){const _rcl=renderClaves;renderClaves=function(A){const r=_rcl.apply(this,arguments);try{const h=$("#claves>h3"),sub=$("#claSub");if(h&&sub){const t=h.textContent.replace(/^Claves del período\s*·?\s*/,"").trim();sub.textContent=(t?t+" · ":"")+"Resumen por zona: desembarque, pescadores, meses y recursos principales"}}catch(e){}return r}}{const sn=document.getElementById("scNote");if(sn)sn.classList.add("concl")}
 const subs={act:"Evolución mensual por zona, proyección, mapa por caleta y mes, estacionalidad y anomalías",esp:"Especies, captura por caleta con variación, años, comunas, ranking y dependencia",soc:"Pescadores por sexo, compañías y brecha de género"};
 Object.entries(subs).forEach(([k,v])=>{const e=document.querySelector(`details.sec[data-sec="${k}"] .sec-s`);if(e)e.textContent=v});
 
