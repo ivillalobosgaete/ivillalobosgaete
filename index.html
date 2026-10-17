@@ -3536,7 +3536,26 @@ function anomalias(){const R=S.R,m=R.m,D=getD(),sel=$("#anomSel"),svg=$("#gAnom"
     hover(E("rect",{x:X(k)-bw/2,y:T,width:Math.max(bw,4),height:B-T,fill:"transparent"},svg),()=>`<b>${cap(ymLabel(i))} · ${esc(m.C[ANOM][0])}</b><br>${t1(v)} t${x?`<br>Habitual para ${MESL[i%12]}: ${t1(x.mu)} t (rango ${t1(x.lo)} a ${t1(x.hi)} t)${isA?`<br><b style="color:${v>x.hi?GREEN:RED}">${v>x.hi?"Inusualmente alto":"Inusualmente bajo"}</b> (${dTxt(dPct(v,x.mu))} vs. habitual)`:""}`:"<br>Sin suficientes años para comparar"}`)});
   E("line",{x1:L,x2:Rr,y1:B,y2:B,stroke:"var(--line)"},svg);
   $("#anomList").innerHTML=out.length?"Últimos meses fuera de rango: "+out.slice(-6).reverse().map(o=>`<b style="color:${o.v>o.x.hi?GREEN:RED}">${cap(ymLabel(o.i))}</b> ${t0(o.v)} t (${dTxt(dPct(o.v,o.x.mu))})`).join(" · "):"";
-  const lo=out.filter(o=>o.v<o.x.lo).length,hi=out.length-lo;setC("cAnomC",out.length?`<b>${esc(m.C[ANOM][0])}</b>: ${out.length} mes${out.length===1?"":"es"} fuera del rango habitual (${hi} alto${hi===1?"":"s"}, ${lo} bajo${lo===1?"":"s"}); el último fue ${ymLabel(out[out.length-1].i)}`:`<b>${esc(m.C[ANOM][0])}</b>: ningún mes fuera del rango habitual`)}
+  try{anomInterp(m,a,b,vals,band,out)}catch(e){console.error(e)}}
+function anomInterp(m,a,b,vals,band,out){const nm=esc(m.C[ANOM][0]),n=vals.length,lo=out.filter(o=>o.v<o.x.lo),hi=out.filter(o=>o.v>o.x.hi);
+  const P=[`<b>Cómo leerlo:</b> la línea azul es lo que desembarcó <b>${nm}</b> cada mes; la banda celeste es lo habitual para ese mismo mes según los demás años. Los puntos verdes y rojos son meses que se salieron de lo normal.`];
+  if(!out.length)P.push(`En todo el período ningún mes salió del rango habitual: la caleta tiene una actividad estable y predecible.`);
+  else{P.push(`Hubo <b>${out.length} mes${out.length===1?"":"es"} fuera del rango</b> (${hi.length} alto${hi.length===1?"":"s"}, ${lo.length} bajo${lo.length===1?"":"s"}); el último fue ${ymLabel(out[out.length-1].i)}.`);
+    const big=out.slice().sort((p,q)=>Math.abs(dPct(q.v,q.x.mu)||0)-Math.abs(dPct(p.v,p.x.mu)||0))[0];if(big)P.push(`El caso más extremo fue ${ymLabel(big.i)}: ${t1(big.v)} t frente a ${t1(big.x.mu)} t habituales (${dTxt(dPct(big.v,big.x.mu))}).`)}
+  /* estacionalidad */
+  const moMu=Array(12).fill(0),moN=Array(12).fill(0);vals.forEach((v,k)=>{const mo=(a+k)%12;moMu[mo]+=v;moN[mo]++});const avg=moMu.map((s,i)=>moN[i]?s/moN[i]:0);const order=avg.map((v,i)=>[v,i]).sort((x,y)=>y[0]-x[0]);
+  if(order[0][0]>0)P.push(`Temporada: en promedio los meses más fuertes son ${MESL[order[0][1]]} y ${MESL[order[1][1]]}, y los más débiles ${MESL[order[11][1]]} y ${MESL[order[10][1]]}.`);
+  /* tendencia últimos 12 meses */
+  let concl="";if(n>=24){const s12=vals.slice(-12).reduce((x,y)=>x+y,0),p12=vals.slice(-24,-12).reduce((x,y)=>x+y,0),d=dPct(s12,p12);
+    if(d!=null)P.push(`Los últimos 12 meses suman ${t0(s12)} t, ${dTxt(d)} frente a los 12 anteriores (${t0(p12)} t).`);
+    const rHi=hi.filter(o=>o.i>b-12).length,rLo=lo.filter(o=>o.i>b-12).length;
+    if(rHi>=3)concl=`<b>Conclusión:</b> en el último año la caleta está desembarcando claramente por sobre su patrón histórico (${rHi} meses altos). Puede reflejar más esfuerzo de pesca, un recurso abundante o mejor registro. Para negociar, conviene usar una línea base que considere estos años recientes, porque el promedio histórico subestimaría su actividad actual.`;
+    else if(rLo>=2)concl=`<b>Conclusión:</b> en el último año hubo ${rLo} meses inusualmente bajos. Conviene verificarlos con la caleta: pueden deberse a vedas, marejadas, conflictos o problemas de registro, y no necesariamente a una baja real de la actividad.`;
+    else if(d!=null&&Math.abs(d)>=25)concl=`<b>Conclusión:</b> el último año ${d>0?"subió":"bajó"} ${t0(Math.abs(d))} % frente al anterior, pero sin meses extremos: es un cambio repartido en varios meses, no concentrado en picos. Conviene seguirlo de cerca${d>0?" y considerarlo al fijar la línea base de negociación":" y conversarlo con la caleta"}.`;
+    else if(rHi+rLo===0)concl=`<b>Conclusión:</b> en el último año la caleta se ha mantenido dentro de lo habitual, así que su historial es una buena referencia para estimar su actividad futura.`;
+    else concl=`<b>Conclusión:</b> el último año tuvo pocos meses fuera de lo normal; no hay señales de un cambio sostenido en la actividad.`}
+  const L=[P[0],P.slice(1).join(" ")];if(concl)L.push(concl);
+  setC("cAnomC",L.filter(Boolean).join("<br>"))}
 
 /* ---------- Valor económico (con precios configurados) ---------- */
 function valor(A){const R=S.R,m=R.m,X=CUR.X,box=$("#valBox"),card=$("#cValor");
@@ -3618,8 +3637,7 @@ function iImpl(){const R=S.R;
   if(S.tab==="especies"){addTo("cCalEspC","Los meses de máxima captura son los de mayor ingreso; cualquier faena, veda o paralización en esos meses tendrá el mayor impacto.");
     addTo("cCatC","La recolección de orilla la realizan con frecuencia mujeres y personas mayores, por lo que su peso indica dónde una medida tiene mayor alcance social.")}}
 function iDepGap(){iImpl();if(isOpen("esp"))addTo("cDepC","Esas caletas son las más vulnerables a vedas, caídas de precio o cambios en la abundancia de su especie principal.");
-  if(isOpen("soc"))addTo("cGapC","Las brechas grandes suelen reflejar que las mujeres se concentran en recursos de menor volumen (como la recolección de orilla), no necesariamente menor dedicación.");
-  if(isOpen("act"))addTo("cAnomC","Los meses inusualmente bajos recientes conviene verificarlos con la caleta: pueden deberse a vedas, marejadas, conflictos o problemas de registro.")}
+  if(isOpen("soc"))addTo("cGapC","Las brechas grandes suelen reflejar que las mujeres se concentran en recursos de menor volumen (como la recolección de orilla), no necesariamente menor dedicación.");}
 /* Negociación */
 if(typeof renderNeg==="function"){const _rn=renderNeg;renderNeg=function(){_rn.apply(this,arguments);try{iNeg()}catch(e){console.error(e)}try{negMx()}catch(e){console.error(e)}try{vedaMark()}catch(e){}}}
 /* Extracción promedio por mes y por año (calculadora para negociación) */
