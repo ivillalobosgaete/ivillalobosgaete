@@ -112,6 +112,7 @@ Después del primer ingreso puedes borrar `ADMIN_PASSWORD` de Vercel: el adminis
 - **Tarjetas de gráficos:** menú ⋯ para ampliar a pantalla completa o descargar la imagen; los textos de ayuda están en el ícono ⓘ.
 - **Exigencias ambientales:** fichas plegadas (se abren con la flecha o al hacer clic en el texto), "Más filtros" y "Más temas" desplegables, una barra de vistas con contadores y lista de RCA con buscador que se puede ocultar.
 - **Negociación:** pestañas Calculadora / Escenarios de compensación y tabla de pescadores plegable. **Poder e interés:** ranking de 10 por zona con "Ver más" y acciones en un menú ⋯.
+- **Búsqueda para usuarios:** los usuarios que no son administradores buscan palabras clave en el texto completo de todas las RCA visibles (al escribir o elegir un tema la búsqueda cambia sola a "Todas las RCA"; pueden volver a "Solo compromisos habilitados"). Nunca ven categorías de fichas no habilitadas.
 - **Pantallas angostas:** las pestañas se eligen en un selector.
 
 ## Exigencias ambientales (RCA)

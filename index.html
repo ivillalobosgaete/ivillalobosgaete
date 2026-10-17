@@ -697,6 +697,10 @@ button.sgk{cursor:pointer}.sgk.on{outline:2px solid var(--brand)}
 .rca-wrap.nolist{grid-template-columns:minmax(0,1fr)}.rca-wrap.nolist .rca-list{display:none}
 @media (max-width:760px){.rca-views .vsep{display:none}.rca-views button{padding:6px 9px;font-size:.8rem}}
 
+.rca-scope{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.rca-scope button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px;font-weight:700;font-size:.8rem;color:var(--ink-2);cursor:pointer}
+.rca-scope button[aria-pressed="true"]{background:var(--brand-deep);border-color:var(--brand-deep);color:#fff}
+
 #nTbl tfoot td,#nFis tfoot td{border-top:2px solid var(--line);background:var(--brand-08)}#nTbl tfoot tr.avg td,#nFis tfoot tr.avg td{border-top:1px solid var(--line);background:var(--surface)}
 
 .tnow{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;font-size:.8rem;margin-top:3px;color:#4a2400}
@@ -997,6 +1001,7 @@ section[data-pane]{gap:16px!important}
           <div class="rca-kpis" id="rcaKpis"></div>
           <div class="card rca-filters">
             <div class="rca-search"><input type="search" id="rcQ" placeholder='Buscar palabras clave: pesca, caleta, comunidad, "plan de seguimiento"… (usa -palabra para excluir)' aria-label="Buscar en las RCA"><button class="btn ghost small" id="rcaClear" type="button">Limpiar filtros</button></div>
+            <div class="rca-scope" id="rcScope" hidden></div>
             <div class="rca-quick" id="rcQuick"></div>
             <div class="rca-sel">
               <label>Compañía<select id="rcEmp"></select></label>
@@ -2345,7 +2350,7 @@ function renderRcaRes(){document.querySelectorAll("#rcaModo button").forEach(b=>
   if(RC.modo==="inversion"){renderRcaInv();return}
   const B=RC.base,adm=S.perm.admin,rows=rcRows(),n=rows.length,pages=Math.max(1,Math.ceil(n/RC_PER));if(RC.page>=pages)RC.page=pages-1;const sl=rows.slice(RC.page*RC_PER,(RC.page+1)*RC_PER);RC.rows=rows;
   const cats=rcCats();
-  $("#rcaCount").innerHTML=`<b>${t0(n)}</b> ficha${n===1?"":"s"}${RC.q?` con “${esc(RC.q)}”`:""}`;
+  $("#rcaCount").innerHTML=`<b>${t0(n)}</b> ficha${n===1?"":"s"}${RC.q?` con “${esc(RC.q)}”`:""}${!adm&&(RC.f.vista||"habilitadas")==="buscar"?" en el texto completo de las RCA":""}`;
   $("#rcaRes").innerHTML=sl.length?sl.map(i=>{const f=B.f[i],r=B.rcas[f[0]],s=RC.st.get(f[1])||{},c=s.c??null,vis=rcVisible(s),open=RC.open.has(f[1])||f[5].length<700;
     const txt=open?f[5]:f[5].slice(0,640)+"…";const showCat=adm||vis;
     const ex=RC.expAll||RC.exp.has(f[1]);
@@ -2406,12 +2411,18 @@ $("#rcaBulk").addEventListener("click",async ev=>{const b=ev.target.closest("[da
     else toast(`${t0(ids.length)} ficha${ids.length>1?"s":""} actualizada${ids.length>1?"s":""}.`)}
   renderRcaRes();renderRcaKpis()});
 $("#rcaList").addEventListener("click",ev=>{const b=ev.target.closest("[data-rca]");if(!b)return;RC.f.rca=RC.f.rca===b.dataset.rca?"":b.dataset.rca;RC.page=0;rcSyncSel();renderRca()});
-[["rcEmp","emp"],["rcRca","rca"],["rcTipo","tipo"],["rcVista","vista"],["rcCat","cat"],["rcTema","tema"],["rcSug","sug"],["rcTxt","txt"]].forEach(([id,k])=>$("#"+id).addEventListener("change",ev=>{RC.f[k]=ev.target.value;if(k==="emp")RC.f.rca="";RC.page=0;rcSyncSel();renderRca()}));
-let rcQT=null;$("#rcQ").addEventListener("input",ev=>{clearTimeout(rcQT);rcQT=setTimeout(()=>{RC.q=ev.target.value.trim();RC.page=0;renderRcaRes();renderRcaKpis()},250)});
-$("#rcQuick").addEventListener("click",ev=>{const p=ev.target.closest("[data-preset]");if(p){const on=RC.f.tema==="1"&&RC.f.txt==="0";RC.f.tema=on?"":"1";RC.f.txt=on?"":"0";RC.page=0;rcSyncSel();renderRca();return}
-  const c=ev.target.closest("[data-tema]");if(c){RC.f.tema=RC.f.tema===c.dataset.tema?"":c.dataset.tema;RC.page=0;rcSyncSel();renderRca();return}
-  const a=ev.target.closest("[data-q]");if(a){ev.preventDefault();RC.q=a.dataset.q;if(!S.perm.admin&&(RC.f.vista||"habilitadas")==="habilitadas")RC.f.vista="buscar";RC.page=0;rcSyncSel();renderRca()}});
-$("#rcaClear").onclick=()=>{RC.sgSt="";RC.f={emp:"",rca:"",tipo:"",vista:"",cat:"",tema:"",sug:"",txt:""};RC.q="";RC.page=0;rcSyncSel();renderRca()};
+[["rcEmp","emp"],["rcRca","rca"],["rcTipo","tipo"],["rcVista","vista"],["rcCat","cat"],["rcTema","tema"],["rcSug","sug"],["rcTxt","txt"]].forEach(([id,k])=>$("#"+id).addEventListener("change",ev=>{RC.f[k]=ev.target.value;if(k==="vista"){RC.autoScope=false;RC.soloHab=ev.target.value==="habilitadas"&&!!RC.q}else if(k==="tema"||k==="txt")rcViewerScope();if(k==="emp")RC.f.rca="";RC.page=0;rcSyncSel();renderRca()}));
+let rcQT=null;$("#rcQ").addEventListener("input",ev=>{clearTimeout(rcQT);rcQT=setTimeout(()=>{RC.q=ev.target.value.trim();RC.page=0;const ch=rcViewerScope();if(ch){rcSyncSel();renderRca()}else{renderRcaRes();renderRcaKpis()}},250)});
+/* Usuarios (no administradores): al buscar palabras clave o elegir un tema, la búsqueda recorre el texto completo de todas las RCA visibles. */
+function rcViewerScope(){if(S.perm.admin)return false;const v=RC.f.vista||"habilitadas",want=(RC.q||RC.f.tema!==""||RC.f.txt!=="")&&!RC.soloHab;
+  if(want&&v==="habilitadas"){RC.f.vista="buscar";RC.autoScope=true;return true}
+  if(!want&&v==="buscar"&&RC.autoScope){RC.f.vista="habilitadas";RC.autoScope=false;return true}return false}
+function rcScopeBar(){const el=$("#rcScope");if(!el)return;const adm=S.perm.admin;el.hidden=adm;if(adm)return;const v=RC.f.vista||"habilitadas";
+  el.innerHTML=`<span class="cs">Buscar en:</span><button type="button" data-scope="buscar" aria-pressed="${v==="buscar"}">Todas las RCA</button><button type="button" data-scope="habilitadas" aria-pressed="${v==="habilitadas"}">Solo compromisos habilitados</button>`}
+$("#rcQuick").addEventListener("click",ev=>{const p=ev.target.closest("[data-preset]");if(p){const on=RC.f.tema==="1"&&RC.f.txt==="0";RC.f.tema=on?"":"1";RC.f.txt=on?"":"0";RC.page=0;rcViewerScope();rcSyncSel();renderRca();return}
+  const c=ev.target.closest("[data-tema]");if(c){RC.f.tema=RC.f.tema===c.dataset.tema?"":c.dataset.tema;RC.page=0;rcViewerScope();rcSyncSel();renderRca();return}
+  const a=ev.target.closest("[data-q]");if(a){ev.preventDefault();RC.q=a.dataset.q;RC.page=0;rcViewerScope();rcSyncSel();renderRca()}});
+$("#rcaClear").onclick=()=>{RC.sgSt="";RC.autoScope=false;RC.soloHab=false;RC.f={emp:"",rca:"",tipo:"",vista:"",cat:"",tema:"",sug:"",txt:""};RC.q="";RC.page=0;rcSyncSel();renderRca()};
 $("#rcaUp").onclick=()=>$("#rcaFile").click();
 $("#rcaFile").addEventListener("change",async ev=>{const file=ev.target.files[0];ev.target.value="";if(!file)return;
   try{let u=new Uint8Array(await file.arrayBuffer());let gz=u;if(u[0]===0x1f&&u[1]===0x8b)u=await gunzip(u);else gz=await gzip(u);
@@ -2575,7 +2586,7 @@ function rcApCard(id){const card=rcCard(id);if(!card)return;const s=RC.st.get(id
   if(ok&&typeof s.ap==="boolean"){const ref=card.querySelector(".fi-h .cc")||card.querySelector(".fi-h .sug");const x=document.createElement("span");x.className="apc "+(s.ap?"si":"no");x.textContent=s.ap?"Aplica a AP Norte":"No aplica a AP Norte";if(ref)ref.after(x);else card.querySelector(".fi-h").appendChild(x)}}
 
 /* ---------- Pantalla más ordenada: fichas plegadas, más filtros, temas y lista ocultable ---------- */
-function rcUiSync(){const F=RC.f;const nm=[F.tipo,F.cat,F.tema,F.txt,F.sug].filter(v=>v!=="").length;const b=$("#rcMoreBtn");
+function rcUiSync(){rcScopeBar();const qi=$("#rcQ");if(qi)qi.placeholder=S.perm.admin?'Buscar palabras clave: pesca, caleta, comunidad, "plan de seguimiento"… (usa -palabra para excluir)':'Buscar palabras clave en todas las RCA: pesca, caleta, comunidad, "mano de obra local"…';const F=RC.f;const nm=[F.tipo,F.cat,F.tema,F.txt,F.sug].filter(v=>v!=="").length;const b=$("#rcMoreBtn");
   if(b){b.textContent=(RC.more?"Menos filtros ▴":"Más filtros ▾")+(nm?` (${nm})`:"");b.setAttribute("aria-expanded",String(RC.more))}const m=$("#rcMore");if(m)m.hidden=!RC.more;
   const q=$("#rcQuick");if(q)q.classList.toggle("open",RC.qx);const w=document.querySelector(".rca-wrap");if(w)w.classList.toggle("nolist",RC.nolist);
   const lt=$("#rcaListTog");if(lt)lt.textContent=RC.nolist?"Mostrar lista de RCA":"Ocultar lista de RCA";
@@ -2590,6 +2601,8 @@ $("#rcaRes").addEventListener("click",ev=>{const t=ev.target.closest(".fi-tog");
   const c=ev.target.closest(".fi.cl");if(c&&ev.target.closest(".fi-t,.fi-sec")){rcTogCard(c,true)}},true);
 $("#rcaList").addEventListener("input",ev=>{if(!ev.target.matches("#rlQ"))return;const q=norm(ev.target.value.trim());RC.rlq=ev.target.value;
   document.querySelectorAll("#rcaList .rl").forEach(b=>{b.hidden=!!q&&!norm(b.textContent).includes(q)});document.querySelectorAll("#rcaList details.rl-g").forEach(d=>{if(q)d.open=[...d.querySelectorAll(".rl")].some(b=>!b.hidden)})});
+
+$("#rcScope").addEventListener("click",ev=>{const b=ev.target.closest("[data-scope]");if(!b)return;RC.f.vista=b.dataset.scope;RC.autoScope=false;RC.soloHab=b.dataset.scope==="habilitadas";RC.page=0;rcSyncSel();renderRca()});
 
 /* ================= Encabezado: lugar, fecha y hora ================= */
 const HDR={t:null,loc:""};
