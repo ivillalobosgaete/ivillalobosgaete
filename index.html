@@ -1074,6 +1074,7 @@ mark.rch{background:#ffe08a;color:inherit;border-radius:3px;padding:0 1px;box-sh
 .rpa-e{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:1px 7px;margin:1px 3px 1px 0;font-size:.78rem;white-space:nowrap}.rpa-e small{color:var(--muted)}.rpa-e.v{border-color:#e0a800;background:#fff8e1}
 .rpa-d .rpa-l{margin:0 0 4px;font-size:.84rem}.rpa-alert{background:#fde8e6;color:#8a1f17;border-radius:8px;padding:4px 8px;font-size:.8rem;margin:4px 0}
 .rpa-t{width:100%;border-collapse:collapse;font-size:.78rem;margin:4px 0}.rpa-t th{text-align:left;font-size:.68rem;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:2px 4px}.rpa-t td{border-bottom:1px solid var(--line);padding:3px 4px;vertical-align:top}.rpa-t tr.in td{color:var(--muted)}.rpa-t td.vv{color:#b23b32;font-weight:700}.rpa-t small{color:var(--muted)}
+.rpa-dd summary{cursor:pointer;font-size:.8rem;white-space:nowrap}.rpa-dd ul{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:4px;min-width:260px}.rpa-dd li{display:flex;flex-wrap:wrap;gap:2px 8px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:4px 7px;font-size:.78rem;background:var(--surface)}.rpa-dd li.in{opacity:.75}.rpa-dd li span{color:var(--ink-2)}.rpa-dd .vv{color:#b23b32;font-weight:700}
 /*C2E*/</style>
 </head>
 <body>
@@ -2151,7 +2152,7 @@ function tableRows(pass){
     const cals=g==="p"?[...r.c].sort((a,b)=>b[1]-a[1]).map(([c,q])=>({n:m.C[c][0],co:m.C[c][1],q:q/1000})):null,esps=g==="p"?[...r.e].sort((a,b)=>b[1]-a[1]).map(([e,q])=>({n:m.E[e][1],q:q/1000,y:r.ey.get(e)})):null;
     return{pi:r.p,name:P[1],rpa:P[0],sexo:m.sexes[P[2]],comuna:m.C[ci][1],caleta:m.C[ci][0],especie:m.E[ei][1],cals,esps,nC:cals?cals.length:1,nE:esps?esps.length:1,hay:cals?cals.map(x=>x.n+" "+x.co).join(" ")+" "+esps.map(x=>x.n).join(" "):"",q:r.q/1000,x:r.x/1000,n:r.n,d1:r.d1}});
 }
-const TCOLS=[["name","Pescador"],["rpa","RPA",1],["rpaE","Estado RPA"],["sexo","Sexo"],["comuna","Comuna"],["caleta","Caleta"],["especie","Especie"],["embN","Embarcaciones activas (Sernapesca)"],["q","Desembarque (t)",1],["x","Captura calc. (t)",1],["n","Registros",1],["d1","Último registro",1]];
+const TCOLS=[["name","Pescador"],["rpa","RPA",1],["rpaE","Estado RPA"],["sexo","Sexo"],["comuna","Comuna"],["caleta","Caleta"],["especie","Especie"],["embN","Embarcaciones (Sernapesca)"],["q","Desembarque (t)",1],["x","Captura calc. (t)",1],["n","Registros",1],["d1","Último registro",1]];
 function renderTable(pass){
   if(pass)TROWS=tableRows(pass);
   const words=norm(S.q).split(/\s+/).filter(Boolean);let rows=words.length?TROWS.filter(r=>{const h=norm(`${r.name} ${r.rpa} ${r.caleta} ${r.comuna} ${r.especie} ${r.hay||""}`);return words.every(w=>h.includes(w))}):TROWS.slice();
@@ -4331,7 +4332,7 @@ rcHi=function(text,q){q=q==null?RC.q:q;if(!q)return esc(text);const rg=rcHitRang
 
 
 /* ================= Registro Pesquero Artesanal (Sernapesca): estado, caleta base y embarcaciones ================= */
-const RPAS={m:new Map(),pend:new Set(),stale:new Set(),busy:false,ok:typeof api==="function"&&/^https?:/.test(location.protocol),falta:false,t:null,prog:null};
+const RPAS={open:new Set(),m:new Map(),pend:new Set(),stale:new Set(),busy:false,ok:typeof api==="function"&&/^https?:/.test(location.protocol),falta:false,t:null,prog:null};
 const rpaHoy=()=>new Date().toLocaleDateString("en-CA",{timeZone:"America/Santiago"});
 const rpaAct=s=>/activ/i.test(s||"")&&!/inactiv/i.test(s||"");
 const rpaFmt=f=>f?f.split("-").reverse().join("-"):"";
@@ -4351,8 +4352,9 @@ window.rpaFill=r=>{const d=rpaGet(r.rpa);if(!d||d.error){r.rpaE=RPAS.ok?(d?"Sin 
 window.rpaCell=r=>{if(!RPAS.ok)return`<span class="cs">—</span>`;const d=rpaGet(r.rpa);if(!d)return`<span class="rpa-b wait">Consultando…</span>`;if(d.error)return`<span class="rpa-b na" title="No se pudo consultar el registro de Sernapesca">Sin dato</span>`;
   const act=rpaAct(d.estado),venc=(d.emb||[]).some(e=>rpaAct(e.estado)&&rpaVenc(e.venc));
   return`<span class="rpa-b ${act?"ok":"no"}">${esc(d.estado||"Sin dato")}</span>${d.cambio?`<span class="rpa-b alert" title="${esc(d.cambio.txt)}">¡Cambió!</span>`:""}${venc?`<span class="rpa-b warn" title="Una embarcación activa tiene la matrícula vencida">Matrícula vencida</span>`:""}`};
-window.rpaEmbCell=r=>{if(!RPAS.ok)return"";const d=rpaGet(r.rpa);if(!d||d.error)return`<span class="cs">${d?"—":"…"}</span>`;const act=(d.emb||[]).filter(e=>rpaAct(e.estado));
-  return act.length?act.map(e=>`<span class="rpa-e${rpaVenc(e.venc)?" v":""}" title="${esc([e.clasificacion,e.eslora?e.eslora+" m":"",e.caleta].filter(Boolean).join(" · "))}">${esc(e.nombre||"")}${e.matricula?` <small>${esc(e.matricula)}</small>`:""}</span>`).join(""):`<span class="cs">Ninguna activa</span>`};
+window.rpaEmbCell=r=>{if(!RPAS.ok)return"";const d=rpaGet(r.rpa);if(!d||d.error)return`<span class="cs">${d?"—":"…"}</span>`;const E=d.emb||[];if(!E.length)return`<span class="cs">Sin embarcaciones</span>`;
+  const act=E.filter(e=>rpaAct(e.estado)).length,venc=E.some(e=>rpaAct(e.estado)&&rpaVenc(e.venc));
+  return`<details class="rpa-dd" data-rpa="${esc(r.rpa)}" ${RPAS.open.has(String(r.rpa))?"open":""}><summary>${t0(E.length)} embarcaci${E.length===1?"ón":"ones"} <span class="cs">· ${t0(act)} activa${act===1?"":"s"}</span>${venc?` <span class="rpa-b warn">vencida</span>`:""}</summary><ul>${E.map(e=>`<li class="${rpaAct(e.estado)?"":"in"}"><b>${esc(e.nombre||"Sin nombre")}</b><span>${esc(e.caleta||"Caleta sin dato")}</span><span>Matrícula ${esc(e.matricula||"sin dato")}</span><span class="rpa-b ${rpaAct(e.estado)?"ok":"no"}">${esc(e.estado||"Sin dato")}</span>${e.venc?`<span class="${rpaVenc(e.venc)&&rpaAct(e.estado)?"vv":"cs"}">vence ${rpaFmt(e.venc)}</span>`:""}</li>`).join("")}</ul></details>`};
 window.rpaSub=r=>{if(!RPAS.ok)return`<div class="dl"><h4>Registro Sernapesca</h4><p class="cs">El estado del RPA y las embarcaciones se consultan en la versión web de la plataforma (Vercel). <a href="${RPA_URL+r.rpa}" target="_blank" rel="noopener">Ver ficha en Sernapesca ↗</a></p></div>`;
   const d=rpaGet(r.rpa);if(!d)return`<div class="dl"><h4>Registro Sernapesca</h4><p class="cs">Consultando…</p></div>`;if(d.error)return`<div class="dl"><h4>Registro Sernapesca</h4><p class="cs">No se pudo consultar ahora. <a href="${RPA_URL+r.rpa}" target="_blank" rel="noopener">Ver ficha en Sernapesca ↗</a></p></div>`;
   const E=d.emb||[];return`<div class="dl rpa-d"><h4>Registro Sernapesca <span class="cs">RPA ${esc(r.rpa)}</span></h4>
@@ -4376,6 +4378,30 @@ function rpaNegStatus(){const s=$("#nRpaS");if(!s)return;if(!RPAS.ok){s.textCont
   s.textContent=RPAS.prog?`· consultando Sernapesca: ${t0(RPAS.prog.done)} de ${t0(RPAS.prog.tot)}…`:known?`· ${t0(ina)} con RPA inactivo de ${t0(known)} consultados${RPAS.falta?" (sin caché diaria: falta la tabla rpa_cache)":""}`:""}
 {const _ne=negElig;negElig=function(fis){_ne.apply(this,arguments);if(N.rpaAct){let k=0;for(const p of [...fis.keys()]){const d=rpaGet(S.R.m.P[p][0]);if(d&&!d.error&&!rpaAct(d.estado)){fis.delete(p);k++}}N.elOut=(N.elOut||0)+k}try{rpaNegStatus()}catch(e){}return fis}}
 {const _rn=renderNeg;renderNeg=function(){try{rpaNegInit()}catch(e){}return _rn.apply(this,arguments)}}
+/* Detalle del pescador: «Principales especies» con cada barra dividida por año (colores por año) */
+const YRC2=k=>["#1f5fa8","#16794a","#d76a00","#8a3fb3","#c0392b","#0f8a8a","#b8860b","#5d6670","#e05297","#2e8b57"][k%10];
+{const _ce=chartEsp;chartEsp=function(A){if(!S.f.p||S.f.p.size<1||!LAST||!LAST.pass){const h=$("#cEsp h3");if(h)h.textContent="Principales especies";return _ce.apply(this,arguments)}
+  try{const R=S.R,m=R.m,nm=A.nMonths,pass=LAST.pass,nY=R.y1-R.y0+1,Y=new Map();
+    for(let i=0;i<R.n;i++){if(!pass[i])continue;let a=Y.get(R.e[i]);if(!a){a=new Float64Array(nY);Y.set(R.e[i],a)}a[R.yr[i]]+=R.q[i]/1000}
+    const it=m.E.map((e,i)=>({id:i,label:e[1],v:V(A.esp[i],A.espFis[i],nm),t:A.esp[i],y:Y.get(i)})).filter(x=>x.v>0&&x.y).sort((a,b)=>b.v-a.v).slice(0,12);
+    const used=new Set();it.forEach(x=>x.y.forEach((v,k)=>{if(v>0)used.add(k)}));
+    const h=$("#cEsp h3");if(h)h.textContent=S.f.p.size===1?"Especies del pescador por año":"Especies de los pescadores elegidos, por año";
+    $("#lEsp").innerHTML=[...used].sort((a,b)=>a-b).map(k=>`<span><i style="background:${YRC2(k)}"></i>${R.y0+k}</span>`).join("");
+    const svgId="gEsp",svg=$("#"+svgId);let W=vw(svgId,440);const labW=Math.min(150,Math.round(W*.36)),maxc=Math.max(8,Math.min(22,Math.max(10,Math.floor(labW/6.2)))-7);
+    if(!it.length){emptyMsg(svg,W,120);return}
+    const rh=24,T=4,H=T+it.length*rh+22,L=labW,Rr=W-(S.measure==="total"?52:84);clear(svg,W,H);
+    const mx=niceMax(Math.max(...it.map(i=>i.v))),sc=v=>(v/mx)*(Rr-L),B=T+it.length*rh,u=usfx(),sel=S.f.esp;
+    [0,.5,1].forEach(k=>{const x=L+sc(mx*k);E("line",{x1:x,x2:x,y1:T,y2:B,class:"gl"},svg);E("text",{x,y:B+15,"text-anchor":"middle"},svg).textContent=tt(mx*k)+u});
+    it.forEach((x,i)=>{const y=T+i*rh+4,hh=rh-8,dim=sel&&sel.size&&!sel.has(x.id),lab=x.label.length>maxc?x.label.slice(0,maxc-1)+"…":x.label;
+      E("text",{x:L-8,y:y+hh/2+4,"text-anchor":"end"},svg).textContent=lab;E("rect",{x:L,y,width:Math.max(0,Rr-L),height:hh,rx:hh/2,fill:"var(--track)"},svg);
+      const g=E("g",{class:dim?"dim":""},svg);let cx=L;const k2=x.t>0?x.v/x.t:0;
+      x.y.forEach((v,k)=>{if(v<=0)return;const w=Math.max(sc(v*k2),.8);const r=E("rect",{x:cx,y,width:w,height:hh,fill:YRC2(k)},g);
+        hover(r,()=>`<b>${esc(x.label)} · ${R.y0+k}</b><br>${tt(v)} t (${t1(x.t?v/x.t*100:0)} % de la especie)`,add=>toggle("esp",x.id,add));cx+=w});
+      E("text",{x:cx+5,y:y+hh/2+4,class:"val"},svg).textContent=tt(x.v)+u;
+      const hit=E("rect",{x:0,y:T+i*rh,width:L,height:rh,fill:"transparent"},svg);hover(hit,()=>`<b>${esc(x.label)}</b><br>${[...x.y].map((v,k)=>v>0?`${R.y0+k}: ${tt(v)} t`:"").filter(Boolean).join("<br>")}`,add=>toggle("esp",x.id,add))});
+    E("line",{x1:L,x2:L,y1:T,y2:B,stroke:"var(--ink-2)"},svg)}catch(e){console.error(e);return _ce.apply(this,arguments)}}}
+
+$("#tbl").addEventListener("toggle",ev=>{const d=ev.target.closest&&ev.target.closest("details.rpa-dd");if(!d)return;d.open?RPAS.open.add(d.dataset.rpa):RPAS.open.delete(d.dataset.rpa)},true);
 
 })();
 

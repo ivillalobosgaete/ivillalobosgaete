@@ -105,13 +105,13 @@ function parseEmbarcacion(html) {
 
 async function consultar(num) {
   const p = parsePescador(await bajar(`${BASE()}regpescadores_publico/verAction.php?num=${encodeURIComponent(num)}`));
-  // Detalle (matrícula, caleta, vencimiento) solo de las embarcaciones activas, para no sobrecargar el registro.
-  const act = p.emb.filter((e) => /activ/i.test(e.estado) && !/inactiv/i.test(e.estado)).slice(0, 4);
+  // Detalle (matrícula, caleta, vencimiento) de todas las embarcaciones inscritas (hasta 10, primero las activas).
+  const act = [...p.emb].sort((a, b) => (/inactiv/i.test(a.estado) ? 1 : 0) - (/inactiv/i.test(b.estado) ? 1 : 0)).slice(0, 10);
   await Promise.all(act.map(async (e) => {
     try { Object.assign(e, parseEmbarcacion(await bajar(`${BASE()}regembarcaciones_publico/verAction.php?num=${encodeURIComponent(e.cod)}`)), { cod: e.cod, tipo: e.tipo, estado: e.estado || "" }); }
     catch (er) { e.error = "No se pudo leer la ficha de la embarcación"; }
   }));
-  return { ...p, fuente: `${BASE()}regpescadores_publico/verAction.php?num=${num}`, obtenido: new Date().toISOString() };
+  return { ...p, ver: 2, fuente: `${BASE()}regpescadores_publico/verAction.php?num=${num}`, obtenido: new Date().toISOString() };
 }
 
 async function pool(items, n, fn) { const out = []; let i = 0; await Promise.all(Array.from({ length: n }, async () => { while (i < items.length) { const k = i++; out[k] = await fn(items[k]); } })); return out; }
@@ -136,7 +136,7 @@ export default handler(async (req, res) => {
   catch (e) { if (tableMissing(e)) falta = true; else throw e; }
   const datos = {}, errores = {}, nuevos = [];
   const stale = u.searchParams.get("stale") === "1";
-  for (const c of cache || []) if ((c.dia === dia || stale) && !forzar) datos[c.rpa] = c.dia === dia ? c.datos : { ...c.datos, desactualizado: true };
+  for (const c of cache || []) if ((c.dia === dia || stale) && !forzar && (stale || (c.datos && c.datos.ver === 2))) datos[c.rpa] = c.dia === dia ? c.datos : { ...c.datos, desactualizado: true };
   const pend = nums.filter((n) => !datos[n]);
   await pool(pend, 4, async (n) => {
     try {
