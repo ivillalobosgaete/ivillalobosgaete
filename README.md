@@ -104,6 +104,16 @@ Después del primer ingreso puedes borrar `ADMIN_PASSWORD` de Vercel: el adminis
 
 **Si actualizas una plataforma ya publicada:** vuelve a ejecutar `supabase/schema.sql` en Supabase. Crea las tablas nuevas (`ajustes`, `bitacora`, `vistas`, `actividad`) y agrega la columna `organizacion` a `evaluaciones`, sin tocar los datos existentes.
 
+## Interfaz
+
+- **Encabezado compacto:** título, datos de la base, lugar y hora en una franja. Reporte ejecutivo, Actualizar datos, Administración y Cerrar sesión están en el menú de usuario (arriba a la derecha).
+- **Filtros en un panel lateral:** período, medida, vistas guardadas y segmentadores se abren con el botón **Filtros**, que muestra cuántos filtros hay activos. Sobre el contenido queda una línea con el período y la medida.
+- **Resumen ejecutivo por niveles:** indicadores arriba, una alerta visible (las demás con "Ver las N alertas"), claves del período en pestañas por zona y gráficos agrupados en secciones desplegables que recuerdan si las dejaste abiertas.
+- **Tarjetas de gráficos:** menú ⋯ para ampliar a pantalla completa o descargar la imagen; los textos de ayuda están en el ícono ⓘ.
+- **Exigencias ambientales:** fichas plegadas (se abren con la flecha o al hacer clic en el texto), "Más filtros" y "Más temas" desplegables, una barra de vistas con contadores y lista de RCA con buscador que se puede ocultar.
+- **Negociación:** pestañas Calculadora / Escenarios de compensación y tabla de pescadores plegable. **Poder e interés:** ranking de 10 por zona con "Ver más" y acciones en un menú ⋯.
+- **Pantallas angostas:** las pestañas se eligen en un selector.
+
 ## Exigencias ambientales (RCA)
 Pestaña para revisar las resoluciones de calificación ambiental (RCA) de las operaciones y ordenar sus obligaciones.
 - **Carga inicial (una vez, solo administradores):** en la pestaña **Exigencias ambientales**, presiona **Cargar base de RCA** y elige `RCA_Operaciones_Norte_base.json.gz`. Ese archivo trae las RCA divididas en fichas por numeral o considerando. Si más adelante cargas una base nueva, las categorizaciones se conservan.

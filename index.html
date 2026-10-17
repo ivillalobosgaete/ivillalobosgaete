@@ -671,12 +671,157 @@ button.sgk{cursor:pointer}.sgk.on{outline:2px solid var(--brand)}
 .apb.on{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
 .apnote{margin:0;font-size:.86rem;background:#eef6fc;border:1px solid #cfe4f5;border-radius:10px;padding:8px 12px;color:#1d3b55}
 
+/* ---- Exigencias: pantalla más liviana ---- */
+.rca-kpis{display:flex;flex-wrap:wrap;gap:8px}
+.rca-kpis .rk{flex:1 1 120px;padding:8px 12px;box-shadow:none}.rca-kpis .rk b{font-size:1.15rem}.rca-kpis .rk span{text-transform:none;letter-spacing:0;font-size:.76rem}
+.rca-kpis .rk.wide{flex:3 1 520px;background:transparent;border:0;padding:4px 0}.rca-kpis .cc{font-size:.7rem;padding:2px 8px}
+.rca-sel label{text-transform:none;letter-spacing:0;font-size:.76rem}
+.rca-sel{align-items:end}.rc-morebtn{align-self:end;height:34px}
+.rca-more{padding-top:8px;border-top:1px dashed var(--line)}
+#rcQuick .qx{display:none}#rcQuick.open .qx{display:inline-flex}#rcQuick.open span.qx{display:inline}
+#rcQuick .qmore{border-style:dashed;color:var(--ink-2)}
+.rca-views{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:5px}
+.rca-views .vt{display:flex;flex-wrap:wrap;gap:4px}
+.rca-views button{border:0;background:none;border-radius:8px;padding:7px 12px;font-weight:700;font-size:.84rem;color:var(--ink-2);cursor:pointer}
+.rca-views button:hover{background:var(--brand-08)}
+.rca-views button[aria-pressed="true"],.rca-views button.on{background:var(--brand);color:var(--on-brand)}
+.rca-views .vsep{width:1px;align-self:stretch;background:var(--line);margin:2px 2px}
+.rca-bar{align-items:center}.rca-bar .lnk{font-size:.82rem}
+.fi-tog{width:26px;height:26px;border-radius:7px;border:1px solid var(--line);background:var(--surface);cursor:pointer;display:inline-grid;place-items:center;flex:none}
+.fi-tog::before{content:"";width:7px;height:7px;border-right:2px solid var(--ink-2);border-bottom:2px solid var(--ink-2);transform:rotate(45deg) translate(-1px,-1px);transition:transform .15s}
+.fi-tog[aria-expanded="false"]::before{transform:rotate(-45deg)}
+.fi.cl{padding-block:10px}.fi.cl .fi-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer;color:var(--ink-2);font-size:.9rem}
+.fi.cl .fi-sgw,.fi.cl .fi-a,.fi.cl .fi-desc,.fi.cl .fi-duda,.fi.cl .fi-more{display:none!important}
+.fi.cl .fi-f{margin-top:2px}
+.rl-q{width:100%;border:1px solid var(--line);border-radius:8px;padding:6px 9px;font-size:.84rem;margin:2px 0 6px}
+.rca-wrap.nolist{grid-template-columns:minmax(0,1fr)}.rca-wrap.nolist .rca-list{display:none}
+@media (max-width:760px){.rca-views .vsep{display:none}.rca-views button{padding:6px 9px;font-size:.8rem}}
+
 #nTbl tfoot td,#nFis tfoot td{border-top:2px solid var(--line);background:var(--brand-08)}#nTbl tfoot tr.avg td,#nFis tfoot tr.avg td{border-top:1px solid var(--line);background:var(--surface)}
 
 .tnow{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;font-size:.8rem;margin-top:3px;color:#4a2400}
 .tnow #tLoc{display:inline-flex;gap:5px;align-items:center;font-weight:700}.tnow #tLoc svg{width:13px;height:13px;flex:none}
 .tnow #tLoc .lnk{color:#4a2400;text-decoration:underline;font-weight:600;font-size:.78rem;background:none;border:0;padding:0;cursor:pointer}
 .tnow time b{font-variant-numeric:tabular-nums}
+/* ===================== Interfaz más liviana ===================== */
+/* Encabezado en una franja */
+.top{padding-block:10px!important;gap:8px 16px;flex-wrap:nowrap}
+.top .brand{gap:2px;min-width:0}
+.top h1{font-size:.98rem!important;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tmeta{display:flex;flex-wrap:wrap;align-items:center;gap:2px 12px;font-size:.76rem;color:#4a2400}
+.tmeta .tsub{font-size:.76rem!important;margin:0!important;opacity:1}
+.tmeta .tnow{margin:0;font-size:.76rem;gap:2px 10px}
+.top-r{flex-wrap:nowrap;gap:8px}
+.top .fsearch{min-width:0;width:clamp(180px,24vw,320px)}
+.top .fsearch input{width:100%}
+#btnFilters{display:inline-flex!important;align-items:center;gap:6px;white-space:nowrap}
+#btnFilters[hidden]{display:none!important}
+#btnFilters::before{content:"";width:14px;height:14px;background:currentColor;-webkit-mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>') center/contain no-repeat;mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>') center/contain no-repeat}
+.umenu{position:relative}
+.ubtn{display:inline-flex;align-items:center;gap:7px;border:0;border-radius:999px;padding:4px 12px 4px 4px;background:rgba(255,255,255,.88);color:#3b1d00;font-weight:700;font-size:.84rem;cursor:pointer;white-space:nowrap}
+.uav{width:28px;height:28px;border-radius:50%;display:inline-grid;place-items:center;background:var(--brand-deep);color:#fff;font-size:.72rem;letter-spacing:.02em}
+.udrop{position:absolute;right:0;top:calc(100% + 8px);z-index:90;min-width:240px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 18px 40px -16px rgba(40,20,0,.45);padding:6px;display:grid;gap:2px}
+.udrop .uhead{padding:8px 10px 10px;border-bottom:1px solid var(--line);margin-bottom:4px;color:var(--ink);font-size:.84rem}
+.udrop .uhead .hello{color:var(--ink)!important}.udrop .uhead .cs{color:var(--muted)!important}
+.udrop .uhead .role{display:inline-block;margin-left:6px}
+.udrop .btn{background:none!important;border:0!important;color:var(--ink)!important;text-align:left;justify-content:flex-start;border-radius:8px;padding:9px 10px;font-weight:600;box-shadow:none}
+.udrop .btn:hover{background:var(--brand-08)!important}
+.udrop #btnLogout{color:#9b2c25!important}
+.udrop .btn[hidden]{display:none!important}
+#tabAdmin{display:none!important}
+/* Pestañas: selector en pantallas angostas */
+.tabsel{display:none}
+@media (max-width:760px){
+  .tabs{display:none!important}
+  .tabsel{display:block;width:calc(100% - 32px);margin:10px 16px 0;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-weight:700;font-size:.95rem;color:var(--ink)}
+  .top{flex-wrap:wrap}.top h1{font-size:.9rem!important;white-space:normal}.top-r{width:100%;flex-wrap:nowrap}.top .fsearch{flex:1;width:auto}
+  .ubtn #uName{display:none}.ubtn{padding:4px 8px 4px 4px}
+  .fab{display:none!important}
+}
+/* Panel de filtros (todas las pantallas) */
+.layout{grid-template-columns:minmax(0,1fr)!important}
+aside#aside{position:fixed!important;top:0!important;bottom:0!important;right:0!important;left:auto!important;width:min(440px,94vw)!important;z-index:85!important;border-radius:18px 0 0 18px!important;overflow:auto;transform:translateX(105%)!important;transition:transform .22s ease!important;padding:0 16px 16px!important;align-content:start;box-shadow:none}
+aside#aside.open{transform:none!important;box-shadow:0 0 50px rgba(30,15,0,.28)!important}
+aside#aside[hidden]{display:grid!important;visibility:hidden}
+.backdrop{z-index:80!important}
+.dhead{position:sticky;top:0;z-index:2;background:var(--surface);display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.dhead b{font-size:1.05rem}
+.dx{border:1px solid var(--line);background:var(--surface);border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:.95rem;color:var(--ink-2)}
+aside#aside .period{position:static!important;display:grid!important;gap:12px;padding:6px 0 12px!important;background:none!important;box-shadow:none!important;border:0!important;border-bottom:1px solid var(--line)!important;backdrop-filter:none!important;margin:0!important}
+aside#aside .period[hidden]{display:none!important}
+aside#aside .period>.pgroup{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
+aside#aside .period .plabel{width:100%;font-size:.76rem;font-weight:800;color:var(--muted);text-transform:none;letter-spacing:0}
+aside#aside .period .pgroup .pgroup{width:auto}
+aside#aside .period .quick{flex-wrap:wrap!important}
+aside#aside .dsec{margin-top:6px}
+aside#aside #closeAside{position:sticky;bottom:0;width:100%;margin-top:8px;background:var(--brand)!important;color:var(--on-brand)!important;border:0!important;padding:10px}
+aside#aside #closeAside[hidden]{display:none}
+/* Contexto del período sobre el contenido */
+.ctx{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;font-size:.84rem;color:var(--ink-2);padding:2px 2px 0}
+.ctx b{color:var(--ink)}.ctx .btn{margin-left:auto}
+.ctx[hidden]{display:none}
+/* Secciones plegables */
+details.sec{background:transparent;border:0}
+details.sec>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;gap:0 12px;align-items:center;padding:12px 16px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec[open]>summary{border-radius:14px 14px 0 0;border-bottom-color:transparent}
+.sec-t{font-weight:800;font-size:1rem;color:var(--ink)}
+.sec-s{grid-row:2;font-size:.8rem;color:var(--muted)}
+.sec-c{grid-row:1/3;grid-column:2;width:30px;height:30px;border-radius:50%;background:var(--brand-08);display:grid;place-items:center}
+.sec-c::before{content:"";width:8px;height:8px;border-right:2px solid var(--brand-ink);border-bottom:2px solid var(--brand-ink);transform:rotate(45deg) translate(-2px,-2px);transition:transform .15s}
+details.sec[open] .sec-c::before{transform:rotate(-135deg) translate(-2px,-2px)}
+details.sec>.sec-b{display:grid;gap:14px;padding:14px;border:1px solid var(--line);border-top:0;border-radius:0 0 14px 14px;background:rgba(255,255,255,.45)}
+details.sec>.sec-b>.viz{margin:0}
+/* Claves del período en pestañas */
+.rtabs{display:flex;flex-wrap:wrap;gap:4px;background:var(--brand-08);border-radius:10px;padding:4px;margin:6px 0 8px;width:max-content;max-width:100%}
+.rtabs button{border:0;background:none;border-radius:8px;padding:7px 14px;font-weight:700;font-size:.86rem;color:var(--ink-2);cursor:pointer}
+.rtabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(60,30,0,.15)}
+.regs.tabbed{grid-template-columns:minmax(0,1fr)!important}
+.regs.tabbed>.reg{display:none}.regs.tabbed>.reg.on{display:block}
+/* Pestañas internas (Negociación) */
+.itabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;width:max-content;max-width:100%}
+.itabs button{border:0;background:none;border-radius:8px;padding:8px 16px;font-weight:700;color:var(--ink-2);cursor:pointer}
+.itabs button[aria-selected="true"]{background:var(--brand);color:var(--on-brand)}
+details.nfis>summary{cursor:pointer;font-weight:800;font-size:1rem;display:flex;gap:8px;align-items:baseline;list-style:none}
+details.nfis>summary::before{content:"▸";color:var(--brand-ink)}details.nfis[open]>summary::before{content:"▾"}
+details.nfis>summary::-webkit-details-marker{display:none}
+details.nfis[open]>summary{margin-bottom:10px}
+/* Menú ⋯ de las tarjetas y ampliar */
+.card{position:relative}
+.cmenu{position:absolute;top:10px;right:10px;z-index:3}
+.cm-b,.rm-b{width:30px;height:30px;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--muted);font-size:1.15rem;line-height:1;cursor:pointer}
+.card:hover .cm-b,.cm-b:focus-visible,.rm-b{border-color:var(--line);background:var(--surface)}
+.cm-d,.rm-d{position:absolute;right:0;top:calc(100% + 4px);background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 30px -14px rgba(40,20,0,.4);padding:4px;display:grid;min-width:170px;z-index:20}
+.cm-d[hidden],.rm-d[hidden]{display:none}
+.cm-d button,.rm-d .btn{border:0!important;background:none!important;text-align:left;padding:8px 10px;border-radius:7px;font-weight:600;color:var(--ink)!important;cursor:pointer;box-shadow:none}
+.cm-d button:hover,.rm-d .btn:hover{background:var(--brand-08)!important}
+.card.max{position:fixed!important;inset:14px;z-index:95;overflow:auto;box-shadow:0 30px 80px rgba(20,10,0,.45);grid-column:auto!important}
+body.has-max::after{content:"";position:fixed;inset:0;background:rgba(20,10,0,.35);z-index:94}
+.card>h3,.card>.tbar{padding-right:36px}
+/* Ayuda ⓘ */
+.hi{display:inline-grid;place-items:center;width:18px;height:18px;margin-left:7px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:700 .68rem/1 Georgia,serif;font-style:italic;vertical-align:2px;cursor:help;padding:0}
+.hi:hover{color:var(--brand-ink);border-color:var(--brand)}
+/* Poder e interés: acciones en menú */
+.rmenu{position:relative;display:inline-block}
+.rm-d .bc{margin-left:6px}
+/* Detalles: menos mayúsculas, color y densidad */
+.kpi .k,.rk span,.sgk span,.plabel,.rca-sel label,.sg-pl,aside h2,.rd span,.rs-k span,.neg-form label,.field label{text-transform:none!important;letter-spacing:0!important}
+.kpi .k{font-size:.8rem}
+.card,.kpi,.claves{box-shadow:0 1px 2px rgba(80,40,0,.04)!important;border-color:#efe6dc!important}
+.card{padding:16px}
+section[data-pane]{gap:16px!important}
+.btn.ghost{color:var(--ink-2)!important;border-color:var(--line)!important;background:var(--surface)}
+.btn.ghost:hover{color:var(--ink)!important;background:var(--brand-08)}
+.qchip{color:var(--ink-2)}
+.chips:empty{display:none}
+
+.layout>main{min-width:0}.claves,.sec-b,.itabs{min-width:0}
+@media (max-width:760px){.rtabs,.itabs{width:auto}.rtabs button,.itabs button{flex:1 1 auto;padding:7px 10px;font-size:.82rem}.ctx{font-size:.8rem}.ctx .btn{margin-left:0}}
+
+#rcaIntro{display:none}.rca-head.show #rcaIntro{display:block}
+@media (max-width:760px){.tmeta .tsub{display:none}.rca-kpis .rk{flex:1 1 30%}.rca-kpis .rk.wide{flex-basis:100%}}
+
+.cmx{position:absolute;top:10px;right:48px;z-index:4;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:5px 10px;font-weight:700;color:var(--ink-2);cursor:pointer}
 </style>
 </head>
 <body>
@@ -695,20 +840,25 @@ button.sgk{cursor:pointer}.sgk.on{outline:2px solid var(--brand)}
   <header class="top gut">
     <div class="brand">
       <h1>Estadísticas de Recolección y Captura · Asuntos Públicos</h1>
-      <div class="tsub" id="stamp"></div>
-      <div class="tnow"><span id="tLoc"></span><span id="tClock"></span></div>
+      <div class="tmeta"><span class="tsub" id="stamp"></span><span class="tnow"><span id="tLoc"></span><span id="tClock"></span></span></div>
     </div>
     <div class="top-r">
-      <span class="hello" id="hello"></span>
       <div class="fsearch">
         <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="#4a5a5f" stroke-width="2"/><path d="M11 11l4 4" stroke="#4a5a5f" stroke-width="2" stroke-linecap="round"/></svg>
         <input id="fs" type="search" placeholder="Buscar pescador por nombre o apellido" aria-label="Buscar pescador por nombre o apellido" autocomplete="off">
         <div class="sugg" id="fsList" hidden></div>
       </div>
       <button class="btn small" id="btnFilters" type="button">Filtros</button>
-      <button class="btn small" id="btnReport" type="button">Reporte ejecutivo</button>
-      <button class="btn small" id="btnUpload" type="button" hidden>Actualizar datos</button>
-      <button class="btn small" id="btnLogout" type="button">Cerrar sesión</button>
+      <div class="umenu">
+        <button class="ubtn" id="uBtn" type="button" aria-haspopup="menu" aria-expanded="false"><span class="uav" id="uAv">?</span><span id="uName">Usuario</span><span aria-hidden="true">▾</span></button>
+        <div class="udrop" id="uDrop" role="menu" hidden>
+          <div class="uhead"><span class="hello" id="hello"></span></div>
+          <button class="btn small" id="btnReport" type="button" role="menuitem">Reporte ejecutivo</button>
+          <button class="btn small" id="btnUpload" type="button" role="menuitem" hidden>Actualizar datos</button>
+          <button class="btn small" id="uAdmin" type="button" role="menuitem" hidden>Administración</button>
+          <button class="btn small" id="btnLogout" type="button" role="menuitem">Cerrar sesión</button>
+        </div>
+      </div>
     </div>
   </header>
   <nav class="tabs gut" role="tablist" id="tabs">
@@ -851,8 +1001,11 @@ button.sgk{cursor:pointer}.sgk.on{outline:2px solid var(--brand)}
             <div class="rca-sel">
               <label>Compañía<select id="rcEmp"></select></label>
               <label>RCA<select id="rcRca"></select></label>
-              <label>Tipo<select id="rcTipo"></select></label>
               <label>Mostrar<select id="rcVista"></select></label>
+              <button type="button" class="btn ghost small rc-morebtn" id="rcMoreBtn" aria-expanded="false">Más filtros ▾</button>
+            </div>
+            <div class="rca-sel rca-more" id="rcMore" hidden>
+              <label>Tipo<select id="rcTipo"></select></label>
               <label>Categoría<select id="rcCat"></select></label>
               <label>Tema<select id="rcTema"></select></label>
               <label id="rcTxtBox">Tipo de texto<select id="rcTxt"></select></label>
@@ -863,7 +1016,8 @@ button.sgk{cursor:pointer}.sgk.on{outline:2px solid var(--brand)}
             <aside class="card rca-list" id="rcaList" aria-label="Resoluciones de calificación ambiental"></aside>
             <div class="rca-main">
               <div class="card" id="rcaDetail" hidden></div>
-              <div class="rca-bar"><span id="rcaCount"></span><div class="rca-bar-r"><div class="seg" id="rcaModo" role="group" aria-label="Vista"><button type="button" data-modo="fichas" aria-pressed="true">Fichas</button><button type="button" data-modo="resumenes" aria-pressed="false">Resúmenes de RCA</button><button type="button" data-modo="seguimiento" aria-pressed="false">Seguimiento</button><button type="button" data-modo="inversion" aria-pressed="false">Montos de inversión</button></div><button type="button" class="btn ghost small apb" id="rcaApSi" hidden>Aplican a AP Norte</button><button type="button" class="btn ghost small apb" id="rcaApNo" hidden>No aplican</button><button type="button" class="btn ghost small" id="rcaDescBtn" hidden>Apartado de descartadas</button></div></div>
+              <div class="rca-views" role="toolbar" aria-label="Vistas de exigencias ambientales"><div class="vt" id="rcaModo" role="group" aria-label="Vista"><button type="button" data-modo="fichas" aria-pressed="true">Fichas</button><button type="button" data-modo="resumenes" aria-pressed="false">Resúmenes</button><button type="button" data-modo="seguimiento" aria-pressed="false">Seguimiento</button><button type="button" data-modo="inversion" aria-pressed="false">Inversión</button></div><span class="vsep" aria-hidden="true"></span><div class="vt vt-ap"><button type="button" class="apb" id="rcaApSi" hidden>Aplican a AP Norte</button><button type="button" class="apb" id="rcaApNo" hidden>No aplican</button><button type="button" class="apb" id="rcaDescBtn" hidden>Descartadas</button></div></div>
+              <div class="rca-bar"><span id="rcaCount"></span><div class="rca-bar-r"><button type="button" class="lnk" id="rcaListTog">Ocultar lista de RCA</button><button type="button" class="lnk" id="rcaExpAll">Abrir todas las fichas</button></div></div>
               <p class="apnote" id="rcaApNote" hidden></p>
               <p class="warnbox" id="rcaDescNote" hidden>Apartado de descartadas: aquí quedan las fichas que descartaste, con quién y cuándo. Puedes reconsiderarlas con <b>Restaurar para revisar</b> o asignándoles directamente una categoría. Los usuarios nunca ven este apartado.</p>
               <div class="card rca-bulk" id="rcaBulk" hidden></div>
@@ -1810,7 +1964,7 @@ function computeAlerts(){
 function alertsHtml(items,lim){return items.length?`<ul class="alist">${items.slice(0,lim).map(a=>`<li class="al s${a.s}"><span class="ai" aria-hidden="true">${a.s===3?"!!":a.s===2?"!":"i"}</span><div><b>${esc(a.z)}</b> · ${esc(a.t)}<br><span class="cs">${esc(a.d)}</span></div></li>`).join("")}</ul>`:`<p class="cs" style="margin:0">Sin alertas: no hay caídas importantes en el último mes completo.</p>`}
 function renderAlerts(){const el=$("#alerts");if(!S.R||!S.R.n){el.hidden=true;return}
   const items=computeAlerts();ALR.items=items;el.hidden=false;const U=+CFG.alertas.umbral||30,minT=+CFG.alertas.minT||5;
-  el.innerHTML=`<div class="tbar"><h3><span class="bell" aria-hidden="true"></span>Alertas · ${esc(ALR.ml)} frente a ${esc(ALR.mp)}</h3><span class="cs">Caídas de ${U} % o más, con al menos ${minT} t de base${S.perm&&S.perm.admin?" · ajustable en Administración":""}</span></div>`+alertsHtml(items,ALR.all?items.length:4)+(items.length>4?`<button class="btn ghost small" type="button" id="alMore">${ALR.all?"Ver menos":`Ver las ${items.length} alertas`}</button>`:"");
+  el.innerHTML=`<div class="tbar"><h3><span class="bell" aria-hidden="true"></span>Alertas · ${esc(ALR.ml)} frente a ${esc(ALR.mp)}</h3><span class="cs">Caídas de ${U} % o más, con al menos ${minT} t de base${S.perm&&S.perm.admin?" · ajustable en Administración":""}</span></div>`+alertsHtml(items,ALR.all?items.length:1)+(items.length>1?`<button class="btn ghost small" type="button" id="alMore">${ALR.all?"Ver menos":`Ver las ${items.length} alertas`}</button>`:"");
   const b=$("#alMore");if(b)b.onclick=()=>{ALR.all=!ALR.all;renderAlerts()}}
 
 /* ================= Comparación de zonas ================= */
@@ -2036,8 +2190,8 @@ function piZone(Z){
     .map(([c,t,s])=>{const n=Z.L.filter(f=>PI_STRAT(f.pw,f.in)[1]===c).length;return`<div class="piq"><span class="sw ${c}"></span><span><b>${t}</b><span class="cs"> ${s}</span></span><b class="n">${t0(n)}</b></div>`}).join("")+
     (org&&Z.sin?`<p class="cs" style="margin:4px 0 0">${t0(Z.sin)} pescadores de la zona no tienen organización asignada.</p>`:"");
   let rows=Z.L;if(sel)rows=rows.filter(f=>f.pw===sel[0]&&f.in===sel[1]);if(qq){const w=qq.split(/\s+/);rows=rows.filter(f=>{const h=norm(f.name+" "+f.id+" "+R.m.C[f.mainCal][0]+" "+f.orgName);return w.every(x=>h.includes(x))})}
-  const lim=PI.page[key]||25,adm=S.perm&&S.perm.admin;
-  const acts=f=>adm?`<button class="btn ghost small" type="button" data-pie="${esc(f.id)}" data-z="${esc(key)}">Evaluar</button> <button class="btn ghost small" type="button" data-bit="${esc(f.id)}" data-bl="${esc(f.name)}">Bitácora${bitCount(f.id)?` <span class="bc">${bitCount(f.id)}</span>`:""}</button>`:"";
+  const lim=PI.page[key]||10,adm=S.perm&&S.perm.admin;
+  const acts=f=>adm?`<div class="rmenu"><button type="button" class="rm-b" aria-label="Acciones" title="Evaluar o abrir bitácora">⋯</button><div class="rm-d" hidden><button class="btn ghost small" type="button" data-pie="${esc(f.id)}" data-z="${esc(key)}">Evaluar</button><button class="btn ghost small" type="button" data-bit="${esc(f.id)}" data-bl="${esc(f.name)}">Bitácora${bitCount(f.id)?` <span class="bc">${bitCount(f.id)}</span>`:""}</button></div></div>`:"";
   const tr=rows.slice(0,lim).map(f=>{const [st,cl]=PI_STRAT(f.pw,f.in);const sub=org?`${f.mem.size} integrantes · ${esc(R.m.C[f.mainCal][0])}`:`RPA ${esc(f.id)} · ${esc(R.m.C[f.mainCal][0])}${f.orgName?" · "+esc(f.orgName):""}`;
     return`<tr><td class="r">${f.rank}</td><td><b>${esc(f.name)}</b><br><span class="cs">${sub}</span><br><span class="stg sm-only ${cl}">${st}</span>${adm?`<span class="sm-only" style="margin-top:4px">${acts(f)}</span>`:""}</td>
     <td class="r"><b>${tt(f.q)}</b><br><span class="cs">${t1(f.share*100)} %</span>${useV?`<br><span class="cs">${money(f.v)}</span>`:""}</td><td class="r hm">${f.ym.size}</td>
@@ -2049,14 +2203,14 @@ function piZone(Z){
     <div class="pi-right"><div class="tbar"><h4 style="margin:0">Ranking por toneladas${sel?` · celda poder ${sel[0]}, interés ${sel[1]} <button class="btn ghost small" type="button" data-picl="${esc(key)}">Ver todos</button>`:""}</h4>
       <input type="search" class="pi-s" data-z="${esc(key)}" value="${esc(PI.q[key]||"")}" placeholder="Buscar ${org?"organización":"pescador, RPA, caleta u organización"}" aria-label="Buscar en el ranking"></div>
       <div class="tbl"><table class="pit"><thead><tr><th class="r">#</th><th>${org?"Organización":"Pescador"}</th><th class="r">Toneladas<br><span style="font-weight:600;text-transform:none">% de la zona${useV?" · valor":""}</span></th><th class="r hm">Meses<br>activos</th><th class="c">Poder</th><th class="c">Interés</th><th class="hm">Estrategia</th>${adm?'<th class="hm"></th>':""}</tr></thead><tbody>${tr||`<tr><td colspan="8" class="empty">Sin ${who} en esta selección</td></tr>`}</tbody></table></div>
-      ${rows.length>lim?`<div class="pager"><button class="btn ghost small" type="button" data-pimore="${esc(key)}">Ver ${Math.min(25,rows.length-lim)} más (${t0(rows.length-lim)} restantes)</button></div>`:""}</div></div></section>`;
+      ${rows.length>lim?`<div class="pager"><button class="btn ghost small" type="button" data-pimore="${esc(key)}">Ver ${Math.min(15,rows.length-lim)} más (${t0(rows.length-lim)} restantes)</button></div>`:""}</div></div></section>`;
 }
-$("#piZones").addEventListener("click",ev=>{const c=ev.target.closest(".pic");if(c){const k=c.dataset.z,p=+c.dataset.p,i=+c.dataset.i;const s=PI.cell[k];PI.cell[k]=s&&s[0]===p&&s[1]===i?null:[p,i];PI.page[k]=25;renderPoder();return}
+$("#piZones").addEventListener("click",ev=>{const c=ev.target.closest(".pic");if(c){const k=c.dataset.z,p=+c.dataset.p,i=+c.dataset.i;const s=PI.cell[k];PI.cell[k]=s&&s[0]===p&&s[1]===i?null:[p,i];PI.page[k]=10;renderPoder();return}
   const cl=ev.target.closest("[data-picl]");if(cl){PI.cell[cl.dataset.picl]=null;renderPoder();return}
-  const mo=ev.target.closest("[data-pimore]");if(mo){const k=mo.dataset.pimore;PI.page[k]=(PI.page[k]||25)+25;renderPoder();return}
+  const mo=ev.target.closest("[data-pimore]");if(mo){const k=mo.dataset.pimore;PI.page[k]=(PI.page[k]||10)+15;renderPoder();return}
   const b=ev.target.closest("[data-bit]");if(b){bitOpen(b.dataset.bit,b.dataset.bl);return}
   const e=ev.target.closest("[data-pie]");if(e)piOpen(e.dataset.pie,e.dataset.z)});
-let piST=null;$("#piZones").addEventListener("input",ev=>{const s=ev.target.closest(".pi-s");if(!s)return;PI.q[s.dataset.z]=s.value;PI.page[s.dataset.z]=25;clearTimeout(piST);piST=setTimeout(()=>{const pos=s.selectionStart;renderPoder();const n=document.querySelector(`.pi-s[data-z="${CSS.escape(s.dataset.z)}"]`);if(n){n.focus();try{n.setSelectionRange(pos,pos)}catch(e){}}},250)});
+let piST=null;$("#piZones").addEventListener("input",ev=>{const s=ev.target.closest(".pi-s");if(!s)return;PI.q[s.dataset.z]=s.value;PI.page[s.dataset.z]=10;clearTimeout(piST);piST=setTimeout(()=>{const pos=s.selectionStart;renderPoder();const n=document.querySelector(`.pi-s[data-z="${CSS.escape(s.dataset.z)}"]`);if(n){n.focus();try{n.setSelectionRange(pos,pos)}catch(e){}}},250)});
 $("#piTop").onchange=ev=>{PI.top=ev.target.value==="all"?1e9:+ev.target.value;renderPoder()};
 $("#piMode").onchange=ev=>{PI.mode=ev.target.value;PI.cell={};PI.page={};renderPoder()};
 $("#piBase").onchange=ev=>{PI.base=ev.target.value;renderPoder()};
@@ -2083,14 +2237,14 @@ const RCST={
 };
 
 /* ================= Exigencias ambientales (RCA) ================= */
-const RC={base:null,meta:null,st:new Map(),hidden:new Set(),loaded:false,warn:"",sel:new Set(),page:0,q:"",idx:null,f:{emp:"",rca:"",tipo:"",vista:"",cat:"",tema:"",sug:"",txt:""},open:new Set(),dirty:new Set(),saveT:null,built:false,modo:"fichas",og:null,seg:new Map(),hist:[],sgOpen:new Set(),sgDraft:new Map(),gf:new Map(),sgSt:"",sgAll:[]};
+const RC={base:null,meta:null,st:new Map(),hidden:new Set(),loaded:false,warn:"",sel:new Set(),page:0,q:"",idx:null,f:{emp:"",rca:"",tipo:"",vista:"",cat:"",tema:"",sug:"",txt:""},open:new Set(),dirty:new Set(),saveT:null,built:false,modo:"fichas",og:null,exp:new Set(),expAll:(()=>{try{return localStorage.getItem("rcExpAll")==="1"}catch(e){return false}})(),qx:false,more:false,nolist:(()=>{try{return localStorage.getItem("rcNoList")==="1"}catch(e){return false}})(),seg:new Map(),hist:[],sgOpen:new Set(),sgDraft:new Map(),gf:new Map(),sgSt:"",sgAll:[]};
 const RC_PER=25,RC_DESC=-2;
 const rcCats=()=>[...(RC.base?RC.base.cats:["Compromiso ambiental voluntario","Medida","Plan de seguimiento o vigilancia","Exigencia o condición"]),"Otro"];
 const rcCatLbl=c=>c===RC_DESC?"Descartado":c==null?"Sin categorizar":(c===1?"Medida (mitigación, reparación o compensación)":rcCats()[c]||"Otro");
 function rcApBtns(){const adm=S.perm.admin,v=RC.f.vista;let si=0,no=0;RC.st.forEach(x=>{if(x.c!=null&&x.c!==RC_DESC){if(x.ap===true)si++;else if(x.ap===false)no++}});
   const a=$("#rcaApSi"),b=$("#rcaApNo");if(a){a.hidden=!adm;a.textContent=`Aplican a AP Norte (${t0(si)})`;a.classList.toggle("on",v==="aplican")}if(b){b.hidden=!adm;b.textContent=`No aplican (${t0(no)})`;b.classList.toggle("on",v==="noaplican")}
   const n=$("#rcaApNote");if(n){n.hidden=!(v==="aplican"||v==="noaplican"||v==="apsin");n.innerHTML=v==="aplican"?"<b>Compromisos, medidas y exigencias de medio humano que aplican a Asuntos Públicos Norte.</b> Aquí quedan todas las fichas categorizadas que marcaste como aplicables. Puedes cambiar la respuesta en cada ficha.":v==="noaplican"?"<b>Compromisos y medidas que no aplican a Asuntos Públicos Norte.</b> Quedan aquí para consulta y revisión; puedes cambiar la respuesta en cada ficha.":"<b>Categorizadas sin definir si aplican a Asuntos Públicos Norte.</b> Responde en cada ficha con el selector «¿Aplica a AP Norte?»."}}
-function rcDescBtn(){rcApBtns();const dv=RC.f.vista==="descartadas";const db=$("#rcaDescBtn");if(db){db.hidden=!S.perm.admin;const nd=[...RC.st.values()].filter(x=>x.c===RC_DESC).length;db.textContent=dv?"← Volver a las fichas":`Apartado de descartadas (${t0(nd)})`;db.classList.toggle("on",dv)}$("#rcaDescNote").hidden=!dv}
+function rcDescBtn(){rcApBtns();const dv=RC.f.vista==="descartadas";const db=$("#rcaDescBtn");if(db){db.hidden=!S.perm.admin;const nd=[...RC.st.values()].filter(x=>x.c===RC_DESC).length;db.textContent=`Descartadas (${t0(nd)})`;db.title=dv?"Volver a las fichas":"Abrir el apartado de descartadas";db.classList.toggle("on",dv)}$("#rcaDescNote").hidden=!dv}
 function rcGoDesc(on){RC.f.vista=on?"descartadas":"";RC.modo="fichas";RC.page=0;rcSyncSel();renderRca();$("#rcaRes").scrollIntoView({behavior:"smooth",block:"start"})}
 function rcToastUndo(msg,undo){const t=$("#toast");t.innerHTML=`<span>${esc(msg)}</span> <button type="button" class="tbtn">Deshacer</button>`;t.hidden=false;clearTimeout(toast.h);
   t.querySelector(".tbtn").onclick=()=>{undo();t.hidden=true};toast.h=setTimeout(()=>t.hidden=true,6000)}
@@ -2131,7 +2285,7 @@ function rcBuildSelects(){const B=RC.base,adm=S.perm.admin,vis=B.rcas.filter(r=>
   $("#rcSugBox").hidden=!adm;
   $("#rcTxt").innerHTML=`<option value="">Todo tipo de texto</option>`+(B.tipos||[]).map((t,i)=>`<option value="${i}">${esc(t)}</option>`).join("");$("#rcTxtBox").hidden=!B.tipos;
   const mh=B.tags.length>=18,quick=mh?[["Medio humano (todo)",1],["Pescadores y caletas",13],["Pueblos indígenas",14],["Organizaciones sociales",15],["Participación ciudadana",16],["Grupos humanos",17],...(B.tags.length>=19?[["Proveedores y empleo local",18]]:[]),["Pesca y mar",0],["Agua",2],["Fauna",5],["Patrimonio",6],["Aire",3]]:[["Pesca",0],["Comunidades",1],["Agua",2],["Fauna",5],["Patrimonio",6],["Aire",3]];
-  $("#rcQuick").innerHTML=(mh&&B.tipos?`<button type="button" class="qchip qmh" data-preset="mhobl">Compromisos con comunidades</button>`:"")+quick.map(([l,t])=>`<button type="button" class="qchip" data-tema="${t}">${l}</button>`).join("")+`<span class="cs">Ejemplos: <a href="#" data-q="caleta">caleta</a> · <a href="#" data-q='"compromiso voluntario"'>"compromiso voluntario"</a> · <a href="#" data-q="indígena">indígena</a> · <a href="#" data-q="monitoreo marino">monitoreo marino</a></span>`;
+  $("#rcQuick").innerHTML=(mh&&B.tipos?`<button type="button" class="qchip qmh" data-preset="mhobl">Compromisos con comunidades</button>`:"")+quick.map(([l,t],k)=>`<button type="button" class="qchip${k>=4?" qx":""}" data-tema="${t}">${l}</button>`).join("")+`<button type="button" class="qchip qmore" id="rcQMore">${RC.qx?"Menos temas ▴":"Más temas ▾"}</button><span class="cs qx">Ejemplos: <a href="#" data-q="caleta">caleta</a> · <a href="#" data-q='"compromiso voluntario"'>"compromiso voluntario"</a> · <a href="#" data-q="indígena">indígena</a> · <a href="#" data-q="monitoreo marino">monitoreo marino</a></span>`;
   rcSyncSel();RC.built=true}
 function rcSyncSel(){const F=RC.f;$("#rcEmp").value=F.emp;$("#rcTipo").value=F.tipo;$("#rcVista").value=F.vista||(S.perm.admin?"todas":"habilitadas");$("#rcCat").value=F.cat;$("#rcTema").value=F.tema;$("#rcSug").value=F.sug;$("#rcTxt").value=F.txt;$("#rcQ").value=RC.q;
   const B=RC.base,adm=S.perm.admin;const rs=B.rcas.map((r,i)=>[r,i]).filter(([r])=>(adm||!RC.hidden.has(r.id))&&(!F.emp||r.empresa===F.emp)).sort((a,b)=>(b[0].anio||0)-(a[0].anio||0));
@@ -2146,7 +2300,7 @@ async function renderRca(){
   const B=RC.base;$("#rcaInfo").textContent=`${B.rcas.length} RCA · ${t0(B.f.length)} fichas · base del ${B.generado}`;
   $("#rcaIntro").innerHTML=adm?`Cada RCA está dividida en fichas por numeral o considerando. Busca palabras clave, revisa cada ficha y asígnale una categoría. Solo las fichas categorizadas que marques como <b>Visible para usuarios</b> aparecen para los demás usuarios. En <b>Seguimiento</b> registras el avance de cada compromiso según sus verificadores.`
     :`Revisa los compromisos y exigencias ambientales habilitados por el administrador y su avance de cumplimiento en <b>Seguimiento</b>, o busca palabras clave en el texto completo de las RCA.`;
-  renderRcaKpis();renderRcaList();renderRcaDetail();renderRcaRes()}
+  renderRcaKpis();renderRcaList();renderRcaDetail();renderRcaRes();rcUiSync();const rq=$("#rlQ");if(rq&&rq.value)rq.dispatchEvent(new Event("input",{bubbles:true}))}
 function rcCounts(){const B=RC.base,adm=S.perm.admin,cnt={tot:0,rev:0,cat:0,hab:0,des:0,by:rcCats().map(()=>0),hby:rcCats().map(()=>0)};
   B.f.forEach(f=>{const r=B.rcas[f[0]];if(!adm&&RC.hidden.has(r.id))return;if(RC.f.emp&&r.empresa!==RC.f.emp)return;if(RC.f.rca&&r.id!==RC.f.rca)return;cnt.tot++;const s=RC.st.get(f[1]);const c=s?s.c:null;
     if(c==null)cnt.rev++;else if(c===RC_DESC)cnt.des++;else{cnt.cat++;cnt.by[c]++;if(s.h){cnt.hab++;cnt.hby[c]++}}});return cnt}
@@ -2156,7 +2310,7 @@ function renderRcaKpis(){rcDescBtn();const c=rcCounts(),adm=S.perm.admin,B=RC.ba
 function renderRcaList(){const B=RC.base,adm=S.perm.admin,per=new Map();B.f.forEach(f=>{const id=B.rcas[f[0]].id;const o=per.get(id)||{n:0,c:0,h:0,d:0};o.n++;const s=RC.st.get(f[1]);if(s&&s.c===RC_DESC)o.d++;else if(s&&s.c!=null){o.c++;if(s.h)o.h++}per.set(id,o)});
   const rs=B.rcas.filter(r=>(adm||!RC.hidden.has(r.id))&&(!RC.f.emp||r.empresa===RC.f.emp));const groups=new Map();rs.forEach(r=>{(groups.get(r.empresa)||groups.set(r.empresa,[]).get(r.empresa)).push(r)});
   if(!RC.og)RC.og=new Set();if(RC.f.emp)RC.og.add(RC.f.emp);if(groups.size===1)RC.og.add([...groups.keys()][0]);const selR=RC.f.rca&&B.rcas.find(r=>r.id===RC.f.rca);if(selR)RC.og.add(selR.empresa);
-  $("#rcaList").innerHTML=`<div class="rl-h"><b>Resoluciones por operación</b><span class="cs">${rs.length} RCA</span></div>`+[...groups].sort((a,b)=>a[0].localeCompare(b[0])).map(([emp,list])=>{
+  $("#rcaList").innerHTML=`<div class="rl-h"><b>Resoluciones por operación</b><span class="cs">${rs.length} RCA</span></div><input type="search" id="rlQ" class="rl-q" placeholder="Buscar RCA o proyecto" aria-label="Buscar en la lista de RCA" value="${esc(RC.rlq||"")}">`+[...groups].sort((a,b)=>a[0].localeCompare(b[0])).map(([emp,list])=>{
     list.sort((a,b)=>(b.anio||0)-(a.anio||0));const tot=list.reduce((a,r)=>{const o=per.get(r.id)||{};a.h+=o.h||0;a.c+=o.c||0;return a},{h:0,c:0});
     return`<details class="rl-g" data-emp="${esc(emp)}" ${RC.og.has(emp)?"open":""}><summary><span class="rl-gt">${esc(emp)}</span><span class="rl-gn">${list.length}</span><span class="cs rl-gs">${adm?`${t0(tot.c)} categorizadas · `:""}${t0(tot.h)} habilitadas</span></summary>`+
       list.map(r=>{const o=per.get(r.id)||{n:0,c:0,h:0,d:0};return`<button type="button" class="rl${RC.f.rca===r.id?" on":""}" data-rca="${esc(r.id)}"><span class="rl-t">RCA ${esc(r.rca)}/${r.anio||"s/f"} <span class="cs">${esc(r.tipo)}</span>${RC.hidden.has(r.id)?` <span class="hid">oculta</span>`:""}</span><span class="rl-p">${esc(r.proyecto)}</span><span class="cs">${t0(o.n)} fichas · ${adm?`${t0(o.c)} categorizadas · ${o.d?`${t0(o.d)} descartadas · `:""}`:""}${t0(o.h)} habilitadas</span></button>`}).join("")+`</details>`}).join("")}
@@ -2194,8 +2348,9 @@ function renderRcaRes(){document.querySelectorAll("#rcaModo button").forEach(b=>
   $("#rcaCount").innerHTML=`<b>${t0(n)}</b> ficha${n===1?"":"s"}${RC.q?` con “${esc(RC.q)}”`:""}`;
   $("#rcaRes").innerHTML=sl.length?sl.map(i=>{const f=B.f[i],r=B.rcas[f[0]],s=RC.st.get(f[1])||{},c=s.c??null,vis=rcVisible(s),open=RC.open.has(f[1])||f[5].length<700;
     const txt=open?f[5]:f[5].slice(0,640)+"…";const showCat=adm||vis;
-    return`<article class="fi ${showCat?rcCatCls(c):""}${s.h&&adm?" hab":""}" data-id="${esc(f[1])}">
-      <div class="fi-h">${adm?`<input type="checkbox" class="fi-sel" aria-label="Seleccionar ficha" ${RC.sel.has(f[1])?"checked":""}>`:""}<span class="fi-rca">RCA ${esc(r.rca)}/${r.anio||"s/f"}</span><span class="fi-emp">${esc(r.empresa.replace("Compañía ",""))}</span><b class="fi-num">${esc(f[2]||"Encabezado")}</b><span class="cs">${rcPag(f)}</span>${f[11]?`<span class="duda" title="${esc(f[11])}">Revisar numeración</span>`:""}<span style="flex:1"></span>
+    const ex=RC.expAll||RC.exp.has(f[1]);
+    return`<article class="fi ${showCat?rcCatCls(c):""}${s.h&&adm?" hab":""}${ex?"":" cl"}" data-id="${esc(f[1])}">
+      <div class="fi-h">${adm?`<input type="checkbox" class="fi-sel" aria-label="Seleccionar ficha" ${RC.sel.has(f[1])?"checked":""}>`:""}<button type="button" class="fi-tog" aria-expanded="${ex}" title="${ex?"Cerrar ficha":"Abrir ficha"}" aria-label="${ex?"Cerrar ficha":"Abrir ficha"}"></button><span class="fi-rca">RCA ${esc(r.rca)}/${r.anio||"s/f"}</span><span class="fi-emp">${esc(r.empresa.replace("Compañía ",""))}</span><b class="fi-num">${esc(f[2]||"Encabezado")}</b><span class="cs">${rcPag(f)}</span>${f[11]?`<span class="duda" title="${esc(f[11])}">Revisar numeración</span>`:""}<span style="flex:1"></span>
         ${showCat&&c!=null?`<span class="cc ${rcCatCls(c)}">${esc(rcCatLbl(c))}</span>`:""}${adm&&c==null&&f[6]>=0?`<span class="sug">Sugerido: ${esc(cats[f[6]])}</span>`:""}${(adm||vis)&&c!=null&&c!==RC_DESC&&s.ap===true?`<span class="apc si">Aplica a AP Norte</span>`:""}${adm&&c!=null&&c!==RC_DESC&&s.ap===false?`<span class="apc no">No aplica a AP Norte</span>`:""}${adm&&vis?`<span class="vis">Visible</span>`:""}</div>
       <div class="fi-sec">${esc(r.proyecto)}${f[3]?` › ${esc(f[3])}`:""}</div>${f[11]&&adm?`<div class="fi-duda">Duda para revisión: ${esc(f[11])}</div>`:""}
       <div class="fi-t">${rcHi(txt,RC.q).replace(/\n/g,"<br>")}</div>
@@ -2227,7 +2382,7 @@ $("#rcaRes").addEventListener("change",async ev=>{const card=ev.target.closest("
     if(nc!=null&&nc!==RC_DESC&&RC.f.vista!=="descartadas"){await rcAskAP([id],num);if(rcApOut(id)){rcRemoveCard(card);renderRcaKpis();return}}
     const inDesc=RC.f.vista==="descartadas";
     if((nc===RC_DESC&&!inDesc)||(inDesc&&nc!==RC_DESC)){rcRemoveCard(card);renderRcaKpis();
-      rcToastUndo(nc===RC_DESC?"Ficha descartada. Quedó en el apartado de descartadas.":"Ficha restaurada.",()=>{rcSet(id,{c:prev});renderRcaRes();renderRcaKpis()});return}const s=RC.st.get(id)||{};card.className=`fi ${rcCatCls(s.c??null)}${s.h?" hab":""}`;const hb=card.querySelector(".fi-hab");hb.disabled=s.c==null||s.c===RC_DESC;hb.checked=!!s.h;const aps=card.querySelector(".fi-ap");if(aps){aps.disabled=hb.disabled;aps.value=s.ap===true?"1":s.ap===false?"0":""}const sw=card.querySelector(".fi-sgw");if(sw){const ff=RC.base.f.find(x=>x[1]===id);if(ff)sw.outerHTML=rcSgCardHtml(ff)}card.querySelector(".fi-ok").textContent="Guardando…";return}
+      rcToastUndo(nc===RC_DESC?"Ficha descartada. Quedó en el apartado de descartadas.":"Ficha restaurada.",()=>{rcSet(id,{c:prev});renderRcaRes();renderRcaKpis()});return}const s=RC.st.get(id)||{};const wasCl=card.classList.contains("cl");card.className=`fi ${rcCatCls(s.c??null)}${s.h?" hab":""}${wasCl?" cl":""}`;const hb=card.querySelector(".fi-hab");hb.disabled=s.c==null||s.c===RC_DESC;hb.checked=!!s.h;const aps=card.querySelector(".fi-ap");if(aps){aps.disabled=hb.disabled;aps.value=s.ap===true?"1":s.ap===false?"0":""}const sw=card.querySelector(".fi-sgw");if(sw){const ff=RC.base.f.find(x=>x[1]===id);if(ff)sw.outerHTML=rcSgCardHtml(ff)}card.querySelector(".fi-ok").textContent="Guardando…";return}
   if(ev.target.classList.contains("fi-ap")){const v=ev.target.value,prev=(RC.st.get(id)||{}).ap,nv=v===""?null:v==="1";const num=card.querySelector(".fi-num").textContent;
     if(!await askYN(nv==null?`¿Dejar sin definir si la ficha <b>${esc(num)}</b> aplica a Asuntos Públicos Norte?`:nv?`¿Confirmas que la ficha <b>${esc(num)}</b> <b>aplica</b> a Asuntos Públicos Norte? Pasará al apartado de compromisos de medio humano que aplican.`:`¿Confirmas que la ficha <b>${esc(num)}</b> <b>no aplica</b> a Asuntos Públicos Norte? Pasará al apartado de los que no aplican.`,{title:"Aplica a Asuntos Públicos Norte"})){ev.target.value=prev===true?"1":prev===false?"0":"";return}
     rcSet(id,{ap:nv==null?undefined:nv});if(nv==null){const x=RC.st.get(id);if(x){delete x.ap}}card.querySelector(".fi-ok").textContent="Guardando…";if(rcApOut(id)){rcRemoveCard(card);renderRcaKpis();return}rcApCard(id);rcApBtns();return}
@@ -2418,6 +2573,23 @@ $("#rcaApSi").onclick=()=>rcGoAp("aplican");$("#rcaApNo").onclick=()=>rcGoAp("no
 function rcApCard(id){const card=rcCard(id);if(!card)return;const s=RC.st.get(id)||{};card.querySelectorAll(".apc").forEach(e=>e.remove());
   const ok=s.c!=null&&s.c!==RC_DESC;const sel=card.querySelector(".fi-ap");if(sel){sel.disabled=!ok;sel.value=s.ap===true?"1":s.ap===false?"0":""}
   if(ok&&typeof s.ap==="boolean"){const ref=card.querySelector(".fi-h .cc")||card.querySelector(".fi-h .sug");const x=document.createElement("span");x.className="apc "+(s.ap?"si":"no");x.textContent=s.ap?"Aplica a AP Norte":"No aplica a AP Norte";if(ref)ref.after(x);else card.querySelector(".fi-h").appendChild(x)}}
+
+/* ---------- Pantalla más ordenada: fichas plegadas, más filtros, temas y lista ocultable ---------- */
+function rcUiSync(){const F=RC.f;const nm=[F.tipo,F.cat,F.tema,F.txt,F.sug].filter(v=>v!=="").length;const b=$("#rcMoreBtn");
+  if(b){b.textContent=(RC.more?"Menos filtros ▴":"Más filtros ▾")+(nm?` (${nm})`:"");b.setAttribute("aria-expanded",String(RC.more))}const m=$("#rcMore");if(m)m.hidden=!RC.more;
+  const q=$("#rcQuick");if(q)q.classList.toggle("open",RC.qx);const w=document.querySelector(".rca-wrap");if(w)w.classList.toggle("nolist",RC.nolist);
+  const lt=$("#rcaListTog");if(lt)lt.textContent=RC.nolist?"Mostrar lista de RCA":"Ocultar lista de RCA";
+  const ea=$("#rcaExpAll");if(ea){ea.textContent=RC.expAll?"Cerrar todas las fichas":"Abrir todas las fichas";ea.hidden=RC.modo!=="fichas"}}
+$("#rcMoreBtn").onclick=()=>{RC.more=!RC.more;rcUiSync()};
+$("#rcaListTog").onclick=()=>{RC.nolist=!RC.nolist;try{localStorage.setItem("rcNoList",RC.nolist?"1":"0")}catch(e){}rcUiSync()};
+$("#rcaExpAll").onclick=()=>{RC.expAll=!RC.expAll;RC.exp.clear();try{localStorage.setItem("rcExpAll",RC.expAll?"1":"0")}catch(e){}renderRcaRes();rcUiSync()};
+$("#rcQuick").addEventListener("click",ev=>{if(ev.target.closest("#rcQMore")){RC.qx=!RC.qx;ev.target.textContent=RC.qx?"Menos temas ▴":"Más temas ▾";rcUiSync()}},true);
+function rcTogCard(card,open){const id=card.dataset.id;const o=open??card.classList.contains("cl");card.classList.toggle("cl",!o);if(o)RC.exp.add(id);else RC.exp.delete(id);
+  const t=card.querySelector(".fi-tog");if(t){t.setAttribute("aria-expanded",String(o));t.title=o?"Cerrar ficha":"Abrir ficha";t.setAttribute("aria-label",t.title)}}
+$("#rcaRes").addEventListener("click",ev=>{const t=ev.target.closest(".fi-tog");if(t){rcTogCard(t.closest(".fi"));return}
+  const c=ev.target.closest(".fi.cl");if(c&&ev.target.closest(".fi-t,.fi-sec")){rcTogCard(c,true)}},true);
+$("#rcaList").addEventListener("input",ev=>{if(!ev.target.matches("#rlQ"))return;const q=norm(ev.target.value.trim());RC.rlq=ev.target.value;
+  document.querySelectorAll("#rcaList .rl").forEach(b=>{b.hidden=!!q&&!norm(b.textContent).includes(q)});document.querySelectorAll("#rcaList details.rl-g").forEach(d=>{if(q)d.open=[...d.querySelectorAll(".rl")].some(b=>!b.hidden)})});
 
 /* ================= Encabezado: lugar, fecha y hora ================= */
 const HDR={t:null,loc:""};
@@ -2672,6 +2844,117 @@ $("#upOk").onclick=async()=>{if(!PENDING)return;const mode=document.querySelecto
   b.disabled=false;b.textContent="Confirmar carga"};
 
 boot().catch(()=>gate(`<p>No se pudo iniciar el dashboard. Recarga la página.</p>`));
+
+/* ================= Interfaz más liviana: menú de usuario, panel de filtros, secciones plegables ================= */
+const UIP={get(k,d){try{const v=localStorage.getItem("ui."+k);return v===null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem("ui."+k,v)}catch(e){}}};
+(function(){
+  /* ---- Menú de usuario ---- */
+  const ub=$("#uBtn"),ud=$("#uDrop");
+  function uClose(){ud.hidden=true;ub.setAttribute("aria-expanded","false")}
+  ub.onclick=ev=>{ev.stopPropagation();const open=ud.hidden;if(open){$("#uAdmin").hidden=$("#tabAdmin").hidden}ud.hidden=!open;ub.setAttribute("aria-expanded",String(open))};
+  ud.addEventListener("click",ev=>{if(ev.target.closest("button"))setTimeout(uClose,0)});
+  document.addEventListener("click",ev=>{if(!ev.target.closest(".umenu"))uClose();if(!ev.target.closest(".cmenu"))document.querySelectorAll(".cm-d").forEach(d=>d.hidden=true);if(!ev.target.closest(".rmenu"))document.querySelectorAll(".rm-d").forEach(d=>d.hidden=true)});
+  document.addEventListener("keydown",ev=>{if(ev.key==="Escape"){uClose();if($("#aside").classList.contains("open"))$("#closeAside").click();document.querySelectorAll(".card.max").forEach(c=>cardMax(c,false))}});
+  $("#uAdmin").onclick=()=>setTab("admin");
+  const syncUser=()=>{const c=S.acct;const n=c?(c.nombre||c.usuario||""):"";$("#uName").textContent=c?c.usuario:"Usuario";
+    $("#uAv").textContent=(n.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("")||"?").toUpperCase()};
+  new MutationObserver(syncUser).observe($("#hello"),{childList:true,subtree:true,characterData:true});
+
+  /* ---- Panel de filtros: período, medida, vistas y segmentadores en un solo panel lateral ---- */
+  const asd=$("#aside"),per=$("#period");
+  const dh=document.createElement("div");dh.className="dhead";dh.innerHTML=`<b>Filtros</b><button type="button" class="dx" id="dClose" aria-label="Cerrar filtros">✕</button>`;
+  asd.prepend(per);asd.prepend(dh);
+  const sh=asd.querySelector("h2");if(sh)sh.classList.add("dsec");
+  $("#dClose").onclick=()=>$("#closeAside").click();
+  $("#closeAside").textContent="Ver resultados";
+  const ctx=document.createElement("div");ctx.className="ctx";ctx.id="ctx";
+  const main=document.querySelector(".layout main");main.insertBefore(ctx,$("#chips"));
+  ctx.addEventListener("click",ev=>{if(ev.target.closest("[data-openf]"))$("#btnFilters").click()});
+
+  /* ---- Pestañas en un selector en pantallas angostas ---- */
+  const nav=$("#tabs"),tsel=document.createElement("select");tsel.id="tabSel";tsel.className="tabsel";tsel.setAttribute("aria-label","Sección");
+  nav.parentNode.insertBefore(tsel,nav);
+  function tabOpts(){tsel.innerHTML=[...nav.querySelectorAll("button[data-tab]")].filter(b=>!b.hidden).map(b=>`<option value="${b.dataset.tab}">${esc(b.textContent)}</option>`).join("");tsel.value=S.tab||"resumen"}
+  tsel.onchange=()=>setTab(tsel.value);tabOpts();
+
+  /* ---- Resumen ejecutivo: secciones plegables ---- */
+  const pane=document.querySelector('[data-pane="resumen"]');
+  function sec(id,title,sub,nodes,openDef){const d=document.createElement("details");d.className="sec";d.dataset.sec=id;d.open=UIP.get("sec."+id,openDef?"1":"0")==="1";
+    d.innerHTML=`<summary><span class="sec-t">${title}</span><span class="sec-s">${sub}</span><span class="sec-c" aria-hidden="true"></span></summary>`;
+    const body=document.createElement("div");body.className="sec-b";nodes.forEach(n=>{if(n)body.appendChild(n)});d.appendChild(body);
+    d.addEventListener("toggle",()=>{UIP.set("sec."+id,d.open?"1":"0");if(d.open&&LAST&&S.tab==="resumen")renderPane()});return d}
+  const g=id=>document.getElementById(id);
+  const viz=pane.querySelector(".viz");
+  const mkViz=(ids,w)=>{const v=document.createElement("div");v.className="viz";ids.forEach((id,k)=>{const c=g(id);if(!c)return;c.classList.remove("w4","w5","w6","w7","w8","w12");c.classList.add(w[k]);v.appendChild(c)});return v};
+  const s1=sec("act","Actividad y estacionalidad","Mapa por caleta y mes, evolución mensual, proyección y estacionalidad",[mkViz(["cMes","cProj","cCalHeat","cHeat"],["w12","w12","w12","w12"])],true);
+  const s2=sec("esp","Especies, caletas y comunas","Principales especies, captura por caleta, grupos de especie por año y comunas",[mkViz(["cEsp","cCaleta","cAnio","cComuna"],["w6","w6","w6","w6"])],false);
+  const s3=sec("soc","Pescadores y compañías","Pescadores por sexo y compañía del área de influencia",[mkViz(["cSexo","cComp"],["w6","w6"])],false);
+  const s0=sec("zon","Comparación de zonas e indicadores","Tabla Norte y Los Pelambres, distribución, mujeres y concentración del volumen",[g("cZonas"),g("info")],false);
+  const ref=viz;pane.insertBefore(s0,ref);pane.insertBefore(s1,ref);pane.insertBefore(s2,ref);pane.insertBefore(s3,ref);viz.remove();
+
+  /* ---- Negociación: pestañas internas y tabla de pescadores plegable ---- */
+  const np=document.querySelector('[data-pane="negociacion"]');
+  if(np){const form=np.querySelector(".card"),sc=$("#scenCard"),nviz=np.querySelector(".viz");
+    const t=document.createElement("div");t.className="itabs";t.id="nTabs";t.setAttribute("role","tablist");
+    t.innerHTML=`<button type="button" role="tab" data-nt="calc">Calculadora</button><button type="button" role="tab" data-nt="esc">Escenarios de compensación</button>`;
+    np.insertBefore(t,form.nextSibling);
+    const fisCard=$("#nFis").closest(".card");if(fisCard){const d=document.createElement("details");d.className="nfis";d.open=UIP.get("nfis","0")==="1";
+      const h=fisCard.querySelector("h3");d.innerHTML=`<summary><span>${h?h.textContent:"Pescadores"}</span><span class="cs" id="nFisN"></span></summary>`;if(h)h.remove();
+      while(fisCard.firstChild)d.appendChild(fisCard.firstChild);fisCard.appendChild(d);d.addEventListener("toggle",()=>UIP.set("nfis",d.open?"1":"0"))}
+    const setNT=k=>{UIP.set("nt",k);t.querySelectorAll("button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.nt===k)));
+      [$("#nKpis"),$("#nText"),nviz].forEach(e=>{if(e)e.hidden=k!=="calc"});if(sc)sc.hidden=k!=="esc";if(S.R&&S.tab==="negociacion")renderNeg()};
+    t.onclick=ev=>{const b=ev.target.closest("[data-nt]");if(b)setNT(b.dataset.nt)};setNT(UIP.get("nt","calc"))}
+
+  /* ---- Menú ⋯ en las tarjetas con gráficos: ampliar y descargar imagen ---- */
+  function addMenus(){document.querySelectorAll('[data-pane] .card').forEach(c=>{if(c.querySelector(":scope > .cmenu")||!c.querySelector("svg[id]")||c.closest(".piz"))return;
+    const m=document.createElement("div");m.className="cmenu";m.innerHTML=`<button type="button" class="cm-b" aria-label="Opciones del gráfico" title="Opciones">⋯</button><div class="cm-d" hidden><button type="button" data-cm="max">Ampliar</button><button type="button" data-cm="svg">Descargar imagen</button></div>`;c.appendChild(m)})}
+  addMenus();
+  document.addEventListener("click",ev=>{const b=ev.target.closest(".cm-b");if(b){ev.stopPropagation();const d=b.nextElementSibling;const o=d.hidden;document.querySelectorAll(".cm-d").forEach(x=>x.hidden=true);d.hidden=!o;
+      const mx=d.querySelector('[data-cm="max"]');mx.textContent=b.closest(".card").classList.contains("max")?"Reducir":"Ampliar";return}
+    const it=ev.target.closest("[data-cm]");if(!it)return;const card=it.closest(".card");it.closest(".cm-d").hidden=true;
+    if(it.dataset.cm==="max")cardMax(card,!card.classList.contains("max"));else cardSvg(card)});
+
+  /* ---- Ayuda: los textos explicativos quedan detrás de un ícono ⓘ ---- */
+  function addHelp(){document.querySelectorAll('[data-pane="resumen"] .card,[data-pane="pescadores"] .card,[data-pane="especies"] .card,[data-pane="negociacion"] .card,[data-pane="poder"] .pi-intro').forEach(c=>{const h=c.querySelector("h3");if(!h||c.dataset.help)return;c.dataset.help="1";
+    const cands=[...c.querySelectorAll(":scope > .cs, :scope > .tbar > .cs, :scope > .tbar > span.cs")].filter(x=>!x.id&&!x.querySelector("*")&&x.textContent.trim().length>25);
+    if(!cands.length)return;const txt=cands.map(x=>x.textContent.trim()).join(" ");cands.forEach(x=>x.remove());
+    const i=document.createElement("button");i.type="button";i.className="hi";i.textContent="i";i.title=txt;i.setAttribute("aria-label","Ayuda: "+txt);i.onclick=ev=>{ev.stopPropagation();toast(txt)};h.appendChild(i)})}
+  addHelp();
+  window.uiHelp=addHelp;window.uiMenus=addMenus;window.uiTabs=tabOpts;
+})();
+function cardMax(c,on){c.classList.toggle("max",on);const ox=c.querySelector(":scope > .cmx");if(ox)ox.remove();if(on){const x=document.createElement("button");x.type="button";x.className="cmx";x.textContent="Cerrar ✕";x.onclick=()=>cardMax(c,false);c.appendChild(x)}document.body.classList.toggle("has-max",!!document.querySelector(".card.max"));
+  const p=c.closest("[data-pane]");if(!p)return;if(p.dataset.pane==="negociacion")renderNeg();else if(LAST)renderPane()}
+function cardSvg(c){const svg=c.querySelector("svg[id]");if(!svg)return;const cl=svg.cloneNode(true);const src=[svg,...svg.querySelectorAll("*")],dst=[cl,...cl.querySelectorAll("*")];
+  src.forEach((e,k)=>{const cs=getComputedStyle(e),d=dst[k];["fill","stroke","stroke-width","stroke-dasharray","opacity","fill-opacity","font-size","font-family","font-weight","text-anchor","dominant-baseline"].forEach(p=>{const v=cs.getPropertyValue(p);if(v)d.style.setProperty(p,v)})});
+  const vb=(svg.getAttribute("viewBox")||"0 0 800 400").split(/\s+/);cl.setAttribute("xmlns","http://www.w3.org/2000/svg");cl.setAttribute("width",vb[2]);cl.setAttribute("height",vb[3]);
+  const bg=document.createElementNS("http://www.w3.org/2000/svg","rect");bg.setAttribute("x",vb[0]);bg.setAttribute("y",vb[1]);bg.setAttribute("width",vb[2]);bg.setAttribute("height",vb[3]);bg.setAttribute("fill","#ffffff");cl.insertBefore(bg,cl.firstChild);
+  const t=(c.querySelector("h3")||{}).textContent||"grafico";const name=norm(t).replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"").slice(0,50)+".svg";
+  saveFile(name,'<?xml version="1.0" encoding="UTF-8"?>\n'+new XMLSerializer().serializeToString(cl),"image/svg+xml").then(()=>ST.log("Descargar imagen",t)).catch(e=>{if(e&&e.code!=="cancelled")toast("No se pudo descargar la imagen.")})}
+
+/* ---- Envoltorios: lo nuevo se actualiza cada vez que la plataforma redibuja ---- */
+(function(){
+  const _setTab=setTab;setTab=function(t){_setTab(t);const nf=t==="negociacion"||t==="ia"||t==="admin"||t==="rca";$("#btnFilters").hidden=nf;$("#ctx").hidden=nf;
+    const s=$("#tabSel");if(s){window.uiTabs();s.value=t}if($("#aside").classList.contains("open")&&nf)$("#closeAside").click();setTimeout(()=>{window.uiMenus();window.uiHelp()},0)};
+  const _render=render;render=function(a){_render(a);uiCtx()};
+  const _claves=renderClaves;renderClaves=function(A){_claves(A);uiClaves()};
+  const _neg=renderNeg;renderNeg=function(){_neg();const n=$("#nFisN");if(n){const r=document.querySelectorAll("#nFis tbody tr:not(:has(.empty))").length,tf=$("#nFis tfoot td");n.textContent=tf?"· "+tf.textContent.replace(/\s+/g," ").trim():r?`· ${r}`:""}};
+})();
+function uiCtx(){const el=$("#ctx");if(!el||!S.R)return;const p=periodText();const m=document.querySelector("#meas button[aria-pressed='true']");
+  const nAct=Object.values(S.f).reduce((a,s)=>a+s.size,0)+(S.from!==null)+(S.to!==null);
+  el.innerHTML=`<span><b>Período:</b> ${esc(p||"todo el período con datos")}</span>${m?`<span><b>Medida:</b> ${esc(m.textContent)}</span>`:""}<button type="button" class="btn ghost small" data-openf>${nAct?`Filtros activos (${nAct})`:"Abrir filtros"}</button>`}
+function uiClaves(){const rg=document.querySelector("#claves .regs");if(!rg)return;const regs=[...rg.querySelectorAll(":scope > .reg")];if(regs.length<2)return;
+  let k=+UIP.get("clv","0");if(!(k>=0&&k<regs.length))k=0;rg.classList.add("tabbed");
+  const t=document.createElement("div");t.className="rtabs";t.setAttribute("role","tablist");
+  t.innerHTML=regs.map((r,i)=>`<button type="button" role="tab" data-ri="${i}" aria-selected="${i===k}">${esc((r.querySelector("h4")||{}).textContent||"Zona "+(i+1))}</button>`).join("");
+  rg.parentNode.insertBefore(t,rg);const show=i=>{regs.forEach((r,j)=>r.classList.toggle("on",j===i));t.querySelectorAll("button").forEach((b,j)=>b.setAttribute("aria-selected",String(j===i)))};show(k);
+  t.onclick=ev=>{const b=ev.target.closest("[data-ri]");if(!b)return;UIP.set("clv",b.dataset.ri);show(+b.dataset.ri)}}
+/* Poder e interés: acciones de cada fila en un menú ⋯ */
+document.addEventListener("click",ev=>{const b=ev.target.closest(".rm-b");if(!b)return;ev.stopPropagation();const d=b.nextElementSibling,o=d.hidden;document.querySelectorAll(".rm-d").forEach(x=>x.hidden=true);d.hidden=!o});
+
+/* Exigencias: texto de introducción detrás de un ícono ⓘ */
+(function(){const h=document.querySelector(".rca-head h3");if(!h)return;const i=document.createElement("button");i.type="button";i.className="hi";i.textContent="i";i.title="Cómo funciona esta pestaña";i.setAttribute("aria-label","Cómo funciona esta pestaña");
+  i.onclick=()=>{const c=h.closest(".rca-head");c.classList.toggle("show")};h.appendChild(i)})();
+
 </script>
 
 </body>
