@@ -148,6 +148,14 @@ create table if not exists public.rca_seguimiento_hist (
 );
 create index if not exists rca_seguimiento_hist_gid on public.rca_seguimiento_hist (gid);
 
+-- Registro Pesquero Artesanal (Sernapesca): caché diaria de la consulta pública por RPA
+create table if not exists public.rpa_cache (
+  rpa         text primary key,
+  datos       jsonb not null default '{}'::jsonb,
+  dia         text,
+  actualizado timestamptz not null default now()
+);
+
 alter table public.usuarios enable row level security;
 alter table public.datos    enable row level security;
 alter table public.cargas   enable row level security;
@@ -161,3 +169,4 @@ alter table public.rca_estado      enable row level security;
 alter table public.rca_visibilidad enable row level security;
 alter table public.rca_seguimiento      enable row level security;
 alter table public.rca_seguimiento_hist enable row level security;
+alter table public.rpa_cache enable row level security;

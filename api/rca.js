@@ -1,19 +1,19 @@
 // Exigencias ambientales: base de RCA (fichas por numeral) y su categorización.
 // GET: cualquier usuario activo. Los visualizadores reciben solo las RCA visibles y solo
-//      las fichas validadas, con su categoría, componentes y apartado (sin notas internas). PUT y POST: solo administradores.
+//      la clasificación de las fichas validadas (sin notas internas); pueden buscar en el texto de las demás, salvo las descartadas. PUT y POST: solo administradores.
 import { handler, send, readBody, current, sb, tableMissing, logAct, zlib } from "../lib/core.js";
 
 const CATS_MAX = 4;      // 0..3 categorías de la base, 4 = Otro
 const DESCARTADO = -2;
 const COMP_MAX = 24;     // componentes ambientales 0..24 (ver la lista en la página)
 
-// Usuarios: sin las RCA ocultas y, si se indica, solo con las fichas validadas (las demás no se envían).
-function filtrarBase(gzB64, ocultas, soloFichas) {
-  if (!ocultas.size && !soloFichas) return gzB64;
+// Usuarios: sin las RCA ocultas ni las fichas descartadas (pueden buscar en el resto del texto de las RCA).
+function filtrarBase(gzB64, ocultas, excluir) {
+  if (!ocultas.size && !(excluir && excluir.size)) return gzB64;
   const o = JSON.parse(zlib.gunzipSync(Buffer.from(gzB64, "base64")).toString("utf8"));
   const map = new Map(); const rcas = [];
   o.rcas.forEach((r, i) => { if (!ocultas.has(r.id)) { map.set(i, rcas.length); rcas.push(r); } });
-  const f = o.f.filter((x) => map.has(x[0]) && (!soloFichas || soloFichas.has(x[1]))).map((x) => [map.get(x[0]), ...x.slice(1)]);
+  const f = o.f.filter((x) => map.has(x[0]) && (!excluir || !excluir.has(x[1]))).map((x) => [map.get(x[0]), ...x.slice(1)]);
   const vivas = new Set(f.map((x) => x[1]));
   const g = Array.isArray(o.g) ? o.g.map((x) => (x && vivas.has(x[0]) ? x : null)) : o.g;
   return zlib.gzipSync(Buffer.from(JSON.stringify({ ...o, rcas, f, g }))).toString("base64");
@@ -66,7 +66,8 @@ export default handler(async (req, res) => {
     // Usuarios: solo el avance de compromisos con alguna ficha habilitada, sin observaciones internas.
     const segPub = (seg || []).filter((x) => (Array.isArray(x.fichas) ? x.fichas : []).some((id) => hab.has(id)))
       .map((x) => ({ gid: x.gid, items: (Array.isArray(x.items) ? x.items : []).map((i) => ({ t: i.t, p: i.p, f: i.f || "" })), actualizado: x.actualizado }));
-    return send(res, 200, { gz: filtrarBase(b.gz, ocultas, hab), meta, estado: pub, ocultas: [], seg: segPub });
+    const desc = new Set((estado || []).filter((e) => e.categoria === DESCARTADO).map((e) => e.id));
+    return send(res, 200, { gz: filtrarBase(b.gz, ocultas, desc), meta, estado: pub, ocultas: [], seg: segPub });
   }
 
   if (!admin) return send(res, 403, { error: "Solo un administrador puede modificar las exigencias ambientales." });

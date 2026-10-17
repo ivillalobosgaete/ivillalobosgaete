@@ -44,5 +44,10 @@
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "api/rpa.js": {
+      "maxDuration": 60
+    }
+  }
 }

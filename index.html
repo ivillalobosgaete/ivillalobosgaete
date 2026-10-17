@@ -849,7 +849,7 @@ details.nelig{border:1px solid var(--line);border-radius:10px;padding:8px 12px;m
 .dl ol{margin:0;padding:0;list-style:none;display:grid;gap:3px}
 .dl li{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(40px,1fr) auto;gap:8px;align-items:center;font-size:.82rem}
 .dl-n{white-space:normal}.dl-n small{color:var(--muted)}
-.dl-b{height:6px;border-radius:3px;background:var(--line);overflow:hidden}.dl-b i{display:block;height:100%;background:var(--brand)}
+.dl-b{height:8px;border-radius:3px;background:var(--line);overflow:hidden;display:flex}.dl-b i{display:block;height:100%;background:var(--brand)}.dl-b i.dl-y{flex:none}.dl-leg{display:flex;flex-wrap:wrap;gap:4px 10px;margin:0 0 6px;font-size:.72rem;color:var(--ink-2)}.dl-leg span{display:inline-flex;align-items:center;gap:4px}.dl-leg i{width:10px;height:10px;border-radius:2px;display:inline-block}
 .dl-v{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.dl-v small{color:var(--muted);margin-left:4px}
 /*DETE*//*XECC*/.xec{max-height:640px;overflow:auto}.xec thead th{position:sticky;top:0;z-index:2;background:var(--surface,#fff);white-space:normal;min-width:92px;vertical-align:bottom;line-height:1.2}.xec th:first-child,.xec td:first-child{position:sticky;left:0;z-index:1;background:var(--surface,#fff)}.xec thead th:first-child{z-index:3}.xec td:first-child{box-shadow:1px 0 0 var(--line)}@media(max-width:700px){.xec th:first-child,.xec td:first-child{max-width:130px;min-width:110px;white-space:normal}.xec td:first-child b{font-size:.8rem}.xec thead th{min-width:76px}}/*XECE*//*C2S*//* ===== Gráficos 2.0 ===== */
 .concl{margin:4px 0 8px;font-size:.86rem;line-height:1.45;color:var(--ink);font-weight:500;background:var(--brand-08,#fff6ec);border-left:3px solid var(--brand,#ff8000);border-radius:0 8px 8px 0;padding:7px 10px}
@@ -1068,6 +1068,12 @@ tr.vr-now td{background:#fff5f4}
 .rkp{flex:1;min-width:120px;height:8px;border-radius:4px;background:var(--line);overflow:hidden}.rkp i{display:block;height:100%;background:#16794a}
 @media(max-width:700px){.fx-f select,.fx-add{min-width:0;width:100%}.fx-f{width:100%}.fx-act .btn{flex:1}}
 .fi-pdf{font-size:.74rem;font-weight:800;color:var(--brand-ink,#a84a00);border:1px solid var(--line);border-radius:999px;padding:1px 8px;text-decoration:none;white-space:nowrap}.fi-pdf:hover{border-color:var(--brand)}
+mark.rch{background:#ffe08a;color:inherit;border-radius:3px;padding:0 1px;box-shadow:0 0 0 1px #f2c94c inset}.nval{font-size:.72rem;font-weight:700;color:#5d6670;border:1px dashed #9aa3ab;border-radius:999px;padding:1px 8px}
+.rpa-b{display:inline-block;border-radius:999px;padding:1px 8px;font-size:.72rem;font-weight:800;margin:1px 3px 1px 0;white-space:nowrap}
+.rpa-b.ok{background:#e3f4ea;color:#16794a}.rpa-b.no{background:#fde8e6;color:#b23b32}.rpa-b.na,.rpa-b.wait{background:var(--line);color:var(--ink-2)}.rpa-b.warn{background:#fff3cd;color:#8a5a00}.rpa-b.alert{background:#b23b32;color:#fff}
+.rpa-e{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:1px 7px;margin:1px 3px 1px 0;font-size:.78rem;white-space:nowrap}.rpa-e small{color:var(--muted)}.rpa-e.v{border-color:#e0a800;background:#fff8e1}
+.rpa-d .rpa-l{margin:0 0 4px;font-size:.84rem}.rpa-alert{background:#fde8e6;color:#8a1f17;border-radius:8px;padding:4px 8px;font-size:.8rem;margin:4px 0}
+.rpa-t{width:100%;border-collapse:collapse;font-size:.78rem;margin:4px 0}.rpa-t th{text-align:left;font-size:.68rem;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:2px 4px}.rpa-t td{border-bottom:1px solid var(--line);padding:3px 4px;vertical-align:top}.rpa-t tr.in td{color:var(--muted)}.rpa-t td.vv{color:#b23b32;font-weight:700}.rpa-t small{color:var(--muted)}
 /*C2E*/</style>
 </head>
 <body>
@@ -2138,24 +2144,28 @@ let TROWS=[];
 function tableRows(pass){
   const R=S.R,m=R.m,g=S.group,map=new Map();
   for(let i=0;i<R.n;i++){if(!pass[i])continue;const key=g==="p"?R.p[i]:R.p[i]+"|"+R.c[i]+"|"+R.e[i];let r=map.get(key);
-    if(!r){r={p:R.p[i],c:new Map(),e:new Map(),q:0,x:0,n:0,d1:-Infinity,cal:R.c[i],esp:R.e[i]};map.set(key,r)}
-    const q=R.q[i];r.q+=q;if(R.x[i]>=0)r.x+=R.x[i];r.n++;r.c.set(R.c[i],(r.c.get(R.c[i])||0)+q);r.e.set(R.e[i],(r.e.get(R.e[i])||0)+q);if(R.d[i]>r.d1)r.d1=R.d[i]}
+    if(!r){r={p:R.p[i],c:new Map(),e:new Map(),ey:new Map(),q:0,x:0,n:0,d1:-Infinity,cal:R.c[i],esp:R.e[i]};map.set(key,r)}
+    const q=R.q[i];r.q+=q;if(R.x[i]>=0)r.x+=R.x[i];r.n++;r.c.set(R.c[i],(r.c.get(R.c[i])||0)+q);r.e.set(R.e[i],(r.e.get(R.e[i])||0)+q);if(g==="p"){let ya=r.ey.get(R.e[i]);if(!ya){ya=new Float64Array(R.y1-R.y0+1);r.ey.set(R.e[i],ya)}ya[R.yr[i]]+=q/1000}if(R.d[i]>r.d1)r.d1=R.d[i]}
   const top=mp=>[...mp].sort((a,b)=>b[1]-a[1])[0][0];
   return[...map.values()].map(r=>{const P=m.P[r.p],ci=g==="p"?top(r.c):r.cal,ei=g==="p"?top(r.e):r.esp;
-    const cals=g==="p"?[...r.c].sort((a,b)=>b[1]-a[1]).map(([c,q])=>({n:m.C[c][0],co:m.C[c][1],q:q/1000})):null,esps=g==="p"?[...r.e].sort((a,b)=>b[1]-a[1]).map(([e,q])=>({n:m.E[e][1],q:q/1000})):null;
+    const cals=g==="p"?[...r.c].sort((a,b)=>b[1]-a[1]).map(([c,q])=>({n:m.C[c][0],co:m.C[c][1],q:q/1000})):null,esps=g==="p"?[...r.e].sort((a,b)=>b[1]-a[1]).map(([e,q])=>({n:m.E[e][1],q:q/1000,y:r.ey.get(e)})):null;
     return{pi:r.p,name:P[1],rpa:P[0],sexo:m.sexes[P[2]],comuna:m.C[ci][1],caleta:m.C[ci][0],especie:m.E[ei][1],cals,esps,nC:cals?cals.length:1,nE:esps?esps.length:1,hay:cals?cals.map(x=>x.n+" "+x.co).join(" ")+" "+esps.map(x=>x.n).join(" "):"",q:r.q/1000,x:r.x/1000,n:r.n,d1:r.d1}});
 }
-const TCOLS=[["name","Pescador"],["rpa","RPA",1],["sexo","Sexo"],["comuna","Comuna"],["caleta","Caleta"],["especie","Especie"],["q","Desembarque (t)",1],["x","Captura calc. (t)",1],["n","Registros",1],["d1","Último registro",1]];
+const TCOLS=[["name","Pescador"],["rpa","RPA",1],["rpaE","Estado RPA"],["sexo","Sexo"],["comuna","Comuna"],["caleta","Caleta"],["especie","Especie"],["embN","Embarcaciones activas (Sernapesca)"],["q","Desembarque (t)",1],["x","Captura calc. (t)",1],["n","Registros",1],["d1","Último registro",1]];
 function renderTable(pass){
   if(pass)TROWS=tableRows(pass);
   const words=norm(S.q).split(/\s+/).filter(Boolean);let rows=words.length?TROWS.filter(r=>{const h=norm(`${r.name} ${r.rpa} ${r.caleta} ${r.comuna} ${r.especie} ${r.hay||""}`);return words.every(w=>h.includes(w))}):TROWS.slice();
+  if(window.rpaFill)rows.forEach(window.rpaFill);
   const {k,d}=S.sort;rows.sort((a,b)=>{const x=a[k],y=b[k];return(typeof x==="number"?x-y:String(x).localeCompare(String(y),"es"))*d});
   const per=15,pages=Math.max(1,Math.ceil(rows.length/per));if(S.page>=pages)S.page=pages-1;
   $("#tbl thead").innerHTML="<tr>"+TCOLS.map(([key,lab,r])=>`<th data-k="${key}" class="sort ${r?"r":""}" ${k===key?`aria-sort="${d<0?"descending":"ascending"}"`:""} tabindex="0">${lab}</th>`).join("")+"</tr>";
-  if(!S.tOpen)S.tOpen=new Set();const dl=(L,lab,tot,co)=>`<div class="dl"><h4>${lab} <span class="cs">(${L.length})</span></h4><ol>${L.map(x=>`<li><span class="dl-n">${esc(x.n)}${co&&x.co?` <small>${esc(x.co)}</small>`:""}</span><span class="dl-b"><i style="width:${tot?Math.max(2,x.q/tot*100):0}%"></i></span><span class="dl-v">${t1(x.q)} t <small>${t1(tot?x.q/tot*100:0)} %</small></span></li>`).join("")}</ol></div>`;
+  if(!S.tOpen)S.tOpen=new Set();const R0=S.R,YRC=k=>["#1f5fa8","#16794a","#d76a00","#8a3fb3","#c0392b","#0f8a8a","#b8860b","#5d6670","#e05297","#2e8b57"][k%10];
+  const yLeg=L=>{if(!L.some(x=>x.y))return"";const ys=new Set();L.forEach(x=>x.y&&x.y.forEach((v,k)=>{if(v>0)ys.add(k)}));return`<div class="dl-leg">${[...ys].sort((a,b)=>a-b).map(k=>`<span><i style="background:${YRC(k)}"></i>${R0.y0+k}</span>`).join("")}</div>`};
+  const dl=(L,lab,tot,co)=>`<div class="dl"><h4>${lab} <span class="cs">(${L.length})</span></h4>${yLeg(L)}<ol>${L.map(x=>`<li><span class="dl-n">${esc(x.n)}${co&&x.co?` <small>${esc(x.co)}</small>`:""}</span><span class="dl-b">${x.y?[...x.y].map((v,k)=>v>0?`<i class="dl-y" style="width:${(tot?v/tot*100:0).toFixed(2)}%;background:${YRC(k)}" title="${R0.y0+k}: ${t1(v)} t"></i>`:"").join(""):`<i style="width:${tot?Math.max(2,x.q/tot*100):0}%"></i>`}</span><span class="dl-v">${t1(x.q)} t <small>${t1(tot?x.q/tot*100:0)} %</small></span></li>`).join("")}</ol></div>`;
   const more=(r,n,w,lab)=>n>1?`<button type="button" class="dchip" data-x="${r.pi}" aria-expanded="${S.tOpen.has(r.pi)}">+${n-1} ${lab}</button>`:"";
-  $("#tbl tbody").innerHTML=rows.slice(S.page*per,S.page*per+per).map(r=>{const op=S.tOpen.has(r.pi),ex=r.cals&&(r.nC>1||r.nE>1);return`<tr class="${op&&ex?"dopen":""}"><td><span class="dname">${ex?`<button type="button" class="dtog" data-x="${r.pi}" aria-expanded="${op}" aria-label="Ver caletas y especies">${op?"▾":"▸"}</button>`:`<span class="dtog-s"></span>`}<button class="lnk" data-p="${r.pi}">${esc(r.name)}</button></span></td><td class="r"><a href="${RPA_URL+r.rpa}" target="_blank" rel="noopener">${r.rpa}</a></td><td>${esc(r.sexo)}</td><td>${esc(r.comuna)}</td><td><span class="dcell">${esc(r.caleta)}${more(r,r.nC,0,r.nC-1===1?"caleta":"caletas")}</span></td><td><span class="dcell">${esc(r.especie)}${more(r,r.nE,0,r.nE-1===1?"especie":"especies")}</span></td><td class="r">${t1(r.q)}</td><td class="r">${t1(r.x)}</td><td class="r">${t0(r.n)}</td><td class="r">${dstr(r.d1)}</td></tr>${op&&ex?`<tr class="dsub"><td colspan="10"><div class="dsub-g">${dl(r.cals,"Caletas",r.q,1)}${dl(r.esps,"Especies",r.q,0)}</div></td></tr>`:""}`}).join("")||`<tr><td colspan="10" class="empty">Sin registros con estos filtros</td></tr>`;
-  const ea=$("#tExp");if(ea){ea.hidden=S.group!=="p";const vis=rows.slice(S.page*per,S.page*per+per).filter(r=>r.nC>1||r.nE>1);const allO=vis.length&&vis.every(r=>S.tOpen.has(r.pi));ea.textContent=allO?"Contraer todo":"Desplegar todo";ea.onclick=()=>{vis.forEach(r=>allO?S.tOpen.delete(r.pi):S.tOpen.add(r.pi));renderTable()}}
+  $("#tbl tbody").innerHTML=rows.slice(S.page*per,S.page*per+per).map(r=>{const op=S.tOpen.has(r.pi),ex=!!r.cals;return`<tr class="${op&&ex?"dopen":""}"><td><span class="dname">${ex?`<button type="button" class="dtog" data-x="${r.pi}" aria-expanded="${op}" aria-label="Ver caletas, especies y registro Sernapesca">${op?"▾":"▸"}</button>`:`<span class="dtog-s"></span>`}<button class="lnk" data-p="${r.pi}">${esc(r.name)}</button></span></td><td class="r"><a href="${RPA_URL+r.rpa}" target="_blank" rel="noopener">${r.rpa}</a></td><td>${window.rpaCell?window.rpaCell(r):""}</td><td>${esc(r.sexo)}</td><td>${esc(r.comuna)}</td><td><span class="dcell">${esc(r.caleta)}${more(r,r.nC,0,r.nC-1===1?"caleta":"caletas")}</span></td><td><span class="dcell">${esc(r.especie)}${more(r,r.nE,0,r.nE-1===1?"especie":"especies")}</span></td><td>${window.rpaEmbCell?window.rpaEmbCell(r):""}</td><td class="r">${t1(r.q)}</td><td class="r">${t1(r.x)}</td><td class="r">${t0(r.n)}</td><td class="r">${dstr(r.d1)}</td></tr>${op&&ex?`<tr class="dsub"><td colspan="12"><div class="dsub-g">${dl(r.cals,"Caletas",r.q,1)}${dl(r.esps,"Especies",r.q,0)}${window.rpaSub?window.rpaSub(r):""}</div></td></tr>`:""}`}).join("")||`<tr><td colspan="12" class="empty">Sin registros con estos filtros</td></tr>`;
+  if(window.rpaPage&&S.group==="p")window.rpaPage(rows.slice(S.page*per,S.page*per+per).map(r=>r.rpa));
+  const ea=$("#tExp");if(ea){ea.hidden=S.group!=="p";const vis=rows.slice(S.page*per,S.page*per+per).filter(r=>r.cals);const allO=vis.length&&vis.every(r=>S.tOpen.has(r.pi));ea.textContent=allO?"Contraer todo":"Desplegar todo";ea.onclick=()=>{vis.forEach(r=>allO?S.tOpen.delete(r.pi):S.tOpen.add(r.pi));renderTable()}}
   $("#pager").innerHTML=`<span>${t0(rows.length)} filas · página ${S.page+1} de ${pages}</span><button class="btn ghost small" id="pPrev" ${S.page?"":"disabled"}>Anterior</button><button class="btn ghost small" id="pNext" ${S.page<pages-1?"":"disabled"}>Siguiente</button>`;
   $("#pPrev").onclick=()=>{S.page--;renderTable()};$("#pNext").onclick=()=>{S.page++;renderTable()};
 }
@@ -3724,7 +3734,7 @@ function negExtras(esp,lug,y0,y1,months,rows,T,fullRows){const R=S.R,m=R.m,en=es
       <p class="concl" id="nBaseC"></p>`;
     const dif=Math.abs(avg-med)/avg*100;setC("nBaseC",`Para ${esc(en)} en ${esc(mTxt)}, la extracción anual va de ${tt(lo.t)} t (${lo.y}) a ${tt(hi.t)} t (${hi.y}). ${dif>10?`El promedio (${tt(avg)} t) se aleja ${t0(dif)} % de la mediana (${tt(med)} t) por años atípicos: conviene negociar sobre la mediana${trim!=null?" o el promedio sin extremos":""}, que son más difíciles de objetar.`:`El promedio (${tt(avg)} t) y la mediana (${tt(med)} t) son parecidos, así que cualquiera es una base sólida.`}${N.noVeda?" Los meses de veda no se cuentan.":""}`)}
   /* Criterios de beneficiarios y organizaciones */
-  const {fis}=negCalc(esp,lug,y0,y1,months);const tot0=fis.size;negElig(fis);const crit=N.minM||N.minY||N.minT||N.ant;
+  const {fis}=negCalc(esp,lug,y0,y1,months);const tot0=fis.size;negElig(fis);const crit=N.minM||N.minY||N.minT||N.ant||N.rpaAct;
   const es=$("#nEligS");if(es)es.innerHTML=crit?`<b>${t0(fis.size)}</b> de ${t0(tot0)} pescadores cumplen los criterios; <span class="vdn">${t0(tot0-fis.size)} quedan fuera</span>.`:`Sin criterios: entran los ${t0(tot0)} pescadores con desembarque.`;
   let oc=$("#nOrgCard");if(!oc){oc=document.createElement("div");oc.id="nOrgCard";oc.className="card w12 c2";const ref=$("#nFis")&&$("#nFis").closest(".card");if(ref)ref.after(oc);else return}
   const yN=y1-y0+1,pk=+$("#nPrice").value||(esp>=0?priceOf(esp):0)||0,A=+($("#scA")||{}).value||pk,B=+($("#scB")||{}).value||0,Cf=+($("#scCf")||{}).value||0,Ck=+($("#scCk")||{}).value||0;
@@ -4189,12 +4199,16 @@ rcRows=function(){const B=RC.base,adm=S.perm.admin,F=RC.f,mt=rcMatcher(RC.q);let
     if(!adm&&RC.hidden.has(r.id))continue;if(F.emp&&r.empresa!==F.emp)continue;if(F.rca&&r.id!==F.rca)continue;if(F.tipo&&r.tipo!==F.tipo)continue;
     if(F.tema!==""&&!f[7].includes(+F.tema))continue;if(F.txt!==""&&f[8]!==+F.txt)continue;
     const s=RC.st.get(f[1]),sec=rcSecOf(s),c=s?s.c:null;
-    if(!adm&&(sec==="rev"||sec==="desc"))continue;
+    if(!adm&&sec==="desc")continue;
+    if(!adm&&sec==="rev"&&!(mt&&v==="validadas"))continue;
     if(v==="descartadas"){if(sec!=="desc")continue}else if(sec==="desc")continue;
-    if(v==="rev"&&sec!=="rev")continue;if(v==="validadas"&&sec==="rev")continue;if(v.startsWith("sec:")&&sec!==v.slice(4))continue;if(v==="dudas"&&!f[11])continue;
+    if(v==="rev"&&sec!=="rev")continue;if(v==="validadas"&&sec==="rev"&&(adm||!mt))continue;if(v.startsWith("sec:")&&sec!==v.slice(4))continue;if(v==="dudas"&&!f[11])continue;
     if(F.cat!==""&&c!==+F.cat)continue;if(F.comp!=null&&F.comp!==""){const cs=s&&s.comp&&s.comp.length?s.comp:(sec==="rev"&&adm?rcSug(f).comp:[]);if(!cs.includes(+F.comp))continue}
     if(adm&&F.sug!==""&&f[6]!==+F.sug)continue;
     if(mt&&!mt(RC.idx[i]))continue;out.push(i)}
+  if(RC.qOpen&&RC.qOpenQ!==RC.q){RC.qOpen.forEach(id=>{RC.open.delete(id);RC.exp.delete(id)});RC.qOpen=null}
+  if(mt&&RC.qOpenQ!==RC.q){RC.qOpen=new Set();RC.qOpenQ=RC.q;out.slice(0,200).forEach(i=>{const id=B.f[i][1];if(!RC.exp.has(id)){RC.exp.add(id);RC.qOpen.add(id)}if(B.f[i][5].length>=700&&!RC.open.has(id)){const k=rcHitPos(B.f[i][5]);if(k>560){RC.open.add(id);RC.qOpen.add(id)}}})}
+  if(!mt)RC.qOpenQ=null;
   if(mt){const terms=rcTerms(RC.q).filter(t=>!t.startsWith("-"));const sc=new Map();out.forEach(i=>{const s=RC.idx[i];let n=0;terms.forEach(t=>{const re=new RegExp(rcRe(t).source,"g");while(re.exec(s)&&n<40)n++});sc.set(i,n+(/^(vistos|encabezado)/i.test(B.f[i][3])?-5:0))});out.sort((a,b)=>sc.get(b)-sc.get(a)||a-b)}
   return out};
 
@@ -4229,14 +4243,14 @@ function rcDecorate(){const adm=S.perm.admin;rcFiMap();
   document.querySelectorAll("#rcaRes .fi").forEach(card=>{const id=card.dataset.id,s=RC.st.get(id)||{},sec=rcSecOf(s),val=sec!=="rev"&&sec!=="desc",h=card.querySelector(".fi-h");
     card.querySelectorAll(".fi-h .vis,.fi-h .sug").forEach(e=>e.remove());
     {const f=RC.fi.get(id),r=f&&RC.base.rcas[f[0]],pg=card.querySelector(".fi-h .fi-num+.cs");if(r&&pg&&!card.querySelector(".fi-pdf")){const a=document.createElement("a");a.className="fi-pdf";a.href=rcPdfUrl(r)+"#page="+f[4];a.target="_blank";a.rel="noopener";a.title="Abrir el PDF de la RCA en la página de referencia";a.textContent="PDF ↗";pg.after(a)}}
-    if(!adm&&!val)return;
+    if(!adm&&!val){if(h&&sec==="rev"&&!h.querySelector(".nval")){const x=document.createElement("span");x.className="nval";x.textContent="Texto de la RCA · sin validar";x.title="Coincide con tu búsqueda, pero aún no ha sido validado como compromiso o exigencia";h.appendChild(x)}return}
     if(val&&h){const x=document.createElement("span");x.className="secc s-"+sec;x.textContent=secLbl(sec);h.appendChild(x)}
     if(adm&&sec==="rev"&&s.c!=null){h.querySelectorAll(".cc").forEach(e=>e.remove());h.querySelectorAll(".apc").forEach(e=>e.remove())}
     if(val&&(s.comp||[]).length){const r=document.createElement("div");r.className="fi-cmp";r.innerHTML=`<span class="cs">Componentes:</span>${s.comp.map(k=>RCOMP[k]?`<span class="cmp">${esc(RCOMP[k][0])}</span>`:"").join("")}${s.pe?`<span class="cmp pe">Pesca y comunidades pescadoras</span>`:""}`;const sc=card.querySelector(".fi-sec");if(sc)sc.after(r)}
     else if(val&&adm&&!(s.comp||[]).length){const r=document.createElement("div");r.className="fi-cmp";r.innerHTML=`<span class="cmp warn">Sin componente asignado: complétalo y guarda los cambios</span>`;const sc=card.querySelector(".fi-sec");if(sc)sc.after(r)}
     if(adm){const a=card.querySelector(".fi-a");if(a){if(sec==="desc")a.remove();else a.outerHTML=rcPanel(id)}
       const rs=card.querySelector(".fi-rest");if(rs)rs.textContent="Reevaluar"}})}
-{const _rr=renderRcaRes;renderRcaRes=function(){_rr.apply(this,arguments);try{if(RC.modo==="fichas"&&RC.base)rcDecorate()}catch(e){console.error(e)}}}
+{const _rr=renderRcaRes;renderRcaRes=function(){_rr.apply(this,arguments);try{if(RC.modo==="fichas"&&RC.base){rcDecorate();if(!S.perm.admin&&RC.q){const rows=RC.rows||[],nv=rows.filter(i=>rcSecOf(RC.st.get(RC.base.f[i][1]))!=="rev").length,c=$("#rcaCount");if(c)c.innerHTML=`<b>${t0(rows.length)}</b> ficha${rows.length===1?"":"s"} con «${esc(RC.q)}» en el texto de las RCA · ${t0(nv)} validada${nv===1?"":"s"}`}}}catch(e){console.error(e)}}}
 
 $("#rcaRes").addEventListener("change",ev=>{const p=ev.target.closest(".fx");if(!p)return;const id=p.dataset.id,d=rcDraft(id);
   if(ev.target.classList.contains("fx-c"))d.c=ev.target.value===""?null:+ev.target.value;
@@ -4286,7 +4300,7 @@ const RC_VUSR=[["validadas","Todos los compromisos validados"],...RSEC.map(([k,l
   const cs=$("#rcCompF");if(cs)cs.innerHTML=`<option value="">Todos los componentes</option>`+RGRP.map(([g,gl])=>`<optgroup label="${gl}">${RCOMP.map((x,k)=>[x,k]).filter(([x])=>x[1]===g).map(([x,k])=>`<option value="${k}">${esc(x[0])}</option>`).join("")}</optgroup>`).join("");
   rcSyncSel()}}
 {const _r=renderRca;renderRca=async function(){await _r.apply(this,arguments);const el=$("#rcaIntro");if(el&&RC.base)el.innerHTML=S.perm.admin?`Cada RCA está dividida en fichas por numeral o considerando. En <b>Por revisar</b> clasifica cada ficha: tipo, si aplica a Asuntos Públicos Norte, componentes ambientales y si tiene relación directa con pesca y comunidades pescadoras. Al <b>validarla</b>, la ficha pasa sola a su apartado y queda visible para los usuarios; las <b>descartadas</b> nunca son visibles y se pueden reevaluar.`
-  :`Aquí están los compromisos, medidas y exigencias validados, ordenados en apartados: <b>Pesca y comunidades pescadoras</b>, <b>AP Norte · otros componentes</b>, <b>Compromisos ambientales</b> y <b>Otros</b>. Busca con palabras exactas o filtra por componente en <b>Más filtros</b>.`}}
+  :`Aquí están los compromisos, medidas y exigencias validados, ordenados en apartados: <b>Pesca y comunidades pescadoras</b>, <b>AP Norte · otros componentes</b>, <b>Compromisos ambientales</b> y <b>Otros</b>. Con el buscador puedes encontrar <b>palabras exactas en el texto completo de todas las RCA</b>: cada coincidencia aparece resaltada y las fichas aún sin validar se marcan como «sin validar». Dentro de un apartado, la búsqueda se limita a lo validado.`}}
 
 /* CSV con apartado, componentes y relación con pesca */
 $("#rcaCsv").onclick=async()=>{const B=RC.base;if(!B)return;
@@ -4306,6 +4320,62 @@ async function rcCheckReinicio(){if(!S.perm.admin||!RC.base||!RC.base.reinicio||
   const ok=await askYN(`La base cargada <b>reinicia desde cero la identificación</b>: cada ficha se identifica por su número de considerando (las páginas quedan solo como referencia).<br><br>Hay <b>${t0(old.length)}</b> clasificaciones${seg.length?` y <b>${t0(seg.length)}</b> registros de seguimiento`:""} de la identificación anterior que ya no corresponden a ninguna ficha.<br><br>¿Estás seguro de borrarlas y empezar desde cero? <b>No se puede deshacer.</b>`,{title:"Reiniciar la identificación",danger:true,si:"Sí, borrar y empezar de cero",no:"Ahora no"});
   if(!ok)return;try{if(RCST.reset)await RCST.reset();RC.st=new Map();RC.seg=new Map();RC.hist=[];RC.dr=new Map();RC.sel.clear();RC.f.vista="rev";ST.log("Exigencias ambientales","Reinició desde cero la identificación");toast("Listo: todas las fichas quedaron en «Por revisar».");rcSyncSel();renderRca()}catch(e){toast(e&&e.message||"No se pudo reiniciar.")}}
 {const _rl=rcLoad;rcLoad=async function(){await _rl.apply(this,arguments);setTimeout(()=>{rcCheckReinicio().catch(e=>console.error(e))},400)}}
+
+/* Resaltado de las coincidencias exactas (mayúsculas y tildes no importan) */
+function rcNormMap(text){let n="";const map=[];for(let i=0;i<text.length;i++){const c=norm(text[i]);for(let k=0;k<c.length;k++){n+=c[k];map.push(i)}}return{n,map}}
+function rcHitRanges(text,q){const terms=rcTerms(q).filter(t=>!t.startsWith("-"));if(!terms.length)return[];const{n,map}=rcNormMap(text),out=[];
+  terms.forEach(t=>{const re=new RegExp(rcRe(t).source,"g");let m,c=0;while((m=re.exec(n))&&c<200){c++;const st=m.index+m[1].length,en=m.index+m[0].length;if(en>st)out.push([map[st],map[en-1]+1]);re.lastIndex=en}});
+  out.sort((a,b)=>a[0]-b[0]);const mg=[];out.forEach(r=>{const l=mg[mg.length-1];if(l&&r[0]<=l[1])l[1]=Math.max(l[1],r[1]);else mg.push(r.slice())});return mg}
+function rcHitPos(text){const r=rcHitRanges(text,RC.q);return r.length?r[0][0]:-1}
+rcHi=function(text,q){q=q==null?RC.q:q;if(!q)return esc(text);const rg=rcHitRanges(text,q);if(!rg.length)return esc(text);let o="",p=0;rg.forEach(([a,b])=>{o+=esc(text.slice(p,a))+"<mark class=\"rch\">"+esc(text.slice(a,b))+"</mark>";p=b});return o+esc(text.slice(p))};
+
+
+/* ================= Registro Pesquero Artesanal (Sernapesca): estado, caleta base y embarcaciones ================= */
+const RPAS={m:new Map(),pend:new Set(),stale:new Set(),busy:false,ok:typeof api==="function"&&/^https?:/.test(location.protocol),falta:false,t:null,prog:null};
+const rpaHoy=()=>new Date().toLocaleDateString("en-CA",{timeZone:"America/Santiago"});
+const rpaAct=s=>/activ/i.test(s||"")&&!/inactiv/i.test(s||"");
+const rpaFmt=f=>f?f.split("-").reverse().join("-"):"";
+const rpaVenc=f=>!!f&&f<rpaHoy();
+function rpaGet(n){return RPAS.m.get(String(n))}
+function rpaWant(list,opt={}){if(!RPAS.ok)return;let add=0;list.forEach(n=>{n=String(n||"");if(n&&!RPAS.m.has(n)&&!RPAS.pend.has(n)){RPAS.pend.add(n);if(opt.stale)RPAS.stale.add(n);add++}});if(add)rpaRun()}
+async function rpaRun(){if(RPAS.busy||!RPAS.pend.size)return;RPAS.busy=true;
+  try{while(RPAS.pend.size){const b=[...RPAS.pend].slice(0,12);b.forEach(n=>RPAS.pend.delete(n));const st=b.every(n=>RPAS.stale.has(n));
+    try{const r=await api("rpa?nums="+b.join(",")+(st?"&stale=1":""));RPAS.falta=!!r.falta;Object.entries(r.datos||{}).forEach(([k,v])=>RPAS.m.set(String(k),v));b.forEach(n=>{if(!RPAS.m.has(n))RPAS.m.set(n,{error:true})})}
+    catch(e){b.forEach(n=>RPAS.m.set(n,{error:true}))}
+    b.forEach(n=>RPAS.stale.delete(n));if(RPAS.prog)RPAS.prog.done+=b.length;rpaRefresh()}}
+  finally{RPAS.busy=false;RPAS.prog=null;rpaRefresh()}}
+function rpaRefresh(){clearTimeout(RPAS.t);RPAS.t=setTimeout(()=>{try{if(S.tab==="detalle")renderTable()}catch(e){}try{renderFicha()}catch(e){}try{if(S.tab==="negociacion"&&N.rpaAct)renderNeg();else rpaNegStatus()}catch(e){}},350)}
+/* Datos para la tabla de Detalle */
+window.rpaFill=r=>{const d=rpaGet(r.rpa);if(!d||d.error){r.rpaE=RPAS.ok?(d?"Sin dato":"…"):"";r.embN=d&&!d.error?0:"";return}
+  const act=(d.emb||[]).filter(e=>rpaAct(e.estado));r.rpaE=d.estado||"Sin dato";r.embN=act.length};
+window.rpaCell=r=>{if(!RPAS.ok)return`<span class="cs">—</span>`;const d=rpaGet(r.rpa);if(!d)return`<span class="rpa-b wait">Consultando…</span>`;if(d.error)return`<span class="rpa-b na" title="No se pudo consultar el registro de Sernapesca">Sin dato</span>`;
+  const act=rpaAct(d.estado),venc=(d.emb||[]).some(e=>rpaAct(e.estado)&&rpaVenc(e.venc));
+  return`<span class="rpa-b ${act?"ok":"no"}">${esc(d.estado||"Sin dato")}</span>${d.cambio?`<span class="rpa-b alert" title="${esc(d.cambio.txt)}">¡Cambió!</span>`:""}${venc?`<span class="rpa-b warn" title="Una embarcación activa tiene la matrícula vencida">Matrícula vencida</span>`:""}`};
+window.rpaEmbCell=r=>{if(!RPAS.ok)return"";const d=rpaGet(r.rpa);if(!d||d.error)return`<span class="cs">${d?"—":"…"}</span>`;const act=(d.emb||[]).filter(e=>rpaAct(e.estado));
+  return act.length?act.map(e=>`<span class="rpa-e${rpaVenc(e.venc)?" v":""}" title="${esc([e.clasificacion,e.eslora?e.eslora+" m":"",e.caleta].filter(Boolean).join(" · "))}">${esc(e.nombre||"")}${e.matricula?` <small>${esc(e.matricula)}</small>`:""}</span>`).join(""):`<span class="cs">Ninguna activa</span>`};
+window.rpaSub=r=>{if(!RPAS.ok)return`<div class="dl"><h4>Registro Sernapesca</h4><p class="cs">El estado del RPA y las embarcaciones se consultan en la versión web de la plataforma (Vercel). <a href="${RPA_URL+r.rpa}" target="_blank" rel="noopener">Ver ficha en Sernapesca ↗</a></p></div>`;
+  const d=rpaGet(r.rpa);if(!d)return`<div class="dl"><h4>Registro Sernapesca</h4><p class="cs">Consultando…</p></div>`;if(d.error)return`<div class="dl"><h4>Registro Sernapesca</h4><p class="cs">No se pudo consultar ahora. <a href="${RPA_URL+r.rpa}" target="_blank" rel="noopener">Ver ficha en Sernapesca ↗</a></p></div>`;
+  const E=d.emb||[];return`<div class="dl rpa-d"><h4>Registro Sernapesca <span class="cs">RPA ${esc(r.rpa)}</span></h4>
+   <p class="rpa-l"><span class="rpa-b ${rpaAct(d.estado)?"ok":"no"}">${esc(d.estado||"Sin dato")}</span>${d.caleta?` Caleta base: <b>${esc(d.caleta)}</b>`:""}${d.oficina?` · Oficina ${esc(d.oficina)}`:""}${d.inscripcion?` · Inscrito el ${rpaFmt(d.inscripcion)}`:""}</p>
+   ${d.cambio?`<p class="rpa-alert">${esc(d.cambio.txt)}</p>`:""}
+   ${(d.categorias||[]).length?`<p class="cs">Categorías: ${d.categorias.map(esc).join(", ")}</p>`:""}
+   ${E.length?`<table class="rpa-t"><thead><tr><th>Embarcación</th><th>Matrícula</th><th>Caleta base</th><th>Estado</th><th>Vence</th></tr></thead><tbody>${E.map(e=>`<tr class="${rpaAct(e.estado)?"":"in"}"><td>${esc(e.nombre||"")}${e.clasificacion?`<br><small>${esc(e.clasificacion)}${e.eslora?" · "+esc(e.eslora)+" m":""}</small>`:""}</td><td>${esc(e.matricula||"—")}</td><td>${esc(e.caleta||"—")}</td><td>${esc(e.estado||"")}</td><td class="${rpaVenc(e.venc)&&rpaAct(e.estado)?"vv":""}">${rpaFmt(e.venc)||"—"}</td></tr>`).join("")}</tbody></table>`:`<p class="cs">Sin embarcaciones inscritas.</p>`}
+   <p class="cs fnote">Fuente: registro público de Sernapesca${d.obtenido?`, consultado el ${new Date(d.obtenido).toLocaleDateString("es-CL")}`:""}${d.desactualizado?" (no se pudo actualizar hoy; se muestra la última consulta)":""}. <a href="${RPA_URL+r.rpa}" target="_blank" rel="noopener">Ver ficha ↗</a></p></div>`};
+window.rpaPage=list=>rpaWant(list);
+/* Ficha del pescador (Resumen) */
+{const _rf=renderFicha;renderFicha=function(){_rf.apply(this,arguments);try{const el=$("#ficha");if(!el||el.hidden||S.f.p.size!==1)return;const pi=[...S.f.p][0],rpa=S.R.m.P[pi][0];
+  if(!RPAS.ok)return;const d=rpaGet(rpa);if(!d){rpaWant([rpa]);return}if(d.error)return;const act=(d.emb||[]).filter(e=>rpaAct(e.estado));
+  const box=document.createElement("div");box.innerHTML=`<div class="k">Registro Sernapesca</div><span class="rpa-b ${rpaAct(d.estado)?"ok":"no"}">${esc(d.estado||"Sin dato")}</span>${d.caleta?`<br><span class="cs">Caleta base ${esc(d.caleta)}</span>`:""}<br>${act.length?act.map(e=>`${esc(e.nombre||"")} <span class="cs">${esc(e.matricula||"")}${e.venc?` · vence ${rpaFmt(e.venc)}`:""}</span>${rpaVenc(e.venc)?` <span class="rpa-b warn">vencida</span>`:""}`).join("<br>"):`<span class="cs">Sin embarcaciones activas</span>`}${d.cambio?`<div class="rpa-alert">${esc(d.cambio.txt)}</div>`:""}`;el.appendChild(box)}catch(e){console.error(e)}}}
+/* Negociación: excluir RPA inactivos */
+function rpaNegInit(){const b=document.querySelector("#nElig .nelig-b");if(!b||$("#nRpaAct"))return;const l=document.createElement("label");l.className="amtog nant";
+  l.innerHTML=`<input type="checkbox" id="nRpaAct"> Excluir pescadores con RPA inactivo en Sernapesca <span class="cs" id="nRpaS"></span>`;b.appendChild(l);
+  $("#nRpaAct").addEventListener("change",ev=>{if(!RPAS.ok){ev.target.checked=false;toast("El estado del RPA se consulta en la versión web de la plataforma (Vercel).");return}N.rpaAct=ev.target.checked;if(N.rpaAct)rpaNegLoad();renderNeg()})}
+function rpaNegLoad(){const all=S.R.m.P.map(p=>String(p[0]));const miss=all.filter(n=>!RPAS.m.has(n));if(miss.length){RPAS.prog={done:0,tot:miss.length};rpaWant(miss,{stale:true})}rpaNegStatus()}
+function rpaNegStatus(){const s=$("#nRpaS");if(!s)return;if(!RPAS.ok){s.textContent="(solo en la versión web)";return}
+  const P=S.R.m.P;let ina=0,known=0;P.forEach(p=>{const d=rpaGet(p[0]);if(d&&!d.error){known++;if(!rpaAct(d.estado))ina++}});
+  s.textContent=RPAS.prog?`· consultando Sernapesca: ${t0(RPAS.prog.done)} de ${t0(RPAS.prog.tot)}…`:known?`· ${t0(ina)} con RPA inactivo de ${t0(known)} consultados${RPAS.falta?" (sin caché diaria: falta la tabla rpa_cache)":""}`:""}
+{const _ne=negElig;negElig=function(fis){_ne.apply(this,arguments);if(N.rpaAct){let k=0;for(const p of [...fis.keys()]){const d=rpaGet(S.R.m.P[p][0]);if(d&&!d.error&&!rpaAct(d.estado)){fis.delete(p);k++}}N.elOut=(N.elOut||0)+k}try{rpaNegStatus()}catch(e){}return fis}}
+{const _rn=renderNeg;renderNeg=function(){try{rpaNegInit()}catch(e){}return _rn.apply(this,arguments)}}
 
 })();
 

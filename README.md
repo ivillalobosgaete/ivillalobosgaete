@@ -212,3 +212,23 @@ Si faltan estas columnas, la plataforma lo avisa en la pestaña Exigencias ambie
 - La carpeta `rca/` contiene los PDF de las 58 RCA (comprimidos para la web, legibles) y `Consolidado_RCA_Operaciones_Norte.xlsx`, cuyos enlaces de la columna RCA apuntan a esos PDF.
 - En Exigencias ambientales: botón **Consolidado RCA (Excel)**, botón **Descargar RCA (PDF)** en el detalle de cada RCA y enlace **PDF** en cada ficha (abre en la página de referencia).
 - Son documentos públicos del SEIA; se sirven como archivos estáticos (sin inicio de sesión).
+
+### Registro Pesquero Artesanal (Sernapesca)
+- `api/rpa.js` consulta el registro público de Sernapesca por número RPA: estado del pescador (activo/inactivo), caleta base, oficina, categorías y embarcaciones (código, nombre, estado y, para las activas, matrícula, capitanía, caleta base, vencimiento, tipo y eslora). RUT, dirección y fecha de nacimiento son confidenciales en la fuente y no se usan.
+- Caché diaria en la tabla `rpa_cache`: cada RPA se consulta como máximo una vez al día; si cambia de activo a inactivo (o al revés) queda una alerta.
+- Dónde se ve: Detalle (columnas Estado RPA y Embarcaciones activas, y el desplegable de cada pescador), la ficha del pescador y, en Negociación › Criterios de beneficiarios, «Excluir pescadores con RPA inactivo».
+- Solo funciona en la versión de Vercel (el artefacto y la versión independiente no pueden consultar a Sernapesca).
+- SQL (ejecutar una vez en Supabase):
+
+```sql
+create table if not exists public.rpa_cache (
+  rpa text primary key,
+  datos jsonb not null default '{}'::jsonb,
+  dia text,
+  actualizado timestamptz not null default now()
+);
+alter table public.rpa_cache enable row level security;
+```
+
+### Búsqueda en exigencias para usuarios
+- Los usuarios ven los apartados validados y, con el buscador, encuentran palabras exactas en el texto de todas las RCA (salvo descartadas y RCA ocultas). Las coincidencias se resaltan y las fichas sin validar se marcan como «sin validar».
