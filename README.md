@@ -207,3 +207,8 @@ Si faltan estas columnas, la plataforma lo avisa en la pestaña Exigencias ambie
 - La base `RCA_Operaciones_Norte_base.json.gz` (versión 3) identifica cada ficha por su **número de considerando** (por ejemplo, «Considerando 12.1.23», «Resuelvo 1°»), sin importar cuántas páginas abarque. Las páginas se muestran solo como referencia.
 - Mejoras en los escaneos: corrige números mal leídos y, cuando el número es ilegible, lo asigna por orden y lo marca como duda. Las observaciones ciudadanas quedan como fichas propias dentro de su considerando.
 - Al cargar esta base, la plataforma ofrece (con confirmación) **borrar las clasificaciones anteriores y empezar desde cero**. En Vercel esto borra las filas de `rca_estado` y `rca_seguimiento`.
+
+### Descarga de RCA y consolidado
+- La carpeta `rca/` contiene los PDF de las 58 RCA (comprimidos para la web, legibles) y `Consolidado_RCA_Operaciones_Norte.xlsx`, cuyos enlaces de la columna RCA apuntan a esos PDF.
+- En Exigencias ambientales: botón **Consolidado RCA (Excel)**, botón **Descargar RCA (PDF)** en el detalle de cada RCA y enlace **PDF** en cada ficha (abre en la página de referencia).
+- Son documentos públicos del SEIA; se sirven como archivos estáticos (sin inicio de sesión).

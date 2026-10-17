@@ -1067,6 +1067,7 @@ tr.vr-now td{background:#fff5f4}
 .rkav{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}.rkav>span:first-child{font-weight:700;font-size:.8rem}
 .rkp{flex:1;min-width:120px;height:8px;border-radius:4px;background:var(--line);overflow:hidden}.rkp i{display:block;height:100%;background:#16794a}
 @media(max-width:700px){.fx-f select,.fx-add{min-width:0;width:100%}.fx-f{width:100%}.fx-act .btn{flex:1}}
+.fi-pdf{font-size:.74rem;font-weight:800;color:var(--brand-ink,#a84a00);border:1px solid var(--line);border-radius:999px;padding:1px 8px;text-decoration:none;white-space:nowrap}.fi-pdf:hover{border-color:var(--brand)}
 /*C2E*/</style>
 </head>
 <body>
@@ -1241,7 +1242,7 @@ tr.vr-now td{background:#fff5f4}
 
       <section data-pane="rca" style="display:grid;gap:14px" hidden>
         <div class="card rca-head">
-          <div class="tbar"><h3>Exigencias ambientales</h3><div class="l"><span class="cs" id="rcaInfo"></span><button class="btn ghost small" id="rcaCsv" type="button">Exportar CSV</button><button class="btn small" id="rcaUp" type="button" hidden>Cargar base de RCA</button><input type="file" id="rcaFile" accept=".gz,.json,application/gzip,application/json" hidden></div></div>
+          <div class="tbar"><h3>Exigencias ambientales</h3><div class="l"><span class="cs" id="rcaInfo"></span><button class="btn ghost small" id="rcaCsv" type="button">Exportar CSV</button><a class="btn ghost small" id="rcaXls" target="_blank" rel="noopener" href="#">Consolidado RCA (Excel) ↓</a><button class="btn small" id="rcaUp" type="button" hidden>Cargar base de RCA</button><input type="file" id="rcaFile" accept=".gz,.json,application/gzip,application/json" hidden></div></div>
           <p class="cs" id="rcaIntro" style="margin:0;color:var(--ink-2)"></p>
           <p class="warnbox" id="rcaWarn" hidden></p>
         </div>
@@ -2538,6 +2539,8 @@ function rcRemoveCard(card){card.classList.add("gone");setTimeout(()=>{card.remo
 const rcCatCls=c=>c===RC_DESC?"cx":c==null?"cn":"c"+c;
 const rcVisible=s=>!!(s&&s.h&&s.c!=null&&s.c!==RC_DESC);
 async function rcLoad(force){if(RC.loaded&&!force)return;try{const r=await RCST.load();RC.base=r.base;RC.meta=r.meta;RC.st=r.estado;RC.hidden=r.hidden;RC.seg=r.seg||new Map();RC.hist=r.hist||[];RC.sgDraft=new Map();RC.warn="";rcIndex();rcGroups();rcMigrar()}catch(e){RC.warn=e&&e.message||"No se pudieron leer las RCA."}RC.loaded=true;RC.built=false}
+const RCA_FILES=/(^|\.)vercel\.app$/.test(location.hostname)?"/rca/":"https://ivillalobosgaete.vercel.app/rca/";
+const rcPdfUrl=r=>RCA_FILES+encodeURIComponent(r.archivo||("RCA "+r.id+".pdf"));
 const rcPag=f=>f[10]&&f[10]!==f[4]?`ref. págs. ${f[4]}–${f[10]}`:`ref. pág. ${f[4]}`;
 function rcIndex(){RC.idx=RC.base?RC.base.f.map(f=>norm(f[5]+" "+f[2]+" "+f[3])):null}
 const ACC={a:"aáàäâ",e:"eéèëê",i:"iíìïî",o:"oóòöô",u:"uúùüû",n:"nñ",c:"cç"};
@@ -2579,7 +2582,7 @@ function rcSyncSel(){const F=RC.f;$("#rcEmp").value=F.emp;$("#rcTipo").value=F.t
   $("#rcRca").innerHTML=`<option value="">Todas las RCA (${rs.length})</option>`+rs.map(([r])=>`<option value="${esc(r.id)}">RCA ${esc(r.rca)}/${r.anio||"s/f"} · ${esc(r.proyecto.slice(0,70))}</option>`).join("");$("#rcRca").value=F.rca;
   document.querySelectorAll("#rcQuick .qchip").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.preset?F.tema==="1"&&F.txt==="0":F.tema===b.dataset.tema&&!(F.tema==="1"&&F.txt==="0"))))}
 async function renderRca(){
-  const adm=S.perm&&S.perm.admin,body=$("#rcaBody"),empty=$("#rcaEmpty");$("#rcaUp").hidden=!adm;$("#rcaCsv").hidden=!(adm||S.perm.exportar);
+  const adm=S.perm&&S.perm.admin,body=$("#rcaBody"),empty=$("#rcaEmpty");$("#rcaUp").hidden=!adm;$("#rcaCsv").hidden=!(adm||S.perm.exportar);{const x=$("#rcaXls");if(x){x.hidden=!(adm||S.perm.exportar);x.href=RCA_FILES+"Consolidado_RCA_Operaciones_Norte.xlsx"}}
   if(!RC.loaded){empty.hidden=false;empty.innerHTML=`<div class="card"><div class="spinner"></div></div>`;body.hidden=true;await rcLoad();if(S.tab!=="rca")return}
   $("#rcaWarn").hidden=!RC.warn;$("#rcaWarn").textContent=RC.warn;
   if(!RC.base){body.hidden=true;empty.hidden=false;empty.innerHTML=`<div class="card"><h3>Aún no hay RCA cargadas</h3><p class="cs" style="margin:0">${adm?`Presiona <b>Cargar base de RCA</b> y elige el archivo <b>RCA_Operaciones_Norte_base.json.gz</b>. Se carga una sola vez; tus categorizaciones se conservan aunque vuelvas a cargar la base.`:"Un administrador debe cargar la base de resoluciones de calificación ambiental."}</p></div>`;$("#rcaInfo").textContent="";return}
@@ -2622,7 +2625,7 @@ function renderRcaDetail(){const el=$("#rcaDetail"),adm=S.perm.admin;if(!RC.f.rc
      <div class="w2"><span>Alcance</span><b class="txt">${esc((r.resumen&&r.resumen.alcance)||"—")}</b></div></div>
    ${r.resumen?`<div class="rs"><dl><dt>Descripción</dt><dd>${esc(r.resumen.descripcion)}</dd></dl></div>`:""}
    ${r.ocr?`<p class="warnbox">Esta RCA es un documento escaneado. Su texto se obtuvo por reconocimiento óptico y puede tener errores: verifica en el documento original antes de usar una cita.</p>`:""}
-   <div class="row" style="justify-content:flex-start;flex-wrap:wrap">${r.url?`<a class="btn ghost small" href="${esc(r.url)}" target="_blank" rel="noopener">Ver expediente en el SEIA ↗</a>`:""}${adm?`<label class="rd-vis"><input type="checkbox" id="rcaVis" ${RC.hidden.has(r.id)?"":"checked"}> RCA visible para los usuarios</label>`:""}</div>`;
+   <div class="row" style="justify-content:flex-start;flex-wrap:wrap">${r.url?`<a class="btn ghost small" href="${esc(r.url)}" target="_blank" rel="noopener">Ver expediente en el SEIA ↗</a>`:""}<a class="btn small" href="${rcPdfUrl(r)}" target="_blank" rel="noopener">Descargar RCA (PDF) ↓</a>${adm?`<label class="rd-vis"><input type="checkbox" id="rcaVis" ${RC.hidden.has(r.id)?"":"checked"}> RCA visible para los usuarios</label>`:""}</div>`;
   const c=$("#rcaClr");if(c)c.onclick=()=>{RC.f.rca="";RC.page=0;rcSyncSel();renderRca()};
   const v=$("#rcaVis");if(v)v.onchange=async()=>{if(!await askYN(v.checked?`¿Hacer visible la RCA <b>${esc(r.rca)}/${r.anio||"s/f"}</b> para los usuarios?`:`¿Ocultar la RCA <b>${esc(r.rca)}/${r.anio||"s/f"}</b> a los usuarios?`,{title:v.checked?"Mostrar RCA":"Ocultar RCA"})){v.checked=!v.checked;return}v.disabled=true;if(v.checked)RC.hidden.delete(r.id);else RC.hidden.add(r.id);try{await RCST.setVisible(r.id,v.checked);ST.log("Exigencias ambientales",`RCA ${r.rca}/${r.anio} ${v.checked?"visible":"oculta"} para usuarios`);toast(v.checked?"La RCA quedó visible para los usuarios.":"La RCA quedó oculta para los usuarios.");renderRcaList()}catch(e){toast(e&&e.message||"No se pudo guardar.")}v.disabled=false}}
 function renderRcaRes(){document.querySelectorAll("#rcaModo button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.modo===RC.modo)));
@@ -4225,6 +4228,7 @@ rcFlush=async function(){if(!RC.dirty.size)return;const ids=[...RC.dirty];RC.dir
 function rcDecorate(){const adm=S.perm.admin;rcFiMap();
   document.querySelectorAll("#rcaRes .fi").forEach(card=>{const id=card.dataset.id,s=RC.st.get(id)||{},sec=rcSecOf(s),val=sec!=="rev"&&sec!=="desc",h=card.querySelector(".fi-h");
     card.querySelectorAll(".fi-h .vis,.fi-h .sug").forEach(e=>e.remove());
+    {const f=RC.fi.get(id),r=f&&RC.base.rcas[f[0]],pg=card.querySelector(".fi-h .fi-num+.cs");if(r&&pg&&!card.querySelector(".fi-pdf")){const a=document.createElement("a");a.className="fi-pdf";a.href=rcPdfUrl(r)+"#page="+f[4];a.target="_blank";a.rel="noopener";a.title="Abrir el PDF de la RCA en la página de referencia";a.textContent="PDF ↗";pg.after(a)}}
     if(!adm&&!val)return;
     if(val&&h){const x=document.createElement("span");x.className="secc s-"+sec;x.textContent=secLbl(sec);h.appendChild(x)}
     if(adm&&sec==="rev"&&s.c!=null){h.querySelectorAll(".cc").forEach(e=>e.remove());h.querySelectorAll(".apc").forEach(e=>e.remove())}
