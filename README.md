@@ -115,6 +115,14 @@ Después del primer ingreso puedes borrar `ADMIN_PASSWORD` de Vercel: el adminis
 - **Búsqueda para usuarios:** los usuarios que no son administradores buscan palabras clave en el texto completo de todas las RCA visibles (al escribir o elegir un tema la búsqueda cambia sola a "Todas las RCA"; pueden volver a "Solo compromisos habilitados"). Nunca ven categorías de fichas no habilitadas.
 - **Pantallas angostas:** las pestañas se eligen en un selector.
 
+## Gráficos
+
+- Cada gráfico tiene una línea de lectura con la conclusión principal y variaciones respecto del año anterior.
+- Resumen: evolución mensual por zona con el mismo mes del año anterior (o vista total), proyección con banda de rango probable, control de anomalías por caleta (± 2 desviaciones estándar), captura por caleta en barras con variación, años en toneladas o en % con el año en curso marcado, ranking de caletas entre los dos últimos años completos, dependencia de una especie, compañías en barras, pescadores por sexo con participación de mujeres por año y brecha de género por caleta o grupo.
+- Pescadores: curva de concentración por zona con índice de Gini, pescadores que entran, se mantienen y salen cada año, y regularidad frente a volumen por pescador (clic abre la ficha).
+- Especies: calendario de capturas por especie y mes con vedas, artesanal frente a recolector de orilla por caleta o especie, y valor económico estimado cuando hay precios configurados.
+- Exigencias ambientales › Gráficos: resumen por compañía, temas, estado de revisión (solo administradores), categorías, aplica a AP Norte, avance de cumplimiento por compañía y tema, RCA por año, tipo de contenido y cruce de caletas con las fichas RCA que las mencionan. Todo se segmenta por compañía.
+
 ## Exigencias ambientales (RCA)
 Pestaña para revisar las resoluciones de calificación ambiental (RCA) de las operaciones y ordenar sus obligaciones.
 - **Carga inicial (una vez, solo administradores):** en la pestaña **Exigencias ambientales**, presiona **Cargar base de RCA** y elige `RCA_Operaciones_Norte_base.json.gz`. Ese archivo trae las RCA divididas en fichas por numeral o considerando. Si más adelante cargas una base nueva, las categorizaciones se conservan.

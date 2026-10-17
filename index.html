@@ -826,7 +826,63 @@ section[data-pane]{gap:16px!important}
 @media (max-width:760px){.tmeta .tsub{display:none}.rca-kpis .rk{flex:1 1 30%}.rca-kpis .rk.wide{flex-basis:100%}}
 
 .cmx{position:absolute;top:10px;right:48px;z-index:4;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:5px 10px;font-weight:700;color:var(--ink-2);cursor:pointer}
-</style>
+/*C2S*//* ===== Gráficos 2.0 ===== */
+.concl{margin:2px 0 6px;font-size:.88rem;line-height:1.4;color:var(--ink);font-weight:500}
+.concl[hidden]{display:none}
+.concl b{font-weight:800}
+.dl{font-weight:700;white-space:nowrap}
+.dl.up{color:#16794a;fill:#16794a}.dl.down{color:#c0392b;fill:#c0392b}
+text.dl.up{fill:#16794a}text.dl.down{fill:#c0392b}
+.c2tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 2px}
+.card>.tbar .c2seg,.card>.tbar .c2emp{flex-wrap:wrap}
+.c2seg button,.c2emp button{white-space:nowrap}
+.fnote{margin:4px 0 0;font-size:.76rem}
+.c2row{display:flex;gap:8px;align-items:center;justify-content:flex-start;margin:2px 0 6px}
+.c2row select{border:1px solid var(--line);border-radius:999px;padding:5px 10px;background:var(--surface);max-width:260px}
+#cSexo .donut-wrap,#cComp .donut-wrap,#cCat .donut-wrap{display:none}
+#gCat~.legend,#lCat{display:none}
+.sx2{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);gap:14px;align-items:start}
+.sxf{display:grid;gap:8px}
+.sxb{border:1px solid var(--line);border-left:5px solid var(--c);background:var(--surface);border-radius:10px;padding:8px 10px;display:grid;text-align:left;cursor:pointer;color:var(--ink)}
+.sxb b{font-size:1.45rem;line-height:1.1;color:var(--c)}
+.sxb.off{opacity:.45}
+.sxb:hover{background:var(--brand-08)}
+@media (max-width:560px){.sx2{grid-template-columns:minmax(0,1fr)}.sxf{grid-template-columns:1fr 1fr}}
+table.cesp{border-collapse:separate;border-spacing:2px;width:100%;font-size:.78rem}
+table.cesp th{font-size:.68rem;text-transform:uppercase;color:var(--muted);font-weight:700;padding:2px 3px;text-align:center}
+table.cesp th:first-child{text-align:left}
+table.cesp th.na{opacity:.4}
+table.cesp td{padding:5px 3px;text-align:center;border-radius:5px;white-space:nowrap;min-width:34px}
+table.cesp td:first-child{text-align:left;min-width:0}
+table.cesp td.vd{background-image:repeating-linear-gradient(135deg,rgba(60,60,60,.28) 0 2px,transparent 2px 6px)!important;outline:1px dashed rgba(60,60,60,.45);outline-offset:-1px}
+table.cesp td.pk{font-weight:800;box-shadow:inset 0 0 0 2px var(--ink)}
+.ce-e{display:inline-flex;align-items:center;gap:6px;font-weight:700;text-align:left}
+.ce-e i{width:9px;height:9px;border-radius:3px;flex:none}
+.val2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media (max-width:820px){.val2{grid-template-columns:minmax(0,1fr)}}
+/* Exigencias: gráficos */
+.rgx{display:grid;gap:14px}
+.rgx>.card{display:grid;gap:8px}
+.rgx .viz{margin:0}
+.c2emp button{display:inline-flex;align-items:center;gap:6px}
+.c2emp button i{width:9px;height:9px;border-radius:50%;background:var(--c);display:inline-block}
+.c2emp button:first-child i{display:none}
+table.rgk,table.rgc,table.rgh{width:100%;border-collapse:collapse;font-size:.82rem}
+table.rgk th,table.rgc th,table.rgh th{font-size:.68rem;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.rgk td,table.rgc td,table.rgh td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.rgk th.r,table.rgk td.r,table.rgc th.r,table.rgc td.r,table.rgh th.r,table.rgh td.r{text-align:right}
+table.rgk tbody tr{cursor:pointer}
+table.rgk tbody tr:hover{background:var(--brand-08)}
+table.rgk tr.on{background:var(--brand-08);box-shadow:inset 3px 0 0 var(--brand)}
+table.rgk tr[data-emp=""] td{font-weight:800;border-top:2px solid var(--line)}
+i.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.rgk .sg-bar,.rgc .sg-bar{display:inline-block;width:56px;vertical-align:middle;margin-right:4px}
+.mbar{display:inline-block;width:56px;height:7px;border-radius:4px;background:var(--track);margin-right:6px;vertical-align:middle;overflow:hidden}
+.mbar i{display:block;height:100%;border-radius:4px;background:var(--s1)}
+.rgq{font-weight:700;display:inline-flex;align-items:center}
+table.rgh td:first-child{white-space:normal}
+@media (max-width:560px){table.rgc .mbar,table.rgk .sg-bar{display:none}}
+/*C2E*/</style>
 </head>
 <body>
 
@@ -2968,7 +3024,451 @@ document.addEventListener("click",ev=>{const b=ev.target.closest(".rm-b");if(!b)
 (function(){const h=document.querySelector(".rca-head h3");if(!h)return;const i=document.createElement("button");i.type="button";i.className="hi";i.textContent="i";i.title="Cómo funciona esta pestaña";i.setAttribute("aria-label","Cómo funciona esta pestaña");
   i.onclick=()=>{const c=h.closest(".rca-head");c.classList.toggle("show")};h.appendChild(i)})();
 
-</script>
+/*C2S*/
+/* ================= Gráficos 2.0: mejores diseños, cruces de variables y gráficos de exigencias por compañía ================= */
+(function(){
+const ZC=z=>/norte/i.test(z)?"var(--s1)":"var(--s4)";
+const CC=e=>{const n=norm(e);return n.includes("zaldivar")?"var(--s1)":n.includes("antucoya")?"var(--s2)":n.includes("centinela")?"var(--s3)":n.includes("pelambres")?"var(--s4)":"var(--s6)"};
+const RED="#d0453b",GREEN="#16794a",GRAY="#b9b6ae";
+const pc=v=>t0(v)+" %",pc1=v=>t1(v)+" %";
+const dPct=(c,p)=>p>0?(c/p-1)*100:null;
+const dTxt=d=>d==null?"sin dato previo":(d>=0?"+":"−")+t0(Math.abs(d))+" %";
+const dCls=d=>d==null?"":d>=0?"up":"down";
+const ST2={get:(k,d)=>{try{const v=localStorage.getItem("c2."+k);return v===null?d:v}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem("c2."+k,v)}catch(e){}}};
+const segH=(k,opts,cur,lbl)=>`<div class="seg c2seg" role="group" aria-label="${esc(lbl||"Vista")}" data-c2k="${k}">${opts.map(([v,t])=>`<button type="button" data-v="${esc(v)}" aria-pressed="${String(v)===String(cur)}">${esc(t)}</button>`).join("")}</div>`;
+const legH=items=>`<div class="hlegend">${items.map(([t,c,dash])=>dash?`<span><span class="ln" style="border-top:2px dashed ${c}"></span>${esc(t)}</span>`:`<span><i style="background:${c}"></i>${esc(t)}</span>`).join("")}</div>`;
+const MENU=`<div class="cmenu"><button type="button" class="cm-b" aria-label="Opciones del gráfico" title="Opciones">⋯</button><div class="cm-d" hidden><button type="button" data-cm="max">Ampliar</button><button type="button" data-cm="svg">Descargar imagen</button></div></div>`;
+function help(txt){return txt?`<button type="button" class="hi" title="${esc(txt)}" aria-label="Ayuda: ${esc(txt)}" data-c2help="${esc(txt)}">i</button>`:""}
+document.addEventListener("click",ev=>{const h=ev.target.closest("[data-c2help]");if(h){ev.stopPropagation();toast(h.dataset.c2help)}});
+function mkCard(id,w,title,hlp,inner,tools){const c=document.createElement("div");c.className="card c2 "+w;c.id=id;
+  c.innerHTML=`<div class="tbar"><h3>${title}${help(hlp)}</h3>${tools||""}</div><p class="concl" id="${id}C"></p>${inner}${MENU}`;return c}
+const setC=(id,html)=>{const e=document.getElementById(id);if(e){e.innerHTML=html||"";e.hidden=!html}};
+const secViz=k=>document.querySelector(`details.sec[data-sec="${k}"] .sec-b .viz`);
+const paneViz=k=>document.querySelector(`[data-pane="${k}"] .viz`);
+const isOpen=k=>{const d=document.querySelector(`details.sec[data-sec="${k}"]`);return!d||d.open};
+const muj=()=>S.R.m.sexes.indexOf("Mujer");
+
+/* ---------- Agregados adicionales (una pasada por render) ---------- */
+let CUR={X:null,D:null,tok:0};
+function ext(pass,prev){const R=S.R,m=R.m,nY=R.y1-R.y0+1,nS=m.sexes.length,nK=m.cats.length,nZ=R.regs.length,nYM=nY*12;
+  const X={calY:m.C.map(()=>new Float64Array(nY)),calEsp:m.C.map(()=>new Map()),calCat:m.C.map(()=>new Float64Array(nK)),espCat:m.E.map(()=>new Float64Array(nK)),
+    calSexT:m.C.map(()=>new Float64Array(nS)),calSexP:m.C.map(()=>m.sexes.map(()=>new Set())),grpSexT:R.grps.map(()=>new Float64Array(nS)),grpSexP:R.grps.map(()=>m.sexes.map(()=>new Set())),
+    yrSexP:Array.from({length:nY},()=>m.sexes.map(()=>new Set())),espMo:m.E.map(()=>new Float64Array(12)),pM:new Map(),zym:R.regs.map(()=>new Float64Array(nYM)),calPrev:new Float64Array(m.C.length),sexT:new Float64Array(nS)};
+  for(let i=0;i<R.n;i++){if(prev&&prev[i])X.calPrev[R.c[i]]+=R.q[i]/1000;if(!pass[i])continue;const q=R.q[i]/1000,c=R.c[i],e=R.e[i],s=R.sex[i],p=R.p[i],k=R.k[i],g=R.grp[i];
+    X.calY[c][R.yr[i]]+=q;X.calEsp[c].set(e,(X.calEsp[c].get(e)||0)+q);X.calCat[c][k]+=q;X.espCat[e][k]+=q;X.calSexT[c][s]+=q;X.calSexP[c][s].add(p);X.grpSexT[g][s]+=q;X.grpSexP[g][s].add(p);
+    X.yrSexP[R.yr[i]][s].add(p);X.espMo[e][R.mo[i]]+=q;X.zym[R.reg[i]][R.ym[i]]+=q;X.sexT[s]+=q;
+    let o=X.pM.get(p);if(!o){o={ym:new Set(),t:0,z:new Float64Array(nZ),sex:s};X.pM.set(p,o)}o.ym.add(R.ym[i]);o.t+=q;o.z[R.reg[i]]+=q}
+  return X}
+/* Solo filtros de dimensión (sin período): para comparar con años anteriores aunque haya un período elegido */
+function getD(){if(CUR.D)return CUR.D;const R=S.R,m=R.m,dp=dimPass(),nY=R.y1-R.y0+1,nYM=nY*12;
+  const D={zym:R.regs.map(()=>new Float64Array(nYM)),calYM:m.C.map(()=>new Float64Array(nYM)),calYd:m.C.map(()=>new Float64Array(nY)),yP:Array.from({length:nY},()=>new Set())};
+  for(let i=0;i<R.n;i++){if(!dp[i])continue;const q=R.q[i]/1000;D.zym[R.reg[i]][R.ym[i]]+=q;D.calYM[R.c[i]][R.ym[i]]+=q;D.calYd[R.c[i]][R.yr[i]]+=q;D.yP[R.yr[i]].add(R.p[i])}
+  return CUR.D=D}
+function moCount(){const R=S.R,c=new Array(12).fill(0);for(let y=0;y<=R.y1-R.y0;y++)for(let mo=0;mo<12;mo++){const ym=y*12+mo;if(ym<R.firstYM||ym>R.lastYM)continue;if(S.f.yr.size&&!S.f.yr.has(y))continue;if(S.f.mo.size&&!S.f.mo.has(mo))continue;if(S.from!==null&&ym<S.from)continue;if(S.to!==null&&ym>S.to)continue;c[mo]++}return c}
+const lastFullYear=()=>{const R=S.R;return R.lastYM%12===11?R.y1-R.y0:R.y1-R.y0-1};
+const partialNote=()=>{const R=S.R;if(R.lastYM%12===11)return"";return`* ${R.y1}: año en curso, con datos hasta ${MESL[R.lastYM%12]}.`};
+function mesWindow(A){const R=S.R;let a=R.firstYM,b=R.lastYM;if(hasTime()||S.f.mo.size){let lo=Infinity,hi=-Infinity;A.ym.forEach((v,i)=>{if(v>0){if(i<lo)lo=i;if(i>hi)hi=i}});if(hi>=lo){a=Math.max(a,lo-(lo%12));b=Math.min(b,hi+(11-hi%12))}}return[a,b]}
+
+/* ---------- Tarjetas nuevas ---------- */
+function build(){
+  const mes=$("#cMes");if(mes&&!$("#mesTools")){const h=mes.querySelector("h3");const t=document.createElement("div");t.id="mesTools";t.className="c2tools";t.innerHTML=segH("mesV",[["zona","Por zona"],["total","Total"]],ST2.get("mesV","zona"),"Vista de la evolución mensual");h.after(t);
+    const p=document.createElement("p");p.className="concl";p.id="cMesC";t.after(p);const lg=document.createElement("div");lg.id="mesZLeg";lg.innerHTML=legH([["Mes del período (color de la zona)","var(--s1)"],["Mismo mes del año anterior","var(--muted)",1]]);p.after(lg)}
+  const an=$("#cAnio");if(an&&!$("#anioTools")){const h=an.querySelector("h3");const t=document.createElement("div");t.id="anioTools";t.className="c2tools";t.innerHTML=segH("anioV",[["t","Toneladas"],["pct","% del año"]],ST2.get("anioV","t"),"Vista por año");h.after(t);
+    const p=document.createElement("p");p.className="concl";p.id="cAnioC";t.after(p);const n=document.createElement("p");n.className="cs fnote";n.id="anioNote";an.appendChild(n)}
+  const sx=$("#cSexo");if(sx&&!$("#sxFig")){sx.querySelector("h3").textContent="Pescadores por sexo";const p=document.createElement("p");p.className="concl";p.id="cSexoC";sx.querySelector("h3").after(p);
+    const d=document.createElement("div");d.className="sx2";d.innerHTML=`<div class="sxf" id="sxFig"></div><div><div class="cs">Participación de mujeres por año (% de pescadores activos)</div><svg id="gSexY" role="img" aria-label="Participación de mujeres por año"></svg></div>`;sx.appendChild(d)}
+  const cp=$("#cComp");if(cp&&!$("#gComp2")){const p=document.createElement("p");p.className="concl";p.id="cCompC";cp.querySelector("h3").after(p);const s=document.createElementNS("http://www.w3.org/2000/svg","svg");s.id="gComp2";s.setAttribute("role","img");s.setAttribute("aria-label","Desembarque por compañía");cp.appendChild(s)}
+  const cl=$("#cCaleta");if(cl&&!$("#cCaletaC")){const p=document.createElement("p");p.className="concl";p.id="cCaletaC";cl.querySelector("h3").after(p);const lg=document.createElement("div");lg.id="lCal2";p.after(lg)}
+  const cat=$("#gCat")&&$("#gCat").closest(".card");if(cat&&!$("#catTools")){cat.id=cat.id||"cCat";const t=document.createElement("div");t.id="catTools";t.className="c2tools";t.innerHTML=segH("catV",[["cal","Por caleta"],["esp","Por especie"]],ST2.get("catV","cal"),"Vista");cat.querySelector("h3").after(t);
+    const p=document.createElement("p");p.className="concl";p.id="cCatC";t.after(p);const lg=document.createElement("div");lg.id="catLeg";p.after(lg);const s=document.createElementNS("http://www.w3.org/2000/svg","svg");s.id="gCat2";s.setAttribute("role","img");s.setAttribute("aria-label","Artesanal y recolector de orilla");cat.appendChild(s)}
+  const add=(viz,card,after)=>{if(!viz||document.getElementById(card.id))return;if(after&&after.parentNode===viz)after.after(card);else viz.appendChild(card)};
+  add(secViz("act"),mkCard("cAnom","w12","Control de anomalías por caleta","Cada punto es el desembarque mensual de la caleta. La banda muestra el rango habitual de ese mes (promedio ± 2 desviaciones estándar de los demás años). Los puntos fuera de la banda son meses inusualmente altos o bajos. Usa los filtros de especie o compañía, pero no el período.",
+    `<div class="row c2row"><label class="cs" for="anomSel">Caleta</label><select id="anomSel"></select></div>${legH([["Desembarque mensual","var(--s1)"],["Rango habitual del mes","rgba(42,120,214,.16)"],["Inusualmente alto",GREEN],["Inusualmente bajo",RED]])}<svg id="gAnom" role="img" aria-label="Control de anomalías"></svg><div class="cs" id="anomList"></div>`));
+  add(secViz("esp"),mkCard("cSlope","w6","Ranking de caletas entre años","Posición de cada caleta según toneladas en los dos últimos años completos. Verde: sube en el ranking; rojo: baja. Usa los filtros de especie, zona o compañía, pero no el período.",`<svg id="gSlope" role="img" aria-label="Ranking de caletas entre años"></svg>`));
+  add(secViz("esp"),mkCard("cDep","w6","Dependencia de una especie por caleta","Porcentaje del desembarque de cada caleta que proviene de su especie principal. Una caleta muy dependiente es más vulnerable a vedas o caídas de precio de esa especie.",`<div class="hlegend" id="lDep"></div><svg id="gDep" role="img" aria-label="Dependencia de una especie por caleta"></svg>`));
+  add(secViz("soc"),mkCard("cGap","w12","Brecha de género: toneladas por pescador","Toneladas por pescador activo de hombres y mujeres en cada caleta o grupo de especie. Solo se muestran los casos con hombres y mujeres activos.",
+    legH([["Hombres","var(--s1)"],["Mujeres","var(--s5)"]])+`<svg id="gGap" role="img" aria-label="Brecha de género"></svg>`,segH("gapV",[["cal","Por caleta"],["grp","Por grupo de especie"]],ST2.get("gapV","cal"),"Vista")));
+  const pv=paneViz("pescadores");
+  add(pv,mkCard("cCoh","w12","Pescadores que entran, se mantienen y salen","Cada año: pescadores que siguen desde el año anterior, que vuelven tras uno o más años sin desembarque, que aparecen por primera vez en la base y que dejaron de desembarcar (bajo la línea). Usa los filtros de dimensión, pero no el período.",
+    legH([["Se mantienen","var(--s1)"],["Vuelven","var(--s4)"],["Nuevos","var(--s2)"],["Salen",RED]])+`<svg id="gCoh" role="img" aria-label="Entradas y salidas de pescadores"></svg><p class="cs fnote" id="cohNote"></p>`),pv&&pv.querySelector("#gActivos")&&pv.querySelector("#gActivos").closest(".card"));
+  add(pv,mkCard("cScat","w12","Regularidad y volumen por pescador","Cada punto es un pescador: meses con desembarque en el período (eje horizontal) y toneladas totales (eje vertical, escala logarítmica). Color según la zona donde desembarca más. Clic en un punto para ver su ficha.",
+    `<div class="hlegend" id="lScat"></div><svg id="gScat" role="img" aria-label="Regularidad y volumen por pescador"></svg>`));
+  const ev=paneViz("especies");
+  add(ev,mkCard("cCalEsp","w12","Calendario de capturas por especie","Toneladas promedio por mes calendario en el período (15 especies principales). Las celdas con trama corresponden a meses en veda. El mes de mayor captura de cada especie va en negrita. Clic en una especie para filtrar.",
+    `<div class="tbl" id="calEsp" style="border:0"></div>`,segH("ceV",[["fila","Intensidad por especie"],["comun","Escala común"]],ST2.get("ceV","fila"),"Escala de color")),ev&&ev.firstElementChild);
+  add(ev,mkCard("cValor","w12","Valor económico estimado","Toneladas × precio de playa por kilo de cada especie (configurado en Administración › Precios). Compara el peso de cada especie en volumen y en valor.",`<div id="valBox"></div>`));
+}
+
+/* ---------- 1. Evolución mensual: pequeños múltiplos por zona con el año anterior ---------- */
+const _chartMes=chartMes;
+chartMes=function(A){const mode=ST2.get("mesV","zona"),X=CUR.X,R=S.R,[a,b]=mesWindow(A),D=getD();
+  const zl=$("#mesZLeg");if(zl)zl.hidden=mode!=="zona";const ol=$("#cMes>.hlegend");if(ol)ol.hidden=mode==="zona"&&!vedaMask();
+  const fm=S.f.mo,fy=S.f.yr;const prevAt=(arr,i)=>{if(i-12<R.firstYM)return null;if(fm.size&&!fm.has(i%12))return null;return arr[i-12]};
+  const sums=R.regs.map((_,z)=>{let c=0,p=0,pp=false;for(let i=a;i<=b;i++){const pv=prevAt(D.zym[z],i);if(pv==null)continue;c+=X.zym[z][i];p+=pv;pp=true}return{z,c,p:pp?p:null}});
+  const tc=sums.reduce((s,x)=>s+x.c,0),tp=sums.some(x=>x.p!=null)?sums.reduce((s,x)=>s+(x.p||0),0):null;
+  setC("cMesC",(mode==="zona"?sums.filter(x=>x.c>0||x.p):[{z:-1,c:tc,p:tp}]).map(x=>{const d=dPct(x.c,x.p);return`<span>${x.z<0?"Total":esc(R.regs[x.z].replace("Asuntos Públicos ","AP "))}: <b>${t0(x.c)} t</b> <span class="dl ${dCls(d)}">${dTxt(d)}</span></span>`}).join(" · ")+(tp!=null?`<span class="cs"> vs. los mismos meses del año anterior</span>`:""));
+  if(mode!=="zona"){_chartMes(A);return}
+  const svg=$("#gMes"),W=vw("gMes",780),zs=R.regs.map((_,z)=>z).filter(z=>sums[z].c>0||sums[z].p),ph=150,gap=18,L=48,Rr=W-62;const H=Math.max(1,zs.length)*(ph+gap);clear(svg,W,H);
+  if(!zs.length){emptyMsg(svg,W,200);return}const VD=vedaMask();$("#vedaLeg").hidden=!VD;
+  zs.forEach((z,j)=>{const T=j*(ph+gap)+22,B=T+ph-44,col=ZC(R.regs[z]);const cur=[],prv=[];for(let i=a;i<=b;i++){cur.push(X.zym[z][i]);prv.push(prevAt(D.zym[z],i))}
+    const mx=niceMax(Math.max(1,...cur,...prv.filter(v=>v!=null))),sc=v=>B-(v/mx)*(B-T),bw=(Rr-L)/cur.length;
+    E("text",{x:L,y:T-8,class:"val",style:`font-size:12.5px;fill:${col}`},svg).textContent=R.regs[z];
+    [0,.5,1].forEach(k=>{const v=mx*k;E("line",{x1:L,x2:Rr,y1:sc(v),y2:sc(v),class:"gl"},svg);E("text",{x:L-6,y:sc(v)+4,"text-anchor":"end"},svg).textContent=t0(v)});
+    cur.forEach((_,k)=>{const i=a+k,mo=i%12,x=L+k*bw;if(VD&&VD[mo])E("rect",{x,y:T,width:bw,height:B-T,fill:"var(--veda)"},svg);const yStep=bw*12<36?2:1;if((mo===0||k===0)&&x<Rr-28&&Math.floor(i/12)%yStep===0)E("text",{x:x+1,y:B+15},svg).textContent=String(R.y0+Math.floor(i/12))});
+    const P=cur.map((v,k)=>[L+k*bw+bw/2,sc(v)]);const Q=prv.map((v,k)=>v==null?null:[L+k*bw+bw/2,sc(v)]);
+    let dq="";Q.forEach((p,k)=>{if(!p)return;dq+=(k===0||!Q[k-1]?"M":"L")+p[0].toFixed(1)+","+p[1].toFixed(1)});if(dq)E("path",{d:dq,fill:"none",stroke:"var(--muted)","stroke-width":1.5,"stroke-dasharray":"4 3","pointer-events":"none"},svg);
+    const dd="M"+P.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join("L");E("path",{d:dd+`L${P[P.length-1][0].toFixed(1)},${B}L${P[0][0].toFixed(1)},${B}Z`,fill:col,"fill-opacity":.12,"pointer-events":"none"},svg);
+    E("path",{d:dd,fill:"none",stroke:col,"stroke-width":2.2,"stroke-linejoin":"round","pointer-events":"none"},svg);
+    let li=cur.length-1;while(li>0&&cur[li]<=0)li--;const lp=P[li];E("circle",{cx:lp[0],cy:lp[1],r:3.5,fill:col,stroke:"#fff","stroke-width":1.5,"pointer-events":"none"},svg);
+    E("text",{x:Math.min(lp[0]+6,Rr+4),y:lp[1]+4,class:"val",style:"font-size:11px"},svg).textContent=t0(cur[li])+" t";
+    E("line",{x1:L,x2:Rr,y1:B,y2:B,stroke:"var(--line)"},svg);
+    cur.forEach((v,k)=>{const i=a+k,y=Math.floor(i/12),mo=i%12,pv=prv[k],d=pv==null?null:dPct(v,pv);const hit=E("rect",{x:L+k*bw,y:T,width:bw,height:B-T,fill:"transparent"},svg);
+      hover(hit,()=>`<b>${MESL[mo]} ${R.y0+y} · ${esc(R.regs[z])}</b><br>${t1(v)} t${pv!=null?`<br>Año anterior: ${t1(pv)} t <span class="dl ${dCls(d)}">${dTxt(d)}</span>`:""}`,add=>{const same=fy.size===1&&fy.has(y)&&fm.size===1&&fm.has(mo);if(!add){fy.clear();fm.clear()}if(!same||add){fy.add(y);fm.add(mo)}S.page=0;render()})})})};
+
+/* ---------- 2. Año × grupo: vista % y año parcial ---------- */
+const _chartAnio=chartAnio;
+chartAnio=function(A){const R=S.R,mode=ST2.get("anioV","t");const n=$("#anioNote");if(n)n.textContent=partialNote();
+  const tots=A.yg.map(a=>a.reduce((s,v)=>s+v,0));const ys=tots.map((v,y)=>[y,v]).filter(x=>x[1]>0);
+  const lf=lastFullYear();if(ys.length){const top=A.yg.map(a=>a.reduce((b,v,i)=>v>a[b]?i:b,0));const y1=lf>=0&&tots[lf]>0?lf:ys[ys.length-1][0];const g=top[y1];setC("cAnioC",`En ${R.y0+y1}, <b>${esc(R.grps[g])}</b> fue el ${t0(tots[y1]?A.yg[y1][g]/tots[y1]*100:0)} % del desembarque`+(lf>0&&tots[lf-1]>0&&y1===lf?` <span class="dl ${dCls(dPct(tots[lf],tots[lf-1]))}">${dTxt(dPct(tots[lf],tots[lf-1]))} total vs. ${R.y0+lf-1}</span>`:""))}else setC("cAnioC","");
+  if(mode!=="pct"){_chartAnio(A);return}
+  const svg=$("#gAnio"),W=vw("gAnio",380),H=240,L=40,Rr=W-6,T=14,B=H-24;clear(svg,W,H);$("#lAnio").innerHTML=R.grps.map((g,i)=>`<span><i style="background:${R.grpColor[i]}"></i>${esc(g)}</span>`).join("");
+  const sc=v=>B-(v/100)*(B-T);[0,25,50,75,100].forEach(v=>{E("line",{x1:L,x2:Rr,y1:sc(v),y2:sc(v),class:"gl"},svg);E("text",{x:L-6,y:sc(v)+4,"text-anchor":"end"},svg).textContent=v+" %"});
+  const bw=(Rr-L)/A.yg.length,partial=R.lastYM%12!==11;
+  A.yg.forEach((arr,y)=>{const tot=tots[y],x=L+y*bw+bw*.16,w=bw*.68,isP=partial&&y===A.yg.length-1;E("text",{x:x+w/2,y:B+16,"text-anchor":"middle"},svg).textContent=String(R.y0+y)+(isP?"*":"");if(!tot)return;let acc=0;
+    arr.forEach((v,i)=>{if(v<=0)return;const p=v/tot*100,y0=sc(acc),y1=sc(acc+p);acc+=p;const r=E("rect",{x,y:y1,width:w,height:Math.max(.5,y0-y1-1),fill:R.grpColor[i],"fill-opacity":isP?.6:1},svg);
+      if(y0-y1>14&&w>26)E("text",{x:x+w/2,y:(y0+y1)/2+4,"text-anchor":"middle",style:"fill:#fff;font-size:10.5px;font-weight:700","pointer-events":"none"},svg).textContent=t0(p)+"%";
+      hover(r,()=>`<b>${R.y0+y}${isP?" (año en curso)":""} · ${esc(R.grps[i])}</b><br>${t1(p)} % del año · ${t1(v)} t${y>0&&A.yg[y-1][i]>0?`<br>vs. ${R.y0+y-1}: <span class="dl ${dCls(dPct(v,A.yg[y-1][i]))}">${dTxt(dPct(v,A.yg[y-1][i]))}</span> en toneladas`:""}`,add=>toggle("grp",i,add))})});
+  E("line",{x1:L,x2:Rr,y1:B,y2:B,stroke:"var(--ink-2)"},svg)};
+
+/* ---------- 3. Donas reemplazadas: compañía y sexo (y categoría en Especies) ---------- */
+const _donut=donut;
+donut=function(svgId){if(svgId==="gSexo"||svgId==="gComp"||svgId==="gCat")return;return _donut.apply(this,arguments)};
+function compBars(A){const R=S.R,nm=A.nMonths,tot=A.q;const it=R.comps.map((c,i)=>({id:i,label:c,v:V(A.comp[i],A.compFis[i],nm),color:CC(c),sub:`${t0(A.compFis[i].size)} pescadores · ${t1(tot?A.comp[i]/tot*100:0)} % del total`,tip:tipAll(A.comp[i],A.compFis[i],nm,tot)})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
+  hbar("gComp2",it,"comp",440,150,{maxc:24,unit:usfx(),right:S.measure==="total"?60:84,rh:30});
+  if(it.length){const t=it[0];setC("cCompC",`<b>${esc(t.label)}</b> concentra el ${t0(tot?A.comp[t.id]/tot*100:0)} % de las toneladas, con ${t0(A.compFis[t.id].size)} pescadores`)}else setC("cCompC","")}
+function sexBox(A){const R=S.R,m=R.m,X=CUR.X,mi=muj(),nTot=A.fis.size,sel=S.f.sex;
+  $("#sxFig").innerHTML=m.sexes.map((s,i)=>{const n=A.sexF[i].size,tp=n?X.sexT[i]/n:0;return`<button type="button" class="sxb${sel.size&&!sel.has(i)?" off":""}" data-sx="${i}" style="--c:${i===mi?"var(--s5)":"var(--s1)"}"><b>${t0(n)}</b><span>${esc(s==="Hombre"?"Hombres":s==="Mujer"?"Mujeres":s)} · ${t0(nTot?n/nTot*100:0)} %</span><span class="cs">${tt(tp)} t por pescador</span></button>`}).join("");
+  $("#sxFig").onclick=ev=>{const b=ev.target.closest("[data-sx]");if(b)toggle("sex",+b.dataset.sx,ev.ctrlKey||ev.metaKey)};
+  if(mi>=0){const nm=A.sexF[mi].size,nh=nTot-nm,tm=nm?X.sexT[mi]/nm:0,th=nh?(A.q-X.sexT[mi])/nh:0;setC("cSexoC",nTot?`Las mujeres son el <b>${t0(nm/nTot*100)} %</b> de los pescadores activos${nm&&nh?` y desembarcan ${tt(tm)} t por persona, frente a ${tt(th)} t de los hombres`:""}`:"")}
+  const svg=$("#gSexY"),W=vw("gSexY",420),H=150,L=34,Rr=W-6,T=18,B=H-22;clear(svg,W,H);if(mi<0||!nTot){emptyMsg(svg,W,H);return}
+  const vals=X.yrSexP.map(a=>{const t=a.reduce((s,x)=>s+x.size,0);return t?{p:a[mi].size/t*100,n:a[mi].size,t}:null});const mx=niceMax(Math.max(5,...vals.map(v=>v?v.p:0))),sc=v=>B-(v/mx)*(B-T);
+  [0,.5,1].forEach(k=>{const v=mx*k;E("line",{x1:L,x2:Rr,y1:sc(v),y2:sc(v),class:"gl"},svg);E("text",{x:L-5,y:sc(v)+4,"text-anchor":"end"},svg).textContent=t0(v)+"%"});
+  const bw=(Rr-L)/vals.length,partial=R.lastYM%12!==11;
+  vals.forEach((v,y)=>{const x=L+y*bw+bw*.22,w=bw*.56,isP=partial&&y===vals.length-1;E("text",{x:x+w/2,y:B+15,"text-anchor":"middle"},svg).textContent=String(R.y0+y).slice(2)+(isP?"*":"");if(!v)return;
+    E("path",{d:rr(x,sc(v.p),w,B-sc(v.p),3),fill:"var(--s5)","fill-opacity":isP?.55:1},svg);E("text",{x:x+w/2,y:sc(v.p)-4,"text-anchor":"middle",class:"val",style:"font-size:10.5px"},svg).textContent=t0(v.p)+"%";
+    hover(E("rect",{x:L+y*bw,y:T,width:bw,height:B-T,fill:"transparent"},svg),()=>`<b>${R.y0+y}${isP?" (año en curso)":""}</b><br>${t0(v.n)} mujeres de ${t0(v.t)} pescadores activos (${t1(v.p)} %)`+(y>0&&vals[y-1]?`<br>vs. ${R.y0+y-1}: ${t1(v.p-vals[y-1].p)} puntos`:""),add=>toggle("yr",y,add))});
+  E("line",{x1:L,x2:Rr,y1:B,y2:B,stroke:"var(--ink-2)"},svg)}
+
+/* ---------- 4. Captura por caleta: barras ordenadas con variación ---------- */
+treemap=function(A){const R=S.R,m=R.m,nm=A.nMonths,svg=$("#gCaleta"),X=CUR.X;const W=vw("gCaleta",560);
+  let prev,lbl;if(A.hasPrev){prev=X.calPrev;lbl="vs. mismo período del año anterior"}else{const D=getD(),L=lastFullYM();prev=null;lbl="últimos 12 meses vs. los 12 anteriores";
+    var c12=m.C.map((_,c)=>{let s=0;for(let k=L-11;k<=L;k++)if(k>=0)s+=D.calYM[c][k];return s}),p12=m.C.map((_,c)=>{let s=0;for(let k=L-23;k<=L-12;k++)if(k>=0)s+=D.calYM[c][k];return s})}
+  const items=m.C.map((c,i)=>{const d=prev?dPct(A.cal[i],prev[i]):dPct(c12[i],p12[i]);return{i,label:c[0],sub:c[1],t:A.cal[i],v:V(A.cal[i],A.calFis[i],nm),d,comp:c[4]}}).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
+  const cs=$("#cCaleta .cs");if(cs)cs.textContent=`${MEAS[S.measure].lbl} (${MEAS[S.measure].u}) · variación ${lbl} · clic para filtrar`;
+  if(!items.length){emptyMsg(svg,W,200);setC("cCaletaC","");return}
+  {const cs2=[...new Set(items.map(x=>x.comp))];$("#lCal2").innerHTML=legH(cs2.map(c=>[c,CC(c)]))}
+  const narrow=W<460,labW=narrow?104:150,dW=narrow?50:64,rh=26,T=4,H=T+items.length*rh+20,Lx=labW,Rr=W-dW-(S.measure==="total"?48:70);clear(svg,W,H);
+  const mx=niceMax(items[0].v),sc=v=>(v/mx)*(Rr-Lx),B=T+items.length*rh,fmt=S.measure==="total"?t0:tt;const sel=S.f.cal,tot=items.reduce((s,x)=>s+x.t,0);
+  E("text",{x:W-4,y:B+15,"text-anchor":"end",style:"font-size:10.5px"},svg).textContent="Variación";
+  items.forEach((it,k)=>{const y=T+k*rh+4,h=rh-9,w=Math.max(sc(it.v),1.5),mc=Math.floor(labW/6.4);
+    E("text",{x:Lx-8,y:y+h/2+4,"text-anchor":"end"},svg).textContent=it.label.length>mc?it.label.slice(0,mc-1)+"…":it.label;
+    E("path",{d:rrH(Lx,y,w,h,h/2),fill:CC(it.comp),"fill-opacity":.9,class:sel.size&&!sel.has(it.i)?"dim":""},svg);
+    E("text",{x:Lx+w+5,y:y+h/2+4,class:"val"},svg).textContent=fmt(it.v)+(S.measure==="total"?" t":"");
+    E("text",{x:W-4,y:y+h/2+4,"text-anchor":"end",class:"dl "+dCls(it.d),style:"font-size:11px;font-weight:700"},svg).textContent=it.d==null?"—":dTxt(it.d);
+    hover(E("rect",{x:0,y:T+k*rh,width:W,height:rh,fill:"transparent"},svg),()=>`<b>${esc(it.label)}</b> (${esc(it.sub)}) · ${esc(it.comp)}<br>${tipAll(it.t,A.calFis[it.i],nm,A.q)}<br>Variación ${lbl}: <span class="dl ${dCls(it.d)}">${dTxt(it.d)}</span>`,add=>toggle("cal",it.i,add))});
+  E("line",{x1:Lx,x2:Lx,y1:T,y2:B,stroke:"var(--ink-2)"},svg);
+  const up=items.filter(x=>x.d!=null&&x.d>0).length,dn=items.filter(x=>x.d!=null&&x.d<0).length;
+  setC("cCaletaC",`<b>${esc(items[0].label)}</b> lidera con el ${t0(tot?items[0].t/tot*100:0)} % de las toneladas · ${up} caleta${up===1?"":"s"} sube${up===1?"":"n"} y ${dn} baja${dn===1?"":"n"} (${lbl})`)};
+
+/* ---------- 5. Concentración: curva de Lorenz por zona ---------- */
+pareto=function(A){const R=S.R,X=CUR.X,svg=$("#gPareto"),W=vw("gPareto",520),H=270,L=44,Rr=W-12,T=12,B=H-32;clear(svg,W,H);
+  const curves=[{n:"Total",c:"var(--ink)",a:[...A.pq.values()]}].concat(R.regs.map((z,zi)=>({n:z.replace("Asuntos Públicos ","AP "),c:ZC(z),a:[...X.pM.values()].map(o=>o.z[zi]).filter(v=>v>0)}))).filter(c=>c.a.length);
+  if(!curves.length){emptyMsg(svg,W,H);return}
+  const sx=p=>L+p/100*(Rr-L),sy=p=>B-p/100*(B-T);
+  [0,25,50,75,100].forEach(p=>{E("line",{x1:L,x2:Rr,y1:sy(p),y2:sy(p),class:"gl"},svg);E("text",{x:L-6,y:sy(p)+4,"text-anchor":"end"},svg).textContent=p+" %";E("text",{x:sx(p),y:B+16,"text-anchor":"middle"},svg).textContent=p+" %"});
+  E("text",{x:(L+Rr)/2,y:H-2,"text-anchor":"middle"},svg).textContent="% de pescadores (de mayor a menor volumen)";
+  E("line",{x1:sx(0),y1:sy(0),x2:sx(100),y2:sy(100),stroke:"var(--muted)","stroke-dasharray":"4 4"},svg);
+  const info=[];
+  curves.forEach((cv,ci)=>{const a=cv.a.sort((x,y)=>y-x),n=a.length,tot=a.reduce((s,v)=>s+v,0);let acc=0,area=0,prevY=0;const pts=[[0,0]];const step=Math.max(1,Math.floor(n/220));
+    a.forEach((v,i)=>{acc+=v;const yy=acc/tot;area+=(prevY+yy)/2/n;prevY=yy;if(i%step===0||i===n-1)pts.push([(i+1)/n*100,yy*100])});
+    const gini=Math.max(0,2*area-1);const k=Math.max(1,Math.round(n*.2)),s20=a.slice(0,k).reduce((s,v)=>s+v,0)/tot*100;info.push({...cv,gini,s20,cnt:n});
+    E("path",{d:"M"+pts.map(p=>sx(p[0]).toFixed(1)+","+sy(p[1]).toFixed(1)).join("L"),fill:"none",stroke:cv.c,"stroke-width":ci?2:2.6,"stroke-dasharray":ci?"":"none"},svg);
+    const x=sx(k/n*100),y=sy(s20);E("circle",{cx:x,cy:y,r:4,fill:cv.c,stroke:"var(--surface)","stroke-width":2},svg);
+    E("text",{x:sx(52),y:sy(34)+ci*16,class:"val",style:`fill:${cv.c};font-size:11.5px`},svg).textContent=`${cv.n}: el 20 % concentra el ${t0(s20)} % · Gini ${t2(gini)}`});
+  hover(E("rect",{x:L,y:T,width:Rr-L,height:B-T,fill:"transparent"},svg),()=>info.map(c=>`<b style="color:${c.c}">${esc(c.n)}</b>: el 20 % de mayor volumen concentra el ${t1(c.s20)} % · índice de Gini ${t2(c.gini)} · ${t0(c.cnt)} pescadores`).join("<br>"));
+  const t=info[0];const card=svg.closest(".card");if(card&&!card.querySelector(".concl")){const p=document.createElement("p");p.className="concl";p.id="cParC";card.querySelector("h3").after(p)}
+  setC("cParC",`El 20 % de los pescadores con más volumen concentra el <b>${t0(t.s20)} %</b> de las toneladas (Gini ${t2(t.gini)}; 0 = reparto igual, 1 = todo en uno)`+(info.length>2?` · ${info.slice(1).map(c=>`${esc(c.n)}: ${t0(c.s20)} %`).join(" · ")}`:""))};
+
+/* ---------- 6. Proyección: línea con banda de rango probable ---------- */
+renderProj=function(){const D=projData(),box=$("#proj");if(!D.length){box.innerHTML=`<p class="cs">Sin datos con estos filtros.</p>`;return}
+  box.innerHTML=D.map((d,j)=>`<div class="pz"><div class="pz-h"><b>${esc(d.label)}</b><span class="cs">Tendencia 12 meses: <span class="dl ${d.tr>=1?"up":"down"}">${d.tr>=1?"+":"−"}${t1(Math.abs(d.tr-1)*100)} %</span></span></div><svg id="gProj${j}" role="img" aria-label="Proyección ${esc(d.label)}"></svg>
+    <div class="pz-l">${d.P.map(p=>`<div><span>${cap(ymLabel(p.ym))}</span><b>${t0(p.f)} t</b><span class="cs">entre ${t0(p.lo)} y ${t0(p.hi)} t</span></div>`).join("")}</div></div>`).join("");
+  D.forEach((d,j)=>{const svg=$("#gProj"+j),W=vw("gProj"+j,520),H=180,L=40,Rr=W-40,T=14,B=H-24;clear(svg,W,H);const col=ZC(d.label);
+    const all=d.hist.map(h=>h.v).concat(d.P.map(p=>p.hi));const mx=niceMax(Math.max(1,...all)),sc=v=>B-(v/mx)*(B-T);yAxis(svg,L,Rr,sc,mx,t0);
+    const n=d.hist.length+d.P.length,bw=(Rr-L)/Math.max(1,n-1),X=k=>L+k*bw;const hp=d.hist.map((h,k)=>[X(k),sc(h.v)]);
+    if(d.P.length){const lk=d.hist.length-1,lv=d.hist[lk]?d.hist[lk].v:0;const up=[[X(lk),sc(lv)]].concat(d.P.map((p,k)=>[X(lk+1+k),sc(p.hi)])),lo=[[X(lk),sc(lv)]].concat(d.P.map((p,k)=>[X(lk+1+k),sc(p.lo)]));
+      E("path",{d:"M"+up.map(p=>p.join(",")).join("L")+"L"+lo.reverse().map(p=>p.join(",")).join("L")+"Z",fill:"var(--s4)","fill-opacity":.2,stroke:"none"},svg);
+      E("line",{x1:X(lk),x2:X(lk),y1:T,y2:B,stroke:"var(--line)","stroke-dasharray":"2 3"},svg);E("text",{x:X(lk)+4,y:T+9,style:"font-size:10px"},svg).textContent="proyección →";
+      const fp=[[X(lk),sc(lv)]].concat(d.P.map((p,k)=>[X(lk+1+k),sc(p.f)]));E("path",{d:"M"+fp.map(p=>p.join(",")).join("L"),fill:"none",stroke:"var(--s4)","stroke-width":2.2,"stroke-dasharray":"6 4"},svg);
+      d.P.forEach((p,k)=>{const x=X(lk+1+k);E("circle",{cx:x,cy:sc(p.f),r:3.5,fill:"var(--s4)"},svg);if(k===d.P.length-1)E("text",{x:x+5,y:sc(p.f)+4,class:"val",style:"font-size:10.5px"},svg).textContent=t0(p.f)+" t"})}
+    E("path",{d:"M"+hp.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join("L"),fill:"none",stroke:col,"stroke-width":2.2,"stroke-linejoin":"round"},svg);hp.forEach(p=>E("circle",{cx:p[0],cy:p[1],r:2.4,fill:col},svg));
+    d.hist.concat(d.P).forEach((h,k)=>{if(k%3===0||k>=d.hist.length)E("text",{x:X(k),y:B+15,"text-anchor":"middle","font-weight":k>=d.hist.length?700:400},svg).textContent=MES[h.ym%12]});
+    d.hist.forEach((h,k)=>hover(E("rect",{x:X(k)-bw/2,y:T,width:bw,height:B-T,fill:"transparent"},svg),()=>`<b>${ymLabel(h.ym)}</b><br>${t1(h.v)} t (real)`+(k>=12?"":"")));
+    d.P.forEach((p,k)=>hover(E("rect",{x:X(d.hist.length+k)-bw/2,y:T,width:bw,height:B-T,fill:"transparent"},svg),()=>`<b>${ymLabel(p.ym)} (proyección)</b><br>${t1(p.f)} t estimadas<br>rango probable ${t1(p.lo)} a ${t1(p.hi)} t<br>basado en ${p.n} año${p.n>1?"s":""}`));
+    E("line",{x1:L,x2:Rr,y1:B,y2:B,stroke:"var(--line)"},svg)})};
+
+/* ---------- a) Calendario especie × mes ---------- */
+function calEsp(A){const R=S.R,m=R.m,X=CUR.X,mc=moCount(),el=$("#calEsp");const top=m.E.map((e,i)=>({i,v:A.esp[i]})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v).slice(0,15);
+  if(!top.length){el.innerHTML=`<div class="empty">Sin datos con estos filtros</div>`;setC("cCalEspC","");return}const common=ST2.get("ceV","fila")==="comun";
+  const rows=top.map(t=>({...t,a:Array.from(X.espMo[t.i],(v,mo)=>mc[mo]?v/mc[mo]:0)}));const gmx=Math.max(...rows.flatMap(r=>r.a))||1;const zone=S.f.reg.size===1?R.regRaw[[...S.f.reg][0]]:undefined;
+  el.innerHTML=`<table class="cesp"><thead><tr><th>Especie</th>${MES.map((x,mo)=>`<th class="${mc[mo]?"":"na"}">${x}</th>`).join("")}<th class="r">Prom. mensual</th></tr></thead><tbody>${rows.map(r=>{const mx=common?gmx:Math.max(...r.a)||1,pk=r.a.indexOf(Math.max(...r.a)),code=m.E[r.i][0],col=R.grpColor[R.grps.indexOf(m.E[r.i][2])];const nM=mc.filter(Boolean).length;
+    return`<tr><td><button type="button" class="lnk ce-e" data-e="${r.i}" title="Filtrar ${esc(m.E[r.i][1])}"><i style="background:${col}"></i>${esc(m.E[r.i][1])}</button></td>${r.a.map((v,mo)=>{const vd=CFG.vedas.length?vedaOf(code,mo,zone):null,k=v/mx;
+      return`<td class="${vd?"vd":""}${mo===pk&&v>0?" pk":""}" title="${esc(MESL[mo])}: ${tt(v)} t promedio${vd?" · veda":""}" style="${v>0?`background:rgba(42,120,214,${(.07+.88*Math.sqrt(k)).toFixed(2)});color:${Math.sqrt(k)>.6?"#fff":"inherit"}`:""}">${v>0?tt(v):"·"}</td>`}).join("")}<td class="r"><b>${tt(nM?r.a.reduce((s,v)=>s+v,0)/nM:0)}</b></td></tr>`}).join("")}</tbody></table>`;
+  el.querySelectorAll(".ce-e").forEach(b=>b.onclick=ev=>toggle("esp",+b.dataset.e,ev.ctrlKey||ev.metaKey));
+  const r0=rows[0],pk=r0.a.indexOf(Math.max(...r0.a));let lowV=0;rows.forEach(r=>{const code=m.E[r.i][0];r.a.forEach((v,mo)=>{if(v>0&&CFG.vedas.length&&vedaOf(code,mo,zone))lowV++})});
+  setC("cCalEspC",`<b>${esc(m.E[r0.i][1])}</b>, la especie principal, alcanza su máximo en <b>${MESL[pk]}</b>`+(CFG.vedas.length?(lowV?` · ${lowV} celdas con desembarque en meses de veda (revisar)`:" · sin desembarques en meses de veda"):""))}
+
+/* ---------- b) Entradas y salidas de pescadores ---------- */
+function cohort(){const R=S.R,D=getD(),nY=D.yP.length,svg=$("#gCoh"),W=vw("gCoh",1000),H=290,L=48,Rr=W-10,T=16,B0=H-42;clear(svg,W,H);
+  const seen=new Set(),rows=[];for(let y=0;y<nY;y++){const cur=D.yP[y],pr=y?D.yP[y-1]:new Set();let man=0,vue=0,nue=0,sal=0;cur.forEach(p=>{if(pr.has(p))man++;else if(seen.has(p))vue++;else nue++});pr.forEach(p=>{if(!cur.has(p))sal++});rows.push({y,man,vue,nue,sal,tot:cur.size});cur.forEach(p=>seen.add(p))}
+  const partial=R.lastYM%12!==11;if(partial&&rows.length)rows[rows.length-1].sal=0;const rs=rows.slice(1);if(!rs.some(r=>r.tot)){emptyMsg(svg,W,H);return}
+  const up=Math.max(...rs.map(r=>r.man+r.vue+r.nue)),dn=Math.max(...rs.map(r=>r.sal)),mx=niceMax(up+dn)||1;const zero=T+(B0-T)*(up/(up+dn||1));const k=(B0-T)/((up+dn)||1);
+  E("line",{x1:L,x2:Rr,y1:zero,y2:zero,stroke:"var(--ink-2)"},svg);[up,up/2].forEach(v=>{const y=zero-v*k;E("line",{x1:L,x2:Rr,y1:y,y2:y,class:"gl"},svg);E("text",{x:L-6,y:y+4,"text-anchor":"end"},svg).textContent=t0(v)});if(dn){const y=zero+dn*k;E("line",{x1:L,x2:Rr,y1:y,y2:y,class:"gl"},svg);E("text",{x:L-6,y:y+4,"text-anchor":"end"},svg).textContent="−"+t0(dn)}
+  const bw=(Rr-L)/rs.length;
+  rs.forEach((r,j)=>{const x=L+j*bw+bw*.2,w=bw*.6,isP=partial&&r.y===nY-1,op=isP?.55:1;let acc=0;[["man","var(--s1)"],["vue","var(--s4)"],["nue","var(--s2)"]].forEach(([key,c])=>{const v=r[key];if(!v)return;E("rect",{x,y:zero-(acc+v)*k,width:w,height:Math.max(.5,v*k-1),fill:c,"fill-opacity":op},svg);acc+=v});
+    if(r.sal)E("rect",{x,y:zero+1,width:w,height:Math.max(.5,r.sal*k-1),fill:RED,"fill-opacity":isP?.35:.85},svg);
+    E("text",{x:x+w/2,y:zero-acc*k-5,"text-anchor":"middle",class:"val",style:"font-size:11px"},svg).textContent="+"+t0(r.vue+r.nue);
+    if(r.sal)E("text",{x:x+w/2,y:zero+r.sal*k+13,"text-anchor":"middle",class:"val",style:`font-size:11px;fill:${RED}`},svg).textContent="−"+t0(r.sal);
+    E("text",{x:x+w/2,y:H-6,"text-anchor":"middle"},svg).textContent=String(R.y0+r.y)+(isP?"*":"");
+    const prevT=rows[r.y-1].tot;hover(E("rect",{x:L+j*bw,y:T,width:bw,height:H-T-20,fill:"transparent"},svg),()=>`<b>${R.y0+r.y}${isP?" (año en curso: las salidas pueden estar sobreestimadas)":""}</b><br>Se mantienen: ${t0(r.man)}${prevT?` (${t0(r.man/prevT*100)} % de ${R.y0+r.y-1})`:""}<br>Vuelven: ${t0(r.vue)}<br>Nuevos: ${t0(r.nue)}<br>Salen: ${t0(r.sal)}<br><b>Activos: ${t0(r.tot)}</b> (${r.tot-prevT>=0?"+":""}${t0(r.tot-prevT)} vs. año anterior)`,add=>toggle("yr",r.y,add))});
+  const lf=lastFullYear(),r=rows[lf];const n=$("#cohNote");if(n)n.textContent=(partialNote()?partialNote()+" ":"")+`${R.y0}: primer año de la base (no se compara).`+(partial?` Las salidas de ${R.y1} se conocerán al cerrar el año.`:"");
+  if(r&&lf>0){const pt=rows[lf-1].tot;setC("cCohC",`En ${R.y0+lf} entraron <b>${t0(r.nue)}</b> pescadores nuevos y volvieron ${t0(r.vue)}; salieron <b>${t0(r.sal)}</b>. Se mantuvo el ${t0(pt?r.man/pt*100:0)} % de los activos de ${R.y0+lf-1}`)}else setC("cCohC","")}
+
+/* ---------- c) Regularidad vs. volumen ---------- */
+function scatter(A){const R=S.R,m=R.m,X=CUR.X,svg=$("#gScat"),W=vw("gScat",1000),H=340,L=52,Rr=W-14,T=14,B=H-34;clear(svg,W,H);const nM=Math.max(1,A.nMonths);
+  const pts=[...X.pM].map(([p,o])=>{let zi=0;o.z.forEach((v,i)=>{if(v>o.z[zi])zi=i});return{p,n:o.ym.size,t:o.t,z:zi}}).filter(x=>x.t>0);if(!pts.length){emptyMsg(svg,W,H);return}
+  $("#lScat").innerHTML=R.regs.map(z=>`<span><i style="background:${ZC(z)}"></i>${esc(z)}</span>`).join("");
+  const mxN=Math.max(...pts.map(x=>x.n)),lo=Math.max(.001,Math.min(...pts.map(x=>x.t))),hi=Math.max(...pts.map(x=>x.t));const l0=Math.floor(Math.log10(lo)),l1=Math.ceil(Math.log10(hi))||1;
+  const sx=n=>L+(n-.5)/(Math.max(mxN,2))*(Rr-L),sy=t=>B-(Math.log10(t)-l0)/((l1-l0)||1)*(B-T);
+  for(let e=l0;e<=l1;e++){const y=sy(Math.pow(10,e));E("line",{x1:L,x2:Rr,y1:y,y2:y,class:"gl"},svg);E("text",{x:L-6,y:y+4,"text-anchor":"end"},svg).textContent=e>=0?t0(Math.pow(10,e)):String(Math.pow(10,e)).replace(".",",")}
+  const ticks=[1,Math.round(mxN/4),Math.round(mxN/2),Math.round(mxN*3/4),mxN].filter((v,i,a)=>v>0&&a.indexOf(v)===i);ticks.forEach(n=>E("text",{x:sx(n),y:B+16,"text-anchor":"middle"},svg).textContent=n);
+  E("text",{x:(L+Rr)/2,y:H-2,"text-anchor":"middle"},svg).textContent=`Meses con desembarque (de ${nM} meses del período)`;
+  const med=a=>{const s=a.slice().sort((x,y)=>x-y);return s[Math.floor(s.length/2)]};const mn=med(pts.map(x=>x.n)),mt=med(pts.map(x=>x.t));
+  E("line",{x1:sx(mn),x2:sx(mn),y1:T,y2:B,stroke:"var(--muted)","stroke-dasharray":"3 4"},svg);E("line",{x1:L,x2:Rr,y1:sy(mt),y2:sy(mt),stroke:"var(--muted)","stroke-dasharray":"3 4"},svg);
+  (W<620?[]:[["Esporádicos de alto volumen",L+6,T+12,"start"],["Regulares de alto volumen",Rr-6,T+12,"end"],["Esporádicos de bajo volumen",L+6,B-6,"start"],["Regulares de bajo volumen",Rr-6,B-6,"end"]]).forEach(([t,x,y,a])=>E("text",{x,y,"text-anchor":a,style:"font-size:10.5px;fill:var(--muted);font-weight:700"},svg).textContent=t);
+  const h=s=>{let x=0;for(let i=0;i<s.length;i++)x=(x*31+s.charCodeAt(i))|0;return(x%1000)/1000};const sel=S.f.p;const g=E("g",{},svg);
+  pts.forEach(o=>{const jx=(h(String(o.p))-.5)*Math.min(14,(Rr-L)/mxN*.7);const c=E("circle",{cx:(sx(o.n)+jx).toFixed(1),cy:sy(o.t).toFixed(1),r:sel.has(o.p)?6:3.6,fill:ZC(R.regs[o.z]),"fill-opacity":sel.size&&!sel.has(o.p)?.15:.6,stroke:sel.has(o.p)?"var(--ink)":"none"},g);
+    hover(c,()=>`<b>${esc(m.P[o.p][1])}</b><br>RPA ${esc(m.P[o.p][0])} · ${esc(R.regs[o.z])}<br>${o.n} meses con desembarque · ${t1(o.t)} t<br>${tt(o.t/o.n)} t por mes activo<br><span class="cs">Clic para ver su ficha</span>`,add=>toggle("p",o.p,add))});
+  const spor=pts.filter(x=>x.n<=3).length;setC("cScatC",`<b>${t0(spor)}</b> de ${t0(pts.length)} pescadores (${t0(spor/pts.length*100)} %) desembarcaron en 3 meses o menos; la mitad desembarca en ${t0(mn)} meses o menos y menos de ${tt(mt)} t`)}
+
+/* ---------- d) Dependencia de una especie ---------- */
+function dependencia(){const R=S.R,m=R.m,X=CUR.X,svg=$("#gDep"),W=vw("gDep",480);
+  const it=m.C.map((c,i)=>{const mp=X.calEsp[i];let tot=0,best=-1,bv=0;mp.forEach((v,e)=>{tot+=v;if(v>bv){bv=v;best=e}});if(!tot)return null;const sorted=[...mp].sort((a,b)=>b[1]-a[1]);const hhi=sorted.reduce((s,[,v])=>s+Math.pow(v/tot*100,2),0);
+    return{id:i,label:c[0],v:bv/tot*100,color:R.grpColor[R.grps.indexOf(m.E[best][2])],sub:`Especie principal: ${m.E[best][1]}`,tip:`${t1(bv/tot*100)} % de ${t0(tot)} t<br>${sorted.slice(0,3).map(([e,v])=>`${esc(m.E[e][1])}: ${t0(v/tot*100)} %`).join("<br>")}<br>Índice de concentración (HHI): ${t0(hhi)} de 10.000`,esp:m.E[best][1]}}).filter(Boolean).sort((a,b)=>b.v-a.v);
+  if(!it.length){emptyMsg(svg,W,120);setC("cDepC","");return}
+  const used=new Set(it.map(x=>x.color));$("#lDep").innerHTML=R.grps.filter((g,i)=>used.has(R.grpColor[i])).map(g=>`<span><i style="background:${R.grpColor[R.grps.indexOf(g)]}"></i>${esc(g)}</span>`).join("");
+  hbar("gDep",it.map(x=>({...x,label:x.label+" · "+x.esp})),"cal",W,250,{max:100,fmt:v=>t0(v),unit:" %",maxc:44,right:46});
+  const hi=it.filter(x=>x.v>50).length;setC("cDepC",`<b>${hi}</b> de ${it.length} caletas obtienen más de la mitad de su desembarque de una sola especie`+(it[0]?` · la más dependiente es ${esc(it[0].label)} (${esc(it[0].esp)}, ${t0(it[0].v)} %)`:""))}
+
+/* ---------- e) Brecha de género ---------- */
+function gap(){const R=S.R,m=R.m,X=CUR.X,mi=muj(),hi=m.sexes.indexOf("Hombre"),svg=$("#gGap"),W=vw("gGap",1000);const mode=ST2.get("gapV","cal");if(mi<0||hi<0){emptyMsg(svg,W,120);return}
+  const src=mode==="cal"?m.C.map((c,i)=>({id:i,label:c[0],T:X.calSexT[i],P:X.calSexP[i]})):R.grps.map((g,i)=>({id:i,label:g,T:X.grpSexT[i],P:X.grpSexP[i]}));
+  const rows=src.map(r=>({...r,h:r.P[hi].size?r.T[hi]/r.P[hi].size:null,m:r.P[mi].size?r.T[mi]/r.P[mi].size:null,nh:r.P[hi].size,nm:r.P[mi].size})).filter(r=>r.h!=null&&r.m!=null).sort((a,b)=>(b.h-b.m)-(a.h-a.m));
+  if(!rows.length){emptyMsg(svg,W,120);setC("cGapC","Sin casos con hombres y mujeres activos con estos filtros.");return}
+  const narrow=W<520,labW=narrow?110:180,rh=28,T=22,H=T+rows.length*rh+8,L=labW,Rr=W-(narrow?70:110);clear(svg,W,H);const mx=niceMax(Math.max(...rows.map(r=>Math.max(r.h,r.m)))),sc=v=>L+v/mx*(Rr-L);
+  [0,.25,.5,.75,1].forEach(k=>{const x=sc(mx*k);E("line",{x1:x,x2:x,y1:T-6,y2:H-6,class:"gl"},svg);E("text",{x,y:T-10,"text-anchor":"middle"},svg).textContent=(mx>=10?t0:tt)(mx*k)+(k===1?" t":"")});
+  rows.forEach((r,j)=>{const y=T+j*rh+rh/2,x1=sc(r.h),x2=sc(r.m),mc=Math.floor(labW/6.4);E("text",{x:L-8,y:y+4,"text-anchor":"end"},svg).textContent=r.label.length>mc?r.label.slice(0,mc-1)+"…":r.label;
+    E("line",{x1,x2,y1:y,y2:y,stroke:"var(--line)","stroke-width":5,"stroke-linecap":"round"},svg);E("circle",{cx:x1,cy:y,r:6,fill:"var(--s1)"},svg);E("circle",{cx:x2,cy:y,r:6,fill:"var(--s5)"},svg);
+    const gp=r.h>0?(r.m/r.h-1)*100:0;E("text",{x:Math.max(x1,x2)+10,y:y+4,class:"val",style:"font-size:11px"},svg).textContent=narrow?`${gp>=0?"+":"−"}${t0(Math.abs(gp))}%`:`mujeres ${gp>=0?"+":"−"}${t0(Math.abs(gp))} %`;
+    hover(E("rect",{x:0,y:y-rh/2,width:W,height:rh,fill:"transparent"},svg),()=>`<b>${esc(r.label)}</b><br>Hombres: ${tt(r.h)} t por pescador (${t0(r.nh)} activos)<br>Mujeres: ${tt(r.m)} t por pescadora (${t0(r.nm)} activas)<br>Diferencia: las mujeres desembarcan ${t0(Math.abs(gp))} % ${gp>=0?"más":"menos"} por persona`,add=>toggle(mode==="cal"?"cal":"grp",r.id,add))});
+  const less=rows.filter(r=>r.m<r.h).length;setC("cGapC",`En <b>${less}</b> de ${rows.length} ${mode==="cal"?"caletas":"grupos"} las mujeres desembarcan menos toneladas por persona que los hombres · mayor brecha: ${esc(rows[0].label)}`)}
+
+/* ---------- f) Artesanal vs. recolector de orilla ---------- */
+function catBars(A){const R=S.R,m=R.m,X=CUR.X,svg=$("#gCat2"),W=vw("gCat2",520),mode=ST2.get("catV","cal"),nK=m.cats.length,col=k=>COLS[k%6];
+  const h3=$("#cGrupoT");if(h3)h3.textContent="Artesanal vs. recolector de orilla";
+  $("#catLeg").innerHTML=legH(m.cats.map((c,k)=>[c,col(k)]));
+  const rows=[{label:"Total",vals:Array.from(A.cat),tot:A.q,id:-1}].concat((mode==="cal"?m.C.map((c,i)=>({id:i,label:c[0],vals:Array.from(X.calCat[i])})):m.E.map((e,i)=>({id:i,label:e[1],vals:Array.from(X.espCat[i])}))).map(r=>({...r,tot:r.vals.reduce((s,v)=>s+v,0)})).filter(r=>r.tot>0).sort((a,b)=>b.tot-a.tot).slice(0,mode==="cal"?20:12));
+  if(!A.q){emptyMsg(svg,W,120);setC("cCatC","");return}
+  const narrow=W<460,labW=narrow?100:150,rh=26,T=4,H=T+rows.length*rh+22,L=labW,Rr=W-(narrow?44:58);clear(svg,W,H);const sc=p=>p/100*(Rr-L),fid=mode==="cal"?"cal":"esp";
+  [0,50,100].forEach(p=>{const x=L+sc(p);E("line",{x1:x,x2:x,y1:T,y2:H-18,class:"gl"},svg);E("text",{x,y:H-4,"text-anchor":"middle"},svg).textContent=p+" %"});
+  rows.forEach((r,j)=>{const y=T+j*rh+4,h=rh-9,mc=Math.floor(labW/6.4);const lt=E("text",{x:L-8,y:y+h/2+4,"text-anchor":"end",style:r.id<0?"font-weight:800":""},svg);lt.textContent=r.label.length>mc?r.label.slice(0,mc-1)+"…":r.label;let acc=0;
+    r.vals.forEach((v,k)=>{if(v<=0)return;const p=v/r.tot*100,x=L+sc(acc),w=sc(p);acc+=p;const s=E("rect",{x,y,width:Math.max(.5,w-1),height:h,rx:3,fill:col(k),class:S.f.cat.size&&!S.f.cat.has(k)?"dim":""},svg);
+      if(w>34)E("text",{x:x+w/2,y:y+h/2+4,"text-anchor":"middle",style:"fill:#fff;font-size:10.5px;font-weight:700","pointer-events":"none"},svg).textContent=t0(p)+"%";
+      hover(s,()=>`<b>${esc(r.label)}</b><br>${esc(m.cats[k])}: ${t1(p)} % · ${tt(v)} t`,add=>toggle("cat",k,add))});
+    E("text",{x:Rr+6,y:y+h/2+4,class:"val",style:"font-size:10.5px"},svg).textContent=t0(r.tot)+" t";
+    if(r.id>=0){const hit=E("rect",{x:0,y,width:L,height:h,fill:"transparent"},svg);hover(hit,()=>`<b>${esc(r.label)}</b><br>${t0(r.tot)} t · clic para filtrar`,add=>toggle(fid,r.id,add))}});
+  const ki=m.cats.findIndex(c=>/recolector/i.test(c)),ka=m.cats.findIndex(c=>/artesanal/i.test(c));
+  if(ki>=0&&ka>=0){const pr=rows.slice(1).filter(r=>r.vals[ki]>0).sort((a,b)=>b.vals[ki]/b.tot-a.vals[ki]/a.tot)[0];setC("cCatC",`El <b>${t0(A.cat[ka]/A.q*100)} %</b> del volumen es desembarque artesanal y el ${t0(A.cat[ki]/A.q*100)} % recolección de orilla`+(pr?` · la recolección pesa más en ${esc(pr.label)} (${t0(pr.vals[ki]/pr.tot*100)} %)`:""))}else setC("cCatC","")}
+
+/* ---------- g) Ranking de caletas entre los dos últimos años completos ---------- */
+function slope(){const R=S.R,m=R.m,D=getD(),svg=$("#gSlope"),W=vw("gSlope",480),y1=lastFullYear(),y0=y1-1;
+  if(y0<0){emptyMsg(svg,W,160);setC("cSlopeC","Se necesitan dos años completos.");return}
+  const it=m.C.map((c,i)=>({i,label:c[0],a:D.calYd[i][y0],b:D.calYd[i][y1]})).filter(x=>x.a>0||x.b>0);if(!it.length){emptyMsg(svg,W,160);setC("cSlopeC","");return}
+  const ra=it.slice().sort((x,y)=>y.a-x.a),rb=it.slice().sort((x,y)=>y.b-x.b);it.forEach(x=>{x.ra=ra.indexOf(x)+1;x.rb=rb.indexOf(x)+1});
+  const narrow=W<460,colW=narrow?118:170,rh=24,T=30,H=T+it.length*rh+6,xa=colW,xb=W-colW;clear(svg,W,H);
+  E("text",{x:xa,y:16,"text-anchor":"end",class:"val"},svg).textContent=String(R.y0+y0);E("text",{x:xb,y:16,class:"val"},svg).textContent=String(R.y0+y1);
+  const yy=r=>T+(r-1)*rh+rh/2,mc=Math.floor(colW/6.6)-6,cut=s=>s.length>mc?s.slice(0,mc-1)+"…":s;const sel=S.f.cal;
+  it.forEach(x=>{const c=x.rb<x.ra?GREEN:x.rb>x.ra?RED:GRAY,dim=sel.size&&!sel.has(x.i);const g=E("g",{class:dim?"dim":""},svg);
+    E("line",{x1:xa+6,x2:xb-6,y1:yy(x.ra),y2:yy(x.rb),stroke:c,"stroke-width":x.ra===x.rb?1.5:2.4},g);E("circle",{cx:xa+6,cy:yy(x.ra),r:3.5,fill:c},g);E("circle",{cx:xb-6,cy:yy(x.rb),r:3.5,fill:c},g);
+    E("text",{x:xa-4,y:yy(x.ra)+4,"text-anchor":"end",style:"font-size:11px"},g).textContent=`${x.ra}. ${cut(x.label)} ${narrow?"":t0(x.a)+" t"}`;
+    E("text",{x:xb+4,y:yy(x.rb)+4,style:"font-size:11px"},g).textContent=`${x.rb}. ${cut(x.label)} ${narrow?"":t0(x.b)+" t"}`;
+    const d=dPct(x.b,x.a);hover(E("rect",{x:0,y:Math.min(yy(x.ra),yy(x.rb))-rh/2,width:W,height:Math.abs(yy(x.ra)-yy(x.rb))+rh,fill:"transparent"},g),()=>`<b>${esc(x.label)}</b><br>${R.y0+y0}: puesto ${x.ra} · ${t0(x.a)} t<br>${R.y0+y1}: puesto ${x.rb} · ${t0(x.b)} t<br><span class="dl ${dCls(d)}">${dTxt(d)}</span> en toneladas`,add=>toggle("cal",x.i,add))});
+  const best=it.slice().sort((p,q)=>(p.rb-p.ra)-(q.rb-q.ra))[0];setC("cSlopeC",best&&best.rb<best.ra?`<b>${esc(best.label)}</b> subió del puesto ${best.ra} al ${best.rb} entre ${R.y0+y0} y ${R.y0+y1}`:`Sin cambios de posición relevantes entre ${R.y0+y0} y ${R.y0+y1}`)}
+
+/* ---------- h) Control de anomalías por caleta ---------- */
+let ANOM=null;
+function anomalias(){const R=S.R,m=R.m,D=getD(),sel=$("#anomSel"),svg=$("#gAnom"),W=vw("gAnom",1000);
+  const tot=m.C.map((_,c)=>D.calYM[c].reduce((s,v)=>s+v,0));const cs=m.C.map((c,i)=>i).filter(i=>tot[i]>0).sort((a,b)=>tot[b]-tot[a]);
+  if(!cs.length){emptyMsg(svg,W,160);setC("cAnomC","");sel.innerHTML="";return}
+  if(S.f.cal.size===1&&cs.includes([...S.f.cal][0]))ANOM=[...S.f.cal][0];if(ANOM==null||!cs.includes(ANOM))ANOM=cs[0];
+  sel.innerHTML=cs.map(i=>`<option value="${i}"${i===ANOM?" selected":""}>${esc(m.C[i][0])}</option>`).join("");sel.onchange=()=>{ANOM=+sel.value;anomalias()};
+  const a=R.firstYM,b=R.lastYM,s=D.calYM[ANOM],vals=[];for(let i=a;i<=b;i++)vals.push(s[i]);
+  const band=vals.map((v,k)=>{const i=a+k,mo=i%12;const o=[];for(let j=mo;j<=b;j+=12)if(j>=a&&j!==i)o.push(s[j]);if(o.length<2)return null;const mu=o.reduce((x,y)=>x+y,0)/o.length,sd=Math.sqrt(o.reduce((x,y)=>x+(y-mu)*(y-mu),0)/(o.length-1));return{mu,lo:Math.max(0,mu-2*sd),hi:mu+2*sd,sd}});
+  const H=230,L=52,Rr=W-10,T=12,B=H-26;clear(svg,W,H);const mx=niceMax(Math.max(1,...vals,...band.filter(Boolean).map(x=>x.hi))),sc=v=>B-(v/mx)*(B-T);yAxis(svg,L,Rr,sc,mx,t0);
+  const bw=(Rr-L)/Math.max(1,vals.length-1),X=k=>L+k*bw;
+  let up="",dn="";band.forEach((x,k)=>{if(!x)return;up+=(up?"L":"M")+X(k).toFixed(1)+","+sc(x.hi).toFixed(1)});const lowPts=band.map((x,k)=>x?[X(k),sc(x.lo)]:null).filter(Boolean).reverse();
+  if(up)E("path",{d:up+"L"+lowPts.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join("L")+"Z",fill:"rgba(42,120,214,.14)"},svg);
+  E("path",{d:"M"+vals.map((v,k)=>X(k).toFixed(1)+","+sc(v).toFixed(1)).join("L"),fill:"none",stroke:"var(--s1)","stroke-width":1.8},svg);
+  const out=[];vals.forEach((v,k)=>{const i=a+k,x=band[k];const isA=x&&(v>x.hi||v<x.lo)&&(x.sd>0||v!==x.mu);if(k%12===(12-a%12)%12||k===0)E("text",{x:X(k),y:B+16,"text-anchor":"middle"},svg).textContent=String(R.y0+Math.floor(i/12));
+    const c=E("circle",{cx:X(k),cy:sc(v),r:isA?5:2.4,fill:isA?(v>x.hi?GREEN:RED):"var(--s1)",stroke:isA?"#fff":"none","stroke-width":1.5},svg);if(isA)out.push({i,v,x});
+    hover(E("rect",{x:X(k)-bw/2,y:T,width:Math.max(bw,4),height:B-T,fill:"transparent"},svg),()=>`<b>${cap(ymLabel(i))} · ${esc(m.C[ANOM][0])}</b><br>${t1(v)} t${x?`<br>Habitual para ${MESL[i%12]}: ${t1(x.mu)} t (rango ${t1(x.lo)} a ${t1(x.hi)} t)${isA?`<br><b style="color:${v>x.hi?GREEN:RED}">${v>x.hi?"Inusualmente alto":"Inusualmente bajo"}</b> (${dTxt(dPct(v,x.mu))} vs. habitual)`:""}`:"<br>Sin suficientes años para comparar"}`)});
+  E("line",{x1:L,x2:Rr,y1:B,y2:B,stroke:"var(--line)"},svg);
+  $("#anomList").innerHTML=out.length?"Últimos meses fuera de rango: "+out.slice(-6).reverse().map(o=>`<b style="color:${o.v>o.x.hi?GREEN:RED}">${cap(ymLabel(o.i))}</b> ${t0(o.v)} t (${dTxt(dPct(o.v,o.x.mu))})`).join(" · "):"";
+  const lo=out.filter(o=>o.v<o.x.lo).length,hi=out.length-lo;setC("cAnomC",out.length?`<b>${esc(m.C[ANOM][0])}</b>: ${out.length} mes${out.length===1?"":"es"} fuera del rango habitual (${hi} alto${hi===1?"":"s"}, ${lo} bajo${lo===1?"":"s"}); el último fue ${ymLabel(out[out.length-1].i)}`:`<b>${esc(m.C[ANOM][0])}</b>: ningún mes fuera del rango habitual`)}
+
+/* ---------- Valor económico (con precios configurados) ---------- */
+function valor(A){const R=S.R,m=R.m,X=CUR.X,box=$("#valBox"),card=$("#cValor");
+  if(!hasPrices()){card.hidden=!S.perm.admin;box.innerHTML=`<p class="cs" style="margin:0">Aún no hay precios de playa. Agrégalos en <b>Administración › Precios</b> para estimar el valor económico por especie, caleta y pescador.</p>`;setC("cValorC","");return}card.hidden=false;
+  const vE=m.E.map((e,i)=>A.esp[i]*1000*priceOf(i)),VT=vE.reduce((s,v)=>s+v,0);const vC=m.C.map((c,ci)=>{let s=0;X.calEsp[ci].forEach((t,e)=>s+=t*1000*priceOf(e));return s});
+  box.innerHTML=`<div class="val2"><div><div class="cs">Especies: peso en volumen y en valor</div><svg id="gValE" role="img" aria-label="Valor por especie"></svg></div><div><div class="cs">Valor por caleta y promedio por pescador</div><svg id="gValC" role="img" aria-label="Valor por caleta"></svg></div></div>`;
+  const ie=m.E.map((e,i)=>i).filter(i=>vE[i]>0).sort((a,b)=>vE[b]-vE[a]).slice(0,12);
+  const svg=$("#gValE"),W=vw("gValE",520),labW=W<460?96:140,rh=26,T=22,H=T+ie.length*rh+6,mid=labW+(W-labW)/2;clear(svg,W,H);
+  E("text",{x:labW+(mid-labW)/2,y:12,"text-anchor":"middle",class:"val",style:"font-size:11px"},svg).textContent="% del volumen";E("text",{x:mid+(W-mid)/2,y:12,"text-anchor":"middle",class:"val",style:"font-size:11px"},svg).textContent="% del valor";
+  const sv=Math.max(...ie.map(i=>Math.max(A.esp[i]/A.q,vE[i]/VT)))||1,half=(W-labW)/2-30;
+  ie.forEach((i,j)=>{const y=T+j*rh+4,h=rh-9,pt=A.esp[i]/A.q*100,pv=vE[i]/VT*100,mc=Math.floor(labW/6.4),nm=m.E[i][1];E("text",{x:labW-8,y:y+h/2+4,"text-anchor":"end"},svg).textContent=nm.length>mc?nm.slice(0,mc-1)+"…":nm;
+    const w1=pt/100/sv*half,w2=pv/100/sv*half;E("path",{d:rrH(labW,y,Math.max(w1,1),h,h/2),fill:"var(--s1)","fill-opacity":.75},svg);E("text",{x:labW+w1+4,y:y+h/2+4,class:"val",style:"font-size:10.5px"},svg).textContent=t0(pt)+"%";
+    E("path",{d:rrH(mid,y,Math.max(w2,1),h,h/2),fill:"var(--s4)"},svg);E("text",{x:mid+w2+4,y:y+h/2+4,class:"val",style:"font-size:10.5px"},svg).textContent=t0(pv)+"%";
+    hover(E("rect",{x:0,y:T+j*rh,width:W,height:rh,fill:"transparent"},svg),()=>`<b>${esc(nm)}</b><br>${t1(A.esp[i])} t (${t1(pt)} % del volumen)<br>${money(vE[i])} (${t1(pv)} % del valor)<br>$ ${t0(priceOf(i))} por kg`,add=>toggle("esp",i,add))});
+  E("line",{x1:mid-4,x2:mid-4,y1:T,y2:H-4,stroke:"var(--line)"},svg);
+  const ic=m.C.map((c,i)=>i).filter(i=>vC[i]>0).sort((a,b)=>vC[b]-vC[a]);
+  hbar("gValC",ic.map(i=>{const nf=A.calFis[i].size;return{id:i,label:m.C[i][0],v:vC[i]/1e6,color:CC(m.C[i][4]),sub:`${money(nf?vC[i]/nf:0)} por pescador (${nf} activos)`,tip:`${money(vC[i])} · ${t1(VT?vC[i]/VT*100:0)} % del valor<br>${money(nf?vC[i]/nf:0)} por pescador activo`}}),"cal",520,130,{fmt:v=>t0(v),unit:" MM",right:70});
+  const top=ie[0],gain=ie.filter(i=>vE[i]/VT>A.esp[i]/A.q*1.5)[0];setC("cValorC",`Valor estimado del período: <b>${money(VT)}</b> (${money(A.fis.size?VT/A.fis.size:0)} por pescador activo)`+(top!=null?` · ${esc(m.E[top][1])} aporta el ${t0(vE[top]/VT*100)} % del valor`:"")+(gain!=null&&gain!==top?` · ${esc(m.E[gain][1])} pesa mucho más en valor que en volumen`:""))}
+
+/* ---------- Conexión con el render ---------- */
+const _renderPane=renderPane;
+renderPane=function(){if(!LAST||!S.R)return _renderPane();const t=S.tab;CUR={X:null,D:null};
+  if(t==="resumen"||t==="pescadores"||t==="especies")CUR.X=ext(LAST.pass,LAST.prev);
+  _renderPane();const A=LAST.A;
+  try{if(t==="resumen"){if(isOpen("soc")){compBars(A);sexBox(A);gap()}if(isOpen("esp")){slope();dependencia()}if(isOpen("act"))anomalias()}
+    if(t==="pescadores"){cohort();scatter(A)}
+    if(t==="especies"){calEsp(A);catBars(A);valor(A)}}catch(e){console.error(e)}};
+document.addEventListener("click",ev=>{const b=ev.target.closest(".c2seg button[data-v]");if(!b)return;const k=b.closest(".c2seg").dataset.c2k;ST2.set(k,b.dataset.v);b.parentNode.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+  if(k.startsWith("rg")){RC.gx=RC.gx||{};RC.gx[k]=b.dataset.v;renderRcaGx();return}if(LAST)renderPane()});
+build();
+const subs={act:"Evolución mensual por zona, proyección, mapa por caleta y mes, estacionalidad y anomalías",esp:"Especies, captura por caleta con variación, años, comunas, ranking y dependencia",soc:"Pescadores por sexo, compañías y brecha de género"};
+Object.entries(subs).forEach(([k,v])=>{const e=document.querySelector(`details.sec[data-sec="${k}"] .sec-s`);if(e)e.textContent=v});
+
+/* ================= Exigencias ambientales: gráficos por compañía ================= */
+const modo=$("#rcaModo");if(modo&&!modo.querySelector('[data-modo="graficos"]')){const b=document.createElement("button");b.type="button";b.dataset.modo="graficos";b.setAttribute("aria-pressed","false");b.textContent="Gráficos";modo.appendChild(b)}
+const _renderRcaRes=renderRcaRes;
+renderRcaRes=function(){if(RC.modo!=="graficos")return _renderRcaRes.apply(this,arguments);document.querySelectorAll("#rcaModo button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.modo===RC.modo)));try{rcDescBtn()}catch(e){}renderRcaGx();try{rcUiSync()}catch(e){}};
+const OTRAS=[["Cobija","cobija"],["Hornitos","hornitos"],["Coloso","coloso"],["Paposo","paposo"],["Juan López","caleta juan lopez"],["Caleta Buena","caleta buena"],["Tocopilla","caleta tocopilla"],["Taltal","caleta taltal"],["Mejillones","caleta mejillones"],["Constitución","caleta constitucion"],["Punta Arenas","caleta punta arenas"]];
+function calAlts(name){const n0=norm(name),par=(n0.match(/\((.*?)\)/)||[])[1];const base=n0.replace(/\(.*?\)/g," ").replace(/\b(i{1,3}|iv|v)\s*reg(ion)?\b/g," ").replace(/\s+/g," ").trim();
+  return[base,par&&par.trim()].filter(Boolean).map(a=>/^(el|la|las|los|san|santa|puerto)\b/.test(a)&&a.split(" ").length<=2?"caleta "+a:a)}
+const reOf=alts=>new RegExp("(^|[^a-z0-9])("+alts.map(a=>a.replace(/[.*+?^${}()|[\]\\]/g,"\\$&").replace(/ /g,"\\s+")).join("|")+")([^a-z0-9]|$)");
+let NT=null;const ntext=()=>{if(NT&&NT.b===RC.base)return NT.t;NT={b:RC.base,t:RC.base.f.map(f=>norm(f[5]))};return NT.t};
+function sbars(id,rows,keys,o={}){const svg=$("#"+id),W=vw(id,o.W||640);if(!rows.length){emptyMsg(svg,W,100);return}
+  const narrow=W<480,labW=Math.min(o.labW||170,Math.round(W*(narrow?.32:.3))),rh=o.rh||26,T=4,H=T+rows.length*rh+22,L=labW,Rr=W-(o.pct?40:56);clear(svg,W,H);
+  const tots=rows.map(r=>r.vals.reduce((s,v)=>s+v,0)),mx=o.pct?100:niceMax(Math.max(1,...tots)),sc=v=>v/mx*(Rr-L);
+  [0,.5,1].forEach(k=>{const x=L+sc(mx*k);E("line",{x1:x,x2:x,y1:T,y2:H-18,class:"gl"},svg);E("text",{x,y:H-4,"text-anchor":"middle"},svg).textContent=o.pct?t0(mx*k)+" %":t0(mx*k)});
+  rows.forEach((r,j)=>{const y=T+j*rh+4,h=rh-9,tot=tots[j],mc=Math.floor(labW/6.4);E("text",{x:L-8,y:y+h/2+4,"text-anchor":"end",style:r.bold?"font-weight:800":""},svg).textContent=r.label.length>mc?r.label.slice(0,mc-1)+"…":r.label;let acc=0;
+    r.vals.forEach((v,k)=>{if(v<=0)return;const vv=o.pct?v/tot*100:v,x=L+sc(acc),w=sc(vv);acc+=vv;const s=E("rect",{x,y,width:Math.max(.8,w-1),height:h,rx:3,fill:keys[k][1]},svg);
+      if(w>(o.pct?30:24))E("text",{x:x+w/2,y:y+h/2+4,"text-anchor":"middle",style:`fill:${keys[k][2]||"#fff"};font-size:10.5px;font-weight:700`,"pointer-events":"none"},svg).textContent=o.pct?t0(vv)+"%":t0(v);
+      hover(s,()=>`<b>${esc(r.label)}</b><br>${esc(keys[k][0])}: ${t0(v)} (${t1(tot?v/tot*100:0)} %)`+(o.tip?"<br>"+o.tip(r,k):""),o.click?()=>o.click(r,k):null)});
+    E("text",{x:L+sc(o.pct?100:tot)+5,y:y+h/2+4,class:"val",style:"font-size:10.5px"},svg).textContent=o.end?o.end(r,tot):t0(tot)})}
+function goFichas(patch,q){Object.assign(RC.f,{vista:"",cat:"",tema:"",txt:"",sug:""},patch||{});RC.modo="fichas";RC.page=0;rcSyncSel();renderRca();if(q!=null){const qi=$("#rcQ");qi.value=q;qi.dispatchEvent(new Event("input",{bubbles:true}))}setTimeout(()=>{const r=$("#rcaRes");if(r)r.scrollIntoView({behavior:"smooth",block:"start"})},60)}
+function renderRcaGx(){const B=RC.base,adm=S.perm.admin,box=$("#rcaRes");$("#rcaBulk").hidden=true;$("#rcaPager").innerHTML="";RC.gx=RC.gx||{};const G=RC.gx;G.rgTema=ST2.get("rgTema","ob");
+  const vis=r=>adm||!RC.hidden.has(r.id);const emps=[...new Set(B.rcas.filter(vis).map(r=>r.empresa))].sort();const E0=RC.f.emp&&emps.includes(RC.f.emp)?RC.f.emp:"";const cats=rcCats(),nT=B.tags.length,tipos=B.tipos||[];
+  const mk=e=>({e,rcas:0,inv:0,f:0,ob:0,cat:0,hab:0,desc:0,rev:0,ap:0,noap:0,apsin:0,tags:new Array(nT).fill(0),cats:new Array(cats.length).fill(0),tipos:new Array(tipos.length).fill(0),sg:{n:0,sum:0,ok:0,mid:0,zero:0},tema:new Map(),years:new Map()});
+  const st=new Map(emps.map(e=>[e,mk(e)]));
+  B.rcas.forEach(r=>{if(!vis(r))return;const o=st.get(r.empresa);o.rcas++;if(r.monto>0)o.inv+=r.monto;if(r.anio){const y=o.years.get(r.anio)||{n:0,inv:0,l:[]};y.n++;y.inv+=r.monto>0?r.monto:0;y.l.push(`${r.rca}/${r.anio} ${r.proyecto}`);o.years.set(r.anio,y)}});
+  const obOnly=G.rgTema!=="all";
+  B.f.forEach(f=>{const r=B.rcas[f[0]];if(!vis(r))return;const o=st.get(r.empresa);o.f++;const ob=f[8]===0;if(ob)o.ob++;const s=RC.st.get(f[1]),c=s?s.c:null;
+    if(c===RC_DESC){if(adm)o.desc++;return}if(!obOnly||ob)f[7].forEach(t=>o.tags[t]++);if(f[8]!=null&&f[8]>=0)o.tipos[f[8]]++;
+    if(c!=null&&(adm||rcVisible(s))){o.cat++;o.cats[c]=(o.cats[c]||0)+1;if(s.h)o.hab++;if(s.ap===true)o.ap++;else if(s.ap===false)o.noap++;else o.apsin++}else o.rev++});
+  (RC.gf||new Map()).forEach((idx,gi)=>{if(!rcSgTracked(gi))return;const r=B.rcas[B.f[idx[0]][0]];if(!vis(r))return;const o=st.get(r.empresa);const p=rcSgAv(rcSgItems(gi));o.sg.n++;o.sg.sum+=p;o.sg[rcSgCls(p)]++;
+    const tg=new Set();idx.forEach(i=>B.f[i][7].forEach(t=>tg.add(t)));tg.forEach(t=>{const x=o.tema.get(t)||{n:0,s:0};x.n++;x.s+=p;o.tema.set(t,x)})});
+  const sel=E0?[st.get(E0)]:[...st.values()];const sum=k=>sel.reduce((s,o)=>s+o[k],0);
+  const short=e=>e.replace(/^Compañía\s+/,"").replace(/^Minera\s+/,"");
+  $("#rcaCount").innerHTML=`Gráficos de <b>${E0?esc(E0):"todas las compañías"}</b> · ${t0(sum("rcas"))} RCA · ${t0(sum("f"))} fichas`;
+  const segEmp=`<div class="seg c2emp" role="group" aria-label="Compañía"><button type="button" data-emp="" aria-pressed="${!E0}">Todas</button>${emps.map(e=>`<button type="button" data-emp="${esc(e)}" aria-pressed="${e===E0}" style="--c:${CC(e)}"><i></i>${esc(short(e))}</button>`).join("")}</div>`;
+  const kRow=o=>{const av=o.sg.n?Math.round(o.sg.sum/o.sg.n):null;return`<tr class="${o.e===E0?"on":""}" data-emp="${esc(o.e===" Total"?"":o.e)}"><td><i class="sw" style="background:${o.e===" Total"?"var(--ink)":CC(o.e)}"></i><b>${esc(o.e.trim())}</b></td><td class="r">${t0(o.rcas)}</td><td class="r">${o.inv?"US$ "+t0(o.inv)+" MM":"—"}</td><td class="r">${t0(o.f)}</td><td class="r">${t0(o.ob)}</td>${adm?`<td class="r">${t0(o.cat)}</td><td class="r">${t0(o.hab)}</td>`:`<td class="r">${t0(o.hab)}</td>`}<td class="r">${t0(o.ap)}</td><td class="r">${t0(o.sg.n)}</td><td class="r">${av==null?"—":`${rcSgBar(av)} ${av} %`}</td></tr>`};
+  const totRow={e:" Total",rcas:sum("rcas"),inv:sum("inv"),f:sum("f"),ob:sum("ob"),cat:sum("cat"),hab:sum("hab"),ap:sum("ap"),sg:{n:sel.reduce((s,o)=>s+o.sg.n,0),sum:sel.reduce((s,o)=>s+o.sg.sum,0)}};
+  const temaKeys=sel.map(o=>[short(o.e),CC(o.e)]);
+  box.innerHTML=`<div class="rgx">
+  <div class="card c2"><div class="tbar"><h3>Compañía</h3>${segEmp}</div><p class="cs" style="margin:0">Elige una compañía para segmentar todos los gráficos de esta vista (también filtra la lista de RCA). Clic en una fila de la tabla para elegirla.</p>
+    <div class="tbl"><table class="rgk"><thead><tr><th>Compañía</th><th class="r">RCA</th><th class="r">Inversión</th><th class="r">Fichas</th><th class="r">Obligaciones</th>${adm?`<th class="r">Categorizadas</th><th class="r">Visibles</th>`:`<th class="r">Compromisos habilitados</th>`}<th class="r">Aplican AP Norte</th><th class="r">En seguimiento</th><th class="r">Avance promedio</th></tr></thead><tbody>${[...st.values()].map(kRow).join("")}${emps.length>1?kRow({...totRow,sg:{n:[...st.values()].reduce((s,o)=>s+o.sg.n,0),sum:[...st.values()].reduce((s,o)=>s+o.sg.sum,0)},rcas:[...st.values()].reduce((s,o)=>s+o.rcas,0),inv:[...st.values()].reduce((s,o)=>s+o.inv,0),f:[...st.values()].reduce((s,o)=>s+o.f,0),ob:[...st.values()].reduce((s,o)=>s+o.ob,0),cat:[...st.values()].reduce((s,o)=>s+o.cat,0),hab:[...st.values()].reduce((s,o)=>s+o.hab,0),ap:[...st.values()].reduce((s,o)=>s+o.ap,0)}):""}</tbody></table></div></div>
+  <div class="viz">
+  <div class="card c2 w12"><div class="tbar"><h3>Temas de las exigencias${help("Número de fichas que tratan cada tema (una ficha puede tener varios temas). Clic en una barra para abrir esas fichas.")}</h3>${segH("rgTema",[["ob","Solo obligaciones"],["all","Todas las fichas"]],G.rgTema,"Fichas")}</div><p class="concl" id="rgTemaC"></p>${E0?"":legH(temaKeys)}<svg id="gRgTema" role="img" aria-label="Temas por compañía"></svg></div>
+  ${adm?`<div class="card c2 w6"><div class="tbar"><h3>Estado de revisión${help("Avance de la revisión de fichas: sin revisar, categorizadas no visibles para usuarios, visibles para usuarios y descartadas.")}</h3></div><p class="concl" id="rgRevC"></p>${legH([["Sin revisar",GRAY],["Categorizada","var(--s4)"],["Visible para usuarios","var(--s2)"],["Descartada","#e2ded6"]])}<svg id="gRgRev" role="img" aria-label="Estado de revisión"></svg></div>`:""}
+  <div class="card c2 ${adm?"w6":"w12"}"><div class="tbar"><h3>${adm?"Categorías asignadas":"Compromisos habilitados por categoría"}${help("Fichas por categoría asignada en cada compañía.")}</h3></div><p class="concl" id="rgCatC"></p>${legH(cats.map((c,k)=>[c,COLS[k%6]]))}<svg id="gRgCat" role="img" aria-label="Categorías por compañía"></svg></div>
+  <div class="card c2 w6"><div class="tbar"><h3>¿Aplica a Asuntos Públicos Norte?${help("Fichas categorizadas según si aplican a Asuntos Públicos Norte. Clic para abrir el apartado.")}</h3></div><p class="concl" id="rgApC"></p>${legH(adm?[["Aplica","var(--s2)"],["No aplica",RED],["Sin definir",GRAY]]:[["Aplica","var(--s2)"],["Otros habilitados",GRAY]])}<svg id="gRgAp" role="img" aria-label="Aplica a AP Norte por compañía"></svg></div>
+  <div class="card c2 w6"><div class="tbar"><h3>Avance de cumplimiento${help("Compromisos en seguimiento según su avance (promedio de sus verificadores).")}</h3></div><p class="concl" id="rgSgC"></p>${legH([["Cumplido","var(--s2)"],["En avance","var(--s4)"],["Sin avance",GRAY]])}<svg id="gRgSg" role="img" aria-label="Avance por compañía"></svg><div class="tbl" id="rgSgT" style="border:0"></div></div>
+  <div class="card c2 w6"><div class="tbar"><h3>RCA aprobadas por año${help("Número de RCA por año de aprobación y compañía. Pasa el cursor para ver los proyectos y el monto de inversión.")}</h3></div><p class="concl" id="rgYrC"></p>${E0?"":legH(temaKeys)}<svg id="gRgYr" role="img" aria-label="RCA por año"></svg></div>
+  <div class="card c2 w6"><div class="tbar"><h3>Tipo de contenido de las fichas${help("Distribución de las fichas según su tipo: obligaciones, observaciones ciudadanas, evaluación de impactos y otros considerandos.")}</h3></div>${legH(tipos.map((t,k)=>[t.replace(/\s*\(.*\)/,""),COLS[k%6]]))}<svg id="gRgTipo" role="img" aria-label="Tipo de fichas por compañía"></svg></div>
+  <div class="card c2 w12"><div class="tbar"><h3>Caletas con compromisos RCA y su actividad${help("Cruza las caletas de la base de desembarque con las fichas de RCA que las mencionan en su texto. Toneladas, pescadores y mujeres responden a los filtros y al período del panel izquierdo; las menciones, a la compañía elegida. Clic en un número de fichas para abrirlas.")}</h3></div><p class="concl" id="rgCalC"></p><div class="tbl" id="rgCal"></div><p class="cs fnote" id="rgCalO"></p></div>
+  </div></div>`;
+  box.querySelectorAll(".c2emp [data-emp], .rgk tr[data-emp]").forEach(b=>b.onclick=()=>{RC.f.emp=b.dataset.emp;RC.page=0;rcSyncSel();renderRca()});
+  /* Temas */
+  const tIdx=[...Array(nT).keys()].map(t=>({t,v:sel.map(o=>o.tags[t])})).filter(x=>x.v.some(Boolean)).sort((a,b)=>b.v.reduce((s,v)=>s+v,0)-a.v.reduce((s,v)=>s+v,0));
+  sbars("gRgTema",tIdx.map(x=>({label:B.tags[x.t],vals:x.v,t:x.t})),temaKeys,{W:1000,labW:230,click:r=>goFichas({tema:String(r.t),txt:obOnly?"0":""}),tip:()=>"Clic para abrir estas fichas"});
+  if(tIdx.length){const x=tIdx[0];setC("rgTemaC",`El tema más frecuente es <b>${esc(B.tags[x.t])}</b> (${t0(x.v.reduce((s,v)=>s+v,0))} ${obOnly?"obligaciones":"fichas"})`+(!E0&&sel.length>1?` · ${sel.map((o,k)=>`${esc(short(o.e))}: ${esc(B.tags[[...Array(nT).keys()].sort((a,b)=>o.tags[b]-o.tags[a])[0]])}`).join(" · ")}`:""))}
+  /* Revisión */
+  if(adm){sbars("gRgRev",sel.map(o=>({label:short(o.e),vals:[o.rev,o.cat-o.hab,o.hab,o.desc]})),[["Sin revisar",GRAY,"#3b3a37"],["Categorizada","var(--s4)"],["Visible para usuarios","var(--s2)"],["Descartada","#e2ded6","#5c5a55"]],{pct:true,W:520,labW:110,end:(r,t)=>t0(t)});
+    const tr=sel.reduce((s,o)=>s+o.f,0),rv=sel.reduce((s,o)=>s+o.cat+o.desc,0);setC("rgRevC",`Revisado el <b>${t0(tr?rv/tr*100:0)} %</b> de las fichas (${t0(rv)} de ${t0(tr)}) · ${t0(sum("hab"))} visibles para usuarios`)}
+  /* Categorías */
+  sbars("gRgCat",sel.map(o=>({label:short(o.e),vals:cats.map((_,k)=>o.cats[k]||0)})),cats.map((c,k)=>[c,COLS[k%6]]),{W:520,labW:110,click:(r,k)=>goFichas({emp:sel[sel.findIndex(o=>short(o.e)===r.label)].e,cat:String(k),vista:adm?"categorizadas":""})});
+  {const tc=cats.map((_,k)=>sel.reduce((s,o)=>s+(o.cats[k]||0),0)),mk2=tc.indexOf(Math.max(...tc)),T=tc.reduce((a,b)=>a+b,0);setC("rgCatC",T?`<b>${t0(T)}</b> ${adm?"fichas categorizadas":"compromisos habilitados"}; la categoría más usada es <b>${esc(cats[mk2])}</b> (${t0(tc[mk2]/T*100)} %)`:"Aún no hay fichas categorizadas.")}
+  /* Aplica */
+  sbars("gRgAp",sel.map(o=>({label:short(o.e),vals:adm?[o.ap,o.noap,o.apsin]:[o.ap,Math.max(0,o.hab-o.ap)]})),adm?[["Aplica","var(--s2)"],["No aplica",RED],["Sin definir",GRAY,"#3b3a37"]]:[["Aplica","var(--s2)"],["Otros habilitados",GRAY,"#3b3a37"]],{W:520,labW:110,click:(r,k)=>{if(k===0)rcGoAp("aplican");else if(k===1&&adm)rcGoAp("noaplican");else if(adm)rcGoAp("apsin")}});
+  {const a=sum("ap"),T=adm?sel.reduce((s,o)=>s+o.ap+o.noap+o.apsin,0):sum("hab");setC("rgApC",T?`<b>${t0(a)}</b> de ${t0(T)} ${adm?"fichas categorizadas":"compromisos habilitados"} aplican a AP Norte (${t0(a/T*100)} %)`:"")}
+  /* Seguimiento */
+  sbars("gRgSg",sel.filter(o=>o.sg.n).map(o=>({label:short(o.e),vals:[o.sg.ok,o.sg.mid,o.sg.zero],o})),[["Cumplido","var(--s2)"],["En avance","var(--s4)"],["Sin avance",GRAY,"#3b3a37"]],{W:520,labW:110,end:r=>`${Math.round(r.o.sg.sum/r.o.sg.n)} % prom.`,click:()=>{RC.modo="seguimiento";renderRcaRes()}});
+  {const n=sel.reduce((s,o)=>s+o.sg.n,0);const temas=new Map();sel.forEach(o=>o.tema.forEach((x,t)=>{const y=temas.get(t)||{n:0,s:0,by:new Map()};y.n+=x.n;y.s+=x.s;y.by.set(o.e,x);temas.set(t,y)}));
+    setC("rgSgC",n?`<b>${t0(n)}</b> compromisos en seguimiento con avance promedio de <b>${Math.round(sel.reduce((s,o)=>s+o.sg.sum,0)/n)} %</b> · ${t0(sel.reduce((s,o)=>s+o.sg.ok,0))} cumplidos`:"Aún no hay compromisos en seguimiento (se activan al categorizar las fichas).");
+    const tl=[...temas].sort((a,b)=>b[1].n-a[1].n).slice(0,10);$("#rgSgT").innerHTML=tl.length?`<table class="rgh"><thead><tr><th>Tema</th>${sel.map(o=>`<th class="r">${esc(short(o.e))}</th>`).join("")}</tr></thead><tbody>${tl.map(([t,y])=>`<tr><td>${esc(B.tags[t])}</td>${sel.map(o=>{const x=y.by.get(o.e);if(!x)return`<td class="r cs">·</td>`;const p=Math.round(x.s/x.n);return`<td class="r" style="background:rgba(27,175,122,${(.08+.8*p/100).toFixed(2)});color:${p>60?"#fff":"inherit"}" title="${x.n} compromisos">${p} %</td>`}).join("")}</tr>`).join("")}</tbody></table>`:""}
+  /* Años */
+  {const svg=$("#gRgYr"),W=vw("gRgYr",520),H=220,L=34,Rr=W-8,T=16,B0=H-24;const ys=new Set();sel.forEach(o=>o.years.forEach((_,y)=>ys.add(+y)));const yl=[...ys].sort((a,b)=>a-b);clear(svg,W,H);
+    if(!yl.length){emptyMsg(svg,W,H)}else{const y0=yl[0],y1=yl[yl.length-1],all=[];for(let y=y0;y<=y1;y++)all.push(y);const tot=all.map(y=>sel.reduce((s,o)=>s+((o.years.get(y)||{}).n||0),0)),mx=niceMax(Math.max(1,...tot)),sc=v=>B0-(v/mx)*(B0-T);
+      [0,.5,1].forEach(k=>{const v=mx*k;E("line",{x1:L,x2:Rr,y1:sc(v),y2:sc(v),class:"gl"},svg);E("text",{x:L-5,y:sc(v)+4,"text-anchor":"end"},svg).textContent=t0(v)});const bw=(Rr-L)/all.length;
+      all.forEach((y,j)=>{const x=L+j*bw+bw*.15,w=Math.max(2,bw*.7);let acc=0;sel.forEach(o=>{const v=(o.years.get(y)||{}).n||0;if(!v)return;E("rect",{x,y:sc(acc+v),width:w,height:Math.max(.5,sc(acc)-sc(acc+v)-1),fill:CC(o.e)},svg);acc+=v});
+        if(tot[j]&&bw>14)E("text",{x:x+w/2,y:sc(tot[j])-4,"text-anchor":"middle",class:"val",style:"font-size:10px"},svg).textContent=tot[j];
+        if(j%Math.ceil(all.length/(W<480?6:12))===0||j===all.length-1)E("text",{x:x+w/2,y:B0+15,"text-anchor":"middle",style:"font-size:10.5px"},svg).textContent=String(y);
+        if(tot[j])hover(E("rect",{x:L+j*bw,y:T,width:bw,height:B0-T,fill:"transparent"},svg),()=>`<b>${y}</b> · ${tot[j]} RCA<br>`+sel.filter(o=>o.years.get(y)).map(o=>{const z=o.years.get(y);return`<b style="color:${CC(o.e)}">${esc(short(o.e))}</b>: ${z.n} RCA${z.inv?` · US$ ${t0(z.inv)} MM`:""}<br><span class="cs">${z.l.slice(0,4).map(esc).join("<br>")}${z.l.length>4?"<br>…":""}</span>`}).join("<br>"))});
+      E("line",{x1:L,x2:Rr,y1:B0,y2:B0,stroke:"var(--ink-2)"},svg);const pk=all[tot.indexOf(Math.max(...tot))];setC("rgYrC",`${t0(tot.reduce((a,b)=>a+b,0))} RCA entre ${y0} y ${y1}; el año con más aprobaciones fue <b>${pk}</b> (${Math.max(...tot)})`)}}
+  /* Tipos */
+  sbars("gRgTipo",sel.map(o=>({label:short(o.e),vals:o.tipos})),tipos.map((t,k)=>[t.replace(/\s*\(.*\)/,""),COLS[k%6]]),{pct:true,W:520,labW:110,end:(r,t)=>t0(t),click:(r,k)=>goFichas({emp:sel[sel.findIndex(o=>short(o.e)===r.label)].e,txt:String(k)})});
+  rgCaletas(sel,E0)}
+function rgCaletas(sel,E0){const B=RC.base,adm=S.perm.admin,el=$("#rgCal");const R=S.R;if(!R){el.innerHTML=`<p class="cs" style="margin:0">Carga la base de desembarque para ver este cruce.</p>`;return}
+  const m=R.m,A=LAST&&LAST.A,nt=ntext(),mi=muj(),emps=new Set(sel.map(o=>o.e));const vis=r=>(adm||!RC.hidden.has(r.id))&&emps.has(r.empresa);
+  const match=re=>{const out=[];B.f.forEach((f,i)=>{const r=B.rcas[f[0]];if(!vis(r))return;const s=RC.st.get(f[1]);if(s&&s.c===RC_DESC)return;if(re.test(nt[i]))out.push(i)});return out};
+  const rows=m.C.map((c,ci)=>{const alts=calAlts(c[0]),ids=match(reOf(alts));const ob=ids.filter(i=>B.f[i][8]===0).length;
+    const ap=ids.filter(i=>{const s=RC.st.get(B.f[i][1]);return s&&s.ap===true&&s.c!=null&&s.c!==RC_DESC&&(adm||rcVisible(s))}).length;
+    const gs=new Set(ids.map(i=>B.f[i][9]).filter(g=>g!=null&&rcSgTracked(g)));const av=gs.size?Math.round([...gs].reduce((s,g)=>s+rcSgAv(rcSgItems(g)),0)/gs.size):null;
+    const rcas=new Set(ids.map(i=>B.f[i][0])).size;return{ci,c,alts,n:ids.length,ob,ap,av,gs:gs.size,rcas,t:A?A.cal[ci]:0,p:A?A.calFis[ci].size:0,mj:A?A.calMuj[ci].size:0}}).sort((a,b)=>b.n-a.n||b.t-a.t);
+  const mxN=Math.max(1,...rows.map(r=>r.n)),mxT=Math.max(1,...rows.map(r=>r.t));
+  el.innerHTML=`<table class="rgc"><thead><tr><th>Caleta</th><th>Compañía (desembarque)</th><th class="r">Toneladas</th><th class="r">Pescadores</th><th class="r">Mujeres</th><th class="r">Fichas RCA que la mencionan</th><th class="r">Obligaciones</th><th class="r">Aplican AP Norte</th><th class="r">Avance</th></tr></thead><tbody>${rows.map(r=>`<tr><td><b>${esc(r.c[0])}</b><div class="cs">${esc(r.c[1])}</div></td><td><i class="sw" style="background:${CC(r.c[4])}"></i>${esc(r.c[4])}</td>
+    <td class="r"><span class="mbar"><i style="width:${(r.t/mxT*100).toFixed(1)}%;background:${CC(r.c[4])}"></i></span>${t0(r.t)}</td><td class="r">${t0(r.p)}</td><td class="r">${t0(r.mj)}${r.p?` <span class="cs">(${t0(r.mj/r.p*100)} %)</span>`:""}</td>
+    <td class="r">${r.n?`<button type="button" class="lnk rgq" data-q="${esc(r.alts[0])}" title="Abrir las fichas que mencionan ${esc(r.c[0])}"><span class="mbar"><i style="width:${(r.n/mxN*100).toFixed(1)}%"></i></span><b>${t0(r.n)}</b></button><div class="cs">${r.rcas} RCA</div>`:`<span class="cs">0</span>`}</td><td class="r">${t0(r.ob)}</td><td class="r">${t0(r.ap)}</td><td class="r">${r.av==null?`<span class="cs">—</span>`:`${rcSgBar(r.av)} ${r.av} %<div class="cs">${r.gs} compromisos</div>`}</td></tr>`).join("")}</tbody></table>`;
+  el.querySelectorAll(".rgq").forEach(b=>b.onclick=()=>goFichas({vista:adm?"":"buscar"},'"'+b.dataset.q+'"'));
+  const wc=rows.filter(r=>r.n>0),sinC=rows.filter(r=>r.n===0&&r.t>0);
+  setC("rgCalC",wc.length?`<b>${wc.length}</b> de ${rows.length} caletas de la base aparecen en las RCA${E0?" de "+esc(E0):""}; <b>${esc(wc[0].c[0])}</b> es la más mencionada (${t0(wc[0].n)} fichas, ${t0(wc[0].ob)} obligaciones)`+(sinC.length?` · ${sinC.length} caletas con desembarque no aparecen en estas RCA`:""):"Ninguna caleta de la base de desembarque aparece en estas RCA.");
+  const known=new Set(m.C.map(c=>norm(c[0])));const ot=OTRAS.filter(([n])=>!known.has(norm(n))).map(([n,a])=>({n,k:match(reOf([a])).length})).filter(x=>x.k>0).sort((a,b)=>b.k-a.k);
+  $("#rgCalO").innerHTML=ot.length?"Otras caletas mencionadas en estas RCA sin desembarque en la base: "+ot.map(x=>`<button type="button" class="lnk rgq2" data-q="${esc(x.n)}">${esc(x.n)} (${x.k})</button>`).join(" · "):"";
+  $("#rgCalO").querySelectorAll(".rgq2").forEach(b=>b.onclick=()=>goFichas({vista:adm?"":"buscar"},'"'+b.dataset.q+'"'))}
+})();
+
+/*C2E*/</script>
 
 </body>
 </html>
