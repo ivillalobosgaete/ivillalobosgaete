@@ -826,6 +826,7 @@ section[data-pane]{gap:16px!important}
 @media (max-width:760px){.tmeta .tsub{display:none}.rca-kpis .rk{flex:1 1 30%}.rca-kpis .rk.wide{flex-basis:100%}}
 
 .cmx{position:absolute;top:10px;right:48px;z-index:4;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:5px 10px;font-weight:700;color:var(--ink-2);cursor:pointer}
+.dgrp{flex-wrap:wrap;align-items:flex-end}.dfield{display:inline-flex;flex-direction:column;gap:2px}.dfield input{border:1px solid var(--line);border-radius:8px;padding:4px 8px;background:var(--surface);font:inherit;font-size:.85rem;color:var(--ink)}.pmhint{flex-basis:100%;font-size:.74rem}
 /*C2S*//* ===== Gráficos 2.0 ===== */
 .concl{margin:4px 0 8px;font-size:.86rem;line-height:1.45;color:var(--ink);font-weight:500;background:var(--brand-08,#fff6ec);border-left:3px solid var(--brand,#ff8000);border-radius:0 8px 8px 0;padding:7px 10px}
 .concl::before{content:"Interpretación";display:block;font-size:.64rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent,#a84a00);margin-bottom:2px}
@@ -1038,8 +1039,9 @@ tr.vr-now td{background:#fff5f4}
   </nav>
   <div class="period gut" id="period">
     <div class="pgroup"><span class="plabel">Años</span><div class="pgroup" id="pYr"></div></div>
-    <div class="pgroup"><span class="plabel">Meses</span><div class="pgroup" id="pMo"></div></div>
-    <div class="pgroup"><span class="plabel">Desde</span><select id="ymFrom" aria-label="Desde mes y año"></select><span class="plabel">Hasta</span><select id="ymTo" aria-label="Hasta mes y año"></select></div>
+    <div class="pgroup"><span class="plabel">Meses</span><div class="pgroup" id="pMo"></div><span class="cs pmhint">Un mes solo, sin elegir año, compara ese mes en todos los años.</span></div>
+    <div class="pgroup"><span class="plabel">Desde el mes</span><select id="ymFrom" aria-label="Desde mes y año"></select><span class="plabel">Hasta el mes</span><select id="ymTo" aria-label="Hasta mes y año"></select></div>
+    <div class="pgroup dgrp"><span class="plabel">Fechas</span><span class="dfield"><label for="dFrom" class="cs">Desde</label><input type="date" lang="es-CL" id="dFrom" aria-label="Desde la fecha"></span><span class="dfield"><label for="dTo" class="cs">Hasta</label><input type="date" lang="es-CL" id="dTo" aria-label="Hasta la fecha"></span><span class="dfield"><label for="dOne" class="cs">o un día</label><input type="date" lang="es-CL" id="dOne" aria-label="Un día puntual"></span><button type="button" class="vbtn" id="dClr" hidden>Quitar fechas</button></div>
     <div class="pgroup"><span class="plabel">Medida</span><div class="seg" id="meas" role="group" aria-label="Medida"><button type="button" data-m="total" aria-pressed="true">Toneladas totales</button><button type="button" data-m="mes" aria-pressed="false">Promedio mensual</button><button type="button" data-m="pesc" aria-pressed="false">Promedio por pescador</button></div><span class="cs" id="measNote"></span></div>
     <div class="pgroup"><span class="plabel">Vistas</span><select id="vSel" aria-label="Vistas guardadas"></select><button type="button" class="vbtn" id="vSave">Guardar vista</button><button type="button" class="vbtn" id="vDel" hidden>Borrar</button></div>
     <div class="quick"><button type="button" data-q="lastfull">Último año completo</button><button type="button" data-q="ytd">Año en curso</button><button type="button" data-q="l12">Últimos 12 meses</button><button type="button" data-q="all">Todo</button></div>
@@ -1558,15 +1560,21 @@ function buildPeriod(){
   a.innerHTML=`<option value="">Inicio</option>`+h;b.innerHTML=`<option value="">Fin</option>`+h;a.value=S.from??"";b.value=S.to??"";
   a.onchange=()=>{S.from=a.value===""?null:+a.value;if(S.to!==null&&S.from!==null&&S.from>S.to){S.to=S.from;b.value=S.to}S.page=0;render()};
   b.onchange=()=>{S.to=b.value===""?null:+b.value;if(S.to!==null&&S.from!==null&&S.from>S.to){S.from=S.to;a.value=S.from}S.page=0;render()};
+  const df=$("#dFrom"),dt=$("#dTo"),d1=$("#dOne");if(df){const mn=dIso(R.minD),mx=dIso(R.maxD);[df,dt,d1].forEach(x=>{x.min=mn;x.max=mx});
+    df.onchange=()=>{S.dFrom=dIdx(df.value);if(S.dFrom!=null&&S.dTo!=null&&S.dFrom>S.dTo){S.dTo=S.dFrom}d1.value="";dSync();S.page=0;render()};
+    dt.onchange=()=>{S.dTo=dIdx(dt.value);if(S.dFrom!=null&&S.dTo!=null&&S.dFrom>S.dTo){S.dFrom=S.dTo}d1.value="";dSync();S.page=0;render()};
+    d1.onchange=()=>{const v=dIdx(d1.value);S.dFrom=S.dTo=v;dSync();S.page=0;render()};
+    $("#dClr").onclick=()=>{S.dFrom=S.dTo=null;d1.value="";dSync();S.page=0;render()};dSync()}
 }
+function dSync(){const df=$("#dFrom");if(!df)return;df.value=dIso(S.dFrom);$("#dTo").value=dIso(S.dTo);const one=S.dFrom!=null&&S.dFrom===S.dTo;$("#dOne").value=one?dIso(S.dFrom):"";$("#dClr").hidden=S.dFrom==null&&S.dTo==null}
 document.querySelectorAll(".quick button").forEach(btn=>btn.onclick=()=>{
-  const R=S.R,q=btn.dataset.q;S.f.yr.clear();S.f.mo.clear();S.from=S.to=null;
+  const R=S.R,q=btn.dataset.q;S.f.yr.clear();S.f.mo.clear();S.from=S.to=null;S.dFrom=S.dTo=null;dSync();
   const lastY=Math.floor(R.lastYM/12),fullY=R.lastYM%12===11?lastY:lastY-1;
   if(q==="lastfull"&&fullY>=0)S.f.yr.add(fullY);if(q==="ytd")S.f.yr.add(lastY);
   if(q==="l12"){S.from=Math.max(R.firstYM,R.lastYM-11);S.to=R.lastYM}
   $("#ymFrom").value=S.from??"";$("#ymTo").value=S.to??"";S.page=0;render()});
 $("#clearAll").onclick=clearAll;
-function clearAll(){Object.values(S.f).forEach(s=>s.clear());S.from=S.to=null;$("#ymFrom").value="";$("#ymTo").value="";S.page=0;render()}
+function clearAll(){Object.values(S.f).forEach(s=>s.clear());S.from=S.to=null;S.dFrom=S.dTo=null;dSync();$("#ymFrom").value="";$("#ymTo").value="";S.page=0;render()}
 function toggle(fid,v,add){const s=S.f[fid];if(add){s.has(v)?s.delete(v):s.add(v)}else if(s.size===1&&s.has(v))s.clear();else{s.clear();s.add(v)}S.page=0;render()}
 $("#btnFilters").onclick=()=>{$("#aside").classList.add("open");$("#closeAside").hidden=false;$("#backdrop").hidden=false};
 $("#fab").onclick=()=>$("#btnFilters").click();$("#backdrop").onclick=()=>$("#closeAside").click();
@@ -1584,8 +1592,13 @@ $("#tabs").addEventListener("click",ev=>{const b=ev.target.closest("button[data-
 
 /* ================= Cálculo ================= */
 function timeFails(R,i,shift){const y=R.yr[i]+shift,ym=R.ym[i]+shift*12,fy=S.f.yr,fm=S.f.mo;
-  if(fy.size&&!fy.has(y))return true;if(fm.size&&!fm.has(R.mo[i]))return true;if(S.from!==null&&ym<S.from)return true;if(S.to!==null&&ym>S.to)return true;return false}
-function hasTime(){return S.f.yr.size>0||S.from!==null||S.to!==null}
+  if(fy.size&&!fy.has(y))return true;if(fm.size&&!fm.has(R.mo[i]))return true;if(S.from!==null&&ym<S.from)return true;if(S.to!==null&&ym>S.to)return true;
+  if(S.dFrom!=null||S.dTo!=null){const dt=new Date(BASE+R.d[i]*DAY);dt.setUTCFullYear(dt.getUTCFullYear()+shift);const dd=Math.round((dt.getTime()-BASE)/DAY);if(S.dFrom!=null&&dd<S.dFrom)return true;if(S.dTo!=null&&dd>S.dTo)return true}return false}
+function hasTime(){return S.f.yr.size>0||S.from!==null||S.to!==null||S.dFrom!=null||S.dTo!=null}
+function ymDayOut(ym){if(S.dFrom==null&&S.dTo==null)return false;const R=S.R,y=R.y0+Math.floor(ym/12),m=ym%12;const a=Math.round((Date.UTC(y,m,1)-BASE)/DAY),b=Math.round((Date.UTC(y,m+1,0)-BASE)/DAY);return(S.dFrom!=null&&b<S.dFrom)||(S.dTo!=null&&a>S.dTo)}
+const dIdx=s=>{if(!s)return null;const t=Date.parse(s+"T00:00:00Z");return isFinite(t)?Math.round((t-BASE)/DAY):null};
+const dIso=d=>d==null?"":new Date(BASE+d*DAY).toISOString().slice(0,10);
+const dTxt=d=>{const s=dIso(d);return s?s.slice(8,10)+"-"+s.slice(5,7)+"-"+s.slice(0,4):""};
 function compute(){
   const R=S.R,n=R.n,F=R.F,nf=F.length;
   const act=F.map(f=>S.f[f.id].size?S.f[f.id]:null);const ti=F.findIndex(f=>f.id==="yr"),mi=F.findIndex(f=>f.id==="mo");
@@ -1593,7 +1606,7 @@ function compute(){
   const doPrev=hasTime();
   for(let i=0;i<n;i++){
     let fails=0,which=-1,dimFail=false;
-    if((S.from!==null&&R.ym[i]<S.from)||(S.to!==null&&R.ym[i]>S.to))fails=2;
+    if((S.from!==null&&R.ym[i]<S.from)||(S.to!==null&&R.ym[i]>S.to)||(S.dFrom!=null&&R.d[i]<S.dFrom)||(S.dTo!=null&&R.d[i]>S.dTo))fails=2;
     else for(let j=0;j<nf;j++){const a=act[j];if(a&&!a.has(F[j].arr[i])){fails++;which=j;if(j!==ti&&j!==mi)dimFail=true;if(fails>1)break}}
     const q=R.q[i];
     if(fails===0){pass[i]=1;for(let j=0;j<nf;j++)optT[j][F[j].arr[i]]+=q}else if(fails===1)optT[which][F[which].arr[i]]+=q;
@@ -1670,7 +1683,7 @@ function renderInd(d){
 }
 /* ---------- Mapa de calor: actividad por caleta y mes ---------- */
 const HEAT=["#cde2fb","#86b6ef","#3987e5","#1c5cab","#0d366b"];
-function monthYears(m){const R=S.R;let n=0;for(let y=0;y<=R.y1-R.y0;y++){const ym=y*12+m;if(ym<R.firstYM||ym>R.lastYM)continue;if(S.f.yr.size&&!S.f.yr.has(y))continue;if(S.f.mo.size&&!S.f.mo.has(m))continue;if(S.from!==null&&ym<S.from)continue;if(S.to!==null&&ym>S.to)continue;n++}return n}
+function monthYears(m){const R=S.R;let n=0;for(let y=0;y<=R.y1-R.y0;y++){const ym=y*12+m;if(ym<R.firstYM||ym>R.lastYM)continue;if(S.f.yr.size&&!S.f.yr.has(y))continue;if(S.f.mo.size&&!S.f.mo.has(m))continue;if(S.from!==null&&ym<S.from)continue;if(S.to!==null&&ym>S.to)continue;if(ymDayOut(ym))continue;n++}return n}
 function calHeat(A){
   const R=S.R,m=R.m,svg=$("#gCalHeat");if(!svg)return;const pass=LAST.pass,ms=S.measure,nC=m.C.length;
   const T=new Float64Array(nC*12),F=Array.from({length:nC*12},()=>null);
@@ -1714,7 +1727,7 @@ let LAST=null;
 function render(slicersOnly){
   const {pass,optT,prev}=compute();renderSlicers(optT);if(slicersOnly&&LAST)return;
   const A=aggregate(pass,prev);LAST={pass,A,prev};renderChips();renderPane();
-  const nAct=Object.values(S.f).reduce((a,s)=>a+s.size,0)+(S.from!==null)+(S.to!==null);$("#btnFilters").textContent=nAct?`Filtros (${nAct})`:"Filtros";$("#fabT").textContent=nAct?`Filtros (${nAct})`:"Filtros";
+  const nAct=Object.values(S.f).reduce((a,s)=>a+s.size,0)+(S.from!==null)+(S.to!==null)+(S.dFrom!=null)+(S.dTo!=null&&S.dTo!==S.dFrom);$("#btnFilters").textContent=nAct?`Filtros (${nAct})`:"Filtros";$("#fabT").textContent=nAct?`Filtros (${nAct})`:"Filtros";
 }
 function renderPane(){const {pass,A}=LAST;
   if(S.tab==="resumen"){renderKpis(A);renderClaves(A);renderInfo(A);renderFicha(pass);chartMes(A);chartAnio(A);chartComuna(A);
@@ -1740,12 +1753,15 @@ function renderSlicers(optT){
   });
 }
 function periodText(){const R=S.R,p=[];if(S.f.yr.size)p.push([...S.f.yr].sort().map(y=>R.y0+y).join(", "));if(S.f.mo.size)p.push([...S.f.mo].sort((a,b)=>a-b).map(m=>MES[m]).join(", "));
-  if(S.from!==null||S.to!==null)p.push(`${S.from!==null?ymLabel(S.from):"inicio"} a ${S.to!==null?ymLabel(S.to):"fin"}`);return p.join(" · ")}
+  if(S.from!==null||S.to!==null)p.push(`${S.from!==null?ymLabel(S.from):"inicio"} a ${S.to!==null?ymLabel(S.to):"fin"}`);
+  if(S.dFrom!=null&&S.dFrom===S.dTo)p.push("día "+dTxt(S.dFrom));else if(S.dFrom!=null||S.dTo!=null)p.push(`${S.dFrom!=null?dTxt(S.dFrom):"inicio"} al ${S.dTo!=null?dTxt(S.dTo):"fin"}`);return p.join(" · ")}
 function renderChips(){
   const R=S.R,box=$("#chips"),parts=[];
   R.F.forEach(f=>S.f[f.id].forEach(v=>parts.push({t:`${f.label}: ${f.opts[v]}`,fn:()=>{S.f[f.id].delete(v);render()}})));
   if(S.from!==null)parts.push({t:"Desde "+ymLabel(S.from),fn:()=>{S.from=null;$("#ymFrom").value="";render()}});
   if(S.to!==null)parts.push({t:"Hasta "+ymLabel(S.to),fn:()=>{S.to=null;$("#ymTo").value="";render()}});
+  if(S.dFrom!=null&&S.dFrom===S.dTo)parts.push({t:"Día "+dTxt(S.dFrom),fn:()=>{S.dFrom=S.dTo=null;dSync();render()}});
+  else{if(S.dFrom!=null)parts.push({t:"Desde el "+dTxt(S.dFrom),fn:()=>{S.dFrom=null;dSync();render()}});if(S.dTo!=null)parts.push({t:"Hasta el "+dTxt(S.dTo),fn:()=>{S.dTo=null;dSync();render()}})}
   box.innerHTML="";
   if(!parts.length){box.innerHTML="";box.hidden=true;return}
   box.hidden=(S.tab==="negociacion"||S.tab==="ia"||S.tab==="admin"||S.tab==="rca");
@@ -1851,7 +1867,7 @@ function yAxis(svg,L,R_,sc,mx,fmt){for(let k=0;k<=4;k++){const v=mx*k/4;E("line"
 
 /* ---------- Medida: totales o promedios ---------- */
 const MEAS={total:{lbl:"Toneladas totales",u:"t",short:"t"},mes:{lbl:"Promedio mensual",u:"t por mes",short:"t/mes"},pesc:{lbl:"Promedio por pescador",u:"t por pescador",short:"t/pesc."}};
-function monthsIn(y){const R=S.R;let n=0;for(let m=0;m<12;m++){const ym=y*12+m;if(ym<R.firstYM||ym>R.lastYM)continue;if(S.f.yr.size&&!S.f.yr.has(y))continue;if(S.f.mo.size&&!S.f.mo.has(m))continue;if(S.from!==null&&ym<S.from)continue;if(S.to!==null&&ym>S.to)continue;n++}return n}
+function monthsIn(y){const R=S.R;let n=0;for(let m=0;m<12;m++){const ym=y*12+m;if(ym<R.firstYM||ym>R.lastYM)continue;if(S.f.yr.size&&!S.f.yr.has(y))continue;if(S.f.mo.size&&!S.f.mo.has(m))continue;if(S.from!==null&&ym<S.from)continue;if(S.to!==null&&ym>S.to)continue;if(ymDayOut(ym))continue;n++}return n}
 function periodMonths(){const R=S.R;let n=0;for(let y=0;y<=R.y1-R.y0;y++)n+=monthsIn(y);return n}
 function V(t,fs,months){const m=S.measure;if(m==="mes")return months?t/months:0;if(m==="pesc")return fs&&fs.size?t/fs.size:0;return t}
 const usfx=()=>S.measure==="total"?"":" "+MEAS[S.measure].short;
@@ -2215,9 +2231,9 @@ const VW={list:[],loaded:false};
 async function vLoad(){VW.list=await ST.vistas();VW.loaded=true;vFill()}
 function vFill(){const s=$("#vSel");s.innerHTML=`<option value="">${VW.list.length?"Elegir vista…":"Sin vistas guardadas"}</option>`+VW.list.map((v,i)=>`<option value="${i}">${esc(v.nombre)}</option>`).join("");$("#vDel").hidden=true}
 function vSerialize(name){const R=S.R,f={};R.F.forEach(F=>{if(S.f[F.id].size)f[F.id]=[...S.f[F.id]].map(v=>F.opts[v])});const lab=i=>i==null?null:(R.y0+Math.floor(i/12))+"-"+(i%12+1);
-  return{nombre:name,tab:["admin","negociacion"].includes(S.tab)?"resumen":S.tab,medida:S.measure,f,desde:lab(S.from),hasta:lab(S.to),ts:Date.now()}}
+  return{nombre:name,tab:["admin","negociacion"].includes(S.tab)?"resumen":S.tab,medida:S.measure,f,desde:lab(S.from),hasta:lab(S.to),fdesde:dIso(S.dFrom)||null,fhasta:dIso(S.dTo)||null,ts:Date.now()}}
 function vApply(v){const R=S.R;R.F.forEach(F=>{S.f[F.id].clear();(v.f&&v.f[F.id]||[]).forEach(o=>{const k=F.opts.indexOf(o);if(k>=0)S.f[F.id].add(k)})});
-  const ix=s=>{if(!s)return null;const [y,mo]=s.split("-").map(Number);const i=(y-R.y0)*12+mo-1;return i>=R.firstYM&&i<=R.lastYM?i:null};S.from=ix(v.desde);S.to=ix(v.hasta);$("#ymFrom").value=S.from??"";$("#ymTo").value=S.to??"";
+  const ix=s=>{if(!s)return null;const [y,mo]=s.split("-").map(Number);const i=(y-R.y0)*12+mo-1;return i>=R.firstYM&&i<=R.lastYM?i:null};S.from=ix(v.desde);S.to=ix(v.hasta);$("#ymFrom").value=S.from??"";$("#ymTo").value=S.to??"";S.dFrom=dIdx(v.fdesde);S.dTo=dIdx(v.fhasta);dSync();
   if(v.medida&&v.medida!==S.measure){const mb=document.querySelector(`#meas button[data-m="${v.medida}"]`);if(mb)mb.click()}S.page=0;setTab(v.tab||"resumen");render()}
 $("#vSel").onchange=ev=>{const v=VW.list[+ev.target.value];$("#vDel").hidden=ev.target.value==="";if(v&&ev.target.value!==""){vApply(v);toast(`Vista "${v.nombre}" aplicada.`)}};
 $("#vSave").onclick=()=>{$("#vName").value=periodText()||"";$("#vErr").textContent="";$("#vModal").hidden=false;$("#vName").focus()};
@@ -3177,7 +3193,7 @@ function getD(){if(CUR.D)return CUR.D;const R=S.R,m=R.m,dp=dimPass(),nY=R.y1-R.y
   const D={zym:R.regs.map(()=>new Float64Array(nYM)),calYM:m.C.map(()=>new Float64Array(nYM)),calYd:m.C.map(()=>new Float64Array(nY)),yP:Array.from({length:nY},()=>new Set())};
   for(let i=0;i<R.n;i++){if(!dp[i])continue;const q=R.q[i]/1000;D.zym[R.reg[i]][R.ym[i]]+=q;D.calYM[R.c[i]][R.ym[i]]+=q;D.calYd[R.c[i]][R.yr[i]]+=q;D.yP[R.yr[i]].add(R.p[i])}
   return CUR.D=D}
-function moCount(){const R=S.R,c=new Array(12).fill(0);for(let y=0;y<=R.y1-R.y0;y++)for(let mo=0;mo<12;mo++){const ym=y*12+mo;if(ym<R.firstYM||ym>R.lastYM)continue;if(S.f.yr.size&&!S.f.yr.has(y))continue;if(S.f.mo.size&&!S.f.mo.has(mo))continue;if(S.from!==null&&ym<S.from)continue;if(S.to!==null&&ym>S.to)continue;c[mo]++}return c}
+function moCount(){const R=S.R,c=new Array(12).fill(0);for(let y=0;y<=R.y1-R.y0;y++)for(let mo=0;mo<12;mo++){const ym=y*12+mo;if(ym<R.firstYM||ym>R.lastYM)continue;if(S.f.yr.size&&!S.f.yr.has(y))continue;if(S.f.mo.size&&!S.f.mo.has(mo))continue;if(S.from!==null&&ym<S.from)continue;if(S.to!==null&&ym>S.to)continue;if(typeof ymDayOut==="function"&&ymDayOut(ym))continue;c[mo]++}return c}
 const lastFullYear=()=>{const R=S.R;return R.lastYM%12===11?R.y1-R.y0:R.y1-R.y0-1};
 const partialNote=()=>{const R=S.R;if(R.lastYM%12===11)return"";return`* ${R.y1}: año en curso, con datos hasta ${MESL[R.lastYM%12]}.`};
 function mesWindow(A){const R=S.R;let a=R.firstYM,b=R.lastYM;if(hasTime()||S.f.mo.size){let lo=Infinity,hi=-Infinity;A.ym.forEach((v,i)=>{if(v>0){if(i<lo)lo=i;if(i>hi)hi=i}});if(hi>=lo){a=Math.max(a,lo-(lo%12));b=Math.min(b,hi+(11-hi%12))}}return[a,b]}
