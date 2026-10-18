@@ -1201,8 +1201,8 @@ html.a11y-hc .cs,html.a11y-hc .muted,html.a11y-hc small{color:#000!important}htm
 /* Inicio: panel con foto de La Portada (Antofagasta) a la izquierda y formulario sobre fondo arena */
 #gate{display:grid!important;grid-template-columns:minmax(0,50%) minmax(0,1fr);grid-template-rows:1fr auto;padding:0!important;gap:0;place-items:stretch;background:radial-gradient(700px 420px at 100% 0%,rgba(255,196,140,.28),transparent 70%),linear-gradient(160deg,#fbf7f2 0%,#f3e8db 100%)!important;color:var(--ink)}
 #gate>.gwrap{display:contents}
-#gate .gside{grid-column:1;grid-row:1/3;position:relative;z-index:1;align-content:end;padding-top:calc(50vw*.618 - 40px)!important;gap:14px;padding:48px clamp(28px,4vw,56px) 44px;min-height:100vh;box-sizing:border-box;background:linear-gradient(180deg,rgba(11,51,71,0) 50%,rgba(11,51,71,.75) 82%,#0b3347 100%) center top/100% calc(50vw*.618 + 2px) no-repeat,url("/img/portada.jpg") center top/100% auto no-repeat,linear-gradient(180deg,#0b3347,#082636);color:#fff;text-shadow:0 1px 10px rgba(0,0,0,.5)}
-#gate .gside::after{content:"La Portada · Antofagasta";position:absolute;top:18px;left:clamp(28px,4vw,56px);font-size:.72rem;letter-spacing:.06em;color:rgba(255,255,255,.85);background:rgba(6,28,44,.35);padding:4px 9px;border-radius:99px;text-shadow:none;backdrop-filter:blur(4px)}
+#gate .gside{grid-column:1;grid-row:1/3;position:relative;z-index:1;align-content:end;padding-top:calc(50vw*.667 - 40px)!important;gap:14px;padding:48px clamp(28px,4vw,56px) 44px;min-height:100vh;box-sizing:border-box;background:linear-gradient(180deg,rgba(11,51,71,0) 50%,rgba(11,51,71,.75) 82%,#0b3347 100%) center top/100% calc(50vw*.667 + 2px) no-repeat,url("/img/costa.jpg") center top/100% auto no-repeat,linear-gradient(180deg,#0b3347,#082636);color:#fff;text-shadow:0 1px 10px rgba(0,0,0,.5)}
+#gate .gside::after{content:"Monumento Natural La Portada · Antofagasta";position:absolute;top:18px;left:clamp(28px,4vw,56px);font-size:.72rem;letter-spacing:.06em;color:rgba(255,255,255,.85);background:rgba(6,28,44,.35);padding:4px 9px;border-radius:99px;text-shadow:none;backdrop-filter:blur(4px)}
 #gate .gtitle{font-size:clamp(1.7rem,2.8vw,2.4rem)}
 #gate .gsub{font-size:1rem;color:#eef6fb}
 #gate .gbrand,#gate .grange{color:#ffe3c4}
@@ -1215,7 +1215,7 @@ html.a11y-hc .cs,html.a11y-hc .muted,html.a11y-hc small{color:#000!important}htm
 @keyframes gflyr2{from{transform:translateX(60vw)}to{transform:translateX(-60vw)}}
 @media (max-width:860px){
  #gate{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto 1fr auto}
- #gate .gside{grid-column:1;grid-row:1;min-height:0;padding-top:20px!important;height:clamp(220px,36vh,320px);padding:20px 20px 52px;align-content:end;background:linear-gradient(180deg,rgba(6,28,44,.05) 0%,rgba(6,28,44,0) 40%,rgba(8,22,32,.7) 100%),url("/img/portada-s.jpg") 45% 40%/cover no-repeat,#1d4a63}
+ #gate .gside{grid-column:1;grid-row:1;min-height:0;padding-top:20px!important;height:clamp(220px,36vh,320px);padding:20px 20px 52px;align-content:end;background:linear-gradient(180deg,rgba(6,28,44,.05) 0%,rgba(6,28,44,0) 40%,rgba(8,22,32,.7) 100%),url("/img/costa-s.jpg") 62% 50%/cover no-repeat,#1d4a63}
  #gate .gside::after{left:16px;top:14px}
  #gate .gcard{grid-column:1;grid-row:2;margin:-36px 0 18px;width:calc(100% - 32px);max-width:460px;padding:26px 22px}
  #gate .gfoot{grid-column:1;grid-row:4}
@@ -1227,6 +1227,8 @@ html.a11y-hc .cs,html.a11y-hc .muted,html.a11y-hc small{color:#000!important}htm
 .np-fesp .fx-cl{display:inline-flex;flex-wrap:wrap;gap:6px}.np-fesp{flex-wrap:wrap;align-items:center}.np-hid{font-size:.78rem;align-self:center}.np-al-act{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0}
 .ficha .fi-full{grid-column:1/-1;border-top:1px solid var(--line);padding-top:10px}.fi-esp{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px 14px}.fi-esp li{position:relative;padding:4px 0 6px;font-size:.9rem}.fi-esp li i{position:absolute;left:0;bottom:0;height:3px;border-radius:2px;background:var(--s1,#b85300);opacity:.7}.fi-rpa{margin:6px 0 8px}.fi-et{font-size:.86rem;width:100%}.fi-et th{text-align:left;white-space:nowrap}.fi-et tr.in td{color:var(--muted)}.fi-et td{vertical-align:middle}
 .cg{margin:2px 0 8px;padding:8px 12px;border-left:3px solid var(--brand,#b85300);background:color-mix(in srgb,var(--brand,#b85300) 6%,transparent);border-radius:0 8px 8px 0;font-size:.86rem;line-height:1.45}.cg p{margin:0}.cg-d summary{cursor:pointer;color:var(--brand,#b85300);font-weight:600;margin-top:4px;width:max-content;max-width:100%}.cg-d p{margin-top:4px}@media (min-width:1000px){.ficha{grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr))}}
+.emb-sec{display:grid;gap:14px}.em-stack{display:flex;height:18px;border-radius:9px;overflow:hidden;margin:8px 0;background:var(--track,#eee)}.em-stack i{display:block;min-width:2px}.em-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:6px 0}.em-kpi>div{border-left:4px solid var(--c);padding:4px 10px;display:grid;gap:2px}.em-kpi b{font-size:1.3rem}.em-kpi span{font-size:.84rem;line-height:1.3}.em-bars{display:grid;gap:6px;margin:8px 0}.em-r{display:grid;grid-template-columns:minmax(90px,30%) 1fr auto;gap:8px;align-items:center;font-size:.84rem}.em-l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}.em-t{display:block;height:16px;background:var(--track,#f1ebe4);border-radius:8px;overflow:hidden}.em-s{display:flex;height:100%;min-width:2px}.em-s i{display:block;height:100%}.em-v{white-space:nowrap;color:var(--ink-2);font-variant-numeric:tabular-nums}table.em-t{display:table;height:auto;background:none;border-radius:0;font-size:.86rem;width:100%}.em-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}.em-rev summary{cursor:pointer;font-weight:600;color:var(--brand,#b85300);margin:6px 0}.em-2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}@media (max-width:860px){.em-2{grid-template-columns:minmax(0,1fr)}}
+@media (min-width:861px) and (max-height:880px){#gate .gfeat{display:none}}@media (max-width:860px){#gate .gside::after{content:"La Portada · Antofagasta"}}
 /*C2E*/</style>
 </head>
 <body>
@@ -1237,18 +1239,18 @@ html.a11y-hc .cs,html.a11y-hc .muted,html.a11y-hc small{color:#000!important}htm
   <div class="gwrap">
     <div class="gside">
       <div class="gbrand"><svg class="glogo" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="23" fill="#fff"/><path d="M8 30c4-3 8-3 12 0s8 3 12 0 8-3 8-3" fill="none" stroke="#b85300" stroke-width="2.6" stroke-linecap="round"/><path d="M8 36c4-3 8-3 12 0s8 3 12 0 8-3 8-3" fill="none" stroke="#f2902a" stroke-width="2.2" stroke-linecap="round" opacity=".8"/><path d="M13 20c4-6 13-7 18-2l5-3v10l-5-3c-5 5-14 4-18-2z" fill="#3b1d00"/><circle cx="28" cy="19" r="1.3" fill="#fff"/></svg><span>Asuntos Públicos Norte</span></div>
-      <p class="gtitle">Relacionamiento con la pesca artesanal</p>
-      <p class="gsub">Desembarque, exigencias ambientales y negociación con las caletas de Antofagasta y Coquimbo, en un solo lugar.</p>
+      <p class="gtitle">Plataforma de Gestión Borde Costero</p>
+      <p class="gsub">Desembarque, embarcaciones, exigencias ambientales y relacionamiento con las caletas de Antofagasta y Coquimbo, en un solo lugar.</p>
       <ul class="gfeat">
         <li><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12c3.5-5 10-6 14-2.5L21 6v12l-4-3.5C13 18 6.5 17 3 12z"/></svg><span>Desembarque por caleta, especie y pescador</span></li>
         <li><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h7M9 16h7"/></svg><span>Compromisos de las RCA y su seguimiento</span></li>
-        <li><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8.5 7.5h7M8.5 12h1M14.5 12h1M8.5 16h1M14.5 16h1"/></svg><span>Cálculo de compensaciones para negociar</span></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8.5 7.5h7M8.5 12h1M14.5 12h1M8.5 16h1M14.5 16h1"/></svg><span>Pescadores, embarcaciones y registro Sernapesca</span></li>
       </ul>
       <p class="grange" id="gSideRange"></p>
     </div>
     <div class="gcard" id="gateCard">
       <span class="eyebrow">Asuntos Públicos Norte</span>
-      <h1>Relacionamiento con la pesca artesanal</h1>
+      <h1>Plataforma de Gestión Borde Costero</h1>
       <div class="spinner" aria-hidden="true"></div>
       <p style="text-align:center">Verificando tu acceso…</p>
     </div>
@@ -1676,7 +1678,7 @@ async function api(path,opts={}){
 }
 const ROLE_LBL={administrador:"Administrador",visualizador:"Visualizador"};
 let RANGE="";
-function gate(html){$("#gate").hidden=false;$("#app").hidden=true;$("#gateCard").innerHTML=`<span class="eyebrow">Asuntos Públicos Norte</span><h1>Relacionamiento con la pesca artesanal</h1>`+html;const sr=$("#gSideRange");if(sr)sr.innerHTML=RANGE?`<span class="gdot" aria-hidden="true"></span>${esc(RANGE)}`:""}
+function gate(html){$("#gate").hidden=false;$("#app").hidden=true;$("#gateCard").innerHTML=`<span class="eyebrow">Asuntos Públicos Norte</span><h1>Plataforma de Gestión Borde Costero</h1>`+html;const sr=$("#gSideRange");if(sr)sr.innerHTML=RANGE?`<span class="gdot" aria-hidden="true"></span>${esc(RANGE)}`:""}
 async function boot(){
   try{const e=await api("estado");if(e&&e.desde)RANGE=`Datos desde el ${e.desde} hasta el ${e.hasta}`}catch(e){}
   try{const me=await api("me");if(me&&me.user){S.acct=me.user;setPerm(me.user);await enter();return}}catch(e){}
@@ -1721,7 +1723,7 @@ function showRegister(){
     catch(e){err.textContent=e.message||"No se pudo crear la cuenta.";b.disabled=false;b.textContent="Crear cuenta"}});
 }
 async function enter(){
-  $("#gateCard").innerHTML=`<span class="eyebrow">Asuntos Públicos Norte</span><h1>Relacionamiento con la pesca artesanal</h1><div class="gload" role="status" aria-live="polite"><div class="gbar"><i></i></div><ol class="gsteps"><li class="on">Acceso verificado</li><li>Abriendo los datos cifrados</li><li>Preparando los gráficos</li></ol></div>`;gLoadSteps();
+  $("#gateCard").innerHTML=`<span class="eyebrow">Asuntos Públicos Norte</span><h1>Plataforma de Gestión Borde Costero</h1><div class="gload" role="status" aria-live="polite"><div class="gbar"><i></i></div><ol class="gsteps"><li class="on">Acceso verificado</li><li>Abriendo los datos cifrados</li><li>Preparando los gráficos</li></ol></div>`;gLoadSteps();
   const ok=await loadData();if(!ok)return;
   $("#gate").hidden=true;$("#app").hidden=false;setTab("resumen");
   const c=S.acct,first=(c.nombre||"").trim().split(/\s+/)[0];
@@ -4522,7 +4524,7 @@ async function rpaRun(){if(RPAS.busy||!RPAS.pend.size)return;RPAS.busy=true;
     catch(e){b.forEach(n=>RPAS.m.set(n,{error:true}))}
     b.forEach(n=>RPAS.stale.delete(n));if(RPAS.prog)RPAS.prog.done+=b.length;rpaRefresh()}}
   finally{RPAS.busy=false;RPAS.prog=null;rpaRefresh()}}
-function rpaRefresh(){clearTimeout(RPAS.t);RPAS.t=setTimeout(()=>{try{if(S.tab==="detalle")renderTable()}catch(e){}try{renderFicha()}catch(e){}try{if(S.tab==="negociacion"&&N.rpaAct)renderNeg();else rpaNegStatus()}catch(e){}},350)}
+function rpaRefresh(){clearTimeout(RPAS.t);RPAS.t=setTimeout(()=>{try{if(S.tab==="detalle")renderTable()}catch(e){}try{renderFicha()}catch(e){}try{if(S.tab==="negociacion"&&N.rpaAct)renderNeg();else rpaNegStatus()}catch(e){}try{if(S.tab==="pescadores")embRender()}catch(e){}},350)}
 /* Datos para la tabla de Detalle */
 window.rpaFill=r=>{const d=rpaGet(r.rpa);if(!d||d.error){r.rpaE=RPAS.ok?(d?"Sin dato":"…"):"";r.embN=d&&!d.error?0:"";return}
   const act=(d.emb||[]).filter(e=>rpaAct(e.estado));r.rpaE=d.estado||"Sin dato";r.embN=act.length};
@@ -4695,6 +4697,67 @@ function npClick(ev){const t=ev.target,tr=t.closest("tr[data-k]"),k=tr&&tr.datas
   if(t.id==="npFClr"){NP.f={y0:null,y1:null,mo:new Set([0,1,2,3,4,5,6,7,8,9,10,11]),d0:null,d1:null,noVeda:false,lug:"all",esp:new Set()};npRe();toast("Se limpiaron todos los filtros del cálculo.");return}
   if(t.id==="npAddLug"){const L=npLugFis(),R=S.R;[...L].sort((a,b)=>b[1]-a[1]).forEach(([p])=>{const k=String(R.m.P[p][0]);if(!NP.sel.includes(k))NP.sel.push(k)});npRe();toast(`Se agregaron los pescadores de ${npLugTxt()}.`);return}
   const bb=t.closest("[data-npb]");if(bb){NP.base=bb.dataset.npb;npRe();return}}
+/* ================= Embarcaciones (registro Sernapesca): elegibilidad, flota, caleta base y tipo ================= */
+const EMB={req:new Set(),open:false};
+const embNorm=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/\bcaleta\b/g,"").replace(/[^a-z0-9]+/g," ").trim();
+const embTipo=t=>{t=String(t||"");return/lancha/i.test(t)?"Lancha":/bote/i.test(t)?"Bote":t?"Otro":"Sin dato"};
+const EMB_TC={Lancha:"#1f5fa8",Bote:"#0f8a8a",Otro:"#b8860b","Sin dato":"#b9ada1"};
+const EMB_EL=[["ok","Habilitado: RPA activo y embarcación activa vigente","#16794a"],["venc","RPA activo, embarcación activa con matrícula vencida","#d76a00"],["sinemb","RPA activo sin embarcación propia activa","#b8860b"],["rpa","RPA no activo","#b4372f"],["na","Sin dato de Sernapesca","#b9ada1"]];
+function embClass(d){if(!d||d.error)return"na";if(!rpaAct(d.estado))return"rpa";const act=(d.emb||[]).filter(e=>rpaAct(e.estado));if(!act.length)return"sinemb";return act.some(e=>!rpaVenc(e.venc))?"ok":"venc"}
+function embCard(){let c=$("#embSec");if(c)return c;const pane=document.querySelector('[data-pane="pescadores"] .viz');if(!pane)return null;c=document.createElement("div");c.id="embSec";c.className="emb-sec";pane.after(c);c.addEventListener("toggle",ev=>{if(ev.target.classList&&ev.target.classList.contains("em-rev"))EMB.open=ev.target.open},true);
+  c.addEventListener("click",ev=>{const b=ev.target.closest("[data-embp]");if(b){const p=+b.dataset.embp;S.f.p.clear();S.f.p.add(p);const t=document.querySelector('#tabs [data-tab="resumen"]');if(t)t.click();else render();setTimeout(()=>{const f=$("#ficha");if(f)f.scrollIntoView({behavior:"smooth",block:"start"})},300);return}
+    if(ev.target.id==="embLoad"){embLoad(true);return}});return c}
+function embLoad(force){if(!RPAS.ok||!LAST)return;const R=S.R,A=LAST.A;const miss=[...A.fis].map(p=>String(R.m.P[p][0])).filter(n=>{const d=RPAS.m.get(n);return(!d||d.error)&&!RPAS.pend.has(n)});miss.forEach(n=>RPAS.m.delete(n));if(!miss.length)return;if(!force&&miss.length>600)return;RPAS.prog={done:0,tot:miss.length};rpaWant(miss,{stale:true});embRender()}
+const embBars=(rows,keys,opt={})=>{const mx=Math.max(1,...rows.map(r=>keys.reduce((s,k)=>s+(r.v[k[0]]||0),0)));return`<div class="em-bars" role="img" aria-label="${esc(opt.aria||"")}">${rows.map(r=>{const tot=keys.reduce((s,k)=>s+(r.v[k[0]]||0),0);return`<div class="em-r"><span class="em-l" title="${esc(r.label)}">${esc(r.label)}</span><span class="em-t"><span class="em-s" style="width:${(tot/mx*100).toFixed(2)}%">${keys.map(k=>r.v[k[0]]?`<i style="flex:${r.v[k[0]]};background:${k[2]}" title="${esc(k[1])}: ${t0(r.v[k[0]])}"></i>`:"").join("")}</span></span><span class="em-v">${r.txt!=null?r.txt:t0(tot)}</span></div>`}).join("")}</div>`};
+const embLeg=keys=>`<div class="hlegend">${keys.map(k=>`<span><i style="background:${k[2]}"></i>${esc(k[1])}</span>`).join("")}</div>`;
+function embRender(){const c=embCard();if(!c||S.tab!=="pescadores"||!LAST)return;const R=S.R,m=R.m,A=LAST.A,pass=LAST.pass;
+  if(!RPAS.ok){c.innerHTML=`<div class="card"><div class="tbar"><h3>Embarcaciones y registro Sernapesca</h3></div><p class="cs" style="margin:0">Los gráficos de elegibilidad, flota activa, caleta base y tipo de embarcación usan el registro de Sernapesca, que se consulta desde la versión web de la plataforma (Vercel). Ábrela ahí para verlos.</p></div>`;return}
+  const fis=[...A.fis];if(!fis.length){c.innerHTML="";return}
+  /* caleta principal de desembarque de cada pescador en el período */
+  const pc=new Map();for(let i=0;i<R.n;i++){if(!pass[i])continue;const p=R.p[i];let mm=pc.get(p);if(!mm){mm=new Map();pc.set(p,mm)}mm.set(R.c[i],(mm.get(R.c[i])||0)+R.q[i])}
+  const mainC=p=>{const mm=pc.get(p);if(!mm)return -1;let b=-1,bv=-1;mm.forEach((v,k)=>{if(v>bv){bv=v;b=k}});return b};
+  const tq=p=>A.pq.get(p)||0;let known=0;const cls=new Map(),cnt={},ton={};EMB_EL.forEach(([k])=>{cnt[k]=0;ton[k]=0});
+  fis.forEach(p=>{const d=rpaGet(R.m.P[p][0]);if(d&&!d.error)known++;const k=embClass(d);cls.set(p,k);cnt[k]++;ton[k]+=tq(p)});
+  const pend=RPAS.prog?`Consultando Sernapesca: ${t0(RPAS.prog.done)} de ${t0(RPAS.prog.tot)}…`:"";
+  const miss=fis.length-known;
+  const head=`<div class="card"><div class="tbar"><h3>Embarcaciones y registro Sernapesca</h3><div class="l">${miss&&!RPAS.prog?`<button type="button" class="btn small" id="embLoad">Consultar Sernapesca (${t0(miss)} pendiente${miss===1?"":"s"})</button>`:""}</div></div>
+    <p class="cs" style="margin:0" aria-live="polite">${t0(known)} de ${t0(fis.length)} pescadores con desembarque en el período tienen datos del registro de Sernapesca${pend?` · ${pend}`:""}. Responde a los filtros y al período del panel izquierdo.</p>${known<fis.length*.5&&!RPAS.prog?`<p class="warnbox" style="margin:8px 0 0">Con menos de la mitad de los pescadores consultados, los gráficos de abajo son parciales.</p>`:""}</div>`;
+  /* 1. Elegibilidad */
+  const rev=fis.filter(p=>cls.get(p)!=="ok"&&cls.get(p)!=="na").sort((a,b)=>tq(b)-tq(a));const totT=A.q||1,noOk=cnt.venc+cnt.sinemb+cnt.rpa;
+  const el=`<div class="card w12" id="embEl"><div class="tbar"><h3>Elegibilidad según registro Sernapesca</h3></div>
+    ${embLeg(EMB_EL)}<div class="em-stack" role="img" aria-label="Pescadores según su situación en el registro">${EMB_EL.map(([k,l,col])=>cnt[k]?`<i style="flex:${cnt[k]};background:${col}" title="${esc(l)}: ${t0(cnt[k])}"></i>`:"").join("")}</div>
+    <div class="em-kpi">${EMB_EL.map(([k,l,col])=>`<div style="--c:${col}"><b>${t0(cnt[k])}</b><span>${esc(l)}</span><small class="cs">${tt(ton[k])} t · ${t1(ton[k]/totT*100)} % del desembarque</small></div>`).join("")}</div>
+    <p class="concl">${known?`${t0(noOk)} de ${t0(known)} pescadores consultados (${t1(known?noOk/known*100:0)} %) tienen alguna observación en el registro y explican ${tt(ton.venc+ton.sinemb+ton.rpa)} t. ${cnt.rpa?`<b>${t0(cnt.rpa)} desembarcan con el RPA no activo</b>: revisar antes de incluirlos como beneficiarios. `:""}${cnt.sinemb?`${t0(cnt.sinemb)} no tienen embarcación propia activa; pueden ser tripulantes de otra embarcación o recolectores de orilla, lo que conviene verificar.`:""}`:"Aún no hay pescadores consultados."}</p>
+    ${rev.length?`<details class="em-rev" ${EMB.open?"open":""}><summary>Ver los ${t0(rev.length)} casos a revisar</summary><div class="tbl"><table class="em-t"><thead><tr><th>Pescador</th><th>RPA</th><th>Situación</th><th class="r">Toneladas en el período</th><th>Caleta donde más desembarca</th><th></th></tr></thead><tbody>${rev.slice(0,200).map(p=>{const k=cls.get(p),e=EMB_EL.find(x=>x[0]===k),mc=mainC(p);return`<tr><td>${esc(m.P[p][1])}</td><td>${esc(String(m.P[p][0]))}</td><td><span class="em-dot" style="background:${e[2]}"></span>${esc(e[1])}</td><td class="r">${tt(tq(p))}</td><td>${mc>=0?esc(m.C[mc][0]):"—"}</td><td><button type="button" class="lnk" data-embp="${p}">Ver ficha</button></td></tr>`}).join("")}</tbody></table></div>${rev.length>200?`<p class="cs">Se muestran los 200 con más toneladas.</p>`:""}</details>`:""}</div>`;
+  /* 2. Flota activa por caleta y 4. tipo de embarcación (embarcaciones únicas por matrícula, asignadas a la caleta donde más desembarca su dueño) */
+  const fl=new Map();const seen=new Set();
+  fis.forEach(p=>{const d=rpaGet(m.P[p][0]);if(!d||d.error)return;const c0=mainC(p);if(c0<0)return;let o=fl.get(c0);if(!o){o={act:0,ina:0,tipo:{},fis:new Set()};fl.set(c0,o)}
+    (d.emb||[]).forEach(e=>{const key=e.matricula||(m.P[p][0]+"|"+e.nombre);if(seen.has(key))return;seen.add(key);if(rpaAct(e.estado)){o.act++;const t=embTipo(e.tipo);o.tipo[t]=(o.tipo[t]||0)+1}else o.ina++})});
+  const fr=[...fl].map(([c0,o])=>({c0,o,t:A.cal[c0]||0})).filter(x=>x.o.act+x.o.ina>0).sort((a,b)=>(b.o.act+b.o.ina)-(a.o.act+a.o.ina)).slice(0,25);
+  const FK=[["act","Embarcaciones activas","#16794a"],["ina","No activas (caducadas, canceladas u otras)","#c9b8a6"]];
+  const totAct=fr.reduce((s,x)=>s+x.o.act,0),best=fr.filter(x=>x.o.act).sort((a,b)=>b.t/b.o.act-a.t/a.o.act);
+  const flota=`<div class="card w6" id="embFl"><div class="tbar"><h3>Flota activa por caleta</h3></div>${embLeg(FK)}
+    ${fr.length?embBars(fr.map(x=>({label:m.C[x.c0][0],v:{act:x.o.act,ina:x.o.ina},txt:`${t0(x.o.act)} act. · ${x.o.act?tt(x.t/x.o.act)+" t/emb.":"—"}`})),FK,{aria:"Embarcaciones activas y no activas por caleta"}):`<p class="cs">Sin embarcaciones en los pescadores consultados.</p>`}
+    <p class="concl">${best.length>1?`${t0(totAct)} embarcaciones activas en ${t0(fr.length)} caletas. La mayor carga por embarcación está en <b>${esc(m.C[best[0].c0][0])}</b> (${tt(best[0].t/best[0].o.act)} t por embarcación activa) y la menor en ${esc(m.C[best[best.length-1].c0][0])} (${tt(best[best.length-1].t/best[best.length-1].o.act)} t).`:""}</p></div>`;
+  const TK=["Lancha","Bote","Otro","Sin dato"].map(t=>[t,t,EMB_TC[t]]);
+  const tr=fr.filter(x=>x.o.act).sort((a,b)=>b.o.act-a.o.act);const tTot={};tr.forEach(x=>Object.entries(x.o.tipo).forEach(([k,v])=>tTot[k]=(tTot[k]||0)+v));
+  const tipo=`<div class="card w6" id="embTi"><div class="tbar"><h3>Tipo de embarcación por caleta</h3></div>${embLeg(TK.filter(k=>tTot[k[0]]))}
+    ${tr.length?embBars(tr.map(x=>({label:m.C[x.c0][0],v:x.o.tipo,txt:`${t0(x.o.act)}`})),TK,{aria:"Embarcaciones activas por tipo y caleta"}):`<p class="cs">Sin embarcaciones activas en los pescadores consultados.</p>`}
+    <p class="concl">${totAct?`De ${t0(totAct)} embarcaciones activas, ${t0(tTot.Bote||0)} son botes (${t1((tTot.Bote||0)/totAct*100)} %) y ${t0(tTot.Lancha||0)} lanchas (${t1((tTot.Lancha||0)/totAct*100)} %). Las caletas con más lanchas tienen mayor autonomía y capacidad de pesca.`:""}</p></div>`;
+  /* 3. Caleta base frente a caleta de desembarque */
+  const bc=new Map(),flows=new Map();
+  fis.forEach(p=>{const d=rpaGet(m.P[p][0]);const c0=mainC(p);if(c0<0)return;let o=bc.get(c0);if(!o){o={igual:0,otra:0,sd:0};bc.set(c0,o)}
+    if(!d||d.error||!d.caleta){o.sd++;return}const a=embNorm(d.caleta),b=embNorm(m.C[c0][0]);if(a&&b&&(a===b||a.includes(b)||b.includes(a)))o.igual++;else{o.otra++;const k=d.caleta+"→"+c0;const f=flows.get(k)||{base:d.caleta,c0,n:0,t:0};f.n++;f.t+=tq(p);flows.set(k,f)}});
+  const BK=[["igual","Caleta base = caleta de desembarque","#1f5fa8"],["otra","Registrado en otra caleta","#d76a00"],["sd","Sin dato","#c9b8a6"]];
+  const br=[...bc].map(([c0,o])=>({c0,o})).filter(x=>x.o.igual+x.o.otra>0).sort((a,b)=>b.o.otra-a.o.otra||(b.o.igual+b.o.otra)-(a.o.igual+a.o.otra)).slice(0,25);
+  const fx=[...flows.values()].sort((a,b)=>b.n-a.n||b.t-a.t).slice(0,15);const nOtra=[...bc.values()].reduce((s,o)=>s+o.otra,0),nIg=[...bc.values()].reduce((s,o)=>s+o.igual,0);
+  const base=`<div class="card w12" id="embBa"><div class="tbar"><h3>Caleta base frente a caleta de desembarque</h3></div>${embLeg(BK)}
+    <div class="em-2"><div>${br.length?embBars(br.map(x=>({label:m.C[x.c0][0],v:x.o,txt:`${t0(x.o.otra)} de otra`})),BK,{aria:"Pescadores por caleta de desembarque según su caleta base"}):`<p class="cs">Sin datos de caleta base.</p>`}</div>
+    <div>${fx.length?`<div class="tbl"><table class="em-t"><caption class="cs" style="text-align:left;caption-side:top;padding-bottom:4px">Principales desplazamientos</caption><thead><tr><th>Caleta base (registro)</th><th>Desembarca en</th><th class="r">Pescadores</th><th class="r">Toneladas</th></tr></thead><tbody>${fx.map(f=>`<tr><td>${esc(f.base)}</td><td>${esc(m.C[f.c0][0])}</td><td class="r">${t0(f.n)}</td><td class="r">${tt(f.t)}</td></tr>`).join("")}</tbody></table></div>`:""}</div></div>
+    <p class="concl">${nIg+nOtra?`${t0(nOtra)} de ${t0(nIg+nOtra)} pescadores (${t1(nOtra/(nIg+nOtra)*100)} %) desembarcan principalmente en una caleta distinta de la registrada como base.${br[0]&&br[0].o.otra?` La caleta que más recibe pescadores de otras caletas es <b>${esc(m.C[br[0].c0][0])}</b> (${t0(br[0].o.otra)}).`:""} La comparación es por nombre de caleta, por lo que diferencias de escritura pueden aparecer como desplazamientos.`:""}</p></div>`;
+  c.innerHTML=head+`<div class="viz">${el}${flota}${tipo}${base}</div>`;
+  if(!EMB.auto){EMB.auto=true;embLoad(false)}}
+{const _rp=renderPane;renderPane=function(){const r=_rp.apply(this,arguments);try{if(S.tab==="pescadores")embRender()}catch(e){console.error(e)}return r}}
 /* Filtro de especies del cálculo */
 function npEspF(){const F=NP.f;if(!F.esp||!F.esp.size)return null;const st=new Set();S.R.m.E.forEach((e,i)=>{if(F.esp.has(String(e[0])))st.add(i)});return st}
 function npEspFHtml(){const F=NP.f,m=S.R.m;if(!F.esp||!F.esp.size)return`<span class="cs">Todas las especies</span><button type="button" class="btn ghost small" id="npFEsp" aria-haspopup="dialog">Filtrar por una o más especies…</button>`;
@@ -4950,6 +5013,11 @@ const CG={
 "productividad por caleta":["Toneladas por pescador activo en cada caleta.","Caletas con baja productividad tienen muchos pescadores para poco recurso: son más vulnerables.","Ajustar criterios de compensación por caleta y no solo por volumen total."],
 "participacion de mujeres por caleta":["El % de pescadores activos que son mujeres en cada caleta.","Altos porcentajes suelen corresponder a caletas con recolección de orilla y algas.","Asegurar la participación de mujeres en mesas y beneficios donde son relevantes."],
 "artesanal vs. recolector de orilla":["Cómo se reparte el desembarque entre pescadores artesanales embarcados y recolectores de orilla.","Los recolectores de orilla suelen tener menor volumen pero alta dependencia (algas y mariscos de orilla) y son los primeros afectados por obras en el borde costero.","Diseñar medidas diferenciadas para recolectores de orilla, que no siempre tienen embarcación ni organización formal."],
+"embarcaciones y registro sernapesca":["Cuántos de los pescadores con desembarque en el período tienen datos del registro pesquero artesanal (RPA) de Sernapesca.","Si faltan muchos por consultar, los gráficos de abajo son parciales; usa el botón para completar la consulta.","Asegurar que el análisis de embarcaciones cubra a todos los pescadores antes de usarlo."],
+"elegibilidad segun registro sernapesca":["Los pescadores con desembarque clasificados según su situación en Sernapesca: habilitados, matrícula vencida, sin embarcación propia activa, RPA no activo o sin dato.","Un pescador que desembarca con el RPA no activo o con la matrícula vencida es una inconsistencia; sin embarcación propia puede ser tripulante o recolector de orilla, lo que hay que verificar.","Depurar la lista de beneficiarios antes de comprometer pagos y evitar cuestionamientos posteriores."],
+"flota activa por caleta":["Las embarcaciones activas y no activas de los pescadores de cada caleta, y las toneladas desembarcadas por embarcación activa.","Muchas toneladas por embarcación indican una flota intensiva; muchas embarcaciones no activas, una flota envejecida o en retiro.","Dimensionar la capacidad real de cada caleta y detectar caletas con flota sobredimensionada o en deterioro."],
+"tipo de embarcacion por caleta":["Las embarcaciones activas de cada caleta según su tipo (lancha, bote u otro).","Las lanchas tienen mayor autonomía y capacidad; los botes trabajan cerca de la costa y son más sensibles a obras en el borde costero.","Anticipar qué caletas serán más afectadas por restricciones cerca de la costa y ajustar las medidas por tipo de flota."],
+"caleta base frente a caleta de desembarque":["Para cada caleta donde se desembarca, cuántos pescadores están registrados en esa misma caleta y cuántos en otra.","Un alto número de pescadores de otras caletas indica movilidad o pescadores «foráneos»; la tabla muestra los principales desplazamientos.","Resolver reclamos sobre quién pertenece a cada caleta y definir criterios territoriales para los beneficios."],
 "categoria":["La distribución del desembarque por categoría o grupo de especie.","Muestra el peso relativo de cada grupo; para ver su evolución, usa «Desembarque por año y grupo de especie».","Contexto general del área."],
 "extraccion promedio por mes y por ano":["Las toneladas de cada mes de cada año con los filtros de la calculadora, con promedios por mes y por año.","Es la base numérica de la línea base: revisa que los años usados sean representativos (sin años anómalos).","Elegir los años de referencia para la línea base de la negociación."],
 "linea base para negociar":["La extracción típica (línea base) de la especie y el lugar elegidos, calculada con los años completos disponibles.","Es el volumen que se considera «normal»; la extracción perdida se mide contra este valor.","Fijar la base técnica de la propuesta de compensación."],
