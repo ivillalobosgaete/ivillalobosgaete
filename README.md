@@ -240,3 +240,15 @@ alter table public.rpa_cache enable row level security;
 - Monto por especie = kilos (promedio por año o total del período, con esos filtros) × precio por kilo (precio base de Administración, editable solo para este cálculo).
 - Cada pescador tiene un % reconocido en el sector (0–100) que multiplica su monto.
 - Un % sobre el total (0–100) se aplica al subtotal de todos los pescadores: «Pagar este % del total» o «Sumar este % al total». Exportable a CSV.
+
+## Aplicación instalable (Android, iPhone/iPad y computador)
+
+La plataforma es una aplicación web instalable (PWA), gratuita y sin tiendas de aplicaciones:
+
+- **Android (Chrome):** abrir https://ivillalobosgaete.vercel.app, tocar «Instalar app» o el menú ⋮ › «Instalar aplicación».
+- **iPhone/iPad (Safari):** abrir el sitio, tocar Compartir › «Agregar a pantalla de inicio».
+- **Computador (Chrome o Edge):** botón «Instalar app» o el ícono de instalar en la barra de direcciones.
+
+Archivos: `manifest.webmanifest` (nombre, colores e íconos), `sw.js` (service worker) e `icons/`.
+El service worker solo guarda la estructura de la página e íconos; **nunca** guarda datos: `/api/*`, Supabase y los PDF de RCA van siempre a la red.
+Para forzar a todos los equipos a renovar la caché, cambiar `VERSION` en `sw.js`.

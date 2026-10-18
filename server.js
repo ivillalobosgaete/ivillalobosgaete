@@ -23,5 +23,10 @@ http.createServer(async (req, res) => {
   const m = url.pathname.match(/^\/api\/([a-z]+)\/?$/);
   if (m) { const h = handlers[m[1]]; if (!h) { res.statusCode = 404; return res.end("{}"); } return h(req, res); }
   if (url.pathname === "/" || url.pathname === "/index.html") { res.setHeader("Content-Type", "text/html; charset=utf-8"); return res.end(html); }
+  const STATIC = { "/sw.js": "application/javascript; charset=utf-8", "/manifest.webmanifest": "application/manifest+json; charset=utf-8" };
+  const icon = url.pathname.match(/^\/icons\/([a-z0-9-]+\.png)$/);
+  if (STATIC[url.pathname] || icon) {
+    try { const buf = fs.readFileSync(path.join(dir, icon ? "icons/" + icon[1] : url.pathname.slice(1))); res.setHeader("Content-Type", icon ? "image/png" : STATIC[url.pathname]); if (url.pathname === "/sw.js") res.setHeader("Cache-Control", "no-cache"); return res.end(buf); } catch { }
+  }
   res.statusCode = 404; res.end("No encontrado");
 }).listen(process.env.PORT || 3000, () => console.log("Plataforma en http://localhost:" + (process.env.PORT || 3000)));
