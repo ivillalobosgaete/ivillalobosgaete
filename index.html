@@ -1075,6 +1075,15 @@ mark.rch{background:#ffe08a;color:inherit;border-radius:3px;padding:0 1px;box-sh
 .rpa-d .rpa-l{margin:0 0 4px;font-size:.84rem}.rpa-alert{background:#fde8e6;color:#8a1f17;border-radius:8px;padding:4px 8px;font-size:.8rem;margin:4px 0}
 .rpa-t{width:100%;border-collapse:collapse;font-size:.78rem;margin:4px 0}.rpa-t th{text-align:left;font-size:.68rem;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:2px 4px}.rpa-t td{border-bottom:1px solid var(--line);padding:3px 4px;vertical-align:top}.rpa-t tr.in td{color:var(--muted)}.rpa-t td.vv{color:#b23b32;font-weight:700}.rpa-t small{color:var(--muted)}
 .rpa-dd summary{cursor:pointer;font-size:.8rem;white-space:nowrap}.rpa-dd ul{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:4px;min-width:260px}.rpa-dd li{display:flex;flex-wrap:wrap;gap:2px 8px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:4px 7px;font-size:.78rem;background:var(--surface)}.rpa-dd li.in{opacity:.75}.rpa-dd li span{color:var(--ink-2)}.rpa-dd .vv{color:#b23b32;font-weight:700}
+.np-add{position:relative;max-width:460px;margin-bottom:8px}.np-add input{width:100%}
+.np-sug{position:absolute;z-index:20;left:0;right:0;top:100%;background:var(--surface,#fff);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);overflow:hidden}
+.np-sug button{display:block;width:100%;text-align:left;border:0;background:none;padding:7px 10px;cursor:pointer;font-size:.86rem}.np-sug button:hover{background:var(--brand-08,#fff3e6)}.np-sug small{color:var(--muted)}
+.np-t td{vertical-align:top}.np-t .np-pc{width:64px;text-align:right}.np-t tfoot td{border-top:2px solid var(--line);font-weight:600}
+.np-det td{background:var(--brand-08,#fff8f0)}.np-dt{width:auto;min-width:420px;font-size:.82rem}.np-dt td,.np-dt th{padding:3px 8px}
+.np-g{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.np-g input{width:70px;text-align:right}.np-tot{margin-left:auto;display:grid;text-align:right}.np-tot span{font-size:.72rem;font-weight:800;text-transform:uppercase;color:var(--muted)}.np-tot b{font-size:1.35rem}
+.np-pr{margin-top:10px}.np-prl{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:6px 16px}.np-prl label{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;justify-content:space-between;font-size:.84rem}.np-prl input{width:90px;text-align:right}
+@media(max-width:700px){.np-tot{margin-left:0;text-align:left}}
 /*C2E*/</style>
 </head>
 <body>
@@ -4403,6 +4412,88 @@ const YRC2=k=>["#1f5fa8","#16794a","#d76a00","#8a3fb3","#c0392b","#0f8a8a","#b88
     E("line",{x1:L,x2:L,y1:T,y2:B,stroke:"var(--ink-2)"},svg)}catch(e){console.error(e);return _ce.apply(this,arguments)}}}
 
 $("#tbl").addEventListener("toggle",ev=>{const d=ev.target.closest&&ev.target.closest("details.rpa-dd");if(!d)return;d.open?RPAS.open.add(d.dataset.rpa):RPAS.open.delete(d.dataset.rpa)},true);
+
+
+/* ================= Negociación: cálculo por pescador y especie ================= */
+const NP=(()=>{let o={};try{o=JSON.parse(localStorage.getItem("negPes")||"{}")}catch(e){}
+  return{sel:o.sel||[],esp:new Map(o.esp||[]),pct:new Map(o.pct||[]),price:new Map(o.price||[]),g:o.g??100,gm:o.gm||"aplicar",base:o.base||"prom",open:new Set()}})();
+function npSave(){try{localStorage.setItem("negPes",JSON.stringify({sel:NP.sel,esp:[...NP.esp].map(([k,v])=>[k,[...v]]),pct:[...NP.pct],price:[...NP.price],g:NP.g,gm:NP.gm,base:NP.base}))}catch(e){}}
+NP.esp=new Map([...NP.esp].map(([k,v])=>[k,new Set(v)]));
+const npRpa=p=>String(S.R.m.P[p][0]);
+function npKey(p){return npRpa(p)}
+function npIdx(){const R=S.R;if(NP.ix&&NP.ixR===R)return NP.ix;const m=new Map();R.m.P.forEach((x,i)=>m.set(String(x[0]),i));NP.ix=m;NP.ixR=R;return m}
+/* Kilos por pescador y especie con los filtros de la calculadora (años, meses, fechas y veda) */
+function npData(){const R=S.R;let y0=+$("#nY0").value,y1=+$("#nY1").value;if(y0>y1)[y0,y1]=[y1,y0];const ms=N.mo,ix=npIdx(),want=new Set(NP.sel.map(k=>ix.get(k)).filter(x=>x!=null)),D=new Map();
+  for(let i=0;i<R.n;i++){const p=R.p[i];if(!want.has(p))continue;const y=R.yr[i]+R.y0;if(y<y0||y>y1||!ms.has(R.mo[i]))continue;if(N.d0!=null&&R.d[i]<N.d0)continue;if(N.d1!=null&&R.d[i]>N.d1)continue;if(N.noVeda&&window.__vedaRec&&window.__vedaRec(i))continue;
+    let a=D.get(p);if(!a){a=new Map();D.set(p,a)}a.set(R.e[i],(a.get(R.e[i])||0)+R.q[i])}
+  return{D,y0,y1,yN:y1-y0+1}}
+const npPrice=e=>{const k=String(S.R.m.E[e][0]);return NP.price.has(k)?NP.price.get(k):(priceOf(e)||0)};
+function npCalc(){const R=S.R,{D,y0,y1,yN}=npData(),ix=npIdx(),rows=[];let tot=0,totKg=0;const sinPrecio=new Set();
+  NP.sel.forEach(k=>{const p=ix.get(k);if(p==null)return;const kg=D.get(p)||new Map();
+    if(!NP.esp.has(k))NP.esp.set(k,new Set([...kg].sort((a,b)=>b[1]-a[1]).map(([e])=>String(R.m.E[e][0]))));
+    const codes=NP.esp.get(k),det=[];let bruto=0,kgs=0;
+    codes.forEach(c=>{const e=R.m.E.findIndex(x=>String(x[0])===c);if(e<0)return;const q=(kg.get(e)||0)/(NP.base==="prom"?yN:1),pr=npPrice(e),m=q*pr;if(!pr)sinPrecio.add(e);det.push({e,c,q,pr,m});bruto+=m;kgs+=q});
+    const pc=NP.pct.has(k)?NP.pct.get(k):100,fin=bruto*pc/100;tot+=fin;totKg+=kgs;rows.push({k,p,det,bruto,kgs,pc,fin})});
+  const g=Math.max(0,Math.min(100,+NP.g||0)),total=NP.gm==="aplicar"?tot*g/100:tot*(1+g/100);
+  return{rows,tot,totKg,g,total,y0,y1,yN,sinPrecio}}
+const npMoney=v=>money(v);
+function npCard(){let c=$("#npCard");if(c)return c;const ref=$("#scenCard");if(!ref)return null;c=document.createElement("div");c.className="card";c.id="npCard";ref.after(c);
+  c.addEventListener("input",npEv);c.addEventListener("change",npEv);c.addEventListener("click",npClick);return c}
+function npRender(){if(!S.R)return;const c=npCard();if(!c)return;const ae=document.activeElement,fk=ae&&c.contains(ae)&&ae.tagName==='INPUT'?{id:ae.id,cl:ae.className,k:(ae.closest('tr[data-k]')||{}).dataset?.k,c:ae.dataset.c}:null;const R=S.R,m=R.m,C=npCalc(),bl=NP.base==="prom"?"kg/año":"kg";
+  const mTxt=N.mo.size===12?"todos los meses":[...N.mo].sort((a,b)=>a-b).map(x=>MES[x]).join(", ");
+  const espOpts=p=>{const have=NP.esp.get(npKey(p))||new Set();return m.E.map((e,i)=>[e,i]).filter(([e])=>!have.has(String(e[0]))).sort((a,b)=>a[0][1].localeCompare(b[0][1],"es")).map(([e])=>`<option value="${esc(String(e[0]))}">${esc(e[1])}</option>`).join("")};
+  const usados=new Map();C.rows.forEach(r=>r.det.forEach(d=>usados.set(d.e,d)));
+  c.innerHTML=`<div class="tbar"><h3>Cálculo por pescador y especie${help("Elige uno o más pescadores y las especies que se les reconocen. Para cada especie se calcula: kilos (con los años, meses y fechas elegidos arriba) × precio por kilo. El monto de cada pescador se multiplica por su porcentaje reconocido en el sector. Al final puedes aplicar un porcentaje sobre el total del cálculo.")}</h3>
+    <div class="l"><label class="cs" for="npBase" style="margin:0">Kilos</label><select id="npBase"><option value="prom" ${NP.base==="prom"?"selected":""}>Promedio por año</option><option value="tot" ${NP.base==="tot"?"selected":""}>Total del período</option></select>${C.rows.length?`<button class="btn ghost small" type="button" id="npCsv">Exportar CSV</button><button class="btn ghost small" type="button" id="npClr">Quitar todos</button>`:""}</div></div>
+   <p class="cs" style="margin:0 0 8px">Período: ${C.y0}–${C.y1} · ${esc(mTxt)}${N.d0!=null||N.d1!=null?" · fechas acotadas":""}${N.noVeda?" · sin meses de veda":""}. Usa los filtros de la calculadora de arriba.</p>
+   <div class="np-add"><input type="search" id="npQ" placeholder="Agregar pescador: nombre o RPA" autocomplete="off" aria-label="Agregar pescador"><div class="np-sug" id="npSug" hidden></div></div>
+   ${C.rows.length?`<div class="tbl"><table class="np-t"><thead><tr><th>Pescador</th><th>Especies reconocidas</th><th class="r">Kilos (${bl})</th><th class="r">Monto según precio</th><th class="r">% reconocido en el sector</th><th class="r">Monto asignado</th><th></th></tr></thead><tbody>
+    ${C.rows.map(r=>{const P=m.P[r.p],op=NP.open.has(r.k);return`<tr data-k="${esc(r.k)}"><td><button type="button" class="dtog np-tog" aria-expanded="${op}">${op?"▾":"▸"}</button> <b>${esc(P[1])}</b><br><span class="cs">RPA ${esc(r.k)}</span></td>
+      <td><div class="fx-cl">${r.det.map(d=>`<span class="fx-k">${esc(m.E[d.e][1])}<button type="button" class="np-ex" data-c="${esc(d.c)}" aria-label="Quitar especie">×</button></span>`).join("")}<select class="np-ea" aria-label="Agregar especie"><option value="">+ Especie</option>${espOpts(r.p)}</select></div></td>
+      <td class="r">${t0(r.kgs)}</td><td class="r">${npMoney(r.bruto)}</td>
+      <td class="r"><input class="np-pc" type="number" min="0" max="100" step="1" value="${r.pc}" aria-label="Porcentaje reconocido"> %</td><td class="r"><b>${npMoney(r.fin)}</b></td>
+      <td><button type="button" class="np-rm lnk" aria-label="Quitar pescador">Quitar</button></td></tr>
+      ${op?`<tr class="np-det"><td></td><td colspan="6"><table class="np-dt"><thead><tr><th>Especie</th><th class="r">Kilos (${bl})</th><th class="r">Precio por kilo</th><th class="r">Monto</th></tr></thead><tbody>${r.det.map(d=>`<tr><td>${esc(m.E[d.e][1])}</td><td class="r">${t0(d.q)}</td><td class="r">$ ${t0(d.pr)}</td><td class="r">${npMoney(d.m)}</td></tr>`).join("")||`<tr><td colspan="4" class="cs">Sin especies asignadas.</td></tr>`}</tbody></table></td></tr>`:""}`}).join("")}
+    </tbody><tfoot><tr><td colspan="2"><b>Subtotal</b> (${t0(C.rows.length)} pescador${C.rows.length===1?"":"es"})</td><td class="r">${t0(C.totKg)}</td><td class="r">${npMoney(C.rows.reduce((s,r)=>s+r.bruto,0))}</td><td></td><td class="r"><b>${npMoney(C.tot)}</b></td><td></td></tr></tfoot></table></div>
+    <div class="np-g"><div><b>Porcentaje sobre el total de la compensación</b><div class="cs">Se aplica al subtotal de todos los pescadores, no a cada uno.</div></div>
+     <select id="npGm"><option value="aplicar" ${NP.gm==="aplicar"?"selected":""}>Pagar este % del total</option><option value="sumar" ${NP.gm==="sumar"?"selected":""}>Sumar este % al total</option></select>
+     <span><input id="npG" type="number" min="0" max="100" step="1" value="${C.g}"> %</span>
+     <div class="np-tot"><span>Total de la compensación</span><b>${npMoney(C.total)}</b><small class="cs">${NP.gm==="aplicar"?`${t0(C.g)} % de ${npMoney(C.tot)}`:`${npMoney(C.tot)} + ${t0(C.g)} %`}</small></div></div>
+    <details class="np-pr"><summary><b>Precios por kilo usados</b> <span class="cs">${t0(usados.size)} especie${usados.size===1?"":"s"}${C.sinPrecio.size?` · <span class="vdn">${t0(C.sinPrecio.size)} sin precio</span>`:""}</span></summary>
+     <p class="cs">Por defecto se usa el precio base de Administración › Precios. Puedes cambiarlo aquí solo para este cálculo.</p>
+     <div class="np-prl">${[...usados.keys()].sort((a,b)=>m.E[a][1].localeCompare(m.E[b][1],"es")).map(e=>{const k=String(m.E[e][0]),base=priceOf(e)||0,ov=NP.price.has(k);return`<label><span>${esc(m.E[e][1])}</span><span>$ <input class="np-pp" data-c="${esc(k)}" type="number" min="0" step="10" value="${npPrice(e)||""}" placeholder="sin precio"> /kg</span>${ov?`<button type="button" class="lnk np-pr0" data-c="${esc(k)}">usar precio base ($ ${t0(base)})</button>`:""}</label>`}).join("")}</div></details>
+    ${C.sinPrecio.size?`<p class="warnbox" style="margin:8px 0 0">Hay especies sin precio por kilo: suman $ 0 hasta que les asignes un precio.</p>`:""}
+    <p class="concl" id="npC"></p>`:`<p class="cs" style="margin:6px 0 0">Aún no hay pescadores en el cálculo. Búscalos por nombre o RPA para agregarlos.</p>`}`;
+  if(fk){let el=fk.id?$('#'+fk.id):null;if(!el&&fk.cl){const sel='.'+fk.cl.split(' ')[0]+(fk.c?`[data-c="${CSS.escape(fk.c)}"]`:'');el=fk.k?c.querySelector(`tr[data-k="${CSS.escape(fk.k)}"] ${sel}`):c.querySelector(sel)}if(el){el.focus();try{const v=el.value;el.value='';el.value=v}catch(e){}}}
+  if(C.rows.length)setC("npC",`Para ${t0(C.rows.length)} pescador${C.rows.length===1?"":"es"}, el cálculo según precio suma ${npMoney(C.rows.reduce((s,r)=>s+r.bruto,0))}; con los porcentajes reconocidos en el sector queda en ${npMoney(C.tot)} y el total de la compensación es <b>${npMoney(C.total)}</b>${C.rows.length?`, en promedio ${npMoney(C.total/C.rows.length)} por pescador`:""}.`)}
+function npRe(){npSave();npRender()}
+let npT=null;
+function npEv(ev){const t=ev.target,tr=t.closest("tr[data-k]"),k=tr&&tr.dataset.k;
+  if(t.id==="npQ"){if(ev.type==="input")npSug(t.value);return}
+  if(t.id==="npBase"&&ev.type==="change"){NP.base=t.value;npRe();return}
+  if(t.id==="npGm"&&ev.type==="change"){NP.gm=t.value;npRe();return}
+  if(t.id==="npG"){clearTimeout(npT);npT=setTimeout(()=>{NP.g=Math.max(0,Math.min(100,+t.value||0));npSave();npRender();},500);return}
+  if(t.classList.contains("np-pc")){clearTimeout(npT);npT=setTimeout(()=>{NP.pct.set(k,Math.max(0,Math.min(100,+t.value||0)));npSave();npRender()},500);return}
+  if(t.classList.contains("np-pp")){clearTimeout(npT);npT=setTimeout(()=>{const v=t.value===""?null:Math.max(0,+t.value||0);if(v==null)NP.price.delete(t.dataset.c);else NP.price.set(t.dataset.c,v);npSave();npRender();const d=$("#npCard .np-pr");if(d)d.open=true},600);return}
+  if(t.classList.contains("np-ea")&&ev.type==="change"&&t.value){const s=NP.esp.get(k)||new Set();s.add(t.value);NP.esp.set(k,s);npRe();return}}
+function npClick(ev){const t=ev.target,tr=t.closest("tr[data-k]"),k=tr&&tr.dataset.k;
+  const sg=t.closest("[data-addp]");if(sg){const r=sg.dataset.addp;if(!NP.sel.includes(r))NP.sel.push(r);$("#npQ").value="";$("#npSug").hidden=true;npRe();return}
+  if(t.closest(".np-ex")){const s=NP.esp.get(k);if(s)s.delete(t.closest(".np-ex").dataset.c);npRe();return}
+  if(t.closest(".np-rm")){NP.sel=NP.sel.filter(x=>x!==k);NP.esp.delete(k);NP.pct.delete(k);npRe();return}
+  if(t.closest(".np-tog")){NP.open.has(k)?NP.open.delete(k):NP.open.add(k);npRender();return}
+  if(t.closest(".np-pr0")){NP.price.delete(t.closest(".np-pr0").dataset.c);npRe();const d=$("#npCard .np-pr");if(d)d.open=true;return}
+  if(t.id==="npClr"){askYN("¿Quitar todos los pescadores del cálculo?",{title:"Cálculo por pescador"}).then(ok=>{if(ok){NP.sel=[];NP.esp.clear();NP.pct.clear();npRe()}});return}
+  if(t.id==="npCsv"){npCsv();return}}
+function npSug(q){const box=$("#npSug");const w=norm(q).split(/\s+/).filter(Boolean);if(!w.length){box.hidden=true;return}const R=S.R,tot=new Float64Array(R.m.P.length);for(let i=0;i<R.n;i++)tot[R.p[i]]+=R.q[i];
+  const hits=R.m.P.map((p,i)=>({i,p})).filter(x=>!NP.sel.includes(String(x.p[0]))&&w.every(s=>norm(x.p[1]+" "+x.p[0]).includes(s))).sort((a,b)=>tot[b.i]-tot[a.i]).slice(0,8);
+  box.hidden=false;box.innerHTML=hits.length?hits.map(x=>`<button type="button" data-addp="${esc(String(x.p[0]))}">${esc(x.p[1])} <small>RPA ${esc(String(x.p[0]))} · ${tt(tot[x.i]/1000)} t</small></button>`).join(""):`<div class="cs" style="padding:6px 10px">Sin coincidencias</div>`}
+async function npCsv(){const C=npCalc(),m=S.R.m,q=v=>`"${String(v??"").replace(/"/g,'""')}"`,bl=NP.base==="prom"?"Kilos por año":"Kilos del período";
+  const L=[["Pescador","RPA","Especie",bl,"Precio por kilo","Monto según precio","% reconocido","Monto asignado"].map(q).join(";")];
+  C.rows.forEach(r=>{r.det.forEach(d=>L.push([m.P[r.p][1],r.k,m.E[d.e][1],Math.round(d.q),d.pr,Math.round(d.m),r.pc,Math.round(d.m*r.pc/100)].map(q).join(";")))});
+  L.push(["Subtotal","","","","","",,Math.round(C.tot)].map(q).join(";"));L.push([NP.gm==="aplicar"?`Pagar ${C.g} % del total`:`Sumar ${C.g} % al total`,"","","","","","",Math.round(C.total)].map(q).join(";"));
+  try{await saveFile("calculo_por_pescador.csv","﻿"+L.join("\r\n"),"text/csv;charset=utf-8");ST.log("Exportar CSV",`Cálculo por pescador: ${C.rows.length}`)}catch(e){if(e&&e.code!=="cancelled")toast("No se pudo descargar el archivo.")}}
+document.addEventListener("click",ev=>{if(!ev.target.closest(".np-add")){const b=$("#npSug");if(b)b.hidden=true}});
+{const _rn2=renderNeg;renderNeg=function(){const r=_rn2.apply(this,arguments);try{npRender()}catch(e){console.error(e)}return r}}
 
 })();
 
