@@ -2629,9 +2629,10 @@ function rcRemoveCard(card){card.classList.add("gone");setTimeout(()=>{card.remo
 const rcCatCls=c=>c===RC_DESC?"cx":c==null?"cn":"c"+c;
 const rcVisible=s=>!!(s&&s.h&&s.c!=null&&s.c!==RC_DESC);
 async function rcLoad(force){if(RC.loaded&&!force)return;try{const r=await RCST.load();RC.base=r.base;RC.meta=r.meta;RC.st=r.estado;RC.hidden=r.hidden;RC.seg=r.seg||new Map();RC.hist=r.hist||[];RC.sgDraft=new Map();RC.warn="";rcIndex();rcGroups();rcMigrar()}catch(e){RC.warn=e&&e.message||"No se pudieron leer las RCA."}RC.loaded=true;RC.built=false}
-const RCA_FILES="https://ivillalobosgaete.vercel.app/rca/";
-const rcPdfUrl=r=>rcxUrl(r)||(RCA_FILES+encodeURIComponent(r.archivo||("RCA "+r.id+".pdf")));
-const rcLinkTit=r=>rcxUrl(r)?"PDF de la RCA en la carpeta rca de la plataforma":"No se encontró el PDF de esta RCA en la carpeta rca";
+const RCA_FILES="https://oxrxklpjqyvtphfizuld.supabase.co/storage/v1/object/public/RCA/";
+const rcaFile=s=>{s=String(s||"").trim();try{s=decodeURIComponent(s)}catch(e){}return encodeURIComponent(s)};
+const rcPdfUrl=r=>rcxUrl(r)||(RCA_FILES+rcaFile(r.archivo||("RCA "+r.id+".pdf")));
+const rcLinkTit=r=>rcxUrl(r)?"PDF de la RCA (columna RCA del Consolidado)":"No se encontró el PDF de esta RCA en la carpeta rca";
 const rcPag=f=>f[10]&&f[10]!==f[4]?`ref. págs. ${f[4]}–${f[10]}`:`ref. pág. ${f[4]}`;
 function rcIndex(){RC.idx=RC.base?RC.base.f.map(f=>norm(f[5]+" "+f[2]+" "+f[3])):null}
 const ACC={a:"aáàäâ",e:"eéèëê",i:"iíìïî",o:"oóòöô",u:"uúùüû",n:"nñ",c:"cç"};
@@ -4685,10 +4686,10 @@ function npViz(C){const R=S.R,m=R.m,box=$("#npViz"),kp=$("#npKpi");if(!box)retur
 /* rca/index.json lista los PDF publicados (se regenera con: node tools/rca-index.js). */
 const RCX={files:null,byNum:null,p:null};
 const rcxNum=s=>{const m=String(s??"").match(/\d+/);return m?String(+m[0]):""};
-function rcxUrl(r){if(!RCX.files||!r)return"";const enc=f=>RCA_FILES+encodeURIComponent(f);
+function rcxUrl(r){if(!RCX.files||!r)return"";const enc=f=>RCA_FILES+rcaFile(f);
   if(r.archivo&&RCX.files.has(r.archivo))return enc(r.archivo);
   const n=rcxNum(r.rca);const c=n&&RCX.byNum.get(n);return c&&c.length===1?enc(c[0]):""}
-function rcxLoad(){if(RCX.p)return RCX.p;RCX.p=(async()=>{try{const r=await fetch(RCA_FILES+"index.json",{cache:"no-cache"});if(!r.ok)return;const list=await r.json();
+function rcxLoad(){if(RCX.p)return RCX.p;RCX.p=(async()=>{try{const r=await fetch("/rca/index.json",{cache:"no-cache"});if(!r.ok)return;const list=await r.json();
   RCX.files=new Set(list);RCX.byNum=new Map();list.forEach(f=>{const m=f.match(/^RCA\s+0*(\d+)\.pdf$/i);if(!m)return;const k=String(+m[1]);(RCX.byNum.get(k)||RCX.byNum.set(k,[]).get(k)).push(f)});
   if(S.tab==="rca"&&RC.base&&!$("#rcaBody").hidden){renderRcaRes();if(RC.f.rca)renderRcaDetail()}}catch(e){}})();return RCX.p}
 {const _r=renderRca;renderRca=async function(){rcxLoad();return _r.apply(this,arguments)}}

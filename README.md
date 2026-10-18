@@ -134,7 +134,7 @@ Después del primer ingreso puedes borrar `ADMIN_PASSWORD` de Vercel: el adminis
 - Exigencias ambientales › Gráficos: resumen por compañía, temas, estado de revisión (solo administradores), categorías, aplica a AP Norte, avance de cumplimiento por compañía y tema, RCA por año, tipo de contenido y cruce de caletas con las fichas RCA que las mencionan. Todo se segmenta por compañía.
 
 ## Exigencias ambientales (RCA)
-- **PDF de las RCA:** los PDF están en la carpeta `rca/` y se publican en `https://ivillalobosgaete.vercel.app/rca/<nombre del archivo>`. El botón **Abrir RCA** de cada ficha usa el nombre de archivo de la base (`archivo`); si no existe en la carpeta, busca el PDF por número de RCA (por ejemplo, `RCA 0016.pdf` para la RCA 16). Al agregar o renombrar un PDF, ejecuta `npm run rca-index` para actualizar `rca/index.json` y haz commit de ambos.
+- **PDF de las RCA:** los PDF están en Supabase Storage, bucket público `RCA`: `https://oxrxklpjqyvtphfizuld.supabase.co/storage/v1/object/public/RCA/` + el nombre de archivo de la columna RCA del Consolidado (por ejemplo `RCA%2020260200168.pdf`). Para agregar una RCA, súbela a ese bucket con el mismo nombre que figura en la columna RCA.
 
 - Los usuarios buscan con sus propias palabras clave en el texto completo de todas las RCA visibles, sin filtros predefinidos. Pueden acotar por su cuenta en «Más filtros» (por ejemplo, solo compromisos habilitados).
 Pestaña para revisar las resoluciones de calificación ambiental (RCA) de las operaciones y ordenar sus obligaciones.
