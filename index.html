@@ -1196,7 +1196,7 @@ html.a11y-hc .cs,html.a11y-hc .muted,html.a11y-hc small{color:#000!important}htm
 .gsteps li::before{content:"";width:18px;height:18px;border-radius:50%;border:2px solid #e2d3c4;flex:none;box-sizing:border-box}
 .gsteps li.on{color:var(--ink);font-weight:600}.gsteps li.on::before{border-color:#b85300;border-top-color:transparent;animation:spin .9s linear infinite}
 .gsteps li.done::before,.gsteps li:first-child.on::before{animation:none;background:#16794a;border-color:#16794a}
-@media (max-width:860px){.gwrap{grid-template-columns:minmax(0,1fr);gap:24px;max-width:460px}.gside{order:2;gap:10px}.gtitle{font-size:1.5rem}.gsub,.gfeat{display:none}#gate{padding-block:64px 16px}}
+@media (max-width:860px){.gwrap{grid-template-columns:minmax(0,1fr);gap:24px;max-width:460px}.gside{order:2;gap:10px}.gtitle,.gsub,.gfeat{display:none}#gate{padding-block:64px 16px}}
 /*C2E*/</style>
 </head>
 <body>
@@ -4766,12 +4766,12 @@ function a11ySay(msg){const r=document.getElementById("a11yLive");if(!r)return;r
   const gate=$("#gate");if(gate)gate.setAttribute("role","main");
   // Pestañas: relación pestaña–panel y navegación con flechas
   const tabs=$("#tabs");if(tabs){tabs.setAttribute("aria-label","Secciones de la plataforma");tabs.removeAttribute("role");const tl=D.createElement("div");tl.setAttribute("role","tablist");tl.setAttribute("aria-label","Secciones");tl.className="tl";while(tabs.firstChild)tl.appendChild(tabs.firstChild);tabs.appendChild(tl);
-    tl.querySelectorAll("button[data-tab]").forEach(b=>{const k=b.dataset.tab;b.id="tab-"+k;b.type="button";const pn=D.querySelector(`section[data-pane="${k}"]`);if(pn){pn.id=pn.id||"pane-"+k;pn.setAttribute("role","tabpanel");pn.setAttribute("aria-labelledby",b.id);pn.tabIndex=-1;b.setAttribute("aria-controls",pn.id)}})}
+    tl.querySelectorAll("button[data-tab]").forEach(b=>{const k=b.dataset.tab;b.id=b.id||"tab-"+k;b.type="button";const pn=D.querySelector(`section[data-pane="${k}"]`);if(pn){pn.id=pn.id||"pane-"+k;pn.setAttribute("role","tabpanel");pn.setAttribute("aria-labelledby",b.id);pn.tabIndex=-1;b.setAttribute("aria-controls",pn.id)}})}
   const syncTabs=()=>D.querySelectorAll('[role="tablist"]').forEach(tl=>{const bs=[...tl.querySelectorAll('[role="tab"]')];if(!bs.length)return;const sel=bs.find(b=>b.getAttribute("aria-selected")==="true")||bs[0];bs.forEach(b=>b.tabIndex=b===sel?0:-1)});
   D.addEventListener("keydown",ev=>{const b=ev.target.closest&&ev.target.closest('[role="tab"]');if(!b)return;const tl=b.closest('[role="tablist"]');if(!tl)return;const bs=[...tl.querySelectorAll('[role="tab"]')].filter(x=>!x.hidden);let i=bs.indexOf(b);
     if(ev.key==="ArrowRight"||ev.key==="ArrowDown")i=(i+1)%bs.length;else if(ev.key==="ArrowLeft"||ev.key==="ArrowUp")i=(i-1+bs.length)%bs.length;else if(ev.key==="Home")i=0;else if(ev.key==="End")i=bs.length-1;else return;ev.preventDefault();bs[i].focus();bs[i].click()});
   // Al cambiar de pestaña se anuncia la sección
-  if(typeof setTab==="function"){const _s=setTab;setTab=function(t){_s.apply(this,arguments);const b=D.getElementById("tab-"+t);if(b)a11ySay("Sección "+b.textContent.trim()+" abierta.");syncTabs()}}
+  if(typeof setTab==="function"){const _s=setTab;setTab=function(t){_s.apply(this,arguments);const b=D.querySelector(`#tabs [data-tab="${t}"]`);if(b)a11ySay("Sección "+b.textContent.trim()+" abierta.");syncTabs()}}
   // Diálogos: guardar el foco, atraparlo dentro y devolverlo al cerrar
   const FOC='a[href],button:not([disabled]),input:not([disabled]):not([type="hidden"]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"]),summary';
   const vis=el=>!!(el.offsetWidth||el.offsetHeight||el.getClientRects().length);
