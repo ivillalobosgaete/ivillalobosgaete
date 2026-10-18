@@ -1154,18 +1154,76 @@ html.a11y-hc .cs,html.a11y-hc .muted,html.a11y-hc small{color:#000!important}htm
 .ne-o{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:8px;align-items:center;padding:6px 4px;border-radius:6px;cursor:pointer}.ne-o:hover{background:var(--brand-08)}
 .ne-o input{width:18px;height:18px;accent-color:var(--brand);margin:0}.ne-o small{font-size:.76rem;color:var(--ink-2)}
 @media (max-width:560px){.ne-o{grid-template-columns:20px minmax(0,1fr)}.ne-o small{grid-column:2}}
+
+/* ===== Inicio de sesión ===== */
+#gate{position:relative;min-height:100vh;display:grid;grid-template-rows:1fr auto;place-items:center;gap:20px;padding-block:56px 20px;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400' viewBox='0 0 600 400'><g fill='none' stroke='%23ffffff' stroke-opacity='.09' stroke-width='1.4'><path d='M-20 20 C 120 -10, 240 50, 380 20 S 560 -5, 640 20'/><path d='M-20 54 C 120 24, 240 84, 380 54 S 560 29, 640 54'/><path d='M-20 88 C 120 58, 240 118, 380 88 S 560 63, 640 88'/><path d='M-20 122 C 120 92, 240 152, 380 122 S 560 97, 640 122'/><path d='M-20 156 C 120 126, 240 186, 380 156 S 560 131, 640 156'/><path d='M-20 190 C 120 160, 240 220, 380 190 S 560 165, 640 190'/><path d='M-20 224 C 120 194, 240 254, 380 224 S 560 199, 640 224'/><path d='M-20 258 C 120 228, 240 288, 380 258 S 560 233, 640 258'/><path d='M-20 292 C 120 262, 240 322, 380 292 S 560 267, 640 292'/><path d='M-20 326 C 120 296, 240 356, 380 326 S 560 301, 640 326'/><path d='M-20 360 C 120 330, 240 390, 380 360 S 560 335, 640 360'/><path d='M-20 394 C 120 364, 240 424, 380 394 S 560 369, 640 394'/></g></svg>") center/900px auto repeat,radial-gradient(900px 500px at 85% 0%,rgba(255,163,71,.35),transparent 60%),linear-gradient(150deg,#3b1d00 0%,#7a3500 45%,#b85300 100%)!important;color:#fff}
+.gwrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,440px);gap:56px;align-items:center;width:min(1040px,100%)}
+.gside{display:grid;gap:16px;align-content:center;min-width:0}
+.gbrand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:.82rem;color:#ffe3c4}
+.glogo{width:48px;height:48px;flex:none;filter:drop-shadow(0 4px 10px rgba(0,0,0,.25))}
+.gtitle{margin:0;font-size:clamp(1.9rem,3.6vw,2.8rem);line-height:1.08;font-weight:800;letter-spacing:-.02em;text-wrap:balance;color:#fff}
+.gsub{margin:0;font-size:1.05rem;line-height:1.5;color:#ffeedd;max-width:46ch}
+.gfeat{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:10px}
+.gfeat li{display:flex;align-items:center;gap:12px;font-weight:600;color:#fff}
+.gfeat svg{width:34px;height:34px;padding:7px;border-radius:10px;background:rgba(255,255,255,.14);flex:none}
+.grange{margin:6px 0 0;font-size:.88rem;color:#ffe3c4;display:flex;align-items:center;gap:8px}.grange:empty{display:none}
+.gdot{width:8px;height:8px;border-radius:50%;background:#7ee2a8;box-shadow:0 0 0 4px rgba(126,226,168,.25)}
+#gate .gcard{width:100%;padding:34px 32px;border-radius:20px;gap:16px;box-shadow:0 30px 70px rgba(30,10,0,.45);color:var(--ink)}
+#gate .gcard h1{font-size:1.45rem;color:#3b1d00}
+#gate .gcard .eyebrow{color:#a84c00}
+.gintro{color:var(--ink-2)!important}
+.lform{display:grid;gap:14px}
+.inp{position:relative;display:flex;align-items:center}
+.inp>svg{position:absolute;left:12px;width:18px;height:18px;color:#8a6a50;pointer-events:none}
+#gate .inp input{height:46px;padding-left:40px;border-radius:10px;border:1.5px solid #e2d3c4;font-size:1rem}
+#gate .inp input:focus{border-color:#b85300;box-shadow:0 0 0 3px #ffe3c4}
+#gate .inp input[aria-invalid="true"]{border-color:#b4372f;background:#fff7f6}
+.pwt{position:absolute;right:6px;width:36px;height:36px;border:0;background:none;border-radius:8px;color:#6b5a4a;display:grid;place-items:center}.pwt svg{width:20px;height:20px}.pwt:hover{background:#fff3e6}.pwt[aria-pressed="true"]{color:#b85300}
+#gate .inp input[type="password"],#gate .inp input#lp{padding-right:46px}
+#gate .err:not(:empty){display:flex;gap:8px;align-items:flex-start;background:#fdecea;border-radius:8px;padding:8px 10px;color:#9b2c25;font-weight:600}
+#gate .err:not(:empty)::before{content:"!";flex:none;width:18px;height:18px;border-radius:50%;background:#b4372f;color:#fff;display:grid;place-items:center;font-size:.75rem;font-weight:900}
+.lbtn{height:48px;font-size:1rem;border-radius:10px!important;background:#b85300!important;color:#fff!important;display:flex;align-items:center;justify-content:center;gap:10px}
+.lbtn:hover{background:#8f4000!important}
+.lbtn:disabled::before{content:"";width:16px;height:16px;border-radius:50%;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;animation:spin .8s linear infinite}
+.galt{display:grid;gap:6px;border-top:1px solid var(--line);padding-top:14px;font-size:.9rem;color:var(--ink-2)}
+.galt .lnk{font-size:.9rem;text-decoration:underline;padding:0 2px}
+.gfoot{margin:0;font-size:.8rem;color:#ffe3c4;text-align:center}
+.gtools{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:max(16px,env(safe-area-inset-right,0px))}
+.gload{display:grid;gap:14px}
+.gbar{height:6px;border-radius:3px;background:#ffe3c4;overflow:hidden}.gbar i{display:block;height:100%;width:30%;background:#b85300;border-radius:3px;transition:width .6s ease}
+.gsteps{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.gsteps li{display:flex;align-items:center;gap:10px;color:#a8988a}
+.gsteps li::before{content:"";width:18px;height:18px;border-radius:50%;border:2px solid #e2d3c4;flex:none;box-sizing:border-box}
+.gsteps li.on{color:var(--ink);font-weight:600}.gsteps li.on::before{border-color:#b85300;border-top-color:transparent;animation:spin .9s linear infinite}
+.gsteps li.done::before,.gsteps li:first-child.on::before{animation:none;background:#16794a;border-color:#16794a}
+@media (max-width:860px){.gwrap{grid-template-columns:minmax(0,1fr);gap:24px;max-width:460px}.gside{order:2;gap:10px}.gtitle{font-size:1.5rem}.gsub,.gfeat{display:none}#gate{padding-block:64px 16px}}
 /*C2E*/</style>
 </head>
 <body>
 
 
 <section id="gate" class="gut">
-  <div class="gcard" id="gateCard">
-    <span class="eyebrow">Asuntos Públicos</span>
-    <h1>Plataforma Gestión Relacionamiento con Pesca Artesanal · AAPP Norte</h1>
-    <div class="spinner" aria-hidden="true"></div>
-    <p style="text-align:center">Verificando tu acceso…</p>
+  <div class="gtools" id="gTools"></div>
+  <div class="gwrap">
+    <div class="gside">
+      <div class="gbrand"><svg class="glogo" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="23" fill="#fff"/><path d="M8 30c4-3 8-3 12 0s8 3 12 0 8-3 8-3" fill="none" stroke="#b85300" stroke-width="2.6" stroke-linecap="round"/><path d="M8 36c4-3 8-3 12 0s8 3 12 0 8-3 8-3" fill="none" stroke="#f2902a" stroke-width="2.2" stroke-linecap="round" opacity=".8"/><path d="M13 20c4-6 13-7 18-2l5-3v10l-5-3c-5 5-14 4-18-2z" fill="#3b1d00"/><circle cx="28" cy="19" r="1.3" fill="#fff"/></svg><span>Asuntos Públicos Norte</span></div>
+      <p class="gtitle">Relacionamiento con la pesca artesanal</p>
+      <p class="gsub">Desembarque, exigencias ambientales y negociación con las caletas de Antofagasta y Coquimbo, en un solo lugar.</p>
+      <ul class="gfeat">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12c3.5-5 10-6 14-2.5L21 6v12l-4-3.5C13 18 6.5 17 3 12z"/></svg><span>Desembarque por caleta, especie y pescador</span></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h7M9 16h7"/></svg><span>Compromisos de las RCA y su seguimiento</span></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8.5 7.5h7M8.5 12h1M14.5 12h1M8.5 16h1M14.5 16h1"/></svg><span>Cálculo de compensaciones para negociar</span></li>
+      </ul>
+      <p class="grange" id="gSideRange"></p>
+    </div>
+    <div class="gcard" id="gateCard">
+      <span class="eyebrow">Asuntos Públicos Norte</span>
+      <h1>Relacionamiento con la pesca artesanal</h1>
+      <div class="spinner" aria-hidden="true"></div>
+      <p style="text-align:center">Verificando tu acceso…</p>
+    </div>
   </div>
+  <p class="gfoot">Acceso solo para personas autorizadas · Los datos viajan y se guardan cifrados</p>
 </section>
 
 <div id="app" hidden>
@@ -1588,21 +1646,21 @@ async function api(path,opts={}){
 }
 const ROLE_LBL={administrador:"Administrador",visualizador:"Visualizador"};
 let RANGE="";
-function gate(html){$("#gate").hidden=false;$("#app").hidden=true;$("#gateCard").innerHTML=`<span class="eyebrow">AAPP Norte</span><h1>Plataforma Gestión Relacionamiento con Pesca Artesanal</h1>`+html+`<p class="cs" id="gateRange">${RANGE?esc(RANGE):""}</p>`}
+function gate(html){$("#gate").hidden=false;$("#app").hidden=true;$("#gateCard").innerHTML=`<span class="eyebrow">Asuntos Públicos Norte</span><h1>Relacionamiento con la pesca artesanal</h1>`+html;const sr=$("#gSideRange");if(sr)sr.innerHTML=RANGE?`<span class="gdot" aria-hidden="true"></span>${esc(RANGE)}`:""}
 async function boot(){
   try{const e=await api("estado");if(e&&e.desde)RANGE=`Datos desde el ${e.desde} hasta el ${e.hasta}`}catch(e){}
   try{const me=await api("me");if(me&&me.user){S.acct=me.user;setPerm(me.user);await enter();return}}catch(e){}
   showLogin();
 }
 function showLogin(msg){
-  gate(`<p>Inicia sesión para ver el dashboard.</p>
-  <form id="loginForm" style="display:grid;gap:12px" autocomplete="on">
-    <div class="field"><label for="lu">Usuario</label><input id="lu" name="username" autocomplete="username" required autofocus></div>
-    <div class="field"><label for="lp">Contraseña</label><input id="lp" name="password" type="password" autocomplete="current-password" required></div>
+  gate(`<p class="gintro">Ingresa con tu usuario y contraseña.</p>
+  <form id="loginForm" class="lform" autocomplete="on">
+    <div class="field"><label for="lu">Usuario</label><div class="inp"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg><input id="lu" name="username" autocomplete="username" required autofocus placeholder="ej. jperez"></div></div>
+    <div class="field"><label for="lp">Contraseña</label><div class="inp"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 018 0v3"/></svg><input id="lp" name="password" type="password" autocomplete="current-password" required><button type="button" class="pwt" aria-label="Mostrar contraseña" aria-pressed="false" title="Mostrar contraseña"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
     <p class="err" id="lErr" role="alert">${msg?esc(msg):""}</p>
-    <button class="btn" type="submit" id="lBtn">Iniciar sesión</button>
+    <button class="btn lbtn" type="submit" id="lBtn">Iniciar sesión</button>
   </form>
-  <p class="cs" style="border-top:1px solid var(--line);padding-top:12px">¿No tienes usuario? <button type="button" class="btn ghost small" id="goReg">Crear cuenta</button></p>`);
+  <div class="galt"><span>¿No tienes usuario? <button type="button" class="lnk" id="goReg">Crear cuenta</button></span><span class="cs">¿Olvidaste tu contraseña? Pide a un administrador que la restablezca.</span></div>`);
   $("#goReg").onclick=showRegister;
   $("#loginForm").addEventListener("submit",async ev=>{ev.preventDefault();const b=$("#lBtn"),err=$("#lErr");err.textContent="";b.disabled=true;b.textContent="Verificando…";
     try{const r=await api("login",{method:"POST",body:{usuario:$("#lu").value,password:$("#lp").value}});S.acct=r.user;setPerm(r.user);await enter()}
@@ -1633,7 +1691,7 @@ function showRegister(){
     catch(e){err.textContent=e.message||"No se pudo crear la cuenta.";b.disabled=false;b.textContent="Crear cuenta"}});
 }
 async function enter(){
-  $("#gateCard").innerHTML=`<div class="spinner"></div><p style="text-align:center">Cargando datos…</p>`;
+  $("#gateCard").innerHTML=`<span class="eyebrow">Asuntos Públicos Norte</span><h1>Relacionamiento con la pesca artesanal</h1><div class="gload" role="status" aria-live="polite"><div class="gbar"><i></i></div><ol class="gsteps"><li class="on">Acceso verificado</li><li>Abriendo los datos cifrados</li><li>Preparando los gráficos</li></ol></div>`;gLoadSteps();
   const ok=await loadData();if(!ok)return;
   $("#gate").hidden=true;$("#app").hidden=false;setTab("resumen");
   const c=S.acct,first=(c.nombre||"").trim().split(/\s+/)[0];
@@ -4777,8 +4835,14 @@ function a11ySay(msg){const r=document.getElementById("a11yLive");if(!r)return;r
   const closeP=()=>{pnl.hidden=true;D.querySelectorAll(".a11y-b").forEach(b=>b.setAttribute("aria-expanded","false"));if(pnl._from&&pnl._from.isConnected)pnl._from.focus()};
   D.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&!pnl.hidden){ev.stopPropagation();closeP()}},true);
   D.addEventListener("click",ev=>{if(!pnl.hidden&&!pnl.contains(ev.target)&&!ev.target.closest(".a11y-b"))closeP()});
-  const top=D.querySelector("#app .top-r");if(top)mk(top);const gc=$("#gateCard");if(gc)mk(gc);apply();
+  const top=D.querySelector("#app .top-r");if(top)mk(top);const gc=$("#gTools");if(gc)mk(gc);apply();
 })();
+
+/* ================= Pantalla de inicio de sesión ================= */
+function gLoadSteps(){let k=0;const t=setInterval(()=>{const li=document.querySelectorAll("#gateCard .gsteps li");if(!li.length){clearInterval(t);return}k=Math.min(li.length-1,k+1);li.forEach((x,j)=>{x.classList.toggle("on",j<=k);x.classList.toggle("done",j<k)});const b=document.querySelector("#gateCard .gbar i");if(b)b.style.width=Math.round((k+1)/li.length*90)+"%";if(k>=li.length-1)clearInterval(t)},900)}
+document.addEventListener("click",ev=>{const b=ev.target.closest(".pwt");if(!b)return;const i=b.parentNode.querySelector("input");if(!i)return;const show=i.type==="password";i.type=show?"text":"password";b.setAttribute("aria-pressed",String(show));b.setAttribute("aria-label",show?"Ocultar contraseña":"Mostrar contraseña");b.title=b.getAttribute("aria-label");i.focus()});
+document.addEventListener("input",ev=>{if(ev.target.closest&&ev.target.closest("#loginForm")){ev.target.removeAttribute("aria-invalid");const e=$("#lErr");if(e&&e.textContent)e.textContent=""}});
+new MutationObserver(()=>{const e=$("#lErr");if(!e)return;const bad=!!e.textContent.trim()&&/incorrect/i.test(e.textContent);["#lu","#lp"].forEach(s=>{const i=$(s);if(i){if(bad){i.setAttribute("aria-invalid","true");i.setAttribute("aria-describedby","lErr")}}})}).observe(document.getElementById("gate"),{subtree:true,childList:true,characterData:true});
 
 /*C2E*/</script>
 
