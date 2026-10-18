@@ -2582,8 +2582,8 @@ function rcRemoveCard(card){card.classList.add("gone");setTimeout(()=>{card.remo
 const rcCatCls=c=>c===RC_DESC?"cx":c==null?"cn":"c"+c;
 const rcVisible=s=>!!(s&&s.h&&s.c!=null&&s.c!==RC_DESC);
 async function rcLoad(force){if(RC.loaded&&!force)return;try{const r=await RCST.load();RC.base=r.base;RC.meta=r.meta;RC.st=r.estado;RC.hidden=r.hidden;RC.seg=r.seg||new Map();RC.hist=r.hist||[];RC.sgDraft=new Map();RC.warn="";rcIndex();rcGroups();rcMigrar()}catch(e){RC.warn=e&&e.message||"No se pudieron leer las RCA."}RC.loaded=true;RC.built=false}
-const RCA_FILES=/(^|\.)vercel\.app$/.test(location.hostname)?"/rca/":"https://ivillalobosgaete.vercel.app/rca/";
-const rcPdfUrl=r=>r.url||(RCA_FILES+encodeURIComponent(r.archivo||("RCA "+r.id+".pdf")));
+const RCA_FILES="https://ivillalobosgaete.vercel.app/rca/";
+const rcPdfUrl=r=>RCA_FILES+encodeURIComponent(r.archivo||("RCA "+r.id+".pdf"));
 const rcPag=f=>f[10]&&f[10]!==f[4]?`ref. págs. ${f[4]}–${f[10]}`:`ref. pág. ${f[4]}`;
 function rcIndex(){RC.idx=RC.base?RC.base.f.map(f=>norm(f[5]+" "+f[2]+" "+f[3])):null}
 const ACC={a:"aáàäâ",e:"eéèëê",i:"iíìïî",o:"oóòöô",u:"uúùüû",n:"nñ",c:"cç"};
@@ -2668,7 +2668,7 @@ function renderRcaDetail(){const el=$("#rcaDetail"),adm=S.perm.admin;if(!RC.f.rc
      <div class="w2"><span>Alcance</span><b class="txt">${esc((r.resumen&&r.resumen.alcance)||"—")}</b></div></div>
    ${r.resumen?`<div class="rs"><dl><dt>Descripción</dt><dd>${esc(r.resumen.descripcion)}</dd></dl></div>`:""}
    ${r.ocr?`<p class="warnbox">Esta RCA es un documento escaneado. Su texto se obtuvo por reconocimiento óptico y puede tener errores: verifica en el documento original antes de usar una cita.</p>`:""}
-   <div class="row" style="justify-content:flex-start;flex-wrap:wrap"><a class="btn small" href="${esc(rcPdfUrl(r))}" target="_blank" rel="noopener" title="Enlace del Consolidado RCA: expediente en el SEIA, donde se descarga el PDF de la RCA">Descargar RCA (PDF) en el SEIA ↗</a>${adm?`<label class="rd-vis"><input type="checkbox" id="rcaVis" ${RC.hidden.has(r.id)?"":"checked"}> RCA visible para los usuarios</label>`:""}</div>`;
+   <div class="row" style="justify-content:flex-start;flex-wrap:wrap">${r.url?`<a class="btn ghost small" href="${esc(r.url)}" target="_blank" rel="noopener">Ver expediente en el SEIA ↗</a>`:""}<a class="btn small" href="${esc(rcPdfUrl(r))}" target="_blank" rel="noopener" title="${esc(rcPdfUrl(r))}">Descargar RCA (PDF) ↓</a>${adm?`<label class="rd-vis"><input type="checkbox" id="rcaVis" ${RC.hidden.has(r.id)?"":"checked"}> RCA visible para los usuarios</label>`:""}</div>`;
   const c=$("#rcaClr");if(c)c.onclick=()=>{RC.f.rca="";RC.page=0;rcSyncSel();renderRca()};
   const v=$("#rcaVis");if(v)v.onchange=async()=>{if(!await askYN(v.checked?`¿Hacer visible la RCA <b>${esc(r.rca)}/${r.anio||"s/f"}</b> para los usuarios?`:`¿Ocultar la RCA <b>${esc(r.rca)}/${r.anio||"s/f"}</b> a los usuarios?`,{title:v.checked?"Mostrar RCA":"Ocultar RCA"})){v.checked=!v.checked;return}v.disabled=true;if(v.checked)RC.hidden.delete(r.id);else RC.hidden.add(r.id);try{await RCST.setVisible(r.id,v.checked);ST.log("Exigencias ambientales",`RCA ${r.rca}/${r.anio} ${v.checked?"visible":"oculta"} para usuarios`);toast(v.checked?"La RCA quedó visible para los usuarios.":"La RCA quedó oculta para los usuarios.");renderRcaList()}catch(e){toast(e&&e.message||"No se pudo guardar.")}v.disabled=false}}
 function renderRcaRes(){document.querySelectorAll("#rcaModo button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.modo===RC.modo)));
@@ -4275,7 +4275,7 @@ rcFlush=async function(){if(!RC.dirty.size)return;const ids=[...RC.dirty];RC.dir
 function rcDecorate(){const adm=S.perm.admin;rcFiMap();
   document.querySelectorAll("#rcaRes .fi").forEach(card=>{const id=card.dataset.id,s=RC.st.get(id)||{},sec=rcSecOf(s),val=sec!=="rev"&&sec!=="desc",h=card.querySelector(".fi-h");
     card.querySelectorAll(".fi-h .vis,.fi-h .sug").forEach(e=>e.remove());
-    {const f=RC.fi.get(id),r=f&&RC.base.rcas[f[0]],pg=card.querySelector(".fi-h .fi-num+.cs");if(r&&pg&&!card.querySelector(".fi-pdf")){const a=document.createElement("a");a.className="fi-pdf";a.href=rcPdfUrl(r);a.target="_blank";a.rel="noopener";a.title="Descargar el PDF de la RCA desde el SEIA (enlace del Consolidado RCA) · página de referencia: "+f[4];a.textContent="RCA (SEIA) ↗";pg.after(a)}}
+    {const f=RC.fi.get(id),r=f&&RC.base.rcas[f[0]],pg=card.querySelector(".fi-h .fi-num+.cs");if(r&&pg&&!card.querySelector(".fi-pdf")){const a=document.createElement("a");a.className="fi-pdf";a.href=rcPdfUrl(r)+"#page="+f[4];a.target="_blank";a.rel="noopener";a.title="Abrir el PDF de la RCA en la página de referencia ("+f[4]+")";a.textContent="PDF ↗";pg.after(a)}}
     if(!adm&&!val){if(h&&sec==="rev"&&!h.querySelector(".nval")){const x=document.createElement("span");x.className="nval";x.textContent="Texto de la RCA · sin validar";x.title="Coincide con tu búsqueda, pero aún no ha sido validado como compromiso o exigencia";h.appendChild(x)}return}
     if(val&&h){const x=document.createElement("span");x.className="secc s-"+sec;x.textContent=secLbl(sec);h.appendChild(x)}
     if(adm&&sec==="rev"&&s.c!=null){h.querySelectorAll(".cc").forEach(e=>e.remove());h.querySelectorAll(".apc").forEach(e=>e.remove())}
