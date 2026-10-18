@@ -1,4 +1,4 @@
-# Plataforma Gestión Relacionamiento con Pesca Artesanal · AAPP Norte
+# Plataforma de Gestión Borde Costero · AAPP Norte
 
 Plataforma web para revisar el desembarque artesanal y la recolección de orilla de pescadores:
 - Asuntos Públicos Norte: Antofagasta y Mejillones.
