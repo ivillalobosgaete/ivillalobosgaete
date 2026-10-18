@@ -1094,6 +1094,8 @@ mark.rch{background:#ffe08a;color:inherit;border-radius:3px;padding:0 1px;box-sh
 @media(max-width:700px){.np-seg{flex-wrap:wrap;border-radius:12px}.np-seg button{flex:1}}
 /* Negociación: solo «Cálculo por pescador y especie» */
 section[data-pane="negociacion"]>*:not(#npCard){display:none!important}
+.np-rm{border:1px solid #e3b4ae;background:#fff5f4;color:#b23b32;border-radius:999px;padding:3px 10px;font-weight:800;font-size:.78rem;cursor:pointer;white-space:nowrap}.np-rm:hover{background:#fde8e6;border-color:#b23b32}
+#npCard tr.np-gone{opacity:0;transition:opacity .25s}
 /*C2E*/</style>
 </head>
 <body>
@@ -4472,7 +4474,7 @@ function npRender(){if(!S.R)return;const c=npCard();if(!c)return;const ae=docume
       <td><div class="fx-cl">${r.det.map(d=>`<span class="fx-k">${esc(m.E[d.e][1])}<button type="button" class="np-ex" data-c="${esc(d.c)}" aria-label="Quitar especie">×</button></span>`).join("")}<select class="np-ea" aria-label="Agregar especie"><option value="">+ Especie</option>${espOpts(r.p)}</select></div></td>
       <td class="r">${t0(r.kgs)}</td><td class="r">${npMoney(r.bruto)}</td>
       <td class="r"><input class="np-pc" type="number" min="0" max="100" step="1" value="${r.pc}" aria-label="Porcentaje reconocido"> %</td><td class="r"><b>${npMoney(r.fin)}</b></td>
-      <td><button type="button" class="np-rm lnk" aria-label="Quitar pescador">Quitar</button></td></tr>
+      <td><button type="button" class="np-rm" aria-label="Eliminar pescador del cálculo" title="Eliminar pescador del cálculo">🗑 Eliminar</button></td></tr>
       ${op?`<tr class="np-det"><td></td><td colspan="6"><table class="np-dt"><thead><tr><th>Especie</th><th class="r">Kilos (${bl})</th><th class="r">Precio por kilo</th><th class="r">Monto</th></tr></thead><tbody>${r.det.map(d=>`<tr><td>${esc(m.E[d.e][1])}</td><td class="r">${t0(d.q)}</td><td class="r">$ ${t0(d.pr)}</td><td class="r">${npMoney(d.m)}</td></tr>`).join("")||`<tr><td colspan="4" class="cs">Sin especies asignadas.</td></tr>`}</tbody></table></td></tr>`:""}`}).join("")}
     </tbody><tfoot><tr><td colspan="2"><b>Subtotal</b> (${t0(C.rows.length)} pescador${C.rows.length===1?"":"es"})</td><td class="r">${t0(C.totKg)}</td><td class="r">${npMoney(C.rows.reduce((s,r)=>s+r.bruto,0))}</td><td></td><td class="r"><b>${npMoney(C.tot)}</b></td><td></td></tr></tfoot></table></div>
     <div class="np-g"><div><b>Porcentaje sobre el total de la compensación</b><div class="cs">Se aplica al subtotal de todos los pescadores, no a cada uno.</div></div>
@@ -4505,7 +4507,7 @@ function npEv(ev){const t=ev.target,tr=t.closest("tr[data-k]"),k=tr&&tr.dataset.
 function npClick(ev){const t=ev.target,tr=t.closest("tr[data-k]"),k=tr&&tr.dataset.k;
   const sg=t.closest("[data-addp]");if(sg){const r=sg.dataset.addp;if(!NP.sel.includes(r))NP.sel.push(r);$("#npQ").value="";$("#npSug").hidden=true;npRe();return}
   if(t.closest(".np-ex")){const s=NP.esp.get(k);if(s)s.delete(t.closest(".np-ex").dataset.c);npRe();return}
-  if(t.closest(".np-rm")){NP.sel=NP.sel.filter(x=>x!==k);NP.esp.delete(k);NP.pct.delete(k);npRe();return}
+  if(t.closest(".np-rm")){const P=S.R.m.P[npIdx().get(k)],nm=P?P[1]:"RPA "+k;askYN(`¿Estás seguro de eliminar a <b>${esc(nm)}</b> (RPA ${esc(k)}) del cálculo?<br><span class="cs">Se quitarán sus especies y su porcentaje reconocido, y el total se recalculará.</span>`,{title:"Eliminar pescador",danger:true,si:"Sí, eliminar",no:"No"}).then(ok=>{if(!ok)return;const row=$(`#npCard tr[data-k="${CSS.escape(k)}"]`);const fin=()=>{NP.sel=NP.sel.filter(x=>x!==k);NP.esp.delete(k);NP.pct.delete(k);NP.open.delete(k);npRe();toast(`${nm} fue eliminado del cálculo.`)};if(row){row.classList.add("np-gone");const d=row.nextElementSibling;if(d&&d.classList.contains("np-det"))d.classList.add("np-gone");setTimeout(fin,250)}else fin()});return}
   if(t.closest(".np-tog")){NP.open.has(k)?NP.open.delete(k):NP.open.add(k);npRender();return}
   if(t.closest(".np-pr0")){NP.price.delete(t.closest(".np-pr0").dataset.c);npRe();const d=$("#npCard .np-pr");if(d)d.open=true;return}
   if(t.id==="npClr"){askYN("¿Quitar todos los pescadores del cálculo?",{title:"Cálculo por pescador"}).then(ok=>{if(ok){NP.sel=[];NP.esp.clear();NP.pct.clear();npRe()}});return}
