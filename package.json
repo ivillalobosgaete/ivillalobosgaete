@@ -6,7 +6,10 @@
   "description": "Estadísticas de Recolección y Captura · Asuntos Públicos",
   "scripts": {
     "start": "node server.js",
-    "hash": "node tools/hash.js"
+    "hash": "node tools/hash.js",
+    "rca-index": "node tools/rca-index.js"
   },
-  "engines": { "node": ">=18" }
+  "engines": {
+    "node": ">=18"
+  }
 }

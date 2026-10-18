@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-CL">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1107,6 +1107,53 @@ section[data-pane="negociacion"]>*:not(#npCard){display:none!important}
 .np-viz{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}.np-vc{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface);min-width:0}.np-vc.w12{grid-column:1/-1}.np-vc h4{margin:0 0 6px;font-size:.9rem}
 @media(max-width:800px){.np-viz{grid-template-columns:1fr}}
 .np-prdel{border:1px solid #e3b4ae;background:#fff5f4;color:#b23b32;border-radius:999px;padding:2px 9px;font-weight:800;font-size:.72rem;cursor:pointer;white-space:nowrap}.np-prdel:hover{background:#fde8e6;border-color:#b23b32}
+/* ===== Accesibilidad ===== */
+:root{--muted:#6b5a4a}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip{position:absolute;left:12px;top:-60px;z-index:1000;background:#fff;color:#3b1d00;font-weight:800;padding:10px 16px;border-radius:8px;border:3px solid #3b1d00;text-decoration:underline;transition:top .15s}
+.skip:focus{top:12px}
+#contenido:focus{outline:none}
+:focus-visible{outline:3px solid #1f5fa8;outline-offset:2px}
+.tabs .tl{display:flex;gap:6px}
+svg [tabindex]:focus{outline:none;stroke:#1f5fa8;stroke-width:3px}
+.a11y-w{display:inline-flex}
+.a11y-b{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.95);background:rgba(255,255,255,.9);color:#5a2a00;border-radius:999px;padding:6px 12px;font-weight:700;font-size:.82rem;white-space:nowrap}
+.a11y-b:hover{background:#fff}
+.gcard .a11y-w{justify-content:flex-end}.gcard .a11y-b{background:var(--brand-08);border-color:var(--line)}
+.a11y-p{position:fixed;top:calc(64px + env(safe-area-inset-top,0px));right:max(16px,env(safe-area-inset-right,0px));z-index:3100;width:min(330px,calc(100vw - 32px));background:#fff;color:#24170c;border:2px solid #3b1d00;border-radius:12px;box-shadow:0 16px 40px rgba(0,0,0,.25);padding:14px;display:grid;gap:8px}
+.a11y-h{display:flex;justify-content:space-between;align-items:center}.a11y-x{border:0;background:none;font-size:1.4rem;line-height:1;padding:2px 8px}
+.a11y-r{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.a11y-r>span:first-child{flex:1 1 100%;font-weight:700;font-size:.85rem}
+.a11y-r button{border:1px solid #3b1d00;background:#fff;border-radius:6px;padding:5px 12px;font-weight:800}
+.a11y-zv{min-width:52px;text-align:center;font-weight:700}
+.a11y-p [data-o]{text-align:left;border:1px solid #d9cbbd;background:#fff;border-radius:8px;padding:9px 12px;font-weight:600;display:flex;justify-content:space-between}
+.a11y-p [data-o]::after{content:"No";font-weight:800;color:#6b5a4a}
+.a11y-p [data-o][aria-pressed="true"]{border-color:#3b1d00;background:#ffe3c4}.a11y-p [data-o][aria-pressed="true"]::after{content:"Sí";color:#3b1d00}
+html.a11y-zoom body{zoom:var(--a11y-zoom)}
+html.a11y-ul a,html.a11y-ul .lnk{text-decoration:underline!important;text-underline-offset:2px}
+html.a11y-fo :focus-visible,html.a11y-fo :focus{outline:4px solid #1f5fa8!important;outline-offset:3px!important;box-shadow:0 0 0 7px #fff!important}
+html.a11y-sp body{letter-spacing:.04em;word-spacing:.12em;line-height:1.8}html.a11y-sp p,html.a11y-sp li,html.a11y-sp dd{line-height:1.9}
+html.a11y-rm *,html.a11y-rm *::before,html.a11y-rm *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+html.a11y-hc{--bg:#fff;--surface:#fff;--ink:#000;--ink-2:#000;--muted:#1a1a1a;--line:#000;--brand-ink:#5a2a00;--brand-soft:#ffd9ad;--brand-08:#fff3e6}
+html.a11y-hc body{background:#fff}html.a11y-hc .card,html.a11y-hc .kpi,html.a11y-hc aside,html.a11y-hc .slicer,html.a11y-hc .fi{border-color:#000!important;border-width:2px}
+html.a11y-hc .cs,html.a11y-hc .muted,html.a11y-hc small{color:#000!important}html.a11y-hc .btn.ghost{border:2px solid #000!important}
+/* Componentes del efecto y especies: aparecen y desaparecen */
+@keyframes fxIn{from{opacity:0;transform:scale(.6)}60%{opacity:1;transform:scale(1.08)}to{opacity:1;transform:none}}
+@keyframes fxFlash{0%,100%{box-shadow:0 0 0 0 rgba(22,121,74,0)}30%{box-shadow:0 0 0 4px rgba(22,121,74,.35)}}
+.fx-k.fx-in{animation:fxIn .32s ease-out,fxFlash .9s ease-out;background:var(--up-bg)!important;border-color:var(--up)!important}
+.fx-k.fx-out{transition:opacity .2s,transform .2s;opacity:0;transform:scale(.6)}
+.fx-none{font-style:italic}
+.fx-uns{color:#8a5a00}
+.np-eb{padding:3px 10px!important}
+/* Diálogo: agregar especies */
+.ne-m{width:min(620px,100%);max-height:92vh;display:grid;gap:10px;grid-template-rows:auto auto auto auto minmax(0,1fr) auto}
+.ne-m h2{margin:0;font-size:1.1rem}.ne-lb{font-size:.8rem;font-weight:700;color:var(--ink-2)}
+.ne-q{border:2px solid var(--brand);border-radius:8px;padding:9px 12px;width:100%}
+.ne-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.ne-bar .lnk{text-decoration:underline;padding:2px}
+.ne-l{overflow:auto;max-height:46vh;border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+.ne-g{border:0;margin:0 0 6px;padding:0}.ne-g legend{font-size:.74rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--brand-ink);padding:6px 0 2px}
+.ne-o{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:8px;align-items:center;padding:6px 4px;border-radius:6px;cursor:pointer}.ne-o:hover{background:var(--brand-08)}
+.ne-o input{width:18px;height:18px;accent-color:var(--brand);margin:0}.ne-o small{font-size:.76rem;color:var(--ink-2)}
+@media (max-width:560px){.ne-o{grid-template-columns:20px minmax(0,1fr)}.ne-o small{grid-column:2}}
 /*C2E*/</style>
 </head>
 <body>
@@ -2583,7 +2630,8 @@ const rcCatCls=c=>c===RC_DESC?"cx":c==null?"cn":"c"+c;
 const rcVisible=s=>!!(s&&s.h&&s.c!=null&&s.c!==RC_DESC);
 async function rcLoad(force){if(RC.loaded&&!force)return;try{const r=await RCST.load();RC.base=r.base;RC.meta=r.meta;RC.st=r.estado;RC.hidden=r.hidden;RC.seg=r.seg||new Map();RC.hist=r.hist||[];RC.sgDraft=new Map();RC.warn="";rcIndex();rcGroups();rcMigrar()}catch(e){RC.warn=e&&e.message||"No se pudieron leer las RCA."}RC.loaded=true;RC.built=false}
 const RCA_FILES="https://ivillalobosgaete.vercel.app/rca/";
-const rcPdfUrl=r=>RCA_FILES+encodeURIComponent(r.archivo||("RCA "+r.id+".pdf"));
+const rcPdfUrl=r=>rcxUrl(r)||(RCA_FILES+encodeURIComponent(r.archivo||("RCA "+r.id+".pdf")));
+const rcLinkTit=r=>rcxUrl(r)?"PDF de la RCA en la carpeta rca de la plataforma":"No se encontró el PDF de esta RCA en la carpeta rca";
 const rcPag=f=>f[10]&&f[10]!==f[4]?`ref. págs. ${f[4]}–${f[10]}`:`ref. pág. ${f[4]}`;
 function rcIndex(){RC.idx=RC.base?RC.base.f.map(f=>norm(f[5]+" "+f[2]+" "+f[3])):null}
 const ACC={a:"aáàäâ",e:"eéèëê",i:"iíìïî",o:"oóòöô",u:"uúùüû",n:"nñ",c:"cç"};
@@ -2658,7 +2706,7 @@ function renderRcaResumenes(){const B=RC.base,adm=S.perm.admin,mt=rcMatcher(RC.q
   const rs=B.rcas.filter(r=>(adm||!RC.hidden.has(r.id))&&(!RC.f.emp||r.empresa===RC.f.emp)&&(!RC.f.rca||r.id===RC.f.rca)&&(!RC.f.tipo||r.tipo===RC.f.tipo)&&(!mt||mt(norm(r.proyecto+" "+JSON.stringify(r.resumen||{})))))
     .sort((a,b)=>a.empresa.localeCompare(b.empresa)||(b.anio||0)-(a.anio||0));
   $("#rcaCount").innerHTML=`<b>${t0(rs.length)}</b> ${rs.length===1?"resumen":"resúmenes"} de RCA`;$("#rcaBulk").hidden=true;$("#rcaPager").innerHTML="";
-  $("#rcaRes").innerHTML=rs.map(r=>`<article class="rsum"><div class="fi-h"><span class="fi-rca">RCA ${esc(r.rca)}/${r.anio||"s/f"}</span><span class="fi-emp">${esc(r.empresa)}</span><span class="cs">${esc(r.tipo)}</span>${r.ocr?`<span class="cs">· documento escaneado</span>`:""}<span style="flex:1"></span><button type="button" class="btn ghost small" data-verfichas="${esc(r.id)}">Ver fichas</button>${r.url?`<a class="btn ghost small" href="${esc(r.url)}" target="_blank" rel="noopener">SEIA ↗</a>`:""}</div>
+  $("#rcaRes").innerHTML=rs.map(r=>`<article class="rsum"><div class="fi-h"><span class="fi-rca">RCA ${esc(r.rca)}/${r.anio||"s/f"}</span><span class="fi-emp">${esc(r.empresa)}</span><span class="cs">${esc(r.tipo)}</span>${r.ocr?`<span class="cs">· documento escaneado</span>`:""}<span style="flex:1"></span><button type="button" class="btn ghost small" data-verfichas="${esc(r.id)}">Ver fichas</button><a class="btn ghost small" href="${esc(rcPdfUrl(r))}" target="_blank" rel="noopener" title="${esc(rcLinkTit(r))}">RCA ↗</a>${r.url&&r.url!==rcPdfUrl(r)?`<a class="btn ghost small" href="${esc(r.url)}" target="_blank" rel="noopener">SEIA ↗</a>`:""}</div>
     <h4>${rcHi(r.proyecto,RC.q)}</h4>${rcResumenHtml(r,true)}</article>`).join("")||`<div class="card"><p class="cs" style="margin:0">No hay resoluciones con estos filtros.</p></div>`}
 function renderRcaDetail(){const el=$("#rcaDetail"),adm=S.perm.admin;if(!RC.f.rca){el.hidden=true;return}const r=RC.base.rcas.find(x=>x.id===RC.f.rca);if(!r){el.hidden=true;return}el.hidden=false;
   el.innerHTML=`<div class="tbar"><h3>RCA ${esc(r.rca)}/${r.anio||"s/f"} · ${esc(r.proyecto)}</h3><button class="btn ghost small" type="button" id="rcaClr">Ver todas las RCA</button></div>
@@ -2668,7 +2716,7 @@ function renderRcaDetail(){const el=$("#rcaDetail"),adm=S.perm.admin;if(!RC.f.rc
      <div class="w2"><span>Alcance</span><b class="txt">${esc((r.resumen&&r.resumen.alcance)||"—")}</b></div></div>
    ${r.resumen?`<div class="rs"><dl><dt>Descripción</dt><dd>${esc(r.resumen.descripcion)}</dd></dl></div>`:""}
    ${r.ocr?`<p class="warnbox">Esta RCA es un documento escaneado. Su texto se obtuvo por reconocimiento óptico y puede tener errores: verifica en el documento original antes de usar una cita.</p>`:""}
-   <div class="row" style="justify-content:flex-start;flex-wrap:wrap">${r.url?`<a class="btn ghost small" href="${esc(r.url)}" target="_blank" rel="noopener">Ver expediente en el SEIA ↗</a>`:""}<a class="btn small" href="${esc(rcPdfUrl(r))}" target="_blank" rel="noopener" title="${esc(rcPdfUrl(r))}">Descargar RCA (PDF) ↓</a>${adm?`<label class="rd-vis"><input type="checkbox" id="rcaVis" ${RC.hidden.has(r.id)?"":"checked"}> RCA visible para los usuarios</label>`:""}</div>`;
+   <div class="row" style="justify-content:flex-start;flex-wrap:wrap">${r.url?`<a class="btn ghost small" href="${esc(r.url)}" target="_blank" rel="noopener">Ver expediente en el SEIA ↗</a>`:""}<a class="btn small" href="${esc(rcPdfUrl(r))}" target="_blank" rel="noopener" title="${esc(rcLinkTit(r))}">Abrir RCA ${esc(r.rca)}/${r.anio||"s/f"} ↗<span class="sr-only"> (se abre en una pestaña nueva)</span></a>${adm?`<label class="rd-vis"><input type="checkbox" id="rcaVis" ${RC.hidden.has(r.id)?"":"checked"}> RCA visible para los usuarios</label>`:""}</div>`;
   const c=$("#rcaClr");if(c)c.onclick=()=>{RC.f.rca="";RC.page=0;rcSyncSel();renderRca()};
   const v=$("#rcaVis");if(v)v.onchange=async()=>{if(!await askYN(v.checked?`¿Hacer visible la RCA <b>${esc(r.rca)}/${r.anio||"s/f"}</b> para los usuarios?`:`¿Ocultar la RCA <b>${esc(r.rca)}/${r.anio||"s/f"}</b> a los usuarios?`,{title:v.checked?"Mostrar RCA":"Ocultar RCA"})){v.checked=!v.checked;return}v.disabled=true;if(v.checked)RC.hidden.delete(r.id);else RC.hidden.add(r.id);try{await RCST.setVisible(r.id,v.checked);ST.log("Exigencias ambientales",`RCA ${r.rca}/${r.anio} ${v.checked?"visible":"oculta"} para usuarios`);toast(v.checked?"La RCA quedó visible para los usuarios.":"La RCA quedó oculta para los usuarios.");renderRcaList()}catch(e){toast(e&&e.message||"No se pudo guardar.")}v.disabled=false}}
 function renderRcaRes(){document.querySelectorAll("#rcaModo button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.modo===RC.modo)));
@@ -4214,11 +4262,18 @@ function rcPanel(id){const s=RC.st.get(id)||{},d=rcDraft(id),sec=rcSecOf(s),val=
   <div class="fx-r"><label class="fx-f"><span>Tipo</span><select class="fx-c"><option value="">Elegir…</option>${cats.map((x,k)=>`<option value="${k}" ${d.c===k?"selected":""}>${esc(rcCatLbl(k))}</option>`).join("")}</select></label>
    <div class="fx-f"><span>¿Aplica a AP Norte?</span><div class="fx-seg"><button type="button" class="fx-ap" data-ap="1" aria-pressed="${d.ap===true}">Sí</button><button type="button" class="fx-ap" data-ap="0" aria-pressed="${d.ap===false}">No</button></div></div>
    <label class="fx-pe${d.pe?" on":""}"><input type="checkbox" class="fx-pec" ${d.pe?"checked":""}> Relación directa con pesca y comunidades pescadoras</label></div>
-  <div class="fx-f fx-cw"><span>Componentes ambientales</span><div class="fx-cl">${d.comp.map(k=>`<span class="fx-k">${esc(RCOMP[k][0])}<button type="button" class="fx-kx" data-k="${k}" aria-label="Quitar ${esc(RCOMP[k][0])}">×</button></span>`).join("")}<select class="fx-add" aria-label="Agregar componente ambiental"><option value="">+ Agregar componente</option>${RGRP.map(([g,gl])=>{const o=RCOMP.map((x,k)=>[x,k]).filter(([x,k])=>x[1]===g&&!d.comp.includes(k));return o.length?`<optgroup label="${gl}">${o.map(([x,k])=>`<option value="${k}">${esc(x[0])}</option>`).join("")}</optgroup>`:""}).join("")}</select></div></div>
+  <div class="fx-f fx-cw"><span>Componentes ambientales</span><div class="fx-cl">${d.comp.length?"":`<span class="cs fx-none">Sin componentes</span>`}${d.comp.map(k=>`<span class="fx-k" data-k="${k}">${esc(RCOMP[k][0])}<button type="button" class="fx-kx" data-k="${k}" aria-label="Quitar ${esc(RCOMP[k][0])}">×</button></span>`).join("")}<select class="fx-add" aria-label="Agregar componente ambiental"><option value="">+ Agregar componente</option>${RGRP.map(([g,gl])=>{const o=RCOMP.map((x,k)=>[x,k]).filter(([x,k])=>x[1]===g&&!d.comp.includes(k));return o.length?`<optgroup label="${gl}">${o.map(([x,k])=>`<option value="${k}">${esc(x[0])}</option>`).join("")}</optgroup>`:""}).join("")}</select></div></div>
   ${d.auto&&!val?`<div class="fx-note">El tipo, los componentes y la relación con pesca vienen <b>sugeridos automáticamente</b> según el texto: revísalos antes de validar.</div>`:""}
   <div class="fx-r fx-act"><input class="fi-nota" maxlength="300" placeholder="Nota interna (opcional)" value="${esc(s.n||"")}"><span class="fi-ok cs"></span><span class="fx-dest">${miss.length?`<span class="cs">Falta: ${miss.join(", ")}</span>`:`Irá a <b class="secc s-${rcDest(d)}">${esc(secLbl(rcDest(d)))}</b>`}</span>
    ${val?`<button type="button" class="btn ghost small fx-back">Volver a revisión</button>`:""}<button type="button" class="btn ghost small fx-desc">Descartar</button><button type="button" class="btn small fx-val" ${miss.length?"disabled":""}>${val?"Guardar cambios":"Validar"}</button></div></div>`}
-function rcPanelRefresh(id){const card=rcCard(id);if(!card)return;const p=card.querySelector(".fx");if(!p)return;const nv=p.querySelector(".fi-nota").value;p.outerHTML=rcPanel(id);const q=card.querySelector(".fx .fi-nota");if(q)q.value=nv}
+function rcPanelRefresh(id,p0,fx){let p=p0&&p0.isConnected?p0:null;if(!p){const card=rcCard(id);p=card&&card.querySelector(".fx")}if(!p)return null;const card=p.closest(".fi"),nt=p.querySelector(".fi-nota"),nv=nt?nt.value:"";const tmp=document.createElement("div");tmp.innerHTML=rcPanel(id);const np=tmp.firstElementChild;p.replaceWith(np);const q=np.querySelector(".fi-nota");if(q)q.value=nv;
+  if(fx&&fx.add!=null){const ch=np.querySelector(`.fx-k[data-k="${fx.add}"]`);if(ch){ch.classList.add("fx-in");setTimeout(()=>ch.classList.remove("fx-in"),900)}}
+  if(fx&&fx.focus){const f=np.querySelector(fx.focus);if(f)f.focus()}
+  if(card)rcLiveCmp(card,id);return np}
+/* Muestra en la ficha, al instante, los componentes que se están editando (aunque aún no se guarden) */
+function rcLiveCmp(card,id){const d=rcDraft(id),s=RC.st.get(id)||{},saved=(s.comp||[]).slice().sort((a,b)=>a-b).join(","),now=d.comp.slice().sort((a,b)=>a-b).join(",");let r=card.querySelector(".fi-cmp");
+  if(!r){if(!d.comp.length&&!d.pe)return;r=document.createElement("div");r.className="fi-cmp";const sc=card.querySelector(".fi-sec")||card.querySelector(".fi-h");if(sc)sc.after(r);else return}
+  const dirty=saved!==now||(!!s.pe)!==(!!d.pe);r.innerHTML=d.comp.length||d.pe?`<span class="cs">Componentes${dirty?" <b class=\"fx-uns\">(sin guardar)</b>":""}:</span>${d.comp.map(k=>RCOMP[k]?`<span class="cmp">${esc(RCOMP[k][0])}</span>`:"").join("")}${d.pe?`<span class="cmp pe">Pesca y comunidades pescadoras</span>`:""}`:`<span class="cmp warn">Sin componente asignado${dirty?" (sin guardar)":""}</span>`}
 function rcInVista(id){const v=RC.f.vista||(S.perm.admin?"todas":"validadas"),sec=rcSecOf(RC.st.get(id));
   if(v==="rev")return sec==="rev";if(v==="descartadas")return sec==="desc";if(v.startsWith("sec:"))return sec===v.slice(4);if(v==="validadas")return sec!=="rev"&&sec!=="desc";return sec!=="desc"}
 const rcSnap=id=>{const s=RC.st.get(id)||{};return{c:s.c??null,ap:s.ap,comp:s.comp,pe:s.pe,h:!!s.h}};
@@ -4275,7 +4330,7 @@ rcFlush=async function(){if(!RC.dirty.size)return;const ids=[...RC.dirty];RC.dir
 function rcDecorate(){const adm=S.perm.admin;rcFiMap();
   document.querySelectorAll("#rcaRes .fi").forEach(card=>{const id=card.dataset.id,s=RC.st.get(id)||{},sec=rcSecOf(s),val=sec!=="rev"&&sec!=="desc",h=card.querySelector(".fi-h");
     card.querySelectorAll(".fi-h .vis,.fi-h .sug").forEach(e=>e.remove());
-    {const f=RC.fi.get(id),r=f&&RC.base.rcas[f[0]],pg=card.querySelector(".fi-h .fi-num+.cs");if(r&&pg&&!card.querySelector(".fi-pdf")){const a=document.createElement("a");a.className="fi-pdf";a.href=rcPdfUrl(r)+"#page="+f[4];a.target="_blank";a.rel="noopener";a.title="Abrir el PDF de la RCA en la página de referencia ("+f[4]+")";a.textContent="PDF ↗";pg.after(a)}}
+    {const f=RC.fi.get(id),r=f&&RC.base.rcas[f[0]],pg=card.querySelector(".fi-h .fi-num+.cs");if(r&&pg&&!card.querySelector(".fi-pdf")){const a=document.createElement("a");a.className="fi-pdf";a.href=rcPdfUrl(r)+"#page="+f[4];a.target="_blank";a.rel="noopener";a.title=rcLinkTit(r)+" · página de referencia: "+f[4];a.textContent="RCA (PDF) ↗";a.setAttribute("aria-label","Abrir RCA "+r.rca+"/"+(r.anio||"s/f")+" en PDF (pestaña nueva)");pg.after(a)}}
     if(!adm&&!val){if(h&&sec==="rev"&&!h.querySelector(".nval")){const x=document.createElement("span");x.className="nval";x.textContent="Texto de la RCA · sin validar";x.title="Coincide con tu búsqueda, pero aún no ha sido validado como compromiso o exigencia";h.appendChild(x)}return}
     if(val&&h){const x=document.createElement("span");x.className="secc s-"+sec;x.textContent=secLbl(sec);h.appendChild(x)}
     if(adm&&sec==="rev"&&s.c!=null){h.querySelectorAll(".cc").forEach(e=>e.remove());h.querySelectorAll(".apc").forEach(e=>e.remove())}
@@ -4288,11 +4343,11 @@ function rcDecorate(){const adm=S.perm.admin;rcFiMap();
 $("#rcaRes").addEventListener("change",ev=>{const p=ev.target.closest(".fx");if(!p)return;const id=p.dataset.id,d=rcDraft(id);
   if(ev.target.classList.contains("fx-c"))d.c=ev.target.value===""?null:+ev.target.value;
   else if(ev.target.classList.contains("fx-pec"))d.pe=ev.target.checked;
-  else if(ev.target.classList.contains("fx-add")){if(ev.target.value==="")return;const k=+ev.target.value;if(!d.comp.includes(k)){d.comp.push(k);d.comp.sort((a,b)=>a-b)}}
-  else return;d.auto=false;rcPanelRefresh(id)});
+  else if(ev.target.classList.contains("fx-add")){if(ev.target.value==="")return;const k=+ev.target.value;if(!d.comp.includes(k)){d.comp.push(k);d.comp.sort((a,b)=>a-b)}d.auto=false;rcPanelRefresh(id,p,{add:k,focus:".fx-add"});a11ySay(`Componente ${RCOMP[k][0]} agregado.`);return}
+  else return;d.auto=false;rcPanelRefresh(id,p,{focus:"."+ev.target.classList[0]})});
 $("#rcaRes").addEventListener("click",async ev=>{const p=ev.target.closest(".fx");if(!p)return;const id=p.dataset.id,d=rcDraft(id),card=p.closest(".fi");
-  const ap=ev.target.closest(".fx-ap");if(ap){const nv=ap.dataset.ap==="1";d.ap=d.ap===nv?null:nv;d.auto=false;rcPanelRefresh(id);return}
-  const kx=ev.target.closest(".fx-kx");if(kx){d.comp=d.comp.filter(k=>k!==+kx.dataset.k);d.auto=false;rcPanelRefresh(id);return}
+  const ap=ev.target.closest(".fx-ap");if(ap){const nv=ap.dataset.ap==="1";d.ap=d.ap===nv?null:nv;d.auto=false;rcPanelRefresh(id,p,{focus:`.fx-ap[data-ap="${ap.dataset.ap}"]`});return}
+  const kx=ev.target.closest(".fx-kx");if(kx){const k=+kx.dataset.k,ch=kx.closest(".fx-k");d.comp=d.comp.filter(x=>x!==k);d.auto=false;a11ySay(`Componente ${RCOMP[k][0]} quitado.`);if(ch){ch.classList.add("fx-out");setTimeout(()=>rcPanelRefresh(id,p,{focus:".fx-add"}),200)}else rcPanelRefresh(id,p,{focus:".fx-add"});return}
   const num=(card.querySelector(".fi-num")||{}).textContent||"",s0=rcSnap(id),was=rcSecOf(RC.st.get(id));
   if(ev.target.closest(".fx-val")){const miss=rcMiss(d);if(miss.length){toast("Falta: "+miss.join(", ")+".");return}const dest=rcDest(d),nuevo=was==="rev";
     if(!await askYN(`¿Estás seguro de ${nuevo?"validar":"guardar los cambios de"} la ficha <b>${esc(num)}</b>?<br><span class="cs">${rcResume(d)}</span><br><br>Quedará en el apartado <b>«${esc(secLbl(dest))}»</b> y será visible para los usuarios.`,{title:nuevo?"Validar ficha":"Guardar cambios",si:nuevo?"Sí, validar":"Sí, guardar",no:"No"}))return;
@@ -4306,10 +4361,10 @@ $("#rcaRes").addEventListener("click",async ev=>{const p=ev.target.closest(".fx"
 /* Acciones sobre varias fichas */
 renderRcaBulk=function(){const el=$("#rcaBulk");if(!S.perm.admin||RC.modo!=="fichas"){el.hidden=true;return}el.hidden=false;const n=RC.sel.size,b=RC.bk||(RC.bk={c:null,ap:null,comp:[],pe:false}),dv=RC.f.vista==="descartadas";
   el.innerHTML=`<div class="bk-r"><span class="cs"><b>${t0(n)}</b> seleccionada${n===1?"":"s"}</span><button class="btn ghost small" type="button" data-b="page">Seleccionar esta página</button><button class="btn ghost small" type="button" data-b="all">Seleccionar todas (${t0((RC.rows||[]).length)})</button>${n?`<button class="btn ghost small" type="button" data-b="none">Quitar selección</button>`:""}</div>${n?(dv?`<div class="bk-r"><button class="btn small" type="button" data-bx="reev">Reevaluar seleccionadas</button></div>`:`<div class="bk-r bk-f"><select class="bk-c" aria-label="Tipo"><option value="">Tipo…</option>${rcCats().map((x,k)=>`<option value="${k}" ${b.c===k?"selected":""}>${esc(rcCatLbl(k))}</option>`).join("")}</select><select class="bk-ap" aria-label="¿Aplica a AP Norte?"><option value="">¿Aplica a AP Norte?</option><option value="1" ${b.ap===true?"selected":""}>Aplica a AP Norte</option><option value="0" ${b.ap===false?"selected":""}>No aplica a AP Norte</option></select><label class="fx-pe${b.pe?" on":""}"><input type="checkbox" class="bk-pe" ${b.pe?"checked":""}> Relación directa con pesca</label>
-    <span class="fx-cl">${b.comp.map(k=>`<span class="fx-k">${esc(RCOMP[k][0])}<button type="button" class="bk-kx" data-k="${k}" aria-label="Quitar">×</button></span>`).join("")}<select class="bk-add" aria-label="Agregar componente"><option value="">+ Componente</option>${RGRP.map(([g,gl])=>{const o=RCOMP.map((x,k)=>[x,k]).filter(([x,k])=>x[1]===g&&!b.comp.includes(k));return o.length?`<optgroup label="${gl}">${o.map(([x,k])=>`<option value="${k}">${esc(x[0])}</option>`).join("")}</optgroup>`:""}).join("")}</select></span>
+    <span class="fx-cl">${b.comp.map(k=>`<span class="fx-k${RC.bkNew===k?" fx-in":""}" data-k="${k}">${esc(RCOMP[k][0])}<button type="button" class="bk-kx" data-k="${k}" aria-label="Quitar ${esc(RCOMP[k][0])}">×</button></span>`).join("")}<select class="bk-add" aria-label="Agregar componente"><option value="">+ Componente</option>${RGRP.map(([g,gl])=>{const o=RCOMP.map((x,k)=>[x,k]).filter(([x,k])=>x[1]===g&&!b.comp.includes(k));return o.length?`<optgroup label="${gl}">${o.map(([x,k])=>`<option value="${k}">${esc(x[0])}</option>`).join("")}</optgroup>`:""}).join("")}</select></span>
     <button class="btn small" type="button" data-bx="val" ${rcMiss(b).length?"disabled":""}>Validar seleccionadas</button><button class="btn ghost small" type="button" data-bx="desc">Descartar seleccionadas</button></div>`):""}`};
-$("#rcaBulk").addEventListener("change",ev=>{const b=RC.bk;if(!b)return;if(ev.target.classList.contains("bk-c"))b.c=ev.target.value===""?null:+ev.target.value;else if(ev.target.classList.contains("bk-ap"))b.ap=ev.target.value===""?null:ev.target.value==="1";else if(ev.target.classList.contains("bk-pe"))b.pe=ev.target.checked;else if(ev.target.classList.contains("bk-add")){if(ev.target.value==="")return;const k=+ev.target.value;if(!b.comp.includes(k)){b.comp.push(k);b.comp.sort((x,y)=>x-y)}}else return;renderRcaBulk()});
-$("#rcaBulk").addEventListener("click",async ev=>{const kx=ev.target.closest(".bk-kx");if(kx){RC.bk.comp=RC.bk.comp.filter(k=>k!==+kx.dataset.k);renderRcaBulk();return}
+$("#rcaBulk").addEventListener("change",ev=>{const b=RC.bk;if(!b)return;if(ev.target.classList.contains("bk-c"))b.c=ev.target.value===""?null:+ev.target.value;else if(ev.target.classList.contains("bk-ap"))b.ap=ev.target.value===""?null:ev.target.value==="1";else if(ev.target.classList.contains("bk-pe"))b.pe=ev.target.checked;else if(ev.target.classList.contains("bk-add")){if(ev.target.value==="")return;const k=+ev.target.value;if(!b.comp.includes(k)){b.comp.push(k);b.comp.sort((x,y)=>x-y)}RC.bkNew=k;renderRcaBulk();RC.bkNew=null;const f=$("#rcaBulk .bk-add");if(f)f.focus();a11ySay(`Componente ${RCOMP[k][0]} agregado.`);return}else return;renderRcaBulk()});
+$("#rcaBulk").addEventListener("click",async ev=>{const kx=ev.target.closest(".bk-kx");if(kx){const k=+kx.dataset.k,ch=kx.closest(".fx-k");RC.bk.comp=RC.bk.comp.filter(x=>x!==k);a11ySay(`Componente ${RCOMP[k][0]} quitado.`);const go=()=>{renderRcaBulk();const f=$("#rcaBulk .bk-add");if(f)f.focus()};if(ch){ch.classList.add("fx-out");setTimeout(go,200)}else go();return}
   const x=ev.target.closest("[data-bx]");if(!x)return;const a=x.dataset.bx,ids=[...RC.sel],n=ids.length;if(!n)return;const fx=`${t0(n)} ficha${n>1?"s":""} seleccionada${n>1?"s":""}`,prevs=ids.map(id=>[id,rcSnap(id)]);
   const undo=()=>{prevs.forEach(([id,s])=>rcSet(id,s));renderRcaRes();renderRcaKpis()};
   if(a==="val"){const b=RC.bk,miss=rcMiss(b);if(miss.length){toast("Falta: "+miss.join(", ")+".");return}const dest=rcDest(b);
@@ -4479,12 +4534,12 @@ function npRender(){if(!S.R)return;const c=npCard();if(!c)return;const ae=docume
   const espOpts=p=>{const have=NP.esp.get(npKey(p))||new Set();return m.E.map((e,i)=>[e,i]).filter(([e])=>!have.has(String(e[0]))).sort((a,b)=>a[0][1].localeCompare(b[0][1],"es")).map(([e])=>`<option value="${esc(String(e[0]))}">${esc(e[1])}</option>`).join("")};
   const usados=new Map();C.rows.forEach(r=>r.det.forEach(d=>usados.set(d.e,d)));
   c.innerHTML=`<div class="tbar"><h3>Cálculo por pescador y especie${help("Elige uno o más pescadores y las especies que se les reconocen. Para cada especie se calcula: kilos (con los años, meses y fechas elegidos arriba) × precio por kilo. El monto de cada pescador se multiplica por su porcentaje reconocido en el sector. Al final puedes aplicar un porcentaje sobre el total del cálculo.")}</h3>
-    <div class="l">${C.rows.length?`<button class="btn ghost small" type="button" id="npCsv">Exportar CSV</button><button class="btn ghost small" type="button" id="npClr">Quitar todos</button>`:""}</div></div>
+    <div class="l">${C.rows.length?`<button class="btn small" type="button" id="npEspAll" aria-haspopup="dialog">+ Agregar especies al cálculo</button><button class="btn ghost small" type="button" id="npCsv">Exportar CSV</button><button class="btn ghost small" type="button" id="npClr">Quitar todos</button>`:""}</div></div>
    ${npFilt()}<p class="cs" style="margin:0 0 8px">Período del cálculo: ${C.y0}–${C.y1} · ${esc(mTxt)} · ${esc(npLugTxt())}${NP.f.d0!=null&&NP.f.d0===NP.f.d1?" · solo el "+dIso(NP.f.d0).split("-").reverse().join("-"):NP.f.d0!=null||NP.f.d1!=null?" · del "+(NP.f.d0!=null?dIso(NP.f.d0).split("-").reverse().join("-"):"inicio")+" al "+(NP.f.d1!=null?dIso(NP.f.d1).split("-").reverse().join("-"):"fin"):""}${NP.f.noVeda?" · sin desembarques en veda":""}.</p>
    <div class="np-add"><input type="search" id="npQ" placeholder="Agregar pescador: nombre o RPA" autocomplete="off" aria-label="Agregar pescador"><div class="np-sug" id="npSug" hidden></div></div>
    ${C.rows.length?`<div class="np-kpi" id="npKpi"></div><div class="tbl"><table class="np-t"><thead><tr><th>Pescador</th><th>Especies reconocidas</th><th class="r">Kilos (${bl})</th><th class="r">Monto según precio</th><th class="r">% reconocido en el sector</th><th class="r">Monto asignado</th><th></th></tr></thead><tbody>
     ${C.rows.map(r=>{const P=m.P[r.p],op=NP.open.has(r.k);return`<tr data-k="${esc(r.k)}"><td><button type="button" class="dtog np-tog" aria-expanded="${op}">${op?"▾":"▸"}</button> <b>${esc(P[1])}</b><br><span class="cs">RPA ${esc(r.k)}</span></td>
-      <td><div class="fx-cl">${r.det.map(d=>`<span class="fx-k">${esc(m.E[d.e][1])}<button type="button" class="np-ex" data-c="${esc(d.c)}" aria-label="Quitar especie">×</button></span>`).join("")}<select class="np-ea" aria-label="Agregar especie"><option value="">+ Especie</option>${espOpts(r.p)}</select></div></td>
+      <td><div class="fx-cl">${r.det.length?"":`<span class="cs">Sin especies</span>`}${r.det.map(d=>`<span class="fx-k${NP.nuevas&&NP.nuevas.has(r.k+"|"+d.c)?" fx-in":""}" data-c="${esc(d.c)}">${esc(m.E[d.e][1])}<button type="button" class="np-ex" data-c="${esc(d.c)}" aria-label="Quitar ${esc(m.E[d.e][1])} de ${esc(m.P[r.p][1])}">×</button></span>`).join("")}<button type="button" class="btn ghost small np-eb" aria-haspopup="dialog">+ Especies</button></div></td>
       <td class="r">${t0(r.kgs)}</td><td class="r">${npMoney(r.bruto)}</td>
       <td class="r"><input class="np-pc" type="number" min="0" max="100" step="1" value="${r.pc}" aria-label="Porcentaje reconocido"> %</td><td class="r"><b>${npMoney(r.fin)}</b></td>
       <td><button type="button" class="np-rm" aria-label="Eliminar pescador del cálculo" title="Eliminar pescador del cálculo">🗑 Eliminar</button></td></tr>
@@ -4523,7 +4578,9 @@ function npEv(ev){const t=ev.target,tr=t.closest("tr[data-k]"),k=tr&&tr.dataset.
   if(t.classList.contains("np-ea")&&ev.type==="change"&&t.value){const s=NP.esp.get(k)||new Set();s.add(t.value);NP.esp.set(k,s);npRe();return}}
 function npClick(ev){const t=ev.target,tr=t.closest("tr[data-k]"),k=tr&&tr.dataset.k;
   const sg=t.closest("[data-addp]");if(sg){const r=sg.dataset.addp;if(!NP.sel.includes(r))NP.sel.push(r);$("#npQ").value="";$("#npSug").hidden=true;npRe();return}
-  if(t.closest(".np-ex")){const s=NP.esp.get(k);if(s)s.delete(t.closest(".np-ex").dataset.c);npRe();return}
+  if(t.closest(".np-eb")){npEspOpen(k);return}
+  if(t.id==="npEspAll"){npEspOpen("*");return}
+  if(t.closest(".np-ex")){const c=t.closest(".np-ex").dataset.c,ch=t.closest(".fx-k"),e=S.R.m.E.find(x=>String(x[0])===c);const go=()=>{const s=NP.esp.get(k);if(s)s.delete(c);npRe();const b=$(`#npCard tr[data-k="${CSS.escape(k)}"] .np-eb`);if(b)b.focus()};a11ySay(`${e?e[1]:"Especie"} quitada del cálculo.`);if(ch){ch.classList.add("fx-out");setTimeout(go,200)}else go();return}
   if(t.closest(".np-rm")){const P=S.R.m.P[npIdx().get(k)],nm=P?P[1]:"RPA "+k;askYN(`¿Estás seguro de eliminar a <b>${esc(nm)}</b> (RPA ${esc(k)}) del cálculo?<br><span class="cs">Se quitarán sus especies y su porcentaje reconocido, y el total se recalculará.</span>`,{title:"Eliminar pescador",danger:true,si:"Sí, eliminar",no:"No"}).then(ok=>{if(!ok)return;const row=$(`#npCard tr[data-k="${CSS.escape(k)}"]`);const fin=()=>{NP.sel=NP.sel.filter(x=>x!==k);NP.esp.delete(k);NP.pct.delete(k);NP.open.delete(k);npRe();toast(`${nm} fue eliminado del cálculo.`)};if(row){row.classList.add("np-gone");const d=row.nextElementSibling;if(d&&d.classList.contains("np-det"))d.classList.add("np-gone");setTimeout(fin,250)}else fin()});return}
   if(t.closest(".np-tog")){NP.open.has(k)?NP.open.delete(k):NP.open.add(k);npRender();return}
   if(t.id==="npPrSave"){const n=NP.price.size,names=[...NP.price.keys()].map(k=>{const e=S.R.m.E.find(x=>String(x[0])===k);return e?e[1]:k});askYN(`¿Guardar ${t0(n)} precio${n===1?"":"s"} como precio base en Administración?<br><span class="cs">${names.slice(0,8).map(esc).join(", ")}${names.length>8?"…":""}</span>`,{title:"Guardar precios base",si:"Sí, guardar",no:"No"}).then(async ok=>{if(!ok)return;try{NP.price.forEach((v,k)=>{CFG.precios[k]=v});await cfgSave();NP.price.clear();npRe();toast("Precios base actualizados.");try{ST.log("Precios",`Actualizó ${n} precio(s) desde Negociación`)}catch(e){}}catch(e){toast(e&&e.message||"No se pudieron guardar los precios.")}});return}
@@ -4537,6 +4594,35 @@ function npClick(ev){const t=ev.target,tr=t.closest("tr[data-k]"),k=tr&&tr.datas
   if(t.id==="npFClr"){NP.f={y0:null,y1:null,mo:new Set([0,1,2,3,4,5,6,7,8,9,10,11]),d0:null,d1:null,noVeda:false,lug:"all"};npRe();toast("Se limpiaron todos los filtros del cálculo.");return}
   if(t.id==="npAddLug"){const L=npLugFis(),R=S.R;[...L].sort((a,b)=>b[1]-a[1]).forEach(([p])=>{const k=String(R.m.P[p][0]);if(!NP.sel.includes(k))NP.sel.push(k)});npRe();toast(`Se agregaron los pescadores de ${npLugTxt()}.`);return}
   const bb=t.closest("[data-npb]");if(bb){NP.base=bb.dataset.npb;npRe();return}}
+/* Diálogo para agregar una o más especies (a un pescador o a todos) */
+function npEspOpen(k0){const R=S.R,m=R.m,ix=npIdx();let ov=$("#npEspModal");if(!ov){ov=document.createElement("div");ov.className="overlay";ov.id="npEspModal";ov.hidden=true;document.body.appendChild(ov);ov.addEventListener("click",ev=>{if(ev.target===ov)ov.hidden=true})}
+  const D=npData().D,grpOrd=["Algas","Moluscos","Peces","Crustáceos","Otros"];let scope=k0,q="",pick=new Set();
+  const kgOf=(k,e)=>{if(k==="*"){let s=0;NP.sel.forEach(x=>{const mm=D.get(ix.get(x));if(mm)s+=mm.get(e)||0});return s}const mm=D.get(ix.get(k));return mm?mm.get(e)||0:0};
+  const has=(k,c)=>k==="*"?NP.sel.every(x=>(NP.esp.get(x)||new Set()).has(c)):(NP.esp.get(k)||new Set()).has(c);
+  const nmP=k=>{const p=ix.get(k);return p!=null?m.P[p][1]:"RPA "+k};
+  const draw=()=>{const w=norm(q).split(/\s+/).filter(Boolean);const list=m.E.map((e,i)=>({e,i,c:String(e[0]),kg:kgOf(scope,i)})).filter(o=>!has(scope,o.c)&&w.every(s=>norm(o.e[1]+" "+o.e[2]).includes(s)));
+    const groups=new Map();list.forEach(o=>{const g=o.e[2]||"Otros";if(!groups.has(g))groups.set(g,[]);groups.get(g).push(o)});
+    const gs=[...groups.keys()].sort((a,b)=>(grpOrd.indexOf(a)+1||9)-(grpOrd.indexOf(b)+1||9)||a.localeCompare(b,"es"));
+    const box=ov.querySelector(".ne-l");box.innerHTML=gs.length?gs.map(g=>`<fieldset class="ne-g"><legend>${esc(g)}</legend>${groups.get(g).sort((a,b)=>b.kg-a.kg||a.e[1].localeCompare(b.e[1],"es")).map(o=>`<label class="ne-o"><input type="checkbox" value="${esc(o.c)}" ${pick.has(o.c)?"checked":""}><span>${esc(o.e[1])}</span>${o.kg>0?`<small>${t0(o.kg)} kg en el período</small>`:`<small class="muted">sin desembarque en el período</small>`}</label>`).join("")}</fieldset>`).join(""):`<p class="cs">${w.length?"Ninguna especie coincide con la búsqueda.":"Todas las especies ya están en el cálculo."}</p>`;
+    ov.querySelector(".ne-n").textContent=list.length+" especie"+(list.length===1?"":"s")+" disponible"+(list.length===1?"":"s");upd()};
+  const upd=()=>{const b=ov.querySelector(".ne-ok");b.disabled=!pick.size;b.textContent=pick.size?`Agregar ${pick.size} especie${pick.size===1?"":"s"}`:"Agregar especies";ov.querySelector(".ne-c").textContent=pick.size?`${pick.size} seleccionada${pick.size===1?"":"s"}`:"Ninguna seleccionada"};
+  ov.innerHTML=`<div class="modal ne-m" role="dialog" aria-modal="true" aria-labelledby="neT"><h2 id="neT">Agregar especies al cálculo</h2>
+    <label class="field"><span class="ne-lb">Agregar a</span><select class="ne-s" aria-label="Agregar las especies a"><option value="*">Todos los pescadores del cálculo (${t0(NP.sel.length)})</option>${NP.sel.map(k=>`<option value="${esc(k)}" ${k===k0?"selected":""}>${esc(nmP(k))} · RPA ${esc(k)}</option>`).join("")}</select></label>
+    <input type="search" class="ne-q" placeholder="Buscar especie o grupo (ej.: loco, alga, peces)" aria-label="Buscar especie">
+    <div class="ne-bar"><span class="cs ne-n" aria-live="polite"></span><span style="flex:1"></span><button type="button" class="lnk ne-all">Marcar las visibles</button><button type="button" class="lnk ne-none">Desmarcar todas</button></div>
+    <div class="ne-l" role="group" aria-label="Especies disponibles"></div>
+    <div class="row"><span class="cs ne-c" aria-live="polite"></span><span style="flex:1"></span><button type="button" class="btn ghost ne-x">Cancelar</button><button type="button" class="btn ne-ok" disabled>Agregar especies</button></div></div>`;
+  const opener=document.activeElement;ov.hidden=false;draw();setTimeout(()=>ov.querySelector(".ne-q").focus(),30);
+  ov.querySelector(".ne-s").onchange=ev=>{scope=ev.target.value;pick.clear();draw()};
+  ov.querySelector(".ne-q").oninput=ev=>{q=ev.target.value;draw()};
+  ov.querySelector(".ne-l").onchange=ev=>{const c=ev.target.value;if(ev.target.checked)pick.add(c);else pick.delete(c);upd()};
+  ov.querySelector(".ne-all").onclick=()=>{ov.querySelectorAll(".ne-l input").forEach(i=>{i.checked=true;pick.add(i.value)});upd()};
+  ov.querySelector(".ne-none").onclick=()=>{pick.clear();ov.querySelectorAll(".ne-l input").forEach(i=>i.checked=false);upd()};
+  const close=()=>{ov.hidden=true;if(opener&&opener.isConnected)opener.focus()};ov.querySelector(".ne-x").onclick=close;
+  ov.querySelector(".ne-ok").onclick=()=>{if(!pick.size)return;const who=scope==="*"?NP.sel.slice():[scope];NP.nuevas=new Set();who.forEach(k=>{const s=NP.esp.get(k)||new Set();pick.forEach(c=>{if(!s.has(c)){s.add(c);NP.nuevas.add(k+"|"+c)}});NP.esp.set(k,s)});
+    const n=pick.size,nm=[...pick].map(c=>{const e=m.E.find(x=>String(x[0])===c);return e?e[1]:c});ov.hidden=true;npRe();NP.nuevas=null;
+    const msg=`${n===1?"Se agregó":"Se agregaron"} ${n} especie${n===1?"":"s"} (${nm.slice(0,4).join(", ")}${nm.length>4?"…":""}) ${scope==="*"?"a todos los pescadores":"a "+nmP(scope)}.`;toast(msg);a11ySay(msg);
+    const b=scope==="*"?$("#npEspAll"):$(`#npCard tr[data-k="${CSS.escape(scope)}"] .np-eb`);if(b)b.focus()}}
 function npSug(q){const box=$("#npSug");const w=norm(q).split(/\s+/).filter(Boolean);if(!w.length){box.hidden=true;return}const R=S.R,tot=new Float64Array(R.m.P.length);for(let i=0;i<R.n;i++)tot[R.p[i]]+=R.q[i];
   const LF=NP.f.lug&&NP.f.lug!=="all"?npLugFis():null;const hits=R.m.P.map((p,i)=>({i,p})).filter(x=>!NP.sel.includes(String(x.p[0]))&&(!LF||LF.has(x.i))&&w.every(s=>norm(x.p[1]+" "+x.p[0]).includes(s))).sort((a,b)=>tot[b.i]-tot[a.i]).slice(0,8);
   box.hidden=false;box.innerHTML=hits.length?hits.map(x=>`<button type="button" data-addp="${esc(String(x.p[0]))}">${esc(x.p[1])} <small>RPA ${esc(String(x.p[0]))} · ${tt(tot[x.i]/1000)} t</small></button>`).join(""):`<div class="cs" style="padding:6px 10px">Sin coincidencias</div>`}
@@ -4593,6 +4679,104 @@ function npViz(C){const R=S.R,m=R.m,box=$("#npViz"),kp=$("#npKpi");if(!box)retur
    const nz=[...Y].map((v,k)=>[v,y0+k]).filter(x=>x[0]>0);if(nz.length){const hi=nz.reduce((a,b)=>b[0]>a[0]?b:a),lo=nz.reduce((a,b)=>b[0]<a[0]?b:a),last=Y[nY-1],prev=Y[nY-2];
      setC("npCD",`El año con mayor monto equivalente fue <b>${hi[1]}</b> (${money(hi[0])}) y el menor ${lo[1]} (${money(lo[0])}). ${hi[0]>lo[0]*2?"La diferencia entre años es grande: elegir el período de referencia cambia mucho el resultado, por eso conviene comparar totales y promedios.":"Los montos son relativamente estables entre años."}${y1===R.y1&&R.lastYM%12<11?` ${y1} es un año incompleto (datos hasta ${MES[R.lastYM%12]}).`:""}`)}else setC("npCD","")}}
 
+})();
+
+/* ================= Enlace de cada RCA: PDF de la carpeta /rca/ del sitio ================= */
+/* rca/index.json lista los PDF publicados (se regenera con: node tools/rca-index.js). */
+const RCX={files:null,byNum:null,p:null};
+const rcxNum=s=>{const m=String(s??"").match(/\d+/);return m?String(+m[0]):""};
+function rcxUrl(r){if(!RCX.files||!r)return"";const enc=f=>RCA_FILES+encodeURIComponent(f);
+  if(r.archivo&&RCX.files.has(r.archivo))return enc(r.archivo);
+  const n=rcxNum(r.rca);const c=n&&RCX.byNum.get(n);return c&&c.length===1?enc(c[0]):""}
+function rcxLoad(){if(RCX.p)return RCX.p;RCX.p=(async()=>{try{const r=await fetch(RCA_FILES+"index.json",{cache:"no-cache"});if(!r.ok)return;const list=await r.json();
+  RCX.files=new Set(list);RCX.byNum=new Map();list.forEach(f=>{const m=f.match(/^RCA\s+0*(\d+)\.pdf$/i);if(!m)return;const k=String(+m[1]);(RCX.byNum.get(k)||RCX.byNum.set(k,[]).get(k)).push(f)});
+  if(S.tab==="rca"&&RC.base&&!$("#rcaBody").hidden){renderRcaRes();if(RC.f.rca)renderRcaDetail()}}catch(e){}})();return RCX.p}
+{const _r=renderRca;renderRca=async function(){rcxLoad();return _r.apply(this,arguments)}}
+
+/* ================= Accesibilidad universal (lectores de pantalla, teclado, contraste, tamaño de texto) ================= */
+function a11ySay(msg){const r=document.getElementById("a11yLive");if(!r)return;r.textContent="";setTimeout(()=>{r.textContent=msg},60)}
+(function(){
+  const D=document,html=D.documentElement;html.lang="es-CL";
+  // Región viva para anuncios y enlace para saltar al contenido
+  const live=D.createElement("div");live.id="a11yLive";live.className="sr-only";live.setAttribute("aria-live","polite");live.setAttribute("aria-atomic","true");D.body.appendChild(live);
+  const skip=D.createElement("a");skip.href="#contenido";skip.className="skip";skip.textContent="Saltar al contenido principal";D.body.prepend(skip);
+  const main=D.querySelector("#app main");if(main){main.id="contenido";main.tabIndex=-1}
+  skip.addEventListener("click",ev=>{const m=D.getElementById("contenido");if(m&&!m.closest("[hidden]")){ev.preventDefault();m.focus();m.scrollIntoView()}else{const g=D.querySelector("#gate input,#gate button");if(g){ev.preventDefault();g.focus()}}});
+  const t=$("#toast");if(t){t.setAttribute("role","status");t.setAttribute("aria-live","polite")}
+  const tip=$("#tip");if(tip)tip.setAttribute("aria-hidden","true");
+  const gate=$("#gate");if(gate)gate.setAttribute("role","main");
+  // Pestañas: relación pestaña–panel y navegación con flechas
+  const tabs=$("#tabs");if(tabs){tabs.setAttribute("aria-label","Secciones de la plataforma");tabs.removeAttribute("role");const tl=D.createElement("div");tl.setAttribute("role","tablist");tl.setAttribute("aria-label","Secciones");tl.className="tl";while(tabs.firstChild)tl.appendChild(tabs.firstChild);tabs.appendChild(tl);
+    tl.querySelectorAll("button[data-tab]").forEach(b=>{const k=b.dataset.tab;b.id="tab-"+k;b.type="button";const pn=D.querySelector(`section[data-pane="${k}"]`);if(pn){pn.id=pn.id||"pane-"+k;pn.setAttribute("role","tabpanel");pn.setAttribute("aria-labelledby",b.id);pn.tabIndex=-1;b.setAttribute("aria-controls",pn.id)}})}
+  const syncTabs=()=>D.querySelectorAll('[role="tablist"]').forEach(tl=>{const bs=[...tl.querySelectorAll('[role="tab"]')];if(!bs.length)return;const sel=bs.find(b=>b.getAttribute("aria-selected")==="true")||bs[0];bs.forEach(b=>b.tabIndex=b===sel?0:-1)});
+  D.addEventListener("keydown",ev=>{const b=ev.target.closest&&ev.target.closest('[role="tab"]');if(!b)return;const tl=b.closest('[role="tablist"]');if(!tl)return;const bs=[...tl.querySelectorAll('[role="tab"]')].filter(x=>!x.hidden);let i=bs.indexOf(b);
+    if(ev.key==="ArrowRight"||ev.key==="ArrowDown")i=(i+1)%bs.length;else if(ev.key==="ArrowLeft"||ev.key==="ArrowUp")i=(i-1+bs.length)%bs.length;else if(ev.key==="Home")i=0;else if(ev.key==="End")i=bs.length-1;else return;ev.preventDefault();bs[i].focus();bs[i].click()});
+  // Al cambiar de pestaña se anuncia la sección
+  if(typeof setTab==="function"){const _s=setTab;setTab=function(t){_s.apply(this,arguments);const b=D.getElementById("tab-"+t);if(b)a11ySay("Sección "+b.textContent.trim()+" abierta.");syncTabs()}}
+  // Diálogos: guardar el foco, atraparlo dentro y devolverlo al cerrar
+  const FOC='a[href],button:not([disabled]),input:not([disabled]):not([type="hidden"]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"]),summary';
+  const vis=el=>!!(el.offsetWidth||el.offsetHeight||el.getClientRects().length);
+  const openOv=()=>[...D.querySelectorAll(".overlay")].filter(o=>!o.hidden).pop();
+  const ret=new WeakMap();
+  new MutationObserver(ms=>ms.forEach(m=>{const o=m.target;if(!o.classList||!o.classList.contains("overlay"))return;
+    if(!o.hidden){if(!ret.has(o))ret.set(o,D.activeElement);const dlg=o.querySelector('[role="dialog"],[role="alertdialog"],.modal');if(dlg){if(!dlg.getAttribute("role"))dlg.setAttribute("role","dialog");dlg.setAttribute("aria-modal","true");if(!dlg.getAttribute("aria-label")&&!dlg.getAttribute("aria-labelledby")){const h=dlg.querySelector("h2,h3,b");if(h){h.id=h.id||"dlg-"+Math.random().toString(36).slice(2,8);dlg.setAttribute("aria-labelledby",h.id)}}
+      setTimeout(()=>{if(!dlg.contains(D.activeElement)){const f=[...dlg.querySelectorAll(FOC)].find(vis);if(f)f.focus()}},60)}}
+    else{const r=ret.get(o);ret.delete(o);if(r&&r.isConnected&&!r.closest("[hidden]"))setTimeout(()=>r.focus(),10)}})).observe(D.body,{subtree:true,attributes:true,attributeFilter:["hidden"]});
+  D.addEventListener("keydown",ev=>{if(ev.key!=="Tab")return;const o=openOv();if(!o)return;const f=[...o.querySelectorAll(FOC)].filter(vis);if(!f.length)return;const a=f[0],z=f[f.length-1];
+    if(!o.contains(D.activeElement)){ev.preventDefault();a.focus()}else if(ev.shiftKey&&D.activeElement===a){ev.preventDefault();z.focus()}else if(!ev.shiftKey&&D.activeElement===z){ev.preventDefault();a.focus()}});
+  // Menú de usuario: cerrar con Escape y volver al botón
+  D.addEventListener("keydown",ev=>{if(ev.key!=="Escape")return;const u=$("#uDrop"),ub=$("#uBtn");if(u&&!u.hidden){u.hidden=true;if(ub){ub.setAttribute("aria-expanded","false");ub.focus()}}});
+  // Nombres accesibles y semántica para el contenido que se dibuja dinámicamente
+  const txt=el=>(el.textContent||"").replace(/\s+/g," ").trim();
+  const nameOf=el=>el.getAttribute("aria-label")||el.getAttribute("aria-labelledby")||el.getAttribute("title")||"";
+  function fix(root){if(!root||!root.querySelectorAll)return;
+    root.querySelectorAll("input:not([type=hidden]),select,textarea").forEach(el=>{if(el.getAttribute("aria-label")||el.getAttribute("aria-labelledby"))return;if(el.id&&D.querySelector(`label[for="${CSS.escape(el.id)}"]`))return;if(el.closest("label")&&txt(el.closest("label")))return;
+      const ph=el.getAttribute("placeholder")||el.getAttribute("title");let lb=ph;if(!lb){const f=el.closest(".field,.fx-f,.np-fg,.pgroup,.rca-sel label");const s=f&&f.querySelector("span,label,.plabel");if(s&&s!==el)lb=txt(s)}if(!lb&&el.tagName==="SELECT"){const o=el.options&&el.options[0];if(o)lb=txt(o)}if(lb)el.setAttribute("aria-label",lb)});
+    root.querySelectorAll("button,a[href]").forEach(el=>{if(nameOf(el))return;const t=txt(el);if(t&&/[a-záéíóúñ0-9]{2,}/i.test(t))return;const lb=t==="×"||t==="✕"?"Cerrar":t==="i"?"Ayuda":t==="▸"||t==="▾"?"Ver detalle":t==="🗑"?"Eliminar":"";if(lb)el.setAttribute("aria-label",lb)});
+    root.querySelectorAll('a[target="_blank"]').forEach(a=>{if(a.dataset.a11y)return;a.dataset.a11y="1";if(!a.querySelector(".sr-only")&&!/pestaña nueva/.test(nameOf(a))){const s=D.createElement("span");s.className="sr-only";s.textContent=" (se abre en una pestaña nueva)";a.appendChild(s)}});
+    root.querySelectorAll("th").forEach(th=>{if(!th.hasAttribute("scope"))th.setAttribute("scope",th.closest("thead")?"col":"row")});
+    root.querySelectorAll("th.sort").forEach(th=>{if(th.tabIndex<0||!th.hasAttribute("tabindex")){th.tabIndex=0;th.setAttribute("role","columnheader")}});
+    root.querySelectorAll(".card svg,.ig svg,.np-vc svg,section svg").forEach(sv=>{if(sv.closest("button,a")||sv.getAttribute("aria-hidden")==="true")return;const hits=sv.querySelector('.hit,[data-hit],[role="button"],[role="img"]');
+      const card=sv.closest(".card,.np-vc,.ig");const h=card&&card.querySelector("h3,h4,.k");const cap=card&&card.querySelector(".cs,.concl");const lb=(h?txt(h):"Gráfico")+(cap&&txt(cap)?". "+txt(cap).slice(0,300):"");
+      try{const vb=sv.viewBox&&sv.viewBox.baseVal;if(vb&&vb.width&&vb.width<40)return}catch(e){}if(!sv.getAttribute("role")||sv.dataset.a11y){sv.dataset.a11y="1";sv.setAttribute("role",hits?"group":"img");sv.setAttribute("aria-label","Gráfico: "+lb)}});
+    root.querySelectorAll("details>summary").forEach(s=>{if(!s.hasAttribute("tabindex"))s.tabIndex=0});
+    root.querySelectorAll('[aria-pressed]:not(button),[role="button"]:not(button)').forEach(el=>{if(!el.hasAttribute("tabindex"))el.tabIndex=0});
+    root.querySelectorAll(".spinner").forEach(s=>{if(!s.getAttribute("role")){s.setAttribute("role","status");s.setAttribute("aria-label","Cargando")}});
+    root.querySelectorAll("img:not([alt])").forEach(i=>i.setAttribute("alt",""));
+    root.querySelectorAll("#rcaCount,#npC,.ne-n").forEach(el=>{if(!el.hasAttribute("aria-live"))el.setAttribute("aria-live","polite")})}
+  let qd=false;const q=new Set();const run=()=>{qd=false;const all=[...q];q.clear();all.forEach(n=>{try{fix(n)}catch(e){}});syncTabs()};
+  new MutationObserver(ms=>{ms.forEach(m=>m.addedNodes.forEach(n=>{if(n.nodeType===1)q.add(n.parentNode||n)}));if(!qd){qd=true;requestAnimationFrame(run)}}).observe(D.body,{childList:true,subtree:true});
+  fix(D.body);syncTabs();
+  // Encabezados ordenables y elementos con role=button: activables con Enter o Espacio
+  D.addEventListener("keydown",ev=>{if(ev.key!=="Enter"&&ev.key!==" ")return;const el=ev.target;if(!el.matches||el instanceof SVGElement)return;if(el.matches('th.sort,[role="button"]:not(button),[aria-pressed]:not(button)')){ev.preventDefault();el.click()}});
+  // Elementos interactivos de los gráficos: se pueden enfocar con el teclado y leen su detalle
+  if(typeof hover==="function"){const _h=hover;hover=function(node,html,onClick){const r=_h.apply(this,arguments);try{if(node&&node.setAttribute){const lbl=()=>{const h=typeof html==="function"?html():html;const d=D.createElement("div");d.innerHTML=String(h||"").replace(/<br\s*\/?>/gi,". ");return(d.textContent||"").replace(/\s+/g," ").trim()};
+      node.setAttribute("role",onClick?"button":"img");node.setAttribute("aria-label",lbl());if(onClick)node.setAttribute("tabindex","0");
+      node.addEventListener("focus",()=>{try{node.setAttribute("aria-label",lbl());const b=node.getBoundingClientRect();node.dispatchEvent(new PointerEvent("pointermove",{bubbles:true,clientX:(b.left+b.right)/2,clientY:b.top}))}catch(e){}});
+      node.addEventListener("blur",()=>{const t=$("#tip");if(t)t.hidden=true});
+      node.addEventListener("keydown",ev=>{if((ev.key==="Enter"||ev.key===" ")&&onClick){ev.preventDefault();node.dispatchEvent(new MouseEvent("click",{bubbles:true,ctrlKey:ev.ctrlKey,metaKey:ev.metaKey}))}})}}catch(e){}return r}}
+  // Panel de accesibilidad: tamaño de texto, alto contraste, subrayar enlaces, reducir movimiento, espaciado legible
+  const OPT_KEY="a11y.opts";let O={};try{O=JSON.parse(localStorage.getItem(OPT_KEY)||"{}")}catch(e){}
+  const apply=()=>{html.style.setProperty("--a11y-zoom",String(O.z||1));html.classList.toggle("a11y-zoom",(O.z||1)!==1);["hc","ul","rm","sp","fo"].forEach(k=>html.classList.toggle("a11y-"+k,!!O[k]));try{localStorage.setItem(OPT_KEY,JSON.stringify(O))}catch(e){}
+    D.querySelectorAll(".a11y-p [data-o]").forEach(b=>b.setAttribute("aria-pressed",String(!!O[b.dataset.o])));const zl=D.querySelector(".a11y-p .a11y-zv");if(zl)zl.textContent=Math.round((O.z||1)*100)+" %"};
+  const mk=host=>{const w=D.createElement("div");w.className="a11y-w";w.innerHTML=`<button type="button" class="a11y-b" aria-expanded="false" aria-controls="a11yPanel" title="Opciones de accesibilidad"><svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><circle cx="12" cy="4" r="2" fill="currentColor"/><path d="M4 8l8 2 8-2M12 10v5m0 0l-4 6m4-6l4 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Accesibilidad</span></button>`;
+    host.appendChild(w);w.querySelector(".a11y-b").onclick=ev=>{const p=$("#a11yPanel");const open=p.hidden;p.hidden=!open;D.querySelectorAll(".a11y-b").forEach(b=>b.setAttribute("aria-expanded",String(open)));if(open){p._from=ev.currentTarget;p.querySelector("button").focus()}}};
+  const pnl=D.createElement("div");pnl.id="a11yPanel";pnl.className="a11y-p";pnl.hidden=true;pnl.setAttribute("role","dialog");pnl.setAttribute("aria-label","Opciones de accesibilidad");
+  pnl.innerHTML=`<div class="a11y-h"><b>Accesibilidad</b><button type="button" class="a11y-x" aria-label="Cerrar opciones de accesibilidad">×</button></div>
+   <div class="a11y-r" role="group" aria-label="Tamaño del texto"><span>Tamaño del texto</span><button type="button" data-z="-1" aria-label="Reducir el texto">A−</button><span class="a11y-zv" aria-live="polite">100 %</span><button type="button" data-z="1" aria-label="Agrandar el texto">A+</button><button type="button" data-z="0" class="lnk">Restablecer</button></div>
+   <button type="button" data-o="hc" aria-pressed="false">Alto contraste</button>
+   <button type="button" data-o="ul" aria-pressed="false">Subrayar los enlaces</button>
+   <button type="button" data-o="fo" aria-pressed="false">Foco del teclado reforzado</button>
+   <button type="button" data-o="sp" aria-pressed="false">Espaciado de lectura amplio</button>
+   <button type="button" data-o="rm" aria-pressed="false">Reducir animaciones</button>
+   <p class="cs">Compatible con lectores de pantalla (NVDA, JAWS, VoiceOver, TalkBack). Usa Tab para avanzar, las flechas para cambiar de pestaña y Escape para cerrar ventanas.</p>`;
+  D.body.appendChild(pnl);
+  pnl.addEventListener("click",ev=>{const z=ev.target.closest("[data-z]"),o=ev.target.closest("[data-o]");if(z){const v=+z.dataset.z;O.z=v===0?1:Math.max(.9,Math.min(1.6,Math.round(((O.z||1)+v*.1)*10)/10));apply();a11ySay("Tamaño del texto "+Math.round(O.z*100)+" por ciento.");return}
+    if(o){O[o.dataset.o]=!O[o.dataset.o];apply();a11ySay(o.textContent+(O[o.dataset.o]?" activado.":" desactivado."));return}if(ev.target.closest(".a11y-x"))closeP()});
+  const closeP=()=>{pnl.hidden=true;D.querySelectorAll(".a11y-b").forEach(b=>b.setAttribute("aria-expanded","false"));if(pnl._from&&pnl._from.isConnected)pnl._from.focus()};
+  D.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&!pnl.hidden){ev.stopPropagation();closeP()}},true);
+  D.addEventListener("click",ev=>{if(!pnl.hidden&&!pnl.contains(ev.target)&&!ev.target.closest(".a11y-b"))closeP()});
+  const top=D.querySelector("#app .top-r");if(top)mk(top);const gc=$("#gateCard");if(gc)mk(gc);apply();
 })();
 
 /*C2E*/</script>
