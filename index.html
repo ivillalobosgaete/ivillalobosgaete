@@ -5132,7 +5132,7 @@ function cgScan(){document.querySelectorAll(".card h3, .card h4, .np-viz h4").fo
   window.__pwaInstall=plat=>{if(dp&&(!plat||plat==="android"&&!ios))return install();guide(plat)};
   async function install(){if(dp){dp.prompt();try{const r=await dp.userChoice;if(r&&r.outcome==="accepted"){dp=null;sync()}}catch(e){}return}guide()}
   function sync(){const show=!standalone();
-    [D.getElementById("gTools"),D.querySelector("#app .top-r")].forEach(host=>{if(!host)return;let b=host.querySelector(".inst-b");
+    {const g=D.querySelector("#gTools .inst-b");if(g)g.remove()}[D.querySelector("#app .top-r")].forEach(host=>{if(!host)return;let b=host.querySelector(".inst-b");
       if(!show){if(b)b.remove();return}
       if(!b){b=D.createElement("button");b.type="button";b.className="a11y-b inst-b";b.title="Instalar la plataforma como aplicación";b.innerHTML=ICO+"<span>Instalar app</span>";b.onclick=install;host.insertBefore(b,host.querySelector(".a11y-w")||null)}})}
   window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();dp=e;sync()});
