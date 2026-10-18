@@ -235,6 +235,7 @@ alter table public.rpa_cache enable row level security;
 
 ### Negociación: cálculo por pescador y especie
 - Se agregan uno o más pescadores (nombre o RPA) y, a cada uno, las especies que se le reconocen (por defecto, las que desembarcó en el período).
-- Monto por especie = kilos (promedio por año o total del período, con los años, meses, fechas y veda de la calculadora) × precio por kilo (precio base de Administración, editable solo para este cálculo).
+- El cuadro tiene sus propios filtros: años, meses a comparar, fechas desde/hasta o un día, y excluir los períodos de veda.
+- Monto por especie = kilos (promedio por año o total del período, con esos filtros) × precio por kilo (precio base de Administración, editable solo para este cálculo).
 - Cada pescador tiene un % reconocido en el sector (0–100) que multiplica su monto.
 - Un % sobre el total (0–100) se aplica al subtotal de todos los pescadores: «Pagar este % del total» o «Sumar este % al total». Exportable a CSV.

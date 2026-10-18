@@ -1084,6 +1084,11 @@ mark.rch{background:#ffe08a;color:inherit;border-radius:3px;padding:0 1px;box-sh
 .np-g input{width:70px;text-align:right}.np-tot{margin-left:auto;display:grid;text-align:right}.np-tot span{font-size:.72rem;font-weight:800;text-transform:uppercase;color:var(--muted)}.np-tot b{font-size:1.35rem}
 .np-pr{margin-top:10px}.np-prl{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:6px 16px}.np-prl label{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;justify-content:space-between;font-size:.84rem}.np-prl input{width:90px;text-align:right}
 @media(max-width:700px){.np-tot{margin-left:0;text-align:left}}
+.np-f{display:grid;gap:8px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 10px;background:var(--surface)}
+.np-fg{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:.86rem}.np-fg .plabel{min-width:120px;font-weight:700;font-size:.78rem;text-transform:uppercase;color:var(--muted)}
+.np-mo{display:flex;flex-wrap:wrap;gap:4px}.np-mo button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 10px;font-size:.8rem;font-weight:700;cursor:pointer;color:var(--ink-2)}
+.np-mo button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--on-brand,#241100)}
+.np-fg label{display:inline-flex;align-items:center;gap:4px}
 /*C2E*/</style>
 </head>
 <body>
@@ -4416,17 +4421,23 @@ $("#tbl").addEventListener("toggle",ev=>{const d=ev.target.closest&&ev.target.cl
 
 /* ================= Negociación: cálculo por pescador y especie ================= */
 const NP=(()=>{let o={};try{o=JSON.parse(localStorage.getItem("negPes")||"{}")}catch(e){}
-  return{sel:o.sel||[],esp:new Map(o.esp||[]),pct:new Map(o.pct||[]),price:new Map(o.price||[]),g:o.g??100,gm:o.gm||"aplicar",base:o.base||"prom",open:new Set()}})();
-function npSave(){try{localStorage.setItem("negPes",JSON.stringify({sel:NP.sel,esp:[...NP.esp].map(([k,v])=>[k,[...v]]),pct:[...NP.pct],price:[...NP.price],g:NP.g,gm:NP.gm,base:NP.base}))}catch(e){}}
+  const f=o.f||{};return{sel:o.sel||[],esp:new Map(o.esp||[]),pct:new Map(o.pct||[]),price:new Map(o.price||[]),g:o.g??100,gm:o.gm||"aplicar",base:o.base||"prom",open:new Set(),f:{y0:f.y0??null,y1:f.y1??null,mo:new Set(f.mo||[0,1,2,3,4,5,6,7,8,9,10,11]),d0:f.d0??null,d1:f.d1??null,noVeda:!!f.noVeda}}})();
+function npSave(){try{localStorage.setItem("negPes",JSON.stringify({sel:NP.sel,esp:[...NP.esp].map(([k,v])=>[k,[...v]]),pct:[...NP.pct],price:[...NP.price],g:NP.g,gm:NP.gm,base:NP.base,f:{...NP.f,mo:[...NP.f.mo]}}))}catch(e){}}
 NP.esp=new Map([...NP.esp].map(([k,v])=>[k,new Set(v)]));
 const npRpa=p=>String(S.R.m.P[p][0]);
 function npKey(p){return npRpa(p)}
 function npIdx(){const R=S.R;if(NP.ix&&NP.ixR===R)return NP.ix;const m=new Map();R.m.P.forEach((x,i)=>m.set(String(x[0]),i));NP.ix=m;NP.ixR=R;return m}
 /* Kilos por pescador y especie con los filtros de la calculadora (años, meses, fechas y veda) */
-function npData(){const R=S.R;let y0=+$("#nY0").value,y1=+$("#nY1").value;if(y0>y1)[y0,y1]=[y1,y0];const ms=N.mo,ix=npIdx(),want=new Set(NP.sel.map(k=>ix.get(k)).filter(x=>x!=null)),D=new Map();
-  for(let i=0;i<R.n;i++){const p=R.p[i];if(!want.has(p))continue;const y=R.yr[i]+R.y0;if(y<y0||y>y1||!ms.has(R.mo[i]))continue;if(N.d0!=null&&R.d[i]<N.d0)continue;if(N.d1!=null&&R.d[i]>N.d1)continue;if(N.noVeda&&window.__vedaRec&&window.__vedaRec(i))continue;
+function npData(){const R=S.R,F=NP.f;let y0=F.y0??R.y0,y1=F.y1??R.y1;y0=Math.max(R.y0,Math.min(R.y1,y0));y1=Math.max(R.y0,Math.min(R.y1,y1));if(y0>y1)[y0,y1]=[y1,y0];const ms=F.mo,ix=npIdx(),want=new Set(NP.sel.map(k=>ix.get(k)).filter(x=>x!=null)),D=new Map();
+  for(let i=0;i<R.n;i++){const p=R.p[i];if(!want.has(p))continue;const y=R.yr[i]+R.y0;if(y<y0||y>y1||!ms.has(R.mo[i]))continue;if(F.d0!=null&&R.d[i]<F.d0)continue;if(F.d1!=null&&R.d[i]>F.d1)continue;if(F.noVeda&&window.__vedaRec&&window.__vedaRec(i))continue;
     let a=D.get(p);if(!a){a=new Map();D.set(p,a)}a.set(R.e[i],(a.get(R.e[i])||0)+R.q[i])}
-  return{D,y0,y1,yN:y1-y0+1}}
+  let yN=0;for(let y=y0;y<=y1;y++){const a=Math.round((Date.UTC(y,0,1)-BASE)/DAY),b=Math.round((Date.UTC(y,11,31)-BASE)/DAY);if((F.d0==null||b>=F.d0)&&(F.d1==null||a<=F.d1))yN++}
+  return{D,y0,y1,yN:Math.max(1,yN)}}
+function npFilt(){const R=S.R,F=NP.f,yrs=[];for(let y=R.y0;y<=R.y1;y++)yrs.push(y);const y0=F.y0??R.y0,y1=F.y1??R.y1,all=F.mo.size===12;
+  return`<div class="np-f"><div class="np-fg"><span class="plabel">Años</span><select id="npY0" aria-label="Desde el año">${yrs.map(y=>`<option ${y===y0?"selected":""}>${y}</option>`).join("")}</select> a <select id="npY1" aria-label="Hasta el año">${yrs.map(y=>`<option ${y===y1?"selected":""}>${y}</option>`).join("")}</select></div>
+   <div class="np-fg"><span class="plabel">Meses a comparar</span><div class="np-mo"><button type="button" data-npm="all" aria-pressed="${all}">Todos</button>${MES.map((x,k)=>`<button type="button" data-npm="${k}" aria-pressed="${!all&&F.mo.has(k)}">${x}</button>`).join("")}</div></div>
+   <div class="np-fg"><span class="plabel">Fechas</span><label>Desde <input type="date" id="npD0" value="${F.d0!=null&&F.d0!==F.d1?dIso(F.d0):""}"></label><label>Hasta <input type="date" id="npD1" value="${F.d1!=null&&F.d0!==F.d1?dIso(F.d1):""}"></label><label>o un día <input type="date" id="npD" value="${F.d0!=null&&F.d0===F.d1?dIso(F.d0):""}"></label>${F.d0!=null||F.d1!=null?`<button type="button" class="lnk" id="npDc">Quitar fechas</button>`:""}</div>
+   <label class="amtog"><input type="checkbox" id="npNV" ${F.noVeda?"checked":""}> Excluir los períodos de veda (los desembarques en veda no se compensan)</label></div>`}
 const npPrice=e=>{const k=String(S.R.m.E[e][0]);return NP.price.has(k)?NP.price.get(k):(priceOf(e)||0)};
 function npCalc(){const R=S.R,{D,y0,y1,yN}=npData(),ix=npIdx(),rows=[];let tot=0,totKg=0;const sinPrecio=new Set();
   NP.sel.forEach(k=>{const p=ix.get(k);if(p==null)return;const kg=D.get(p)||new Map();
@@ -4440,12 +4451,12 @@ const npMoney=v=>money(v);
 function npCard(){let c=$("#npCard");if(c)return c;const ref=$("#scenCard");if(!ref)return null;c=document.createElement("div");c.className="card";c.id="npCard";ref.after(c);
   c.addEventListener("input",npEv);c.addEventListener("change",npEv);c.addEventListener("click",npClick);return c}
 function npRender(){if(!S.R)return;const c=npCard();if(!c)return;const ae=document.activeElement,fk=ae&&c.contains(ae)&&ae.tagName==='INPUT'?{id:ae.id,cl:ae.className,k:(ae.closest('tr[data-k]')||{}).dataset?.k,c:ae.dataset.c}:null;const R=S.R,m=R.m,C=npCalc(),bl=NP.base==="prom"?"kg/año":"kg";
-  const mTxt=N.mo.size===12?"todos los meses":[...N.mo].sort((a,b)=>a-b).map(x=>MES[x]).join(", ");
+  const mTxt=NP.f.mo.size===12?"todos los meses":[...NP.f.mo].sort((a,b)=>a-b).map(x=>MES[x]).join(", ");
   const espOpts=p=>{const have=NP.esp.get(npKey(p))||new Set();return m.E.map((e,i)=>[e,i]).filter(([e])=>!have.has(String(e[0]))).sort((a,b)=>a[0][1].localeCompare(b[0][1],"es")).map(([e])=>`<option value="${esc(String(e[0]))}">${esc(e[1])}</option>`).join("")};
   const usados=new Map();C.rows.forEach(r=>r.det.forEach(d=>usados.set(d.e,d)));
   c.innerHTML=`<div class="tbar"><h3>Cálculo por pescador y especie${help("Elige uno o más pescadores y las especies que se les reconocen. Para cada especie se calcula: kilos (con los años, meses y fechas elegidos arriba) × precio por kilo. El monto de cada pescador se multiplica por su porcentaje reconocido en el sector. Al final puedes aplicar un porcentaje sobre el total del cálculo.")}</h3>
     <div class="l"><label class="cs" for="npBase" style="margin:0">Kilos</label><select id="npBase"><option value="prom" ${NP.base==="prom"?"selected":""}>Promedio por año</option><option value="tot" ${NP.base==="tot"?"selected":""}>Total del período</option></select>${C.rows.length?`<button class="btn ghost small" type="button" id="npCsv">Exportar CSV</button><button class="btn ghost small" type="button" id="npClr">Quitar todos</button>`:""}</div></div>
-   <p class="cs" style="margin:0 0 8px">Período: ${C.y0}–${C.y1} · ${esc(mTxt)}${N.d0!=null||N.d1!=null?" · fechas acotadas":""}${N.noVeda?" · sin meses de veda":""}. Usa los filtros de la calculadora de arriba.</p>
+   ${npFilt()}<p class="cs" style="margin:0 0 8px">Período del cálculo: ${C.y0}–${C.y1} · ${esc(mTxt)}${NP.f.d0!=null&&NP.f.d0===NP.f.d1?" · solo el "+dIso(NP.f.d0).split("-").reverse().join("-"):NP.f.d0!=null||NP.f.d1!=null?" · del "+(NP.f.d0!=null?dIso(NP.f.d0).split("-").reverse().join("-"):"inicio")+" al "+(NP.f.d1!=null?dIso(NP.f.d1).split("-").reverse().join("-"):"fin"):""}${NP.f.noVeda?" · sin desembarques en veda":""}.</p>
    <div class="np-add"><input type="search" id="npQ" placeholder="Agregar pescador: nombre o RPA" autocomplete="off" aria-label="Agregar pescador"><div class="np-sug" id="npSug" hidden></div></div>
    ${C.rows.length?`<div class="tbl"><table class="np-t"><thead><tr><th>Pescador</th><th>Especies reconocidas</th><th class="r">Kilos (${bl})</th><th class="r">Monto según precio</th><th class="r">% reconocido en el sector</th><th class="r">Monto asignado</th><th></th></tr></thead><tbody>
     ${C.rows.map(r=>{const P=m.P[r.p],op=NP.open.has(r.k);return`<tr data-k="${esc(r.k)}"><td><button type="button" class="dtog np-tog" aria-expanded="${op}">${op?"▾":"▸"}</button> <b>${esc(P[1])}</b><br><span class="cs">RPA ${esc(r.k)}</span></td>
@@ -4471,6 +4482,10 @@ let npT=null;
 function npEv(ev){const t=ev.target,tr=t.closest("tr[data-k]"),k=tr&&tr.dataset.k;
   if(t.id==="npQ"){if(ev.type==="input")npSug(t.value);return}
   if(t.id==="npBase"&&ev.type==="change"){NP.base=t.value;npRe();return}
+  if(ev.type==="change"&&(t.id==="npY0"||t.id==="npY1")){NP.f[t.id==="npY0"?"y0":"y1"]=+t.value;npRe();return}
+  if(ev.type==="change"&&t.id==="npNV"){NP.f.noVeda=t.checked;npRe();return}
+  if(ev.type==="change"&&(t.id==="npD0"||t.id==="npD1")){const v=dIdx(t.value);if(t.id==="npD0")NP.f.d0=v;else NP.f.d1=v;if(NP.f.d0!=null&&NP.f.d1!=null&&NP.f.d0>NP.f.d1)[NP.f.d0,NP.f.d1]=[NP.f.d1,NP.f.d0];npRe();return}
+  if(ev.type==="change"&&t.id==="npD"){const v=dIdx(t.value);NP.f.d0=NP.f.d1=v;npRe();return}
   if(t.id==="npGm"&&ev.type==="change"){NP.gm=t.value;npRe();return}
   if(t.id==="npG"){clearTimeout(npT);npT=setTimeout(()=>{NP.g=Math.max(0,Math.min(100,+t.value||0));npSave();npRender();},500);return}
   if(t.classList.contains("np-pc")){clearTimeout(npT);npT=setTimeout(()=>{NP.pct.set(k,Math.max(0,Math.min(100,+t.value||0)));npSave();npRender()},500);return}
@@ -4483,7 +4498,9 @@ function npClick(ev){const t=ev.target,tr=t.closest("tr[data-k]"),k=tr&&tr.datas
   if(t.closest(".np-tog")){NP.open.has(k)?NP.open.delete(k):NP.open.add(k);npRender();return}
   if(t.closest(".np-pr0")){NP.price.delete(t.closest(".np-pr0").dataset.c);npRe();const d=$("#npCard .np-pr");if(d)d.open=true;return}
   if(t.id==="npClr"){askYN("¿Quitar todos los pescadores del cálculo?",{title:"Cálculo por pescador"}).then(ok=>{if(ok){NP.sel=[];NP.esp.clear();NP.pct.clear();npRe()}});return}
-  if(t.id==="npCsv"){npCsv();return}}
+  if(t.id==="npCsv"){npCsv();return}
+  const mb=t.closest("[data-npm]");if(mb){const v=mb.dataset.npm,F=NP.f;if(v==="all")F.mo=new Set([0,1,2,3,4,5,6,7,8,9,10,11]);else{const k=+v;if(F.mo.size===12)F.mo=new Set([k]);else{F.mo.has(k)?F.mo.delete(k):F.mo.add(k);if(!F.mo.size)F.mo=new Set([0,1,2,3,4,5,6,7,8,9,10,11])}}npRe();return}
+  if(t.id==="npDc"){NP.f.d0=NP.f.d1=null;npRe();return}}
 function npSug(q){const box=$("#npSug");const w=norm(q).split(/\s+/).filter(Boolean);if(!w.length){box.hidden=true;return}const R=S.R,tot=new Float64Array(R.m.P.length);for(let i=0;i<R.n;i++)tot[R.p[i]]+=R.q[i];
   const hits=R.m.P.map((p,i)=>({i,p})).filter(x=>!NP.sel.includes(String(x.p[0]))&&w.every(s=>norm(x.p[1]+" "+x.p[0]).includes(s))).sort((a,b)=>tot[b.i]-tot[a.i]).slice(0,8);
   box.hidden=false;box.innerHTML=hits.length?hits.map(x=>`<button type="button" data-addp="${esc(String(x.p[0]))}">${esc(x.p[1])} <small>RPA ${esc(String(x.p[0]))} · ${tt(tot[x.i]/1000)} t</small></button>`).join(""):`<div class="cs" style="padding:6px 10px">Sin coincidencias</div>`}
