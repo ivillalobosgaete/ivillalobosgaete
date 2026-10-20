@@ -8,10 +8,12 @@ import { handler, send, current } from "../lib/core.js";
 const VISOR = () => process.env.CCMM_VISOR || "https://visorasuntosmaritimos.ssffaa.gob.cl/deptoaamm/map/7";
 const UA = "Mozilla/5.0 (Plataforma Gestion Relacionamiento Pesca Artesanal AAPP Norte; consulta periodica de datos publicos)";
 
+let LIMITE = Infinity;
 async function bajar(url, max = 3_000_000) {
   const t0 = Date.now();
+  if (t0 > LIMITE) return { url, status: 0, error: "omitido por tiempo", ms: 0, txt: "" };
   try {
-    const r = await fetch(url, { signal: AbortSignal.timeout(8000), redirect: "follow", headers: { "User-Agent": UA, Accept: "*/*" } });
+    const r = await fetch(url, { signal: AbortSignal.timeout(7000), redirect: "follow", headers: { "User-Agent": UA, Accept: "*/*" } });
     const buf = new Uint8Array(await r.arrayBuffer());
     const txt = new TextDecoder("utf-8").decode(buf.slice(0, max));
     return { url, final: r.url, status: r.status, tipo: r.headers.get("content-type") || "", server: r.headers.get("server") || "", largo: buf.length, ms: Date.now() - t0, txt };
@@ -27,6 +29,7 @@ function contexto(txt, rx, n = 12) { const out = []; const g = new RegExp(rx.sou
 const abs = (u, base) => { try { return new URL(u, base).href; } catch { return null; } };
 
 async function descubrir() {
+  LIMITE = Date.now() + 40000;
   const L = [], base = VISOR(), host = new URL(base).host;
   L.push("DIAGNÓSTICO VISOR DE CONCESIONES MARÍTIMAS", "Visor: " + base, "Fecha: " + new Date().toISOString(), "");
   const pg = await bajar(base);
