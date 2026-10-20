@@ -87,6 +87,9 @@
   "functions": {
     "api/rpa.js": {
       "maxDuration": 60
+    },
+    "api/ccmm.js": {
+      "maxDuration": 60
     }
   }
 }
