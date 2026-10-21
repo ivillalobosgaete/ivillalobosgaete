@@ -1434,6 +1434,21 @@ svg text.val{fill:var(--ink-2);font-weight:700}
 .mn-npl summary{cursor:pointer;padding:4px 0}.mn-nph{display:flex;justify-content:space-between;gap:8px;padding:2px 0 6px;border-bottom:1px solid var(--line)}
 .mn-npr{display:flex;gap:10px;align-items:flex-start;padding:7px 4px;border-radius:8px;cursor:pointer}.mn-npr:hover{background:var(--brand-08)}
 .mn-npr input{margin-top:3px;width:18px;height:18px;accent-color:var(--down)}.mn-npr span{display:grid;gap:2px;font-size:.88rem}.mn-npr small{color:var(--muted)}
+
+.mn-relc>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline}.mn-relc>summary::-webkit-details-marker{display:none}
+.mn-relc>summary h3{margin:0}.mn-relc>summary::after{content:"▾";margin-left:auto;color:var(--brand-ink)}.mn-relc[open]>summary::after{content:"▴"}
+.mn-relb{display:grid;gap:12px;margin-top:10px}
+.mn-relg{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;background:var(--brand-08);border-radius:12px;padding:10px 14px;font-size:.9rem}
+.mn-relt tr.on td{background:var(--brand-soft)}.mn-relnew{font-size:.78rem;font-weight:700;color:#b45309;margin-top:2px}
+.mn-clima{display:inline-block;font-size:.74rem;font-weight:800;color:#fff;background:var(--c);border-radius:999px;padding:2px 10px;vertical-align:2px}
+.mn-cdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;vertical-align:0}
+.mn-relv{display:grid;gap:8px}.mn-relbar{display:flex;flex-wrap:wrap;gap:6px}
+.mn-relx{border:1px solid var(--line);border-radius:12px;padding:16px 20px;background:#fff;font-size:.92rem;line-height:1.55;max-width:900px}
+.mn-relx[contenteditable="true"]{outline:3px solid var(--brand-soft);border-color:var(--brand)}
+.mn-relx h2{font-size:1.15rem;margin:0 0 4px}.mn-relx h3{font-size:1rem;color:var(--brand-ink);margin:16px 0 4px;border-bottom:1px solid var(--line);padding-bottom:3px}.mn-relx h4{margin:8px 0 2px;font-size:.9rem}
+.mn-relx p{margin:4px 0}.mn-relx ul,.mn-relx ol{margin:4px 0;padding-left:20px;display:grid;gap:3px}
+.mn-ref{border:0;background:var(--brand-soft);color:var(--brand-ink);font-weight:800;font-size:.72rem;border-radius:5px;padding:0 5px;margin:0 1px;cursor:pointer;vertical-align:1px}
+.mn-relref{border-top:1px dashed var(--line);padding-top:8px;margin-top:12px!important}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
@@ -5461,7 +5476,7 @@ function cgScan(){document.querySelectorAll(".card h3, .card h4, .np-viz h4").fo
 
 // ===== Minutas de reuniones con organizaciones (pestaña «Minutas») =====
 {
-  const MN={list:[],loaded:false,loading:false,ia:null,warn:"",f:{cal:"",org:"",tema:"",d0:"",d1:"",q:"",soloPend:false,porComp:false},edit:null,busy:false,page:0,open:new Set(),inl:null,obs:null};
+  const MN={list:[],loaded:false,loading:false,ia:null,warn:"",f:{cal:"",org:"",tema:"",d0:"",d1:"",q:"",soloPend:false,porComp:false},edit:null,busy:false,page:0,rel:[],relAbierto:null,relBusy:false,relEdit:false,relOpen:false,open:new Set(),inl:null,obs:null};
   const ORG0=[["El Cobre","Cooperativa de Pescadores Caleta El Cobre"],["Michilla","Asociación de Pescadores de Michilla"],["Michilla","Sindicato de Pescadores de Michilla"]];
   const TEMAS=["Compensación","AMERB y planes de manejo","Vedas y recursos","Compromisos RCA","Infraestructura y caleta","Empleo local y capacitación","Medio ambiente","Seguridad y navegación","Conflictos y reclamos","Coordinación y seguimiento","Otros"];
   const ART=()=>!!S.db;
@@ -5520,7 +5535,7 @@ Reglas:
   function parseJ(t){const a=String(t||"").indexOf("{"),b=String(t||"").lastIndexOf("}");if(a<0||b<a)throw new Error("La IA no devolvió una ficha válida.");return JSON.parse(t.slice(a,b+1))}
 
   /* ---------- Carga ---------- */
-  async function mnLoad(force){if(MN.loading||(MN.loaded&&!force))return;MN.loading=true;try{const r=await ST2.list();MN.list=r.list;MN.ia=r.ia;if(!ART()&&MN.warn&&!/Falta/.test(MN.warn))MN.warn=""}catch(e){MN.warn=e&&e.message||"No se pudieron cargar las minutas."}MN.loaded=true;MN.u=(S.acct&&S.acct.usuario)||"";MN.loading=false;mnRender()}
+  async function mnLoad(force){if(MN.loading||(MN.loaded&&!force))return;MN.loading=true;try{const r=await ST2.list();MN.rel=r.list.filter(x=>(x.datos||{}).tipo==="relato").sort((a,b)=>(b.datos.generado||0)-(a.datos.generado||0));MN.list=r.list.filter(x=>(x.datos||{}).tipo!=="relato");MN.ia=r.ia;if(!ART()&&MN.warn&&!/Falta/.test(MN.warn))MN.warn=""}catch(e){MN.warn=e&&e.message||"No se pudieron cargar las minutas."}MN.loaded=true;MN.u=(S.acct&&S.acct.usuario)||"";MN.loading=false;mnRender()}
 
   /* ---------- Filtros y resultados ---------- */
   function filtrar(){const f=MN.f,q=nrm(f.q).trim(),words=q?q.split(/\s+/).filter(w=>w.length>1):[];
@@ -5542,8 +5557,9 @@ Reglas:
     p.innerHTML=`<div class="card mn-head"><div class="tbar"><div><h2>Minutas de reuniones</h2><p class="cs">Reuniones con las organizaciones de pescadores. ${A?"Agrega una minuta (PDF, Word o foto) y la IA propone la ficha: fecha, lugar, organización, participantes, temas, acuerdos y resumen; tú la revisas antes de guardar.":"Busca por organización, fecha o palabras clave; pasa el cursor sobre un resultado para ver el detalle."}</p></div>
         <div class="l">${A?`<button class="btn" id="mnBulkB" type="button">⇪ Carga masiva</button><button class="btn ghost" id="mnAdd" type="button">+ Agregar una</button>`:""}${A&&MN.list.length?`<button class="btn ghost small mn-delnp" id="mnNoPesca" type="button" title="Eliminar minutas de reuniones con actores que no son organizaciones de pescadores">🗑 Eliminar no pesqueras${(()=>{const n=MN.list.filter(noPesca).length;return n?` (${n})`:""})()}</button>`:""}<button class="btn ghost small" id="mnCsv" type="button">Exportar CSV</button></div></div>
         ${MN.warn?`<p class="warnbox">${esc(MN.warn)}</p>`:""}${A&&MN.ia===false?`<p class="cs mn-noia">${ART()?"La lectura con IA no está disponible en esta vista: puedes completar la ficha a mano.":"La lectura automática con IA requiere configurar ANTHROPIC_API_KEY en Vercel. Mientras tanto, completa la ficha a mano."}</p>`:""}
-        <div class="mn-orgs">${byOrg.map(o=>`<button type="button" class="mn-org ${nrm(f.org)===nrm(o.o)?"on":""}" data-mnorg="${esc(o.o)}"><b>${esc(o.o)}</b><span>${o.c?"Caleta "+esc(o.c)+" · ":""}${o.n} minuta${o.n===1?"":"s"}${o.last?" · última: "+esc(fmtF(o.last)):""}${o.pe?` · <em>${o.pe} compromiso${o.pe===1?"":"s"} pendiente${o.pe===1?"":"s"}</em>`:""}</span></button>`).join("")}</div></div>
+        <div class="mn-orgs">${byOrg.map(o=>`<button type="button" class="mn-org ${nrm(f.org)===nrm(o.o)?"on":""}" data-mnorg="${esc(o.o)}"><b>${climaDot(o.o)}${esc(o.o)}</b><span>${o.c?"Caleta "+esc(o.c)+" · ":""}${o.n} minuta${o.n===1?"":"s"}${o.last?" · última: "+esc(fmtF(o.last)):""}${o.pe?` · <em>${o.pe} compromiso${o.pe===1?"":"s"} pendiente${o.pe===1?"":"s"}</em>`:""}</span></button>`).join("")}</div></div>
       ${PT.n?`<div class="mn-alert" role="alert"><span class="mn-al-ic" aria-hidden="true">!</span><div><p><b>${PT.n} compromiso${PT.n===1?"":"s"} pendiente${PT.n===1?"":"s"}</b> en ${PT.m} minuta${PT.m===1?"":"s"}${PT.v?` · <b>${PT.v} vencido${PT.v===1?"":"s"}</b>`:""}</p><span>${PT.o.slice(0,3).map(o=>esc(o[0])+" ("+o[1]+")").join(" · ")}${PT.o.length>3?" · …":""}</span></div><button type="button" class="btn small" id="mnVerPend">${f.soloPend?"Ver todas las minutas":"Ver compromisos pendientes"}</button></div>`:""}
+      ${relCard()}
       <div class="card mn-filt"><div class="mn-fg">
         <label>Buscar<input type="search" id="mnQ" placeholder="Palabras clave: muelle, cuota, compensación…" value="${esc(f.q)}"></label>
         <label>Caleta<select id="mnCal"><option value="">Todas</option>${cals().map(c=>`<option ${f.cal===c?"selected":""}>${esc(c)}</option>`).join("")}</select></label>
@@ -5594,6 +5610,74 @@ Reglas:
   async function verifDel(v){if(ART()){if(v.archivo&&v.archivo.partes)for(let i=0;i<v.archivo.partes;i++){try{await S.db.doc(`minutasf/${v.vid}/partes/p${i}`).delete()}catch(e){}}}}
   function host(){return MN.inl?document.querySelector(`.mn-it[data-mnid="${CSS.escape(MN.inl)}"] .mn-inl`):document.getElementById("mnModal")}
   function cerrarEditor(){if(MN.inl){MN.inl=null;MN.edit=null;mnRender()}else{const o=document.getElementById("mnModal");if(o)o.hidden=true;MN.edit=null}}
+
+
+  /* ---------- Relato del relacionamiento (IA) ---------- */
+  const CLIMA={colaborativa:["#2e7d32","Colaborativa"],mixta:["#e0a100","Mixta"],tensa:["#ef6c00","Tensa"],conflicto:["#c62828","En conflicto"]};
+  function relScope(){const f=MN.f;const p=[];if(f.org)p.push(f.org);else if(f.cal)p.push("Caleta "+f.cal);else p.push("Todas las organizaciones");if(f.tema)p.push("tema: "+f.tema);if(f.d0||f.d1)p.push(rgTxt());return p.join(" · ")}
+  function relBase(){const f=MN.f;const q=nrm(f.q).trim();return(f.cal||f.org||f.tema||f.d0||f.d1||f.soloPend||f.porComp||q.length>=2)?filtrar():MN.list.slice().sort((a,b)=>String((b.datos||{}).fecha||"").localeCompare(String((a.datos||{}).fecha||"")))}
+  function climaDot(org){const r=MN.rel.find(x=>nrm(x.datos.alcanceOrg||"")===nrm(org)&&x.datos.clima);if(!r)return"";const c=CLIMA[r.datos.clima]||CLIMA.mixta;return`<i class="mn-cdot" style="background:${c[0]}" title="Clima según el relato del ${esc(fmtF(String(new Date(r.datos.generado).toISOString()).slice(0,10)))}: ${c[1]}"></i>`}
+  function relNuevas(r){const ids=new Set(r.datos.ids||[]);const f=r.datos.filtros||{};const same=MN.list.filter(m=>{const d=m.datos||{};if(f.org&&nrm(d.organizacion)!==nrm(f.org))return false;if(!f.org&&f.cal&&nrm(d.caleta)!==nrm(f.cal))return false;if(f.tema&&!(d.temas||[]).includes(f.tema))return false;if(f.d0&&(!d.fecha||d.fecha<f.d0))return false;if(f.d1&&(!d.fecha||d.fecha>f.d1))return false;return true});return same.filter(m=>!ids.has(m.id)).length}
+  function relCard(){if(!MN.loaded)return"";const A=adm(),vis=MN.rel.filter(r=>A||r.datos.visible);if(!A&&!vis.length)return"";const base=relBase(),n=base.length,ab=MN.rel.find(r=>r.id===MN.relAbierto);
+    return`<details class="card mn-relc" id="mnRelC" ${MN.relOpen?"open":""}><summary><h3>📝 Relato del relacionamiento</h3><span class="cs">${vis.length?`${vis.length} relato${vis.length===1?"":"s"} guardado${vis.length===1?"":"s"}`:"Genera con IA una historia de la relación a partir de las minutas"}</span></summary>
+      <div class="mn-relb">
+      ${A?`<div class="mn-relg"><div><b>Alcance:</b> ${esc(relScope())} · <b>${n}</b> minuta${n===1?"":"s"}<br><span class="cs">El relato usa las minutas que coinciden con los filtros de búsqueda (organización o caleta, tema y fechas). Sin filtros, usa todas.</span></div>
+        <button type="button" class="btn" id="mnRelGen" ${!n||MN.relBusy?"disabled":""}>${MN.relBusy?'<span class="spin"></span> Generando relato…':"Generar relato"}</button></div>`:""}
+      ${MN.relMsg?`<p class="mn-msg">${MN.relMsg}</p>`:""}
+      ${vis.length?`<div class="tbl"><table class="mn-relt"><thead><tr><th>Alcance</th><th>Generado</th><th class="r">Minutas</th><th>Clima</th>${A?"<th>Visibilidad</th>":""}<th></th></tr></thead><tbody>${vis.map(r=>{const d=r.datos,c=CLIMA[d.clima],nu=relNuevas(r);return`<tr class="${r.id===MN.relAbierto?"on":""}"><td style="white-space:normal"><b>${esc(d.alcance||"")}</b>${nu?`<div class="mn-relnew">${nu} minuta${nu===1?"":"s"} nueva${nu===1?"":"s"} desde este relato${A?` · <button type="button" class="lnk" data-relup="${esc(r.id)}">Actualizar</button>`:""}</div>`:""}</td><td>${esc(new Date(d.generado).toLocaleDateString("es-CL"))}${d.editado?' <span class="cs">(editado)</span>':""}</td><td class="r">${(d.ids||[]).length}</td><td>${c?`<span class="mn-clima" style="--c:${c[0]}">${c[1]}</span>`:"—"}</td>${A?`<td><label class="mn-chk"><input type="checkbox" data-relvis="${esc(r.id)}" ${d.visible?"checked":""}> Visible para visualizadores</label></td>`:""}<td><button type="button" class="lnk" data-relopen="${esc(r.id)}">${r.id===MN.relAbierto?"Cerrar":"Abrir"}</button>${A?` <button type="button" class="lnk mn-del" data-reldel="${esc(r.id)}">Eliminar</button>`:""}</td></tr>`}).join("")}</tbody></table></div>`:""}
+      ${ab?relView(ab):""}</div></details>`}
+  const refs=(t,r)=>{const map=r.datos.refmap||{};return esc(t||"").replace(/\[?\b(M\d{1,3})\b\]?/g,(x,k)=>map[k]?`<button type="button" class="mn-ref" data-relref="${esc(map[k].id)}" title="${esc(map[k].t)}">${k}</button>`:x)};
+  const lst=(a,r)=>(a||[]).length?`<ul>${a.map(x=>`<li>${refs(typeof x==="string"?x:JSON.stringify(x),r)}</li>`).join("")}</ul>`:`<p class="cs">Sin información suficiente en las minutas.</p>`;
+  function relHtml(r){const j=r.datos.json||{},c=CLIMA[j.clima&&j.clima.nivel]||null,cl=j.clima||{},po=j.posiciones||{},co=j.compromisos||{};
+    return`<h2>Relato del relacionamiento · ${esc(r.datos.alcance||"")}</h2><p class="cs">Generado el ${esc(new Date(r.datos.generado).toLocaleString("es-CL"))} a partir de ${(r.datos.ids||[]).length} minuta${(r.datos.ids||[]).length===1?"":"s"} (${esc(r.datos.periodo||"")}). Relato generado con IA: revisar antes de usar.</p>
+      <h3>1. Resumen ejecutivo</h3><p>${refs(j.resumen,r)}</p>
+      <h3>2. Clima de la relación ${c?`<span class="mn-clima" style="--c:${c[0]}">${c[1]}</span>`:""}</h3><p>${refs(cl.justificacion,r)}</p>${cl.evolucion?`<p><b>Evolución:</b> ${refs(cl.evolucion,r)}</p>`:""}
+      <h3>3. Línea de tiempo</h3>${(j.linea_tiempo||[]).length?`<ol class="mn-tl">${j.linea_tiempo.map(h=>`<li><b>${esc(/^\d{4}-\d{2}-\d{2}$/.test(h.fecha||"")?fmtF(h.fecha):(h.fecha||""))}</b> ${h.ref?refs(h.ref,r):""} — ${refs(h.hito,r)}</li>`).join("")}</ol>`:'<p class="cs">Sin información suficiente.</p>'}
+      <h3>4. Temas recurrentes y su evolución</h3>${(j.temas||[]).length?j.temas.map(t=>`<p><b>${esc(t.tema||"")}${t.estado?` <span class="tg">${esc(t.estado)}</span>`:""}:</b> ${refs(t.evolucion,r)}</p>`).join(""):'<p class="cs">Sin información suficiente.</p>'}
+      <h3>5. Compromisos</h3><p>${refs(co.analisis,r)}</p>${lst((co.destacados||[]).map(x=>`${x.texto||""}${x.estado?` (${x.estado})`:""}${x.ref?" "+x.ref:""}`),r)}
+      <h3>6. Posiciones y demandas de la organización</h3>${lst(po.demandas,r)}<h4>Puntos de acuerdo</h4>${lst(po.acuerdos,r)}<h4>Puntos de tensión</h4>${lst(po.tensiones,r)}
+      <h3>7. Actores clave</h3>${(j.actores||[]).length?`<ul>${j.actores.map(a=>`<li><b>${esc(a.nombre||"")}</b>${a.cargo?` · ${esc(a.cargo)}`:""}${a.rol?` — ${refs(a.rol,r)}`:""}</li>`).join("")}</ul>`:'<p class="cs">Sin información suficiente.</p>'}
+      <h3>8. Riesgos</h3>${lst(j.riesgos,r)}<h3>9. Oportunidades</h3>${lst(j.oportunidades,r)}<h3>10. Recomendaciones para la próxima reunión</h3>${lst(j.recomendaciones,r)}
+      ${(j.vacios||[]).length?`<h3>Vacíos de información</h3>${lst(j.vacios,r)}`:""}
+      <p class="cs mn-relref">Referencias: ${Object.entries(r.datos.refmap||{}).map(([k,v])=>`<b>${k}</b> ${esc(v.t)}`).join(" · ")}</p>`}
+  function relView(r){const A=adm();return`<div class="mn-relv"><div class="mn-relbar">${A?(MN.relEdit?`<button type="button" class="btn small" id="mnRelSaveEd">Guardar edición</button><button type="button" class="btn ghost small" id="mnRelCancelEd">Cancelar edición</button>`:`<button type="button" class="btn ghost small" id="mnRelEd">✎ Editar texto</button>`):""}<button type="button" class="btn ghost small" data-reldoc="${esc(r.id)}">Descargar Word</button><button type="button" class="btn ghost small" data-relpdf="${esc(r.id)}">Imprimir / PDF</button></div>
+      <article class="mn-relx" id="mnRelX" ${MN.relEdit?'contenteditable="true"':""}>${r.datos.html||relHtml(r)}</article></div>`}
+  function relInstr(){return`Eres analista de relacionamiento comunitario de la Plataforma de Gestión Borde Costero (relación de una empresa minera con organizaciones de pescadores artesanales en la región de Antofagasta, Chile). A partir de las fichas de minutas de reuniones que siguen (cada una identificada como M1, M2…, ordenadas por fecha), escribe un relato del relacionamiento. Usa SOLO la información de las minutas; no inventes. Cita la minuta de origen con su código entre corchetes, por ejemplo [M3], en cada afirmación relevante. Si algo no tiene respaldo, dilo en "vacios".
+Devuelve SOLO un objeto JSON válido, en español, conciso (máximo unas 1.200 palabras en total), con esta forma:
+{"resumen":"5 a 6 líneas sobre el estado actual de la relación","clima":{"nivel":"colaborativa | mixta | tensa | conflicto","justificacion":"...","evolucion":"cómo cambió el clima en el tiempo"},"linea_tiempo":[{"fecha":"AAAA-MM-DD","ref":"[M1]","hito":"qué pasó y qué cambió"}],"temas":[{"tema":"...","evolucion":"qué se planteó, cómo se respondió y en qué quedó","estado":"abierto | resuelto | en curso"}],"compromisos":{"analisis":"balance de cumplimiento y su efecto en la relación","destacados":[{"texto":"...","estado":"pendiente | cumplido | vencido","ref":"[M2]"}]},"posiciones":{"demandas":["..."],"acuerdos":["..."],"tensiones":["..."]},"actores":[{"nombre":"...","cargo":"...","rol":"papel en la relación"}],"riesgos":["..."],"oportunidades":["..."],"recomendaciones":["acciones concretas para la próxima reunión"],"vacios":["información que falta"]}`}
+  function relContexto(list){const hoy=todayISO();let budget=90000;const out=[],refmap={};list.slice().sort((a,b)=>String((a.datos||{}).fecha||"").localeCompare(String((b.datos||{}).fecha||""))).forEach((m,i)=>{const d=m.datos||{},k="M"+(i+1);refmap[k]={id:m.id,t:`${d.organizacion||"Sin organización"} · ${fmtF(d.fecha)}`};
+      let t=`### ${k} · ${d.fecha||"sin fecha"} · ${d.organizacion||"sin organización"}${d.caleta?" · Caleta "+d.caleta:""}${d.lugar?" · "+d.lugar:""}
+Participantes: ${(d.participantes||[]).map(p=>p.nombre+(p.cargo?" ("+p.cargo+")":"")).join("; ")||"sin registro"}
+Temas: ${(d.temas||[]).join(", ")||"sin registro"}
+Resumen: ${d.resumen||"sin resumen"}
+Compromisos: ${(d.acuerdos||[]).map(a=>`- ${a.texto} | responsable: ${a.responsable||"?"} | plazo: ${a.plazo||"?"} | estado: ${a.estado==="cumplido"?"cumplido"+(a.fechaCumplido?" el "+a.fechaCumplido:""):(/^\d{4}-\d{2}-\d{2}$/.test(a.plazo||"")&&a.plazo<hoy?"vencido":"pendiente")}${a.obs?" | observación: "+a.obs:""}`).join("\n")||"ninguno"}`;
+      out.push(t);budget-=t.length});
+    const per=list.length?Math.max(0,Math.floor(budget/list.length)):0;if(per>400)out.forEach((t,i)=>{const m=list.slice().sort((a,b)=>String((a.datos||{}).fecha||"").localeCompare(String((b.datos||{}).fecha||"")))[i];if(m&&m.texto)out[i]=t+`\nExtracto del texto original: ${m.texto.replace(/\s+/g," ").slice(0,Math.min(per,6000))}`});
+    return{texto:out.join("\n\n"),refmap}}
+  async function relGenerar(prev){const base=prev?MN.list.filter(m=>{const f=prev.datos.filtros||{},d=m.datos||{};if(f.org&&nrm(d.organizacion)!==nrm(f.org))return false;if(!f.org&&f.cal&&nrm(d.caleta)!==nrm(f.cal))return false;if(f.tema&&!(d.temas||[]).includes(f.tema))return false;if(f.d0&&(!d.fecha||d.fecha<f.d0))return false;if(f.d1&&(!d.fecha||d.fecha>f.d1))return false;return true}):relBase();
+    if(!base.length){MN.relMsg="No hay minutas para el alcance elegido.";mnRender();return}
+    MN.relBusy=true;MN.relOpen=true;MN.relMsg=`La IA está leyendo ${base.length} minuta${base.length===1?"":"s"} y redactando el relato (puede tardar hasta un minuto)…`;mnRender();
+    try{const {texto,refmap}=relContexto(base);const out=parseJ(await ST2.ia(texto,[],relInstr()));
+      const fs=prev?prev.datos.filtros:{org:MN.f.org,cal:MN.f.cal,tema:MN.f.tema,d0:MN.f.d0,d1:MN.f.d1};const fechas=base.map(m=>(m.datos||{}).fecha).filter(Boolean).sort();
+      const rec={id:prev?prev.id:"rel"+nid(),datos:{tipo:"relato",alcance:prev?prev.datos.alcance:relScope(),alcanceOrg:fs.org||"",filtros:fs,ids:base.map(m=>m.id),refmap,json:out,clima:(out.clima&&out.clima.nivel)||"",periodo:fechas.length?`${fmtF(fechas[0])} a ${fmtF(fechas[fechas.length-1])}`:"sin fechas",generado:Date.now(),visible:prev?!!prev.datos.visible:false,por:(S.acct&&S.acct.usuario)||""},texto:""};
+      await ST2.save(rec);MN.rel=[rec,...MN.rel.filter(x=>x.id!==rec.id)];MN.relAbierto=rec.id;MN.relEdit=false;MN.relMsg="";toast("Relato generado y guardado.")}
+    catch(e){MN.relMsg=iaErr(e).replace("Completa la ficha a mano.","").replace("completa la ficha a mano.","")}
+    MN.relBusy=false;mnRender();setTimeout(()=>{const v=document.querySelector(".mn-relv");if(v)v.scrollIntoView({behavior:"smooth",block:"start"})},80)}
+  function relDoc(r){const html=r.datos.html||relHtml(r);return`<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Relato del relacionamiento</title><style>body{font-family:Calibri,Arial,sans-serif;font-size:11pt;line-height:1.45;color:#111;max-width:780px;margin:24px auto}h2{color:#174763}h3{color:#174763;margin-top:18px;border-bottom:1px solid #ccd}h4{margin:10px 0 4px}.cs{color:#666;font-size:9.5pt}.tg,.mn-clima{border:1px solid #999;border-radius:8px;padding:0 6px;font-size:9pt}.mn-ref{border:0;background:#eef;border-radius:4px;font-size:8.5pt;padding:0 3px}</style></head><body>${html.replace(/<button[^>]*class="mn-ref"[^>]*>(M\d+)<\/button>/g,"[$1]")}</body></html>`}
+  document.addEventListener("click",async ev=>{const t=ev.target;if(!t.closest||!t.closest('[data-pane="minutas"]'))return;
+    if(t.closest("#mnRelC>summary")){setTimeout(()=>{const d=document.getElementById("mnRelC");MN.relOpen=!!(d&&d.open)},0);return}
+    if(t.closest("#mnRelGen")){relGenerar(null);return}
+    const up=t.closest("[data-relup]");if(up){const r=MN.rel.find(x=>x.id===up.dataset.relup);if(r&&await askYN("¿Generar de nuevo este relato incluyendo las minutas nuevas? Se reemplazará el relato guardado (y las ediciones manuales).",{title:"Actualizar relato",si:"Sí, actualizar",no:"No"}))relGenerar(r);return}
+    const op=t.closest("[data-relopen]");if(op){MN.relAbierto=MN.relAbierto===op.dataset.relopen?null:op.dataset.relopen;MN.relEdit=false;mnRender();return}
+    const de=t.closest("[data-reldel]");if(de){const r=MN.rel.find(x=>x.id===de.dataset.reldel);if(!r)return;if(!await askYN(`¿Eliminar el relato «${esc(r.datos.alcance)}» del ${esc(new Date(r.datos.generado).toLocaleDateString("es-CL"))}?`,{title:"Eliminar relato",danger:true,si:"Sí, eliminar",no:"No"}))return;
+      try{await ST2.del(r);MN.rel=MN.rel.filter(x=>x.id!==r.id);if(MN.relAbierto===r.id)MN.relAbierto=null;toast("Relato eliminado.");mnRender()}catch(e){toast("No se pudo eliminar.")}return}
+    if(t.closest("#mnRelEd")){MN.relEdit=true;mnRender();const x=document.getElementById("mnRelX");if(x)x.focus();return}
+    if(t.closest("#mnRelCancelEd")){MN.relEdit=false;mnRender();return}
+    if(t.closest("#mnRelSaveEd")){const r=MN.rel.find(x=>x.id===MN.relAbierto),x=document.getElementById("mnRelX");if(!r||!x)return;const prev=r.datos.html;r.datos.html=x.innerHTML;r.datos.editado=Date.now();if(await guardarMin(r,"Edición del relato guardada.")){MN.relEdit=false;mnRender()}else r.datos.html=prev;return}
+    const rf=t.closest("[data-relref]");if(rf&&!MN.relEdit){const m=MN.list.find(x=>x.id===rf.dataset.relref);if(m){MN.open.add(m.id);MN.f={cal:"",org:(m.datos||{}).organizacion||"",tema:"",d0:(m.datos||{}).fecha||"",d1:(m.datos||{}).fecha||"",q:"",soloPend:false,porComp:false};mnRender();setTimeout(()=>{const c=document.querySelector(`.mn-it[data-mnid="${CSS.escape(m.id)}"]`);if(c)c.scrollIntoView({behavior:"smooth",block:"start"})},80)}else toast("Esa minuta ya no está cargada.");return}
+    const dc=t.closest("[data-reldoc]");if(dc){const r=MN.rel.find(x=>x.id===dc.dataset.reldoc);if(r){const nm=`relato_${nrm(r.datos.alcance).replace(/[^a-z0-9]+/g,"_").slice(0,40)}_${todayISO()}.doc`;const data=relDoc(r);if(S.downloads){try{await S.downloads.save({filename:nm,data:new Blob([data],{type:"application/msword"})})}catch(e){}}else saveFile(nm,data,"application/msword")}return}
+    const pd=t.closest("[data-relpdf]");if(pd){const r=MN.rel.find(x=>x.id===pd.dataset.relpdf);if(!r)return;const w=window.open("","_blank");if(!w){toast("El navegador bloqueó la ventana. Usa «Descargar Word».");return}w.document.write(relDoc(r).replace("</body>","<script>setTimeout(()=>print(),300)<\/script></body>"));w.document.close();return}});
+  document.addEventListener("change",async ev=>{const v=ev.target.closest&&ev.target.closest("[data-relvis]");if(!v)return;const r=MN.rel.find(x=>x.id===v.dataset.relvis);if(!r)return;r.datos.visible=v.checked;if(!await guardarMin(r,v.checked?"El relato ahora es visible para visualizadores.":"El relato ahora es solo para administradores.")){r.datos.visible=!v.checked;v.checked=!v.checked}});
 
   /* ---------- Minutas que no corresponden a organizaciones de pescadores ---------- */
   const RX_PESCA=/pescador|pesca|sindicato|cooperativa|\bsti\b|buzo|mariscador|recolector|alguer|caleta|gremial|\ba\.?\s?g\.?\b|armador|tripulante|ribere/;

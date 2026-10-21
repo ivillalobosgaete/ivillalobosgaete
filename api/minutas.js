@@ -68,7 +68,8 @@ export default handler(async (req, res) => {
     }
     try {
       const rows = await sb("minutas?select=id,datos,texto,archivo,archivo_nombre,archivo_tipo,por,creado,actualizado&order=creado.desc&limit=2000");
-      return send(res, 200, { minutas: rows || [], ia: !!process.env.ANTHROPIC_API_KEY });
+      const vis = (rows || []).filter((r) => adm || !(r.datos && r.datos.tipo === "relato" && !r.datos.visible));
+      return send(res, 200, { minutas: vis, ia: !!process.env.ANTHROPIC_API_KEY });
     } catch (e) { if (tableMissing(e)) return send(res, 200, { minutas: [], falta: true, ia: !!process.env.ANTHROPIC_API_KEY }); throw e; }
   }
 
