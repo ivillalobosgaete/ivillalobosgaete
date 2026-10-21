@@ -80,8 +80,11 @@ export default handler(async (req, res) => {
     const f = b.ficha || {};
     const id = f.id || nuevoId();
     const row = { id, datos: f.datos || {}, texto: String(f.texto || "").slice(0, 400000), archivo: f.archivo || null, archivo_nombre: f.archivo_nombre || null, archivo_tipo: f.archivo_tipo || null, por: me.usuario, actualizado: new Date().toISOString() };
+    let previo = null;
+    try { const ex = await sb(`minutas?id=eq.${encodeURIComponent(id)}&select=archivo`); previo = ex && ex[0] && ex[0].archivo; } catch { /* tabla aún no creada */ }
     try { await sb("minutas?on_conflict=id", { method: "POST", prefer: "resolution=merge-duplicates,return=minimal", body: row }); }
     catch (e) { if (tableMissing(e)) return send(res, 400, { error: "Falta crear la tabla de minutas en Supabase: ejecuta supabase/schema.sql." }); throw e; }
+    if (previo && row.archivo && previo !== row.archivo) { try { await fetch(`${SBU()}/storage/v1/object/${BUCKET}`, { method: "DELETE", headers: hdr(), body: JSON.stringify({ prefixes: [previo] }) }); } catch { /* archivo anterior ya no existe */ } }
     await logAct(me.usuario, f.id ? "minuta editada" : "minuta agregada", `${(f.datos || {}).organizacion || ""} ${(f.datos || {}).fecha || ""}`);
     return send(res, 200, { ok: true, id });
   }

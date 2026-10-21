@@ -1366,6 +1366,8 @@ svg text.val{fill:var(--ink-2);font-weight:700}
 .mn-bsum{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.9rem}.mn-bw{color:#8a5a00;font-weight:700}.mn-be{color:var(--down);font-weight:700}
 .mn-bbar{height:8px;border-radius:999px;background:var(--brand-08);overflow:hidden}.mn-bbar i{display:block;height:100%;background:var(--brand);transition:width .3s}
 .mn-btbl{max-height:46vh;overflow:auto}.mn-btbl td{font-size:.84rem}.mn-btbl tr.b-error td:nth-child(2){color:var(--down);font-weight:700}.mn-btbl tr.b-ok td:nth-child(2){color:var(--up);font-weight:700}
+.mn-dl{margin:8px 0;padding-left:18px;display:grid;gap:3px;font-size:.88rem;max-height:40vh;overflow:auto}.mn-rep{font-size:.72rem;font-weight:800;background:#e8f0ff;color:#1f4fa0;border-radius:999px;padding:1px 8px}.mn-btbl tr.b-dup td:nth-child(2),.mn-btbl tr.b-dup2 td:nth-child(2){color:#9a5b00;font-weight:800}.mn-btbl tr.b-omitida td{color:var(--muted)}
+#ynModal{z-index:92!important}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
@@ -5391,7 +5393,7 @@ function cgScan(){document.querySelectorAll(".card h3, .card h4, .np-viz h4").fo
   const ST2={
     async list(){if(ART()){const s=await S.db.collection("minutas").get();const out=[];for(const d of s.docs){try{const o=await decJ(d.data().enc);out.push({...o,id:d.id})}catch(e){}}let ia=false;try{const sm=await claude.use("sample");ia=!!sm}catch(e){}return{list:out,ia}}
       const r=await api("minutas");if(r.falta)MN.warn="Falta crear la tabla de minutas en Supabase: ejecuta el SQL actualizado (supabase/schema.sql).";return{list:(r.minutas||[]).map(x=>({id:x.id,datos:x.datos||{},texto:x.texto||"",archivo:x.archivo,archivo_nombre:x.archivo_nombre,archivo_tipo:x.archivo_tipo,por:x.por,creado:x.creado})),ia:!!r.ia}},
-    async upload(file,id){if(ART()){const bytes=new Uint8Array(await file.arrayBuffer());const b64=await aesEnc(S.key,bytes);const n=await bigPut(`minutasf/${id}/partes`,b64);return{archivo:{partes:n},archivo_nombre:file.name,archivo_tipo:file.type||""}}
+    async upload(file,id,old){if(ART()){const bytes=new Uint8Array(await file.arrayBuffer());const b64=await aesEnc(S.key,bytes);const n=await bigPut(`minutasf/${id}/partes`,b64);if(old&&old.archivo&&old.archivo.partes>n){for(let i=n;i<old.archivo.partes;i++){try{await S.db.doc(`minutasf/${id}/partes/p${i}`).delete()}catch(e){}}}return{archivo:{partes:n},archivo_nombre:file.name,archivo_tipo:file.type||""}}
       const s=await api("minutas",{method:"POST",body:{accion:"subida",nombre:file.name,tipo:file.type}});
       const r=await fetch(s.url,{method:"PUT",headers:{"Content-Type":file.type||"application/octet-stream","x-upsert":"true"},body:file});if(!r.ok)throw new Error("No se pudo subir el archivo ("+r.status+")");
       return{archivo:s.path,archivo_nombre:file.name,archivo_tipo:file.type||""}},
@@ -5506,7 +5508,7 @@ Reglas:
 
   /* ---------- Formulario: agregar / editar ---------- */
   function vacio(){return{id:null,datos:{fecha:"",hora:"",lugar:"",caleta:"",organizacion:"",participantes:[],temas:[],resumen:"",acuerdos:[],pendientes:[]},texto:"",archivo:null,archivo_nombre:"",archivo_tipo:"",_file:null}}
-  function abrirForm(rec){MN.edit=rec?JSON.parse(JSON.stringify(rec)):vacio();MN.edit._file=null;let ov=document.getElementById("mnModal");if(!ov){ov=document.createElement("div");ov.id="mnModal";ov.className="overlay";document.body.appendChild(ov)}ov.hidden=false;formRender("")}
+  function abrirForm(rec){MN.edit=rec?JSON.parse(JSON.stringify(rec)):vacio();MN.edit._file=null;MN.edit._orig=rec?rec.id:null;let ov=document.getElementById("mnModal");if(!ov){ov=document.createElement("div");ov.id="mnModal";ov.className="overlay";document.body.appendChild(ov)}ov.hidden=false;formRender("")}
   function formRender(msg){const ov=document.getElementById("mnModal"),r=MN.edit,d=r.datos,os=orgs(),miss=new Set(d.pendientes||[]);const mc=k=>miss.has(k)?" mn-miss":"";
     const orgIn=d.organizacion&&!os.some(o=>nrm(o.o)===nrm(d.organizacion));
     ov.innerHTML=`<div class="modal mn-fm" role="dialog" aria-modal="true" aria-labelledby="mnFT"><h2 id="mnFT">${r.id?"Editar minuta":"Agregar minuta"}</h2>
@@ -5530,7 +5532,11 @@ Reglas:
       </div>
       <div class="row"><button type="button" class="btn ghost" id="mnCancel">Cancelar</button><button type="button" class="btn" id="mnSave">${r.id?"Guardar cambios":"Guardar minuta"}</button></div></div>`;
     const sel=ov.querySelector("#mO");sel.onchange=()=>{ov.querySelector("#mO2").hidden=sel.value!=="__otra"};
-    ov.querySelector("#mnFile").onchange=ev=>{const fl=ev.target.files[0];if(!fl)return;if(fl.size>(ART()?8:40)*1024*1024){formRender(`El archivo pesa ${t1(fl.size/1048576)} MB: el máximo es ${ART()?8:40} MB.`);return}leerForm();MN.edit._file=fl;formRender("");if(MN.ia!==false)leerIA()};
+    ov.querySelector("#mnFile").onchange=async ev=>{const fl=ev.target.files[0];if(!fl)return;if(fl.size>(ART()?8:40)*1024*1024){formRender(`El archivo pesa ${t1(fl.size/1048576)} MB: el máximo es ${ART()?8:40} MB.`);return}leerForm();
+      const r=MN.edit,h=await sha(fl),dup=dupArchivo(h,fl.name,fl.size,r._orig||null);
+      if(dup){const ok=await askYN(`Esta minuta ya está cargada en la plataforma:<br>${descMin(dup)}<br><br>¿Quieres <b>reemplazar</b> la minuta existente con este archivo o <b>cancelar la subida</b>?`,{title:"Minuta duplicada",si:"Reemplazar la existente",no:"Cancelar subida"});
+        if(!ok){formRender("Subida cancelada: esa minuta ya estaba cargada.");return}r.id=dup.id;r._replace=dup;r.por=dup.por}
+      r._file=fl;r.datos.hash=h;r.datos.tam=fl.size;formRender(r._replace?"Se reemplazará la minuta existente al guardar.":"");if(MN.ia!==false)leerIA()};
     const ia=ov.querySelector("#mnIA");if(ia)ia.onclick=()=>{leerForm();leerIA()};
     ov.querySelector("#mnCancel").onclick=()=>{ov.hidden=true;MN.edit=null};ov.querySelector("#mnSave").onclick=guardar}
   function leerForm(){const ov=document.getElementById("mnModal");if(!ov||!MN.edit)return;const d=MN.edit.datos,v=id=>ov.querySelector(id).value.trim();
@@ -5567,20 +5573,38 @@ Reglas:
   async function archivoDe(m){let b;if(ART())b=await ST2.blob(m);else{const r=await fetch(`/api/minutas?archivo=${encodeURIComponent(m.id)}`,{credentials:"same-origin"});if(!r.ok)throw new Error("HTTP "+r.status);b=await r.blob()}
     return new File([b],m.archivo_nombre||"minuta",{type:m.archivo_tipo||b.type||""})}
 
+  /* ---------- Duplicados ---------- */
+  async function sha(file){const h=await crypto.subtle.digest("SHA-256",await file.arrayBuffer());return[...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,"0")).join("")}
+  function dupArchivo(hash,name,size,ex){return MN.list.find(m=>m.id!==ex&&(m.datos||{}).hash===hash)||MN.list.find(m=>m.id!==ex&&!(m.datos||{}).hash&&m.archivo_nombre&&m.archivo_nombre===name&&((m.datos||{}).tam==null||(m.datos||{}).tam===size))||null}
+  function dupContenido(d,ex){if(!d||!d.organizacion||!d.fecha)return null;return MN.list.find(m=>m.id!==ex&&(m.datos||{}).fecha===d.fecha&&nrm((m.datos||{}).organizacion)===nrm(d.organizacion))||null}
+  const descMin=m=>{const d=m.datos||{};return`<b>${esc(d.organizacion||"Organización sin identificar")}</b> · ${esc(fmtF(d.fecha))}${m.archivo_nombre?` · archivo «${esc(m.archivo_nombre)}»`:""}`};
+
   /* ---------- Carga masiva ---------- */
   const BULK={items:[],run:false,stop:false};
   function bulkOpen(){if(BULK.run){bulkRender();document.getElementById("mnBulk").hidden=false;return}BULK.items=[];let ov=document.getElementById("mnBulk");if(!ov){ov=document.createElement("div");ov.id="mnBulk";ov.className="overlay";document.body.appendChild(ov)}ov.hidden=false;bulkRender()}
-  function bulkAdd(files){const max=(ART()?8:40)*1048576;[...files].forEach(f=>{if(BULK.items.some(x=>x.f.name===f.name&&x.f.size===f.size))return;BULK.items.push({f,st:f.size>max?"error":"cola",msg:f.size>max?`Pesa ${t1(f.size/1048576)} MB (máx. ${ART()?8:40} MB)`:"",id:null,miss:[]})});bulkRender()}
+  async function bulkAdd(files){const max=(ART()?8:40)*1048576;const nuevos=[];
+    for(const f of [...files]){const x={f,st:f.size>max?"error":"cola",msg:f.size>max?`Pesa ${t1(f.size/1048576)} MB (máx. ${ART()?8:40} MB)`:"",id:null,miss:[]};
+      try{x.hash=await sha(f)}catch(e){x.hash=""}
+      const enLote=BULK.items.find(y=>y.hash&&y.hash===x.hash&&y.st!=="omitida");if(enLote){x.st="omitida";x.msg=`Repetida en esta misma carga («${enLote.f.name}»): no se subirá.`}
+      else if(x.st==="cola"){const d=dupArchivo(x.hash,f.name,f.size,null);if(d){x.st="dup";x.dup=d;x.msg="Ya está cargada: "+((d.datos||{}).organizacion||"sin organización")+" · "+fmtF((d.datos||{}).fecha)}}
+      BULK.items.push(x);nuevos.push(x)}
+    bulkRender();const dups=nuevos.filter(x=>x.st==="dup"),rep=nuevos.filter(x=>x.st==="omitida"&&/misma carga/.test(x.msg));
+    if(rep.length)toast(`${rep.length} archivo${rep.length===1?"":"s"} repetido${rep.length===1?"":"s"} en esta carga: no se subirá${rep.length===1?"":"n"} dos veces.`);
+    if(dups.length){const ok=await askYN(`${dups.length===1?"Se detectó":"Se detectaron"} <b>${dups.length} minuta${dups.length===1?"":"s"} que ya ${dups.length===1?"está cargada":"están cargadas"}</b> en la plataforma:<ul class="mn-dl">${dups.slice(0,8).map(x=>`<li>«${esc(x.f.name)}» → ${descMin(x.dup)}</li>`).join("")}${dups.length>8?`<li>y ${dups.length-8} más</li>`:""}</ul>¿Qué quieres hacer?`,{title:"Minutas duplicadas",si:dups.length===1?"Reemplazar la existente":"Reemplazar todas",no:dups.length===1?"Cancelar su subida":"No subir las duplicadas",cancel:dups.length>1?"Decidir una por una":""});
+      dups.forEach(x=>{if(ok===true){x.st="cola";x.replace=x.dup;x.msg="Reemplazará la minuta existente."}else if(ok===false){x.st="omitida";x.msg="Duplicada: subida cancelada."}});bulkRender()}}
+  async function bulkGuardar(x,r,replace){const old=replace||null;if(old){r.id=old.id;r.por=old.por}
+    const up=await ST2.upload(x.f,r.id,old);const rec={id:r.id,datos:r.datos,texto:r.texto||"",archivo:up.archivo,archivo_nombre:up.archivo_nombre,archivo_tipo:up.archivo_tipo,por:r.por||(S.acct&&S.acct.usuario)||""};
+    await ST2.save(rec);MN.list=MN.list.filter(m=>m.id!==rec.id);MN.list.unshift(rec);x.id=rec.id;x.miss=r.datos.pendientes||[];x.st="ok";x.rep=!!old}
   function bulkRender(){const ov=document.getElementById("mnBulk");if(!ov)return;const it=BULK.items,n=it.length,ok=it.filter(x=>x.st==="ok").length,pe=it.filter(x=>x.st==="ok"&&x.miss.length).length,er=it.filter(x=>x.st==="error").length,done=it.filter(x=>x.st==="ok"||x.st==="error").length;
-    const ST={cola:"En cola",leyendo:"Leyendo…",guardando:"Guardando…",ok:"Guardada",error:"Error"};
+    const ST={cola:"En cola",leyendo:"Leyendo…",guardando:"Guardando…",ok:"Guardada",error:"Error",dup:"Duplicada",dup2:"Posible duplicado",omitida:"No se sube"};const nd=it.filter(x=>x.st==="dup"||x.st==="dup2").length;
     ov.innerHTML=`<div class="modal mn-bm" role="dialog" aria-modal="true" aria-labelledby="mnBT"><h2 id="mnBT">Carga masiva de minutas</h2>
       <p class="cs">Elige o arrastra varias minutas a la vez (PDF, Word, fotos o escaneos). La plataforma las lee una por una con IA, completa la ficha de cada una y las guarda. Lo que la IA no logre reconocer queda marcado <b>«por completar»</b> para que lo llenes a mano después.${MN.ia===false?` <b>La IA no está disponible en esta versión: las minutas se guardarán con su archivo y todos los campos por completar.</b>`:""}</p>
       ${BULK.run?"":`<label class="mn-bdrop" id="mnBDrop"><input type="file" id="mnBFiles" multiple accept=".pdf,.docx,.txt,image/*" hidden><b>Elegir archivos</b><span class="cs">o arrástralos aquí · puedes agregar más antes de comenzar</span></label>`}
       ${n?`<div class="mn-bsum"><span><b>${n}</b> archivo${n===1?"":"s"}</span><span>✓ ${ok} guardada${ok===1?"":"s"}</span>${pe?`<span class="mn-bw">⚠ ${pe} con campos por completar</span>`:""}${er?`<span class="mn-be">✕ ${er} con error</span>`:""}</div>
         <div class="mn-bbar"><i style="width:${n?done/n*100:0}%"></i></div>
-        <div class="tbl mn-btbl"><table><thead><tr><th>Archivo</th><th>Estado</th><th>Detalle</th></tr></thead><tbody>${it.map((x,k)=>`<tr class="b-${x.st}"><td>${esc(x.f.name)}</td><td>${x.st==="leyendo"||x.st==="guardando"?'<span class="spin"></span>':""}${ST[x.st]}</td><td style="white-space:normal">${x.st==="ok"?(x.msg?`<span class="cs">${esc(x.msg)}</span> `:"")+(x.miss.length?`Por completar: ${esc(x.miss.map(k=>LBLC[k]||k).join(", "))} <button type="button" class="lnk" data-mned="${esc(x.id)}">Completar</button>`:`Ficha completa <button type="button" class="lnk" data-mned="${esc(x.id)}">Revisar</button>`):esc(x.msg||"")}${!BULK.run&&x.st!=="ok"?` <button type="button" class="lnk mn-del" data-bdel="${k}">Quitar</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:""}
-      <div class="row">${BULK.run?`<button type="button" class="btn ghost" id="mnBStop">Detener después de la actual</button><button type="button" class="btn ghost" id="mnBHide">Seguir en segundo plano</button>`:`<button type="button" class="btn ghost" id="mnBClose">${done&&done===n?"Cerrar":"Cancelar"}</button>${pe?`<button type="button" class="btn ghost" id="mnBPend">Ver las por completar</button>`:""}${it.some(x=>x.st==="cola"||x.st==="error"&&!/Pesa/.test(x.msg))?`<button type="button" class="btn" id="mnBGo">${done?"Procesar pendientes":"Comenzar carga"} (${it.filter(x=>x.st==="cola"||x.st==="error"&&!/Pesa/.test(x.msg)).length})</button>`:""}`}</div></div>`;
-    const inp=ov.querySelector("#mnBFiles");if(inp)inp.onchange=e=>{bulkAdd(e.target.files)};
+        <div class="tbl mn-btbl"><table><thead><tr><th>Archivo</th><th>Estado</th><th>Detalle</th></tr></thead><tbody>${it.map((x,k)=>`<tr class="b-${x.st}"><td>${esc(x.f.name)}</td><td>${x.st==="leyendo"||x.st==="guardando"?'<span class="spin"></span>':""}${ST[x.st]}</td><td style="white-space:normal">${x.st==="dup"?`${esc(x.msg)} <button type="button" class="lnk" data-bdup="${k}|r">Reemplazar</button> <button type="button" class="lnk mn-del" data-bdup="${k}|c">Cancelar subida</button>`:x.st==="dup2"?`${esc(x.msg)} <button type="button" class="lnk" data-bdup="${k}|r">Reemplazar</button> <button type="button" class="lnk" data-bdup="${k}|n">Guardar como nueva</button> <button type="button" class="lnk mn-del" data-bdup="${k}|c">Descartar</button>`:x.st==="ok"?(x.rep?`<span class="mn-rep">Reemplazó la existente</span> `:"")+(x.msg?`<span class="cs">${esc(x.msg)}</span> `:"")+(x.miss.length?`Por completar: ${esc(x.miss.map(k=>LBLC[k]||k).join(", "))} <button type="button" class="lnk" data-mned="${esc(x.id)}">Completar</button>`:`Ficha completa <button type="button" class="lnk" data-mned="${esc(x.id)}">Revisar</button>`):esc(x.msg||"")}${!BULK.run&&x.st!=="ok"&&x.st!=="dup"&&x.st!=="dup2"?` <button type="button" class="lnk mn-del" data-bdel="${k}">Quitar</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:""}
+      <div class="row">${BULK.run?`<button type="button" class="btn ghost" id="mnBStop">Detener después de la actual</button><button type="button" class="btn ghost" id="mnBHide">Seguir en segundo plano</button>`:`<button type="button" class="btn ghost" id="mnBClose">${done&&done===n?"Cerrar":"Cancelar"}</button>${pe?`<button type="button" class="btn ghost" id="mnBPend">Ver las por completar</button>`:""}${nd?`<span class="mn-bw">Decide qué hacer con ${nd} duplicada${nd===1?"":"s"}${it.some(x=>x.st==="cola")?" para comenzar":""}</span>`:""}${it.some(x=>x.st==="cola"||x.st==="error"&&!/Pesa/.test(x.msg))&&!it.some(x=>x.st==="dup")?`<button type="button" class="btn" id="mnBGo">${done?"Procesar pendientes":"Comenzar carga"} (${it.filter(x=>x.st==="cola"||x.st==="error"&&!/Pesa/.test(x.msg)).length})</button>`:""}`}</div></div>`;
+    const inp=ov.querySelector("#mnBFiles");if(inp)inp.onchange=e=>{bulkAdd(e.target.files);e.target.value=""};
     const dz=ov.querySelector("#mnBDrop");if(dz){dz.ondragover=e=>{e.preventDefault();dz.classList.add("over")};dz.ondragleave=()=>dz.classList.remove("over");dz.ondrop=e=>{e.preventDefault();dz.classList.remove("over");bulkAdd(e.dataTransfer.files)}}}
   async function bulkGo(){if(BULK.run)return;BULK.run=true;BULK.stop=false;BULK.items.forEach(x=>{if(x.st==="error"&&!/Pesa/.test(x.msg)){x.st="cola";x.msg=""}});bulkRender();
     for(const x of BULK.items){if(BULK.stop)break;if(x.st!=="cola")continue;x.st="leyendo";x.msg="";bulkRender();
@@ -5588,18 +5612,27 @@ Reglas:
       if(MN.ia!==false){try{await analizar(x.f,r,()=>{})}catch(e){iaMsg=e&&e.code?iaErr(e):"No se pudo leer automáticamente: "+(e&&e.message||"error");if(e&&e.code==="rate_limited"){await new Promise(z=>setTimeout(z,8000))}}}
       else{try{const t=await extraer(x.f,()=>{});r.texto=t.texto||""}catch(e){}r.datos.pendientes=faltan(r.datos)}
       if(!r.datos.pendientes||!r.datos.pendientes.length&&!r.datos.ia)r.datos.pendientes=faltan(r.datos);
+      r.datos.hash=x.hash||"";r.datos.tam=x.f.size;
+      if(!x.replace){const dc=dupContenido(r.datos,null);if(dc){x.st="dup2";x.dup=dc;x.rec=r;x.msg="Misma organización y fecha que: "+((dc.datos||{}).organizacion||"")+" · "+fmtF((dc.datos||{}).fecha)+(dc.archivo_nombre?` («${dc.archivo_nombre}»)`:"");bulkRender();continue}}
       x.st="guardando";bulkRender();
-      try{const up=await ST2.upload(x.f,r.id);const rec={id:r.id,datos:r.datos,texto:r.texto||"",archivo:up.archivo,archivo_nombre:up.archivo_nombre,archivo_tipo:up.archivo_tipo,por:(S.acct&&S.acct.usuario)||""};
-        await ST2.save(rec);MN.list.unshift(rec);x.id=r.id;x.miss=r.datos.pendientes||[];x.st="ok";x.msg=iaMsg}
+      try{await bulkGuardar(x,r,x.replace);x.msg=iaMsg}
       catch(e){x.st="error";x.msg="No se pudo guardar: "+(e&&e.message||"error")}
       bulkRender();if(S.tab==="minutas")mnRender()}
-    BULK.run=false;bulkRender();const ok=BULK.items.filter(x=>x.st==="ok").length,pe=BULK.items.filter(x=>x.st==="ok"&&x.miss.length).length;toast(`Carga masiva: ${ok} minuta${ok===1?"":"s"} guardada${ok===1?"":"s"}${pe?`, ${pe} con campos por completar`:""}.`);if(S.tab==="minutas")mnRender()}
+    BULK.run=false;bulkRender();
+    const d2=BULK.items.filter(x=>x.st==="dup2");if(d2.length){const ok=await askYN(`<b>${d2.length} minuta${d2.length===1?"":"s"}</b> ${d2.length===1?"parece":"parecen"} corresponder a reuniones ya cargadas (misma organización y fecha):<ul class="mn-dl">${d2.slice(0,8).map(x=>`<li>«${esc(x.f.name)}» → ${descMin(x.dup)}</li>`).join("")}${d2.length>8?`<li>y ${d2.length-8} más</li>`:""}</ul>¿Qué quieres hacer?`,{title:"Posibles minutas duplicadas",si:d2.length===1?"Reemplazar la existente":"Reemplazar las existentes",no:d2.length===1?"Guardar como nueva":"Guardar como nuevas",cancel:"Decidir una por una"});
+      if(ok!==null){for(const x of d2)await bulkResolver(x,ok?"r":"n")}}
+    const ok=BULK.items.filter(x=>x.st==="ok").length,pe=BULK.items.filter(x=>x.st==="ok"&&x.miss.length).length;toast(`Carga masiva: ${ok} minuta${ok===1?"":"s"} guardada${ok===1?"":"s"}${pe?`, ${pe} con campos por completar`:""}.`);if(S.tab==="minutas")mnRender()}
+  async function bulkResolver(x,op){if(op==="c"){x.st="omitida";x.msg=x.rec?"Descartada (duplicada).":"Duplicada: subida cancelada.";bulkRender();return}
+    if(x.st==="dup"){x.st="cola";if(op==="r"){x.replace=x.dup;x.msg="Reemplazará la minuta existente."}bulkRender();return}
+    if(x.st==="dup2"){x.st="guardando";bulkRender();try{await bulkGuardar(x,x.rec,op==="r"?x.dup:null);x.msg=""}catch(e){x.st="error";x.msg="No se pudo guardar: "+(e&&e.message||"error")}bulkRender();if(S.tab==="minutas")mnRender()}}
   async function guardar(){if(MN.busy)return;leerForm();const r=MN.edit,d=r.datos;if(!d.organizacion&&!d.fecha&&!d.resumen&&!r._file&&!r.archivo){formRender("Agrega al menos un archivo, la organización, la fecha o un resumen.");return}
+    if(!r._orig&&!r._replace){const dc=dupContenido(d,r.id);if(dc){const ok=await askYN(`Ya existe una minuta de la misma organización y fecha:<br>${descMin(dc)}<br><br>¿Es la misma reunión?`,{title:"Posible minuta duplicada",si:"Sí, reemplazar la existente",no:"No, guardar como nueva",cancel:"Cancelar subida"});
+      if(ok===null){formRender("Subida cancelada. Puedes corregir la fecha u organización, o cerrar sin guardar.");return}if(ok){r.id=dc.id;r._replace=dc;r.por=dc.por}}}
     MN.busy=true;const b=document.getElementById("mnSave");if(b){b.disabled=true;b.textContent="Guardando…"}
-    try{const id=r.id||nid();if(r._file){const up=await ST2.upload(r._file,id);r.archivo=up.archivo;r.archivo_nombre=up.archivo_nombre;r.archivo_tipo=up.archivo_tipo}
+    try{const id=r.id||nid();if(r._file){const up=await ST2.upload(r._file,id,r._replace||(r._orig?MN.list.find(x=>x.id===r._orig):null));r.archivo=up.archivo;r.archivo_nombre=up.archivo_nombre;r.archivo_tipo=up.archivo_tipo}
       const rec={id,datos:d,texto:r.texto||"",archivo:r.archivo,archivo_nombre:r.archivo_nombre,archivo_tipo:r.archivo_tipo,por:r.por||(S.acct&&S.acct.usuario)||""};
       if(ART()){await ST2.save(rec)}else{await ST2.save({...rec,id})}
-      const i=MN.list.findIndex(x=>x.id===id);if(i>=0)MN.list[i]=rec;else MN.list.unshift(rec);MN.busy=false;document.getElementById("mnModal").hidden=true;MN.edit=null;toast("Minuta guardada.");mnRender()}
+      const i=MN.list.findIndex(x=>x.id===id);if(i>=0)MN.list[i]=rec;else MN.list.unshift(rec);MN.busy=false;document.getElementById("mnModal").hidden=true;MN.edit=null;toast(r._replace?"Minuta reemplazada.":"Minuta guardada.");mnRender()}
     catch(e){MN.busy=false;formRender("No se pudo guardar: "+esc(e&&e.message||"error"))}}
 
   function csv(){const q=v=>`"${String(v==null?"":v).replace(/"/g,'""')}"`;const rows=[["Fecha","Hora","Caleta","Organización","Lugar","Temas","Participantes","Resumen","Acuerdos","Acuerdos pendientes","Archivo"]];
@@ -5623,6 +5656,7 @@ Reglas:
     if(t.closest("#mnBHide")){document.getElementById("mnBulk").hidden=true;toast("La carga sigue en segundo plano. Vuelve a «Carga masiva» para ver el avance.");return}
     if(t.closest("#mnBClose")){document.getElementById("mnBulk").hidden=true;if(!BULK.run)BULK.items=[];return}
     if(t.closest("#mnBPend")){document.getElementById("mnBulk").hidden=true;BULK.items=[];MN.f.porComp=true;MN.page=0;if(S.tab!=="minutas")setTab("minutas");else mnRender();return}
+    const bu=t.closest("[data-bdup]");if(bu){const [k,op]=bu.dataset.bdup.split("|");const x=BULK.items[+k];if(x)await bulkResolver(x,op);return}
     const bd=t.closest("[data-bdel]");if(bd){BULK.items.splice(+bd.dataset.bdel,1);bulkRender();return}
     if(t.closest("#mnCsv")){csv();return}
     if(t.closest("#mnMore")){MN.page++;mnRender();return}
