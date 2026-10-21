@@ -5523,7 +5523,7 @@ function cgScan(){document.querySelectorAll(".card h3, .card h4, .np-viz h4").fo
     if(/^text\//.test(ty)||/\.(txt|md|csv)$/.test(nm))return{texto:await file.text(),imgs:[]};
     throw new Error("Formato no reconocido. Usa PDF, Word (.docx), foto (JPG o PNG) o texto.")}
 
-  function instr(conImg){return`Eres asistente de la Plataforma de Gestión Borde Costero (relacionamiento con pesca artesanal, región de Antofagasta, Chile). Lee esta minuta de reunión${conImg?" (viene como imágenes; puede estar escrita a mano)":""} y devuelve SOLO un objeto JSON válido, sin texto antes ni después, con esta forma:
+  function instr(conImg){return`Eres asistente de la Plataforma de Gestión Borde Costero (relacionamiento con pesca artesanal, región de Antofagasta, Chile). Lee esta minuta de reunión${conImg?" (viene como imágenes; puede estar escrita a mano)":""} y devuelve SOLO un objeto JSON válido, sin texto antes ni después (dentro de los textos NO uses comillas dobles: usa « » para citar), con esta forma:
 {"fecha":"AAAA-MM-DD o null","hora":"HH:MM o null","lugar":"texto o null","caleta":"El Cobre | Michilla | otra caleta | null","organizacion":"texto o null","otras_organizaciones":["..."],"participantes":[{"nombre":"...","cargo":"...","organizacion":"..."}],"temas":["..."],"resumen":"3 a 5 frases en español","acuerdos":[{"texto":"...","responsable":"... o null","plazo":"AAAA-MM-DD o texto o null"}],"transcripcion":"${conImg?"texto completo de la minuta tal como se lee, en español":""}","no_legible":["campos que no pudiste leer con seguridad"],"es_organizacion_pescadores":true o false}
 Reglas:
 - Organizaciones conocidas (usa exactamente este nombre si corresponde): ${ORG0.map(x=>x[1]+" (Caleta "+x[0]+")").join("; ")}.
@@ -5532,7 +5532,20 @@ Reglas:
 - Fechas en formato AAAA-MM-DD; si el año no aparece, null.
 - "es_organizacion_pescadores": true si la reunión es con una organización de pescadores artesanales, buzos, recolectores, algueros o de una caleta (sindicato, cooperativa, asociación gremial, etc.); false si es con otro tipo de actor (familias, juntas de vecinos, empresas, servicios públicos, municipios, comunidades no pesqueras).
 - No incluyas RUT, teléfonos ni correos.`}
-  function parseJ(t){const a=String(t||"").indexOf("{"),b=String(t||"").lastIndexOf("}");if(a<0||b<a)throw new Error("La IA no devolvió una ficha válida.");return JSON.parse(t.slice(a,b+1))}
+  /* Repara JSON imperfecto de la IA: comillas dobles sin escapar dentro de textos, saltos de línea, comas sobrantes y cierres faltantes. */
+  function repJ(x){let o="",inS=false,esc2=false;const st=[];
+    for(let i=0;i<x.length;i++){const c=x[i];
+      if(inS){if(esc2){o+=c;esc2=false;continue}if(c==="\\"){o+=c;esc2=true;continue}
+        if(c==='"'){let j=i+1;while(j<x.length&&/\s/.test(x[j]))j++;const nx=x[j];let cierra=nx===undefined||nx===":"||nx==="}"||nx==="]";
+          if(nx===","){let k=j+1;while(k<x.length&&/\s/.test(x[k]))k++;cierra=k>=x.length||/["{\[\]}\d\-]|t(?=rue)|f(?=alse)|n(?=ull)/.test(x.slice(k,k+5))&&/^(["{\[\]}\d\-]|true|false|null)/.test(x.slice(k,k+5))}
+          if(cierra){o+=c;inS=false}else o+='\\"';continue}
+        if(c==="\n"){o+="\\n";continue}if(c==="\r")continue;if(c==="\t"){o+="\\t";continue}o+=c;continue}
+      if(c==='"'){inS=true;o+=c;continue}if(c==="{"||c==="["){st.push(c==="{"?"}":"]");o+=c;continue}if(c==="}"||c==="]"){st.pop();o+=c;continue}o+=c}
+    if(inS)o+='"';o=o.replace(/,\s*([}\]])/g,"$1").replace(/,\s*$/,"");while(st.length)o+=st.pop();return o}
+  function parseJ(t){t=String(t||"").replace(/```(?:json)?/gi,"");const a=t.indexOf("{");if(a<0)throw new Error("La IA no devolvió un resultado válido.");const b=t.lastIndexOf("}");const raw=b>a?t.slice(a,b+1):t.slice(a);
+    try{return JSON.parse(raw)}catch(e1){try{return JSON.parse(repJ(raw))}catch(e2){try{return JSON.parse(repJ(t.slice(a)))}catch(e3){const e=new Error("La IA devolvió un texto con formato incompleto");e.raw=t;throw e}}}}
+  async function iaJSON(texto,imgs,ins){let t=await ST2.ia(texto,imgs,ins);try{return parseJ(t)}catch(e){
+      t=await ST2.ia("",[],`Corrige este JSON para que sea válido (escapa las comillas internas o reemplázalas por « », no cambies el contenido) y devuelve SOLO el JSON corregido:\n\n${String(t).slice(0,60000)}`);return parseJ(t)}}
 
   /* ---------- Carga ---------- */
   async function mnLoad(force){if(MN.loading||(MN.loaded&&!force))return;MN.loading=true;try{const r=await ST2.list();MN.rel=r.list.filter(x=>(x.datos||{}).tipo==="relato").sort((a,b)=>(b.datos.generado||0)-(a.datos.generado||0));MN.list=r.list.filter(x=>(x.datos||{}).tipo!=="relato");MN.ia=r.ia;if(!ART()&&MN.warn&&!/Falta/.test(MN.warn))MN.warn=""}catch(e){MN.warn=e&&e.message||"No se pudieron cargar las minutas."}MN.loaded=true;MN.u=(S.acct&&S.acct.usuario)||"";MN.loading=false;mnRender()}
@@ -5643,7 +5656,7 @@ Reglas:
   function relView(r){const A=adm();return`<div class="mn-relv"><div class="mn-relbar">${A?(MN.relEdit?`<button type="button" class="btn small" id="mnRelSaveEd">Guardar edición</button><button type="button" class="btn ghost small" id="mnRelCancelEd">Cancelar edición</button>`:`<button type="button" class="btn ghost small" id="mnRelEd">✎ Editar texto</button>`):""}<button type="button" class="btn ghost small" data-reldoc="${esc(r.id)}">Descargar Word</button><button type="button" class="btn ghost small" data-relpdf="${esc(r.id)}">Imprimir / PDF</button></div>
       <article class="mn-relx" id="mnRelX" ${MN.relEdit?'contenteditable="true"':""}>${r.datos.html||relHtml(r)}</article></div>`}
   function relInstr(){return`Eres analista de relacionamiento comunitario de la Plataforma de Gestión Borde Costero (relación de una empresa minera con organizaciones de pescadores artesanales en la región de Antofagasta, Chile). A partir de las fichas de minutas de reuniones que siguen (cada una identificada como M1, M2…, ordenadas por fecha), escribe un relato del relacionamiento. Usa SOLO la información de las minutas; no inventes. Cita la minuta de origen con su código entre corchetes, por ejemplo [M3], en cada afirmación relevante. Si algo no tiene respaldo, dilo en "vacios".
-Devuelve SOLO un objeto JSON válido, en español, conciso (máximo unas 1.200 palabras en total), con esta forma:
+Devuelve SOLO un objeto JSON válido (dentro de los textos NO uses comillas dobles: usa « » para citar), en español, conciso (máximo unas 1.200 palabras en total), con esta forma:
 {"resumen":"5 a 6 líneas sobre el estado actual de la relación","clima":{"nivel":"colaborativa | mixta | tensa | conflicto","justificacion":"...","evolucion":"cómo cambió el clima en el tiempo"},"linea_tiempo":[{"fecha":"AAAA-MM-DD","ref":"[M1]","hito":"qué pasó y qué cambió"}],"temas":[{"tema":"...","evolucion":"qué se planteó, cómo se respondió y en qué quedó","estado":"abierto | resuelto | en curso"}],"compromisos":{"analisis":"balance de cumplimiento y su efecto en la relación","destacados":[{"texto":"...","estado":"pendiente | cumplido | vencido","ref":"[M2]"}]},"posiciones":{"demandas":["..."],"acuerdos":["..."],"tensiones":["..."]},"actores":[{"nombre":"...","cargo":"...","rol":"papel en la relación"}],"riesgos":["..."],"oportunidades":["..."],"recomendaciones":["acciones concretas para la próxima reunión"],"vacios":["información que falta"]}`}
   function relContexto(list){const hoy=todayISO();let budget=90000;const out=[],refmap={};list.slice().sort((a,b)=>String((a.datos||{}).fecha||"").localeCompare(String((b.datos||{}).fecha||""))).forEach((m,i)=>{const d=m.datos||{},k="M"+(i+1);refmap[k]={id:m.id,t:`${d.organizacion||"Sin organización"} · ${fmtF(d.fecha)}`};
       let t=`### ${k} · ${d.fecha||"sin fecha"} · ${d.organizacion||"sin organización"}${d.caleta?" · Caleta "+d.caleta:""}${d.lugar?" · "+d.lugar:""}
@@ -5657,7 +5670,7 @@ Compromisos: ${(d.acuerdos||[]).map(a=>`- ${a.texto} | responsable: ${a.responsa
   async function relGenerar(prev){const base=prev?MN.list.filter(m=>{const f=prev.datos.filtros||{},d=m.datos||{};if(f.org&&nrm(d.organizacion)!==nrm(f.org))return false;if(!f.org&&f.cal&&nrm(d.caleta)!==nrm(f.cal))return false;if(f.tema&&!(d.temas||[]).includes(f.tema))return false;if(f.d0&&(!d.fecha||d.fecha<f.d0))return false;if(f.d1&&(!d.fecha||d.fecha>f.d1))return false;return true}):relBase();
     if(!base.length){MN.relMsg="No hay minutas para el alcance elegido.";mnRender();return}
     MN.relBusy=true;MN.relOpen=true;MN.relMsg=`La IA está leyendo ${base.length} minuta${base.length===1?"":"s"} y redactando el relato (puede tardar hasta un minuto)…`;mnRender();
-    try{const {texto,refmap}=relContexto(base);const out=parseJ(await ST2.ia(texto,[],relInstr()));
+    try{const {texto,refmap}=relContexto(base);const out=await iaJSON(texto,[],relInstr());
       const fs=prev?prev.datos.filtros:{org:MN.f.org,cal:MN.f.cal,tema:MN.f.tema,d0:MN.f.d0,d1:MN.f.d1};const fechas=base.map(m=>(m.datos||{}).fecha).filter(Boolean).sort();
       const rec={id:prev?prev.id:"rel"+nid(),datos:{tipo:"relato",alcance:prev?prev.datos.alcance:relScope(),alcanceOrg:fs.org||"",filtros:fs,ids:base.map(m=>m.id),refmap,json:out,clima:(out.clima&&out.clima.nivel)||"",periodo:fechas.length?`${fmtF(fechas[0])} a ${fmtF(fechas[fechas.length-1])}`:"sin fechas",generado:Date.now(),visible:prev?!!prev.datos.visible:false,por:(S.acct&&S.acct.usuario)||""},texto:""};
       await ST2.save(rec);MN.rel=[rec,...MN.rel.filter(x=>x.id!==rec.id)];MN.relAbierto=rec.id;MN.relEdit=false;MN.relMsg="";toast("Relato generado y guardado.")}
@@ -5817,7 +5830,7 @@ Compromisos: ${(d.acuerdos||[]).map(a=>`- ${a.texto} | responsable: ${a.responsa
   /* Lee un archivo con IA y completa la ficha d (y el texto de búsqueda de r). Lanza {code} si la IA no está disponible. */
   async function analizar(file,r,prog){const x=await extraer(file,prog);prog(`La IA está leyendo la minuta${x.imgs.length?" (imágenes; puede tardar hasta un minuto)":""}…`);
     r.texto=x.texto||r.texto||"";
-    let out;try{out=parseJ(await ST2.ia(x.texto||"",x.imgs,instr(x.imgs.length>0)))}catch(e){r.datos.pendientes=faltan(r.datos);throw e}
+    let out;try{out=await iaJSON(x.texto||"",x.imgs,instr(x.imgs.length>0))}catch(e){r.datos.pendientes=faltan(r.datos);throw e}
     const d=r.datos,set=(k,v)=>{if(v!=null&&v!==""&&!(Array.isArray(v)&&!v.length))d[k]=v};
     set("fecha",/^\d{4}-\d{2}-\d{2}$/.test(out.fecha||"")?out.fecha:null);set("hora",/^\d{1,2}:\d{2}$/.test(out.hora||"")?out.hora.padStart(5,"0"):null);set("lugar",out.lugar);
     const cal=String(out.caleta||"");set("caleta",/cobre/i.test(cal)?"El Cobre":/michilla/i.test(cal)?"Michilla":cal||null);
