@@ -1449,6 +1449,32 @@ svg text.val{fill:var(--ink-2);font-weight:700}
 .mn-relx p{margin:4px 0}.mn-relx ul,.mn-relx ol{margin:4px 0;padding-left:20px;display:grid;gap:3px}
 .mn-ref{border:0;background:var(--brand-soft);color:var(--brand-ink);font-weight:800;font-size:.72rem;border-radius:5px;padding:0 5px;margin:0 1px;cursor:pointer;vertical-align:1px}
 .mn-relref{border-top:1px dashed var(--line);padding-top:8px;margin-top:12px!important}
+.bc-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}.bc-head h2{margin:0}
+.bc-tabs{flex-wrap:wrap}.bc-badge{display:inline-block;background:#c62828;color:#fff;border-radius:999px;padding:0 7px;font-size:.72rem;margin-left:4px}
+.bc-ord{display:grid;grid-template-columns:minmax(240px,320px) minmax(0,1fr);gap:14px;align-items:start}
+.bc-ord>.bc-cruce,.bc-ord>.bc-ins{grid-column:1/-1}
+@media(max-width:820px){.bc-ord{grid-template-columns:minmax(0,1fr)}}
+.bc-layers{max-height:520px;overflow:auto}.bc-lg{margin-top:10px}.bc-lgt{display:block;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:4px}
+.bc-lc{display:flex;align-items:flex-start;gap:8px;padding:6px 4px;border-radius:8px;cursor:pointer}.bc-lc:hover{background:var(--brand-08)}
+.bc-lc i{flex:none;width:14px;height:14px;border-radius:4px;margin-top:3px;opacity:.85}.bc-lc span{flex:1;font-size:.88rem;line-height:1.3}.bc-lc small{display:block;color:var(--muted);font-size:.74rem}
+.bc-map{height:500px;border-radius:12px;overflow:hidden;background:#dfe8ec}@media(max-width:820px){.bc-map{height:360px}}
+.bc-sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.bc-attr{display:grid;gap:2px;font-size:.78rem;margin-top:6px}.bc-attr div{display:flex;gap:8px;justify-content:space-between}.bc-attr span{color:var(--muted)}.bc-attr b{text-align:right;font-weight:600}
+.bc-ct td,.bc-it td{vertical-align:top}.bc-est{font-size:.76rem;font-weight:700;background:var(--brand-08);border-radius:999px;padding:2px 8px;white-space:nowrap}
+.bc-venc{color:#c62828;font-weight:700}.bc-cerca{color:#ef6c00;font-weight:700}
+.bc-form{border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0;display:grid;gap:10px;background:var(--surface)}.bc-form h4{margin:0}
+.bc-iabox{display:grid;gap:8px;border:1px dashed var(--line);border-radius:10px;padding:10px}.bc-iabox textarea{width:100%}
+.bc-zs{display:flex;flex-wrap:wrap;gap:4px 14px;max-height:150px;overflow:auto;font-size:.86rem}
+.bc-alert{margin-bottom:0}.bc-ok{background:#e8f5e9;color:#1b5e20;border-radius:12px;padding:10px 14px;font-weight:700}
+.bc-avs{display:grid;gap:10px;margin-top:10px}.bc-av{border:1px solid var(--line);border-left:5px solid #c62828;border-radius:12px;padding:10px 14px;display:grid;gap:4px}
+.bc-av.prog{border-left-color:#ef6c00}.bc-av.fin{border-left-color:#90a4ae;opacity:.8}.bc-av p{margin:2px 0}
+.bc-avh{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.bc-avi{font-size:1.2rem}
+.bc-st{font-size:.72rem;font-weight:800;color:#fff;background:var(--c);border-radius:999px;padding:2px 9px}
+.bc-avf{display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-size:.85rem}.bc-avf .mn-act{margin-left:auto;display:flex;gap:10px}
+.bc-ol td{text-align:center;font-variant-numeric:tabular-nums;color:#1b2a30}.bc-ol td:first-child{text-align:left;background:none;color:inherit}
+.bc-ord>*{min-width:0}[data-pane="borde"] .tbar{flex-wrap:wrap;gap:8px}[data-pane="borde"] .tbl{max-width:100%;overflow:auto}
+[data-pane="borde"] .card{min-width:0}[data-pane="borde"] .card>*{min-width:0;max-width:100%}
+[data-pane="borde"] .card{grid-template-columns:minmax(0,1fr)}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
@@ -1510,7 +1536,7 @@ svg text.val{fill:var(--ink-2);font-weight:700}
     <button role="tab" data-tab="negociacion" aria-selected="false">Negociación</button>
     <button role="tab" data-tab="poder" aria-selected="false">Poder e interés</button>
     <button role="tab" data-tab="rca" aria-selected="false">Exigencias ambientales</button>
-    <button role="tab" data-tab="minutas" aria-selected="false">Minutas</button>
+    <button role="tab" data-tab="minutas" aria-selected="false">Minutas</button><button role="tab" data-tab="borde" aria-selected="false">Borde costero</button>
     <button role="tab" data-tab="detalle" aria-selected="false">Detalle</button>
     <button role="tab" data-tab="admin" aria-selected="false" id="tabAdmin" hidden>Administración</button>
   </nav>
@@ -1681,7 +1707,7 @@ svg text.val{fill:var(--ink-2);font-weight:700}
       </section>
 
       <section data-pane="cmp" style="display:grid;gap:14px" hidden></section>
-      <section data-pane="minutas" style="display:grid;gap:14px" hidden></section>
+      <section data-pane="minutas" style="display:grid;gap:14px" hidden></section><section data-pane="borde" style="display:grid;gap:14px" hidden></section>
       <section data-pane="detalle" style="display:grid;gap:14px" hidden>
         <div class="card">
           <div class="tbar">
@@ -4186,7 +4212,7 @@ const loadScript=src=>new Promise((res,rej)=>{const s=document.createElement("sc
 function loadLeaflet(){if(LEAF)return LEAF;LEAF=(async()=>{const l=document.createElement("link");l.rel="stylesheet";l.href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";document.head.appendChild(l);
   await loadScript("https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js");try{await loadScript("https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js")}catch(e){}return window.L||null})().catch(()=>null);return LEAF}
 
-const calLab=n=>n.replace(/\s*\(.*\)$/,"").replace(/ Iv Reg$/i,"");
+const calLab=n=>n.replace(/\s*\(.*\)$/,"").replace(/ Iv Reg$/i,"");window.__bc={geoOf:c=>geoOf(c),calLab,geoLoad:()=>geoLoad(),loadLeaflet:()=>loadLeaflet()};
 function mapData(A){const R=S.R,m=R.m,nm=A.nMonths,zones=new Map(),all=[];
   m.C.forEach((c,i)=>{const g=geoOf(c);if(!g)return;const z=regLabel(c[3]);if(!zones.has(z))zones.set(z,{name:z,raw:c[3],pts:[]});
     const p={i,name:c[0],com:c[1],comp:c[4],lat:g[0],lon:g[1],aprox:!!g[2],off:g[3]||null,t:A.cal[i],fis:A.calFis[i].size,muj:A.calMuj[i].size,v:V(A.cal[i],A.calFis[i],nm)};zones.get(z).pts.push(p);all.push(p)});
@@ -5548,7 +5574,7 @@ Reglas:
       t=await ST2.ia("",[],`Corrige este JSON para que sea válido (escapa las comillas internas o reemplázalas por « », no cambies el contenido) y devuelve SOLO el JSON corregido:\n\n${String(t).slice(0,60000)}`);return parseJ(t)}}
 
   /* ---------- Carga ---------- */
-  async function mnLoad(force){if(MN.loading||(MN.loaded&&!force))return;MN.loading=true;try{const r=await ST2.list();MN.rel=r.list.filter(x=>(x.datos||{}).tipo==="relato").sort((a,b)=>(b.datos.generado||0)-(a.datos.generado||0));MN.list=r.list.filter(x=>(x.datos||{}).tipo!=="relato");MN.ia=r.ia;if(!ART()&&MN.warn&&!/Falta/.test(MN.warn))MN.warn=""}catch(e){MN.warn=e&&e.message||"No se pudieron cargar las minutas."}MN.loaded=true;MN.u=(S.acct&&S.acct.usuario)||"";MN.loading=false;mnRender()}
+  async function mnLoad(force){if(MN.loading||(MN.loaded&&!force))return;MN.loading=true;try{const r=await ST2.list();MN.rel=r.list.filter(x=>(x.datos||{}).tipo==="relato").sort((a,b)=>(b.datos.generado||0)-(a.datos.generado||0));const TX=new Set(["relato","capa","instrumento","aviso"]);MN.list=r.list.filter(x=>!TX.has((x.datos||{}).tipo));MN.capas=r.list.filter(x=>(x.datos||{}).tipo==="capa");MN.instr=r.list.filter(x=>(x.datos||{}).tipo==="instrumento");MN.avisos=r.list.filter(x=>(x.datos||{}).tipo==="aviso");MN.ia=r.ia;if(!ART()&&MN.warn&&!/Falta/.test(MN.warn))MN.warn=""}catch(e){MN.warn=e&&e.message||"No se pudieron cargar las minutas."}MN.loaded=true;MN.u=(S.acct&&S.acct.usuario)||"";MN.loading=false;mnRender();try{window.__bcAfter&&window.__bcAfter()}catch(e){}}
 
   /* ---------- Filtros y resultados ---------- */
   function filtrar(){const f=MN.f,q=nrm(f.q).trim(),words=q?q.split(/\s+/).filter(w=>w.length>1):[];
@@ -5972,7 +5998,211 @@ Compromisos: ${(d.acuerdos||[]).map(a=>`- ${a.texto} | responsable: ${a.responsa
   document.addEventListener("keydown",ev=>{if(ev.key==="Escape"){popHide(0);const v=document.getElementById("mnView");if(v&&!v.hidden)v.hidden=true}});
 
   const _st=setTab;setTab=function(t){_st(t);if(t==="minutas"){["#fab","#period","#aside","#chips"].forEach(s=>{const e=document.querySelector(s);if(e)e.hidden=true});const l=document.querySelector(".layout");if(l)l.style.gridTemplateColumns="minmax(0,1fr)";mnRender()}else popHide(0)};
-  window.mnReset=()=>{MN.list=[];MN.loaded=false;MN.warn=""};
+  window.mnReset=()=>{MN.list=[];MN.capas=[];MN.instr=[];MN.avisos=[];MN.loaded=false;MN.warn=""};
+
+  /* ===================== Pestaña «Borde costero»: ordenamiento territorial y condiciones del mar ===================== */
+  const BC={sub:"ord",capasOf:null,on:new Set(),geo:new Map(),err:new Map(),load:new Set(),map:null,lay:new Map(),mar:null,marErr:"",marLoad:false,avEdit:null,inEdit:null,capEdit:null,popDone:false,fAv:"vig"};
+  const BCOL=["#1f77b4","#d62728","#2ca02c","#9467bd","#ff7f0e","#17becf","#8c564b","#e377c2","#7f7f7f","#bcbd22"];
+  const AV_CAT=[["marejada","Marejada / oleaje anormal","🌊"],["marea_roja","Marea roja / cierre sanitario","🦠"],["floracion","Floración algal / varazón","🟢"],["contaminacion","Derrame / contaminación","🛢️"],["tsunami","Alerta de tsunami","⚠️"],["viento","Viento / temporal","💨"],["otro","Otro","📌"]];
+  const AV=k=>AV_CAT.find(x=>x[0]===k)||AV_CAT[AV_CAT.length-1];
+  const INS_EST=["Por iniciar","En elaboración","En evaluación ambiental estratégica (EAE)","En consulta pública","En aprobación","Vigente","Suspendido / sin avance"];
+  const CAT_CAPA=["Zonificación del borde costero","Plan regulador","Concesiones","Áreas protegidas","Riesgo","Otro"];
+  const bcGeo=()=>window.__bc||null;
+  const bcSetC=(id,h)=>{const e=document.getElementById(id);if(e)e.innerHTML=h};
+  const LL=()=>bcGeo()&&bcGeo().loadLeaflet;
+  const WEB=()=>!ART();
+  function caletasGeo(){const g=bcGeo();if(!g||!S.R)return[];const out=[];S.R.m.C.forEach((c,i)=>{const p=g.geoOf(c);if(p)out.push({i,n:g.calLab(c[0]),com:c[1],lat:p[0],lon:p[1]})});return out}
+  function avEstado(a){const d=a.datos||a,h=todayISO();if(d.finalizado)return"fin";if(d.desde&&d.desde>h)return"prog";if(d.hasta&&d.hasta<h)return"fin";return"vig"}
+  const AVEST={vig:["Vigente","#c62828"],prog:["Programado","#ef6c00"],fin:["Finalizado","#607d8b"]};
+  const vigentes=()=>(MN.avisos||[]).filter(a=>avEstado(a)==="vig");
+
+  /* ---- geometría ---- */
+  function pip(pt,ring){let ins=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){const xi=ring[i][0],yi=ring[i][1],xj=ring[j][0],yj=ring[j][1];if(((yi>pt[1])!==(yj>pt[1]))&&(pt[0]<(xj-xi)*(pt[1]-yi)/(yj-yi)+xi))ins=!ins}return ins}
+  function polys(g){if(!g)return[];if(g.type==="Polygon")return[g.coordinates];if(g.type==="MultiPolygon")return g.coordinates;if(g.type==="GeometryCollection")return(g.geometries||[]).flatMap(polys);return[]}
+  function inGeom(pt,g){return polys(g).some(p=>p.length&&pip(pt,p[0])&&!p.slice(1).some(h=>pip(pt,h)))}
+  function distKm(pt,g){let best=Infinity;const seg=(a,b)=>{const kx=111.32*Math.cos(pt[1]*Math.PI/180),ky=110.57;const ax=(a[0]-pt[0])*kx,ay=(a[1]-pt[1])*ky,bx=(b[0]-pt[0])*kx,by=(b[1]-pt[1])*ky;const dx=bx-ax,dy=by-ay,L=dx*dx+dy*dy;let t=L?-(ax*dx+ay*dy)/L:0;t=Math.max(0,Math.min(1,t));const x=ax+t*dx,y=ay+t*dy;return Math.sqrt(x*x+y*y)};
+    polys(g).forEach(p=>p.forEach(r=>{for(let i=1;i<r.length;i++){const d=seg(r[i-1],r[i]);if(d<best)best=d}}));
+    if(g&&(g.type==="LineString"||g.type==="MultiLineString")){const ls=g.type==="LineString"?[g.coordinates]:g.coordinates;ls.forEach(r=>{for(let i=1;i<r.length;i++){const d=seg(r[i-1],r[i]);if(d<best)best=d}})}
+    if(g&&g.type==="Point"){const d=seg(g.coordinates,g.coordinates);best=Math.min(best,d)}return best}
+  function etiqueta(p){if(!p)return"";const ks=Object.keys(p);const pref=[/^zona$/i,/^nom_?zona/i,/^zonificac/i,/^nombre_?zon/i,/zona/i,/^uso/i,/^cod_?zona/i,/^nombre$/i,/^nom$/i,/descrip/i,/^name$/i];for(const re of pref){const k=ks.find(x=>re.test(x)&&p[x]!=null&&String(p[x]).trim()&&!/^(objectid|fid|shape)/i.test(x));if(k)return String(p[k]).trim()}return""}
+  function attrsHtml(p){return Object.entries(p||{}).filter(([k,v])=>v!=null&&String(v).trim()!==""&&!/^(objectid|fid|shape|st_area|st_length|globalid)/i.test(k)).slice(0,14).map(([k,v])=>`<div><span>${esc(k)}</span><b>${esc(String(v)).slice(0,160)}</b></div>`).join("")}
+
+  /* ---- carga de capas ---- */
+  async function capasOficiales(){if(BC.capasOf)return BC.capasOf;if(!WEB()){BC.capasOf=[];return[]}try{const r=await api("territorio?capas=1");BC.capasOf=r.capas||[];BC.marCfg=!!r.mar}catch(e){BC.capasOf=[];BC.ofErr=e.message}return BC.capasOf}
+  async function geoDe(key){if(BC.geo.has(key))return BC.geo.get(key);if(BC.load.has(key))return null;BC.load.add(key);bcRender();
+    try{let gj;if(key.startsWith("of:"))gj=await api("territorio?capa="+encodeURIComponent(key.slice(3)));else{const c=(MN.capas||[]).find(x=>"up:"+x.id===key);if(!c)throw new Error("Capa no encontrada");const f=await archivoDe(c);gj=JSON.parse(await f.text())}
+      BC.geo.set(key,gj);BC.err.delete(key)}catch(e){BC.err.set(key,e.message||"error")}BC.load.delete(key);bcRender();return BC.geo.get(key)||null}
+  function capasLista(){const of=(BC.capasOf||[]).map((c,i)=>({key:"of:"+c.k,n:c.n,g:c.g,fuente:"GeoIDE MINVU",col:BCOL[i%BCOL.length]}));const up=(MN.capas||[]).map((c,i)=>({key:"up:"+c.id,n:c.datos.nombre||"Capa",g:c.datos.categoria||"Otro",fuente:c.datos.fuente||"Cargada por administrador",col:c.datos.color||BCOL[(i+4)%BCOL.length],rec:c}));return[...up,...of]}
+
+  /* ---- archivo (KML, GeoJSON, ZIP de shapefile) a GeoJSON ---- */
+  function kml2geo(txt){const doc=new DOMParser().parseFromString(txt,"text/xml");const feats=[];const cs=s=>String(s||"").trim().split(/\s+/).map(t=>t.split(",").map(Number)).filter(a=>a.length>=2&&a.every(isFinite)).map(a=>[a[0],a[1]]);
+    doc.querySelectorAll("Placemark").forEach(pm=>{const props={};const nm=pm.querySelector("name");if(nm)props.nombre=nm.textContent.trim();const ds=pm.querySelector("description");if(ds)props.descripcion=ds.textContent.replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim().slice(0,500);
+      pm.querySelectorAll("ExtendedData Data, ExtendedData SimpleData").forEach(d=>{const k=d.getAttribute("name");const v=d.querySelector("value")?d.querySelector("value").textContent:d.textContent;if(k)props[k]=String(v).trim()});
+      const geoms=[];pm.querySelectorAll("Polygon").forEach(pg=>{const o=pg.querySelector("outerBoundaryIs coordinates");if(!o)return;const rings=[cs(o.textContent)];pg.querySelectorAll("innerBoundaryIs coordinates").forEach(h=>rings.push(cs(h.textContent)));geoms.push({type:"Polygon",coordinates:rings})});
+      pm.querySelectorAll("LineString coordinates").forEach(l=>geoms.push({type:"LineString",coordinates:cs(l.textContent)}));
+      pm.querySelectorAll("Point coordinates").forEach(p=>{const c=cs(p.textContent)[0];if(c)geoms.push({type:"Point",coordinates:c})});
+      geoms.forEach(g=>feats.push({type:"Feature",properties:props,geometry:g}))});return{type:"FeatureCollection",features:feats}}
+  async function archivoAGeo(file){const nm=nrm(file.name);
+    if(/\.(geo)?json$/.test(nm)){const j=JSON.parse(await file.text());return j.type==="FeatureCollection"?j:j.type==="Feature"?{type:"FeatureCollection",features:[j]}:{type:"FeatureCollection",features:[{type:"Feature",properties:{},geometry:j}]}}
+    if(/\.kml$/.test(nm))return kml2geo(await file.text());
+    if(/\.kmz$/.test(nm)){await loadJs(JSZ);const z=await window.JSZip.loadAsync(await file.arrayBuffer());const k=Object.keys(z.files).find(n=>/\.kml$/i.test(n));if(!k)throw new Error("El KMZ no contiene un KML");return kml2geo(await z.file(k).async("string"))}
+    if(/\.zip$/.test(nm)){await loadJs("https://unpkg.com/shpjs@4.0.4/dist/shp.min.js");const r=await window.shp(await file.arrayBuffer());const arr=Array.isArray(r)?r:[r];return{type:"FeatureCollection",features:arr.flatMap(x=>x.features||[])}}
+    throw new Error("Formato no reconocido: usa KML, KMZ, GeoJSON o ZIP de shapefile.")}
+
+  /* ---- render principal ---- */
+  function bcRender(){const p=document.querySelector('[data-pane="borde"]');if(!p||S.tab!=="borde")return;if(!MN.loaded){p.innerHTML=`<div class="card"><p class="cs">Cargando…</p></div>`;mnLoad();return}
+    const A=adm(),nv=vigentes().length;
+    p.innerHTML=`<div class="card bc-head"><div><h2>Borde costero</h2><p class="cs">Instrumentos de ordenamiento territorial del borde costero y condiciones del mar y sanitarias que afectan a las caletas.</p></div>
+      <div class="itabs bc-tabs" role="tablist"><button type="button" role="tab" data-bcsub="ord" aria-selected="${BC.sub==="ord"}">🗺️ Ordenamiento territorial</button><button type="button" role="tab" data-bcsub="mar" aria-selected="${BC.sub==="mar"}">🌊 Condiciones del mar y sanitarias${nv?` <span class="bc-badge">${nv}</span>`:""}</button></div></div>
+      <div id="bcBody"></div>`;
+    if(BC.sub==="ord")ordRender();else marRender()}
+
+  /* ===== Ordenamiento territorial ===== */
+  async function ordRender(){const b=document.getElementById("bcBody");if(!b)return;await capasOficiales();try{bcGeo()&&await bcGeo().geoLoad()}catch(e){}if(S.tab!=="borde"||BC.sub!=="ord")return;const A=adm(),L=capasLista(),cal=caletasGeo();
+    const act=L.filter(c=>BC.on.has(c.key));
+    b.innerHTML=`<div class="bc-ord">
+      <div class="card bc-layers"><div class="tbar"><h3>Capas${help("Activa capas para verlas en el mapa y cruzarlas con las caletas. Las oficiales vienen del GeoIDE del MINVU (planes reguladores intercomunal y comunales). Los administradores pueden cargar otras capas, como la zonificación del borde costero, en KML, KMZ, GeoJSON o ZIP de shapefile.")}</h3>${A?`<button type="button" class="btn small" id="bcCapAdd">+ Cargar capa</button>`:""}</div>
+        ${!WEB()&&!(MN.capas||[]).length?`<p class="cs">Las capas oficiales del MINVU se muestran en la versión web (Vercel). Aquí puedes cargar capas propias.</p>`:""}${BC.ofErr?`<p class="warnbox">No se pudo leer el catálogo oficial: ${esc(BC.ofErr)}</p>`:""}
+        ${[...new Set(L.map(c=>c.g))].map(g=>`<div class="bc-lg"><span class="bc-lgt">${esc(g)}</span>${L.filter(c=>c.g===g).map(c=>`<label class="bc-lc"><input type="checkbox" data-bccap="${esc(c.key)}" ${BC.on.has(c.key)?"checked":""}><i style="background:${c.col}"></i><span>${esc(c.n)}<small>${esc(c.fuente)}${BC.load.has(c.key)?" · cargando…":BC.err.has(c.key)?" · error: "+esc(BC.err.get(c.key)):BC.geo.has(c.key)?` · ${t0((BC.geo.get(c.key).features||[]).length)} polígonos`:""}</small></span>${c.rec&&A?`<button type="button" class="lnk mn-del" data-bccapdel="${esc(c.rec.id)}" title="Eliminar capa">✕</button>`:""}</label>`).join("")}</div>`).join("")||`<p class="cs">No hay capas disponibles.</p>`}
+      </div>
+      <div class="card bc-mapc">${LL()||window.L?`<div id="bcMap" class="bc-map"></div>`:`<p class="cs">El mapa interactivo se muestra en la versión web.</p>`}</div>
+      <div class="card bc-cruce"><div class="tbar"><h3>Caletas y ordenamiento${help("Para cada caleta con ubicación, indica en qué zona de cada capa activa se encuentra o cuál es la zona más cercana (hasta 3 km).")}</h3></div><p class="concl" id="bcCruceC"></p><div id="bcCruce">${act.length?"":`<p class="cs">Activa una o más capas para ver en qué zona queda cada caleta.</p>`}</div></div>
+      <div class="card bc-ins"><div class="tbar"><h3>Instrumentos territoriales${help("Seguimiento de los instrumentos de planificación del borde costero: zonificación, planes reguladores, seccionales, etc. Registra su estado, etapa y próxima fecha.")}</h3>${A?`<button type="button" class="btn small" id="bcInsAdd">+ Agregar instrumento</button>`:""}</div><div id="bcIns"></div></div></div>`;
+    insRender();bcMap(act,cal);cruce(act,cal)}
+  async function bcMap(act,cal){const el=document.getElementById("bcMap");if(!el)return;let L0=null;try{L0=LL()?await LL()():window.L}catch(e){L0=null}if(!L0){el.innerHTML=`<p class="cs">No se pudo cargar el mapa.</p>`;return}if(!L0||!document.getElementById("bcMap"))return;
+    if(!BC.map||BC.map.getContainer()!==el){if(BC.map)try{BC.map.remove()}catch(e){}BC.map=L0.map(el,{scrollWheelZoom:false});L0.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:"© OpenStreetMap"}).addTo(BC.map);BC.lay=new Map();BC.calL=null;
+      const pts=cal.map(c=>[c.lat,c.lon]);if(pts.length)BC.map.fitBounds(pts,{padding:[30,30]});else BC.map.setView([-23.6,-70.4],8)}
+    if(!BC.calL){BC.calL=L0.layerGroup(cal.map(c=>L0.circleMarker([c.lat,c.lon],{radius:6,color:"#0b2230",weight:2,fillColor:"#ffd54f",fillOpacity:1}).bindTooltip(`<b>${esc(c.n)}</b> · ${esc(c.com)}`))).addTo(BC.map)}
+    for(const [k,l] of BC.lay){if(!BC.on.has(k)){BC.map.removeLayer(l);BC.lay.delete(k)}}
+    for(const c of act){if(BC.lay.has(c.key))continue;const gj=BC.geo.get(c.key)||await geoDe(c.key);if(!gj||!BC.on.has(c.key)||BC.lay.has(c.key))continue;
+      const l=L0.geoJSON(gj,{style:f=>({color:c.col,weight:1.5,fillColor:c.col,fillOpacity:.18}),pointToLayer:(f,ll)=>L0.circleMarker(ll,{radius:5,color:c.col}),onEachFeature:(f,ly)=>{const e=etiqueta(f.properties);ly.bindPopup(`<div class="mpop"><b>${esc(c.n)}</b>${e?`<br>Zona: <b>${esc(e)}</b>`:""}<div class="bc-attr">${attrsHtml(f.properties)}</div></div>`,{maxWidth:340})}}).addTo(BC.map);BC.lay.set(c.key,l)}
+    if(BC.calL)BC.calL.bringToFront&&BC.calL.eachLayer(x=>x.bringToFront&&x.bringToFront());setTimeout(()=>BC.map&&BC.map.invalidateSize(),60)}
+  async function cruce(act,cal){const box=document.getElementById("bcCruce");if(!box||!act.length){bcSetC("bcCruceC","");return}
+    for(const c of act)if(!BC.geo.has(c.key))await geoDe(c.key);if(!document.getElementById("bcCruce"))return;
+    const rows=[];cal.forEach(k=>{const pt=[k.lon,k.lat];act.forEach(c=>{const gj=BC.geo.get(c.key);if(!gj)return;let hit=null,near=null,nd=Infinity;for(const f of gj.features||[]){if(!f.geometry)continue;if(inGeom(pt,f.geometry)){hit=f;break}const d=distKm(pt,f.geometry);if(d<nd){nd=d;near=f}}
+      if(hit)rows.push({k,c,f:hit,d:0});else if(near&&nd<=3)rows.push({k,c,f:near,d:nd})})});
+    const byCal=new Map();rows.forEach(r=>{if(!byCal.has(r.k.n))byCal.set(r.k.n,[]);byCal.get(r.k.n).push(r)});
+    box.innerHTML=rows.length?`<div class="tbl"><table class="bc-ct"><thead><tr><th>Caleta</th><th>Capa</th><th>Zona</th><th>Ubicación</th><th>Atributos</th></tr></thead><tbody>${rows.map(r=>`<tr><td><b>${esc(r.k.n)}</b><div class="cs">${esc(r.k.com)}</div></td><td><i class="bc-sw" style="background:${r.c.col}"></i>${esc(r.c.n)}</td><td><b>${esc(etiqueta(r.f.properties)||"(sin nombre)")}</b></td><td>${r.d?`a ${r.d<1?t0(r.d*1000)+" m":t1(r.d)+" km"}`:"dentro de la zona"}</td><td><details><summary class="cs">Ver</summary><div class="bc-attr">${attrsHtml(r.f.properties)}</div></details></td></tr>`).join("")}</tbody></table></div>`:`<p class="cs">Ninguna caleta queda dentro o a menos de 3 km de las zonas de las capas activas.</p>`;
+    const sin=cal.filter(k=>!byCal.has(k.n)).length,zs=new Map();rows.forEach(r=>{const z=etiqueta(r.f.properties);if(z)zs.set(z,(zs.get(z)||0)+1)});const top=[...zs].sort((a,b)=>b[1]-a[1]).slice(0,3);
+    bcSetC("bcCruceC",rows.length?`${byCal.size} de ${cal.length} caletas quedan dentro o junto a zonas de las capas activas${top.length?`; las zonas más frecuentes son ${top.map(x=>`<b>${esc(x[0])}</b> (${x[1]})`).join(", ")}`:""}.${sin?` ${sin} caleta${sin===1?"":"s"} queda${sin===1?"":"n"} fuera de las capas activas (por ejemplo, fuera del límite urbano).`:""} Revisa en cada instrumento qué usos permite la zona: es la base para evaluar compatibilidad con la pesca artesanal.`:"")}
+
+  function insRender(){const box=document.getElementById("bcIns");if(!box)return;const A=adm(),L=(MN.instr||[]).slice().sort((a,b)=>String(a.datos.proxima||"9").localeCompare(String(b.datos.proxima||"9")));const h=todayISO();
+    if(BC.inEdit){const d=BC.inEdit.datos;box.innerHTML=`<div class="bc-form"><div class="mn-grid">
+        <label class="mn-w2">Nombre del instrumento<input id="biN" list="biNL" value="${esc(d.nombre||"")}" placeholder="Ej.: Zonificación del Uso del Borde Costero Región de Antofagasta"><datalist id="biNL">${["Zonificación del Uso del Borde Costero (ZUBC) Región de Antofagasta","PRI Borde Costero de Antofagasta (PRIBCA)","Plan Regulador Comunal de Mejillones","Plan Regulador Comunal de Antofagasta","Plan Regulador Comunal de Tocopilla","Plan Regulador Comunal de Taltal","Plan Seccional Itata–Hornitos (Mejillones)"].map(x=>`<option value="${esc(x)}">`).join("")}</datalist></label>
+        <label>Ámbito<input id="biA" value="${esc(d.ambito||"")}" placeholder="Región, comuna o sector"></label>
+        <label>Estado<select id="biE">${INS_EST.map(x=>`<option ${d.estado===x?"selected":""}>${esc(x)}</option>`).join("")}</select></label>
+        <label>Etapa o hito actual<input id="biH" value="${esc(d.etapa||"")}" placeholder="Ej.: Anteproyecto en consulta"></label>
+        <label>Próxima fecha clave<input type="date" id="biF" value="${esc(d.proxima||"")}"></label>
+        <label class="mn-w2">Enlace a la fuente oficial<input id="biU" value="${esc(d.enlace||"")}" placeholder="https://…"></label>
+        <label class="mn-w2">Observaciones (relación con caletas, AMERB, conflictos)<textarea id="biO" rows="3">${esc(d.obs||"")}</textarea></label></div>
+        <div class="row"><button type="button" class="btn ghost" id="biX">Cancelar</button><button type="button" class="btn" id="biS">Guardar</button></div></div>`;return}
+    box.innerHTML=L.length?`<div class="tbl"><table class="bc-it"><thead><tr><th>Instrumento</th><th>Ámbito</th><th>Estado</th><th>Etapa</th><th>Próxima fecha</th><th></th></tr></thead><tbody>${L.map(r=>{const d=r.datos,pr=d.proxima,venc=pr&&pr<h,cerca=pr&&!venc&&pr<=isoD(new Date(Date.now()+30*864e5));return`<tr><td style="white-space:normal"><b>${esc(d.nombre)}</b>${d.obs?`<div class="cs">${esc(d.obs)}</div>`:""}${d.enlace?`<div><a href="${esc(d.enlace)}" target="_blank" rel="noopener">Fuente ↗</a></div>`:""}</td><td>${esc(d.ambito||"—")}</td><td><span class="bc-est">${esc(d.estado||"—")}</span></td><td style="white-space:normal">${esc(d.etapa||"—")}</td><td>${pr?`<span class="${venc?"bc-venc":cerca?"bc-cerca":""}">${esc(fmtF(pr))}</span>`:"—"}</td><td>${A?`<button type="button" class="lnk" data-bcined="${esc(r.id)}">Editar</button> <button type="button" class="lnk mn-del" data-bcindel="${esc(r.id)}">Eliminar</button>`:""}</td></tr>`}).join("")}</tbody></table></div>`:`<p class="cs">Aún no hay instrumentos registrados.${A?" Agrega, por ejemplo, la Zonificación del Uso del Borde Costero o el PRIBCA, con su estado y próxima fecha.":""}</p>`}
+
+  function capForm(){let ov=document.getElementById("bcCapM");if(!ov){ov=document.createElement("div");ov.id="bcCapM";ov.className="overlay";document.body.appendChild(ov)}ov.hidden=false;
+    ov.innerHTML=`<div class="modal mn-fm"><h2>Cargar capa territorial</h2><p class="cs">Formatos: KML, KMZ, GeoJSON o ZIP de shapefile (con .shp, .dbf y .prj). Coordenadas geográficas (WGS84); los shapefile en otras proyecciones se convierten si traen el archivo .prj.</p>
+      <div class="mn-grid"><label class="mn-w2">Archivo<input type="file" id="bcF" accept=".kml,.kmz,.geojson,.json,.zip"></label>
+      <label class="mn-w2">Nombre de la capa<input id="bcN" placeholder="Ej.: Zonificación Borde Costero Antofagasta (anteproyecto)"></label>
+      <label>Categoría<select id="bcC">${CAT_CAPA.map(x=>`<option>${esc(x)}</option>`).join("")}</select></label>
+      <label>Color<input type="color" id="bcK" value="${BCOL[(MN.capas||[]).length%BCOL.length]}"></label>
+      <label class="mn-w2">Fuente y fecha<input id="bcS" placeholder="Ej.: GORE Antofagasta, 2025"></label></div>
+      <p class="mn-msg" id="bcMsg" hidden></p><div class="row"><button type="button" class="btn ghost" id="bcCx">Cancelar</button><button type="button" class="btn" id="bcCs">Cargar capa</button></div></div>`;
+    ov.querySelector("#bcF").onchange=e=>{const f=e.target.files[0];if(f&&!ov.querySelector("#bcN").value)ov.querySelector("#bcN").value=f.name.replace(/\.[^.]+$/,"").replace(/[_-]+/g," ")};
+    ov.querySelector("#bcCx").onclick=()=>{ov.hidden=true};
+    ov.querySelector("#bcCs").onclick=async()=>{const f=ov.querySelector("#bcF").files[0],msg=t=>{const m=ov.querySelector("#bcMsg");m.hidden=false;m.innerHTML=t};if(!f){msg("Elige un archivo.");return}
+      const bt=ov.querySelector("#bcCs");bt.disabled=true;msg('<span class="spin"></span> Leyendo la capa…');
+      try{const gj=await archivoAGeo(f);const n=(gj.features||[]).filter(x=>x.geometry).length;if(!n)throw new Error("El archivo no tiene geometrías.");
+        const blob=new File([JSON.stringify(gj)],"capa.geojson",{type:"application/geo+json"});const id="cap"+nid();msg('<span class="spin"></span> Guardando…');const up=await ST2.upload(blob,id);
+        const rec={id,datos:{tipo:"capa",nombre:ov.querySelector("#bcN").value.trim()||f.name,categoria:ov.querySelector("#bcC").value,color:ov.querySelector("#bcK").value,fuente:ov.querySelector("#bcS").value.trim(),nFeat:n,original:f.name,fecha:todayISO()},texto:"",archivo:up.archivo,archivo_nombre:"capa.geojson",archivo_tipo:"application/geo+json"};
+        await ST2.save(rec);MN.capas=[...(MN.capas||[]),rec];BC.geo.set("up:"+id,gj);BC.on.add("up:"+id);ov.hidden=true;toast(`Capa cargada (${t0(n)} elementos).`);bcRender()}
+      catch(e){msg("No se pudo cargar: "+esc(e.message||"error"));bt.disabled=false}}}
+
+  /* ===== Condiciones del mar y sanitarias ===== */
+  function marRender(){const b=document.getElementById("bcBody");if(!b)return;const A=adm(),vg=vigentes(),L=(MN.avisos||[]).slice().sort((a,b)=>{const o={vig:0,prog:1,fin:2};return o[avEstado(a)]-o[avEstado(b)]||String(b.datos.desde||"").localeCompare(String(a.datos.desde||""))}).filter(a=>BC.fAv==="todos"||avEstado(a)!=="fin");
+    b.innerHTML=`${vg.length?`<div class="mn-alert bc-alert" role="alert"><span class="mn-al-ic">!</span><div><p><b>${vg.length} aviso${vg.length===1?"":"s"} vigente${vg.length===1?"":"s"}</b> que afecta${vg.length===1?"":"n"} a caletas de interés</p><span>${vg.slice(0,4).map(a=>esc(AV(a.datos.categoria)[2]+" "+(a.datos.titulo||AV(a.datos.categoria)[1]))).join(" · ")}</span></div></div>`:`<div class="bc-ok">✓ Sin avisos vigentes registrados para las caletas de interés.</div>`}
+      <div class="card"><div class="tbar"><h3>Avisos y cierres${help("Registro de marejadas, marea roja y cierres sanitarios, floraciones, varazones, derrames y otras condiciones que afectan la actividad en las caletas. Cada aviso indica su fuente oficial (Armada/SHOA, Seremi de Salud, Sernapesca, etc.).")}</h3>
+        <div class="l"><select id="bcFAv"><option value="vig" ${BC.fAv==="vig"?"selected":""}>Vigentes y programados</option><option value="todos" ${BC.fAv==="todos"?"selected":""}>Todos (incluye finalizados)</option></select>${A?`<button type="button" class="btn small" id="bcAvAdd">+ Registrar aviso</button>`:""}</div></div>
+        <div id="bcAvF"></div>
+        ${L.length?`<div class="bc-avs">${L.map(a=>{const d=a.datos,e=avEstado(a),c=AV(d.categoria);return`<div class="bc-av ${e}"><div class="bc-avh"><span class="bc-avi">${c[2]}</span><b>${esc(d.titulo||c[1])}</b><span class="bc-st" style="--c:${AVEST[e][1]}">${AVEST[e][0]}</span><span class="tg">${esc(c[1])}</span></div>
+          <div class="cs">${d.desde?"Desde el "+esc(fmtF(d.desde)):""}${d.hasta?" hasta el "+esc(fmtF(d.hasta)):d.desde?" · sin fecha de término":""}${(d.zonas||[]).length?" · Afecta: "+esc(d.zonas.join(", ")):""}${d.recursos?" · Recursos: "+esc(d.recursos):""}</div>
+          ${d.detalle?`<p>${esc(d.detalle)}</p>`:""}<div class="bc-avf">${d.fuente?`<span class="cs">Fuente: ${esc(d.fuente)}</span>`:""}${d.enlace?`<a href="${esc(d.enlace)}" target="_blank" rel="noopener">Ver aviso oficial ↗</a>`:""}${a.archivo?`<button type="button" class="lnk" data-bcver="${esc(a.id)}">📎 ${esc(a.archivo_nombre||"Documento")}</button>`:""}
+          ${A?`<span class="mn-act">${e!=="fin"?`<button type="button" class="lnk" data-bcavfin="${esc(a.id)}">Dar por finalizado</button>`:""}<button type="button" class="lnk" data-bcaved="${esc(a.id)}">Editar</button><button type="button" class="lnk mn-del" data-bcavdel="${esc(a.id)}">Eliminar</button></span>`:""}</div></div>`}).join("")}</div>`:`<p class="cs">No hay avisos ${BC.fAv==="vig"?"vigentes ni programados":"registrados"}.</p>`}</div>
+      <div class="card"><div class="tbar"><h3>Pronóstico de oleaje (7 días)${help("Altura máxima diaria de olas frente a cada caleta. Colores: verde hasta 1,5 m; amarillo hasta 2,5 m; naranjo hasta 3,5 m; rojo sobre 3,5 m. Es un modelo de pronóstico: los avisos oficiales de la Armada prevalecen.")}</h3></div><div id="bcMar"></div></div>`;
+    if(BC.avEdit)avForm();marOlas()}
+  async function marOlas(){const box=document.getElementById("bcMar");if(!box)return;try{bcGeo()&&await bcGeo().geoLoad()}catch(e){}
+    if(!WEB()){box.innerHTML=`<p class="cs">El pronóstico de oleaje se muestra en la versión web (Vercel).</p>`;return}
+    await capasOficiales();if(!BC.marCfg){box.innerHTML=`<p class="cs">El pronóstico de oleaje no está activado. Usa el servicio Open-Meteo Marine: su versión gratuita es <b>solo para uso no comercial</b>; para uso institucional o de empresa se requiere un plan pagado. Para activarlo, agrega en Vercel la variable <code>OPENMETEO_APIKEY</code> (plan pagado) o, si el uso es no comercial, <code>OPENMETEO_FREE</code> con valor <code>1</code>, y vuelve a publicar.</p>`;return}
+    const cal=caletasGeo();if(!cal.length){box.innerHTML=`<p class="cs">No hay caletas con ubicación.</p>`;return}
+    const pts=[];cal.forEach(c=>{if(!pts.some(p=>Math.abs(p.lat-c.lat)<.03&&Math.abs(p.lon-c.lon)<.03))pts.push({...c,ns:[c.n]});else pts.find(p=>Math.abs(p.lat-c.lat)<.03&&Math.abs(p.lon-c.lon)<.03).ns.push(c.n)});const P=pts.slice(0,40);
+    if(!BC.mar&&!BC.marLoad){BC.marLoad=true;box.innerHTML=`<p class="cs"><span class="spin"></span> Consultando el pronóstico…</p>`;try{BC.mar=await api("territorio?mar=1&pts="+encodeURIComponent(P.map(p=>p.lat.toFixed(3)+","+p.lon.toFixed(3)).join(";")))}catch(e){BC.marErr=e.message}BC.marLoad=false;if(S.tab==="borde"&&BC.sub==="mar")marOlas();return}
+    if(BC.marErr){box.innerHTML=`<p class="warnbox">No se pudo obtener el pronóstico: ${esc(BC.marErr)}</p>`;return}if(!BC.mar)return;
+    const col=v=>v==null?"#eceff1":v<=1.5?"#c8e6c9":v<=2.5?"#fff59d":v<=3.5?"#ffcc80":"#ef9a9a";const D=(BC.mar.puntos[0]||{}).daily||{},dias=D.time||[];
+    const rows=P.map((p,i)=>({p,d:(BC.mar.puntos[i]||{}).daily||{}}));const alto=rows.filter(r=>(r.d.wave_height_max||[]).some(v=>v>2.5));
+    box.innerHTML=`<p class="concl">${alto.length?`Se pronostican olas sobre 2,5 m en ${alto.length} punto${alto.length===1?"":"s"} (${alto.slice(0,4).map(r=>esc(r.p.ns.join(" / "))).join(", ")}${alto.length>4?"…":""}) en los próximos 7 días: revisa los avisos de la Armada antes de programar faenas o reuniones en terreno.`:"No se pronostican olas sobre 2,5 m frente a las caletas en los próximos 7 días."}</p>
+      <div class="tbl"><table class="bc-ol"><thead><tr><th>Caleta</th>${dias.map(t=>{const d=new Date(t+"T12:00:00");return`<th>${["dom","lun","mar","mié","jue","vie","sáb"][d.getDay()]} ${d.getDate()}</th>`}).join("")}</tr></thead><tbody>${rows.map(r=>`<tr><td><b>${esc(r.p.ns.slice(0,2).join(" / "))}${r.p.ns.length>2?" +"+(r.p.ns.length-2):""}</b></td>${dias.map((_,j)=>{const v=(r.d.wave_height_max||[])[j],pe=(r.d.wave_period_max||[])[j];return`<td style="background:${col(v)}" title="${v!=null?`Ola máx. ${t1(v)} m${pe!=null?` · período ${t0(pe)} s`:""}`:"Sin dato (punto en tierra o fuera del modelo)"}">${v!=null?t1(v):"—"}</td>`}).join("")}</tr>`).join("")}</tbody></table></div>
+      <p class="cs">Fuente: ${esc(BC.mar.fuente)} · consultado ${esc(new Date(BC.mar.obtenido).toLocaleString("es-CL"))}. Metros de altura máxima de ola por día.</p>`}
+  function avForm(){const box=document.getElementById("bcAvF");if(!box)return;const r=BC.avEdit,d=r.datos,cal=caletasGeo(),opts=[...new Set(["Toda la región",...(S.R?S.R.coms:[]).map(c=>"Comuna de "+c),...cal.map(c=>c.n)])];
+    box.innerHTML=`<div class="bc-form"><h4>${r.id?"Editar aviso":"Registrar aviso"}</h4>
+      <div class="bc-iabox"><label>Pegar el texto del aviso o resolución (opcional)<textarea id="baTx" rows="3" placeholder="Pega aquí el texto del aviso de la Armada, la resolución de la Seremi de Salud, etc.">${esc(BC.avTx||"")}</textarea></label>
+        <div class="row" style="justify-content:flex-start"><label class="btn ghost small">📎 Adjuntar PDF o imagen<input type="file" id="baFile" accept=".pdf,.docx,image/*" hidden></label><span class="cs" id="baFn">${r._file?esc(r._file.name):a2(r)}</span>${MN.ia!==false?`<button type="button" class="btn small" id="baIA">Completar con IA</button>`:""}</div></div>
+      <p class="mn-msg" id="baMsg" hidden></p>
+      <div class="mn-grid"><label>Tipo<select id="baC">${AV_CAT.map(x=>`<option value="${x[0]}" ${d.categoria===x[0]?"selected":""}>${x[2]} ${esc(x[1])}</option>`).join("")}</select></label>
+        <label>Título<input id="baT" value="${esc(d.titulo||"")}" placeholder="Ej.: Aviso especial de marejadas"></label>
+        <label>Desde<input type="date" id="baD" value="${esc(d.desde||"")}"></label><label>Hasta<input type="date" id="baH" value="${esc(d.hasta||"")}"></label>
+        <fieldset class="mn-w2"><legend>Caletas o zonas afectadas</legend><div class="bc-zs">${opts.map(o=>`<label><input type="checkbox" value="${esc(o)}" ${(d.zonas||[]).includes(o)?"checked":""}> ${esc(o)}</label>`).join("")}</div></fieldset>
+        <label>Recursos afectados<input id="baR" value="${esc(d.recursos||"")}" placeholder="Ej.: mariscos bivalvos, loco"></label>
+        <label>Fuente<input id="baF" list="baFL" value="${esc(d.fuente||"")}"><datalist id="baFL">${["Armada de Chile / SHOA","Seremi de Salud Antofagasta","Sernapesca","Subpesca","SENAPRED","Capitanía de Puerto"].map(x=>`<option value="${x}">`).join("")}</datalist></label>
+        <label class="mn-w2">Enlace al aviso oficial<input id="baU" value="${esc(d.enlace||"")}" placeholder="https://…"></label>
+        <label class="mn-w2">Detalle<textarea id="baX" rows="3">${esc(d.detalle||"")}</textarea></label></div>
+      <div class="row"><button type="button" class="btn ghost" id="baCx">Cancelar</button><button type="button" class="btn" id="baS">Guardar aviso</button></div></div>`;
+    box.querySelector("#baFile").onchange=e=>{const f=e.target.files[0];if(f){avLeer();BC.avEdit._file=f;box.querySelector("#baFn").textContent=f.name}}}
+  const a2=r=>r.archivo_nombre?esc(r.archivo_nombre):"";
+  function avLeer(){const box=document.getElementById("bcAvF");if(!box||!BC.avEdit)return;const d=BC.avEdit.datos,v=s=>box.querySelector(s).value.trim();d.categoria=v("#baC");d.titulo=v("#baT");d.desde=v("#baD");d.hasta=v("#baH");d.recursos=v("#baR");d.fuente=v("#baF");d.enlace=v("#baU");d.detalle=v("#baX");d.zonas=[...box.querySelectorAll(".bc-zs input:checked")].map(x=>x.value);BC.avTx=box.querySelector("#baTx").value}
+  async function avIA(){avLeer();const r=BC.avEdit,msg=t=>{const m=document.getElementById("baMsg");if(m){m.hidden=false;m.innerHTML=t}};if(!BC.avTx&&!r._file){msg("Pega el texto del aviso o adjunta el documento.");return}
+    msg('<span class="spin"></span> La IA está leyendo el aviso…');try{let texto=BC.avTx||"",imgs=[];if(r._file){const x=await extraer(r._file,()=>{});texto=(texto?texto+"\n\n":"")+(x.texto||"");imgs=x.imgs}
+      const cal=caletasGeo().map(c=>c.n);const out=await iaJSON(texto,imgs,`Lee este aviso oficial sobre condiciones del mar o sanitarias en la costa de Chile y devuelve SOLO un JSON válido (dentro de los textos usa « » en vez de comillas dobles):
+{"categoria":"marejada | marea_roja | floracion | contaminacion | tsunami | viento | otro","titulo":"título breve","desde":"AAAA-MM-DD o null","hasta":"AAAA-MM-DD o null","zonas":["caletas o comunas afectadas, usando estos nombres si corresponden: ${["Toda la región",...cal].join(", ")}"],"recursos":"recursos afectados o null","fuente":"institución que emite el aviso","detalle":"resumen en 2 a 3 frases"}
+Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la región". No inventes fechas: si no aparecen, usa null.`);
+      const d=r.datos;["categoria","titulo","recursos","fuente","detalle"].forEach(k=>{if(out[k])d[k]=String(out[k])});["desde","hasta"].forEach(k=>{if(/^\d{4}-\d{2}-\d{2}$/.test(out[k]||""))d[k]=out[k]});if(!AV_CAT.some(x=>x[0]===d.categoria))d.categoria="otro";
+      const opts=["Toda la región",...(S.R?S.R.coms:[]).map(c=>"Comuna de "+c),...cal];d.zonas=[...new Set((out.zonas||[]).map(z=>opts.find(o=>nrm(o)===nrm(z)||nrm(o).includes(nrm(z))||nrm(z).includes(nrm(o).replace(/^comuna de /,"")))).filter(Boolean))];
+      avForm();msg("La IA completó el aviso: revísalo antes de guardar.")}catch(e){avForm();msg(iaErr(e).replace(/Completa la ficha a mano\.?/i,"Completa el aviso a mano."))}}
+  async function avGuardar(){avLeer();const r=BC.avEdit,d=r.datos;if(!d.titulo&&!d.detalle){const m=document.getElementById("baMsg");if(m){m.hidden=false;m.textContent="Agrega al menos un título o un detalle."}return}
+    try{const id=r.id||"av"+nid();if(r._file){const up=await ST2.upload(r._file,id);r.archivo=up.archivo;r.archivo_nombre=up.archivo_nombre;r.archivo_tipo=up.archivo_tipo}
+      const rec={id,datos:{...d,tipo:"aviso"},texto:"",archivo:r.archivo||null,archivo_nombre:r.archivo_nombre||null,archivo_tipo:r.archivo_tipo||null,por:(S.acct&&S.acct.usuario)||""};await ST2.save(rec);
+      MN.avisos=[rec,...(MN.avisos||[]).filter(x=>x.id!==id)];BC.avEdit=null;BC.avTx="";toast("Aviso guardado.");bcRender()}catch(e){toast("No se pudo guardar: "+(e&&e.message||"error"))}}
+
+  /* ---- alerta emergente diaria de avisos vigentes ---- */
+  function bcPop(force){const vg=vigentes();if(!vg.length){if(force)toast("No hay avisos vigentes.");return}const key="bcpop."+todayISO()+"."+vg.map(a=>a.id).join(",").length;if(!force){try{if(localStorage.getItem(key))return;localStorage.setItem(key,"1")}catch(e){}}
+    askYN(`<ul class="mn-dl">${vg.slice(0,8).map(a=>{const d=a.datos,c=AV(d.categoria);return`<li>${c[2]} <b>${esc(d.titulo||c[1])}</b>${(d.zonas||[]).length?` · ${esc(d.zonas.join(", "))}`:""}${d.hasta?` · hasta el ${esc(fmtF(d.hasta))}`:""}</li>`}).join("")}</ul>Revisa los detalles en <b>Borde costero › Condiciones del mar y sanitarias</b>.`,{title:`⚠ ${vg.length} aviso${vg.length===1?"":"s"} vigente${vg.length===1?"":"s"} en el borde costero`,si:"Ver avisos",no:"Cerrar"}).then(ok=>{if(ok){BC.sub="mar";setTab("borde")}})}
+  function bcAfterLoad(){if(!BC.popDone&&S.R&&!(document.getElementById("vdPop")&&!document.getElementById("vdPop").hidden)){BC.popDone=true;setTimeout(()=>bcPop(false),900)}if(S.tab==="borde")bcRender()}
+  window.__bcAfter=bcAfterLoad;
+  setInterval(()=>{if(S.R&&S.perm&&!MN.loaded&&!MN.loading)mnLoad()},2500);
+
+  /* ---- eventos ---- */
+  document.addEventListener("click",async ev=>{const t=ev.target;if(!t.closest)return;const inP=t.closest('[data-pane="borde"]');if(!inP)return;
+    const sb=t.closest("[data-bcsub]");if(sb){BC.sub=sb.dataset.bcsub;bcRender();return}
+    if(t.closest("#bcCapAdd")){capForm();return}
+    const vr=t.closest("[data-bcver]");if(vr){const r=(MN.avisos||[]).find(x=>x.id===vr.dataset.bcver);if(!r)return;if(!ART()){window.open("/api/minutas?archivo="+encodeURIComponent(r.id),"_blank","noopener");return}try{const b=await archivoDe(r);const u=URL.createObjectURL(b);window.open(u,"_blank")||saveFile(r.archivo_nombre||"aviso",b,b.type)}catch(e){toast("No se pudo abrir el documento.")}return}
+    const cd=t.closest("[data-bccapdel]");if(cd){const c=(MN.capas||[]).find(x=>x.id===cd.dataset.bccapdel);if(!c)return;if(!await askYN(`¿Eliminar la capa «${esc(c.datos.nombre)}»?`,{title:"Eliminar capa",danger:true,si:"Sí, eliminar",no:"No"}))return;
+      try{await ST2.del(c);MN.capas=MN.capas.filter(x=>x.id!==c.id);BC.on.delete("up:"+c.id);BC.geo.delete("up:"+c.id);toast("Capa eliminada.");bcRender()}catch(e){toast("No se pudo eliminar.")}return}
+    if(t.closest("#bcInsAdd")){BC.inEdit={id:null,datos:{tipo:"instrumento",estado:INS_EST[1]}};insRender();return}
+    const ie=t.closest("[data-bcined]");if(ie){const r=(MN.instr||[]).find(x=>x.id===ie.dataset.bcined);if(r){BC.inEdit=JSON.parse(JSON.stringify(r));insRender()}return}
+    if(t.closest("#biX")){BC.inEdit=null;insRender();return}
+    if(t.closest("#biS")){const b=document.getElementById("bcIns"),v=s=>b.querySelector(s).value.trim();const r=BC.inEdit;r.datos={...r.datos,tipo:"instrumento",nombre:v("#biN"),ambito:v("#biA"),estado:v("#biE"),etapa:v("#biH"),proxima:v("#biF"),enlace:v("#biU"),obs:v("#biO")};if(!r.datos.nombre){toast("Escribe el nombre del instrumento.");return}
+      r.id=r.id||"ins"+nid();try{await ST2.save({id:r.id,datos:r.datos,texto:""});MN.instr=[r,...(MN.instr||[]).filter(x=>x.id!==r.id)];BC.inEdit=null;toast("Instrumento guardado.");insRender()}catch(e){toast("No se pudo guardar.")}return}
+    const id2=t.closest("[data-bcindel]");if(id2){const r=(MN.instr||[]).find(x=>x.id===id2.dataset.bcindel);if(!r)return;if(!await askYN(`¿Eliminar el instrumento «${esc(r.datos.nombre)}»?`,{title:"Eliminar instrumento",danger:true,si:"Sí, eliminar",no:"No"}))return;try{await ST2.del(r);MN.instr=MN.instr.filter(x=>x.id!==r.id);insRender()}catch(e){toast("No se pudo eliminar.")}return}
+    if(t.closest("#bcAvAdd")){BC.avEdit={id:null,datos:{tipo:"aviso",categoria:"marejada",desde:todayISO(),zonas:[]}};BC.avTx="";avForm();return}
+    const ae=t.closest("[data-bcaved]");if(ae){const r=(MN.avisos||[]).find(x=>x.id===ae.dataset.bcaved);if(r){BC.avEdit=JSON.parse(JSON.stringify(r));BC.avTx="";avForm();document.getElementById("bcAvF").scrollIntoView({behavior:"smooth",block:"start"})}return}
+    if(t.closest("#baCx")){BC.avEdit=null;document.getElementById("bcAvF").innerHTML="";return}
+    if(t.closest("#baIA")){avIA();return}
+    if(t.closest("#baS")){avGuardar();return}
+    const af=t.closest("[data-bcavfin]");if(af){const r=(MN.avisos||[]).find(x=>x.id===af.dataset.bcavfin);if(!r)return;if(!await askYN(`¿Dar por finalizado el aviso «${esc(r.datos.titulo||"")}»?`,{title:"Finalizar aviso",si:"Sí, finalizar",no:"No"}))return;r.datos.finalizado=todayISO();if(!r.datos.hasta||r.datos.hasta>todayISO())r.datos.hasta=todayISO();try{await ST2.save(r);bcRender()}catch(e){toast("No se pudo guardar.")}return}
+    const ad=t.closest("[data-bcavdel]");if(ad){const r=(MN.avisos||[]).find(x=>x.id===ad.dataset.bcavdel);if(!r)return;if(!await askYN(`¿Eliminar el aviso «${esc(r.datos.titulo||"")}»?`,{title:"Eliminar aviso",danger:true,si:"Sí, eliminar",no:"No"}))return;try{await ST2.del(r);MN.avisos=MN.avisos.filter(x=>x.id!==r.id);bcRender()}catch(e){toast("No se pudo eliminar.")}return}
+  });
+  document.addEventListener("change",ev=>{const t=ev.target;if(!t.closest||!t.closest('[data-pane="borde"]'))return;
+    if(t.dataset&&t.dataset.bccap){const k=t.dataset.bccap;if(t.checked)BC.on.add(k);else BC.on.delete(k);ordRender();return}
+    if(t.id==="bcFAv"){BC.fAv=t.value;marRender()}});
+  {const _st=setTab;setTab=function(t){_st(t);if(t==="borde"){["#fab","#period","#aside","#chips"].forEach(s=>{const e=document.querySelector(s);if(e)e.hidden=true});const l=document.querySelector(".layout");if(l)l.style.gridTemplateColumns="minmax(0,1fr)";bcRender()}}}
+
 }
 
 /*CMPJSE*//*C2E*/</script>

@@ -90,6 +90,9 @@
     },
     "api/minutas.js": {
       "maxDuration": 60
+    },
+    "api/territorio.js": {
+      "maxDuration": 60
     }
   }
 }
