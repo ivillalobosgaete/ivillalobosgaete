@@ -4,7 +4,7 @@
 // GET  /api/minutas                         → lista de fichas (cualquier usuario con sesión)
 // GET  /api/minutas?archivo=<id>[&dl=1]     → redirige a un enlace firmado (2 min) del archivo original
 // POST /api/minutas {accion:"subida", nombre, tipo}        → (admin) enlace firmado para subir el archivo
-// POST /api/minutas {accion:"ia", texto, imagenes:[b64]}   → (admin) lectura con IA (requiere ANTHROPIC_API_KEY)
+// POST /api/minutas {accion:"ia", texto, imagenes:[b64]}   → (admin) lectura con IA (requiere ANTHROPIC_API_KEY; ANTHROPIC_WORKSPACE_ID si la clave no está asociada a un espacio de trabajo)
 // POST /api/minutas {accion:"guardar", ficha}              → (admin) crea o actualiza la ficha
 // POST /api/minutas {accion:"borrar", id}                  → (admin) elimina la ficha y su archivo
 import { handler, send, current, sb, readBody, tableMissing, logAct } from "../lib/core.js";
@@ -32,7 +32,7 @@ async function leerIA(texto, imagenes, instrucciones) {
   const r = await fetch((process.env.ANTHROPIC_BASE || "https://api.anthropic.com") + "/v1/messages", {
     method: "POST",
     signal: AbortSignal.timeout(55000),
-    headers: { "x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+    headers: { "x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json", ...(process.env.ANTHROPIC_WORKSPACE_ID ? { "anthropic-workspace-id": process.env.ANTHROPIC_WORKSPACE_ID.trim() } : {}) },
     body: JSON.stringify({ model: process.env.ANTHROPIC_MODEL || "claude-sonnet-5-5", max_tokens: 6000, messages: [{ role: "user", content }] }),
   });
   const j = await r.json().catch(() => ({}));
