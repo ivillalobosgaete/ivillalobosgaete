@@ -170,3 +170,18 @@ alter table public.rca_visibilidad enable row level security;
 alter table public.rca_seguimiento      enable row level security;
 alter table public.rca_seguimiento_hist enable row level security;
 alter table public.rpa_cache enable row level security;
+
+-- Minutas de reuniones con organizaciones (fichas y archivo original en el depósito privado «minutas»)
+create table if not exists public.minutas (
+  id          text primary key,
+  datos       jsonb not null default '{}'::jsonb,
+  texto       text not null default '',
+  archivo     text,
+  archivo_nombre text,
+  archivo_tipo   text,
+  por         text,
+  creado      timestamptz not null default now(),
+  actualizado timestamptz not null default now()
+);
+alter table public.minutas enable row level security;
+insert into storage.buckets (id, name, public) values ('minutas', 'minutas', false) on conflict (id) do nothing;

@@ -1317,6 +1317,48 @@ svg text.val{fill:var(--ink-2);font-weight:700}
 .cmp-concl ul{gap:7px}
 @media (max-width:700px){.cmp-cards{grid-auto-flow:column;grid-auto-columns:minmax(78%,1fr);grid-template-columns:none;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}.cmp-card{scroll-snap-align:start}.cmp-ctrl select{max-width:100%}.cmp-ctrl label{flex-wrap:wrap}}
 .cmp-head{gap:4px}.cmp-head h2{margin:0;font-size:1.15rem;font-weight:800}.cmp-head p{margin:0}
+
+.mn-head h2{margin:0;font-size:1.15rem;font-weight:800}.mn-head .tbar{align-items:flex-start}.mn-head p{margin:2px 0 0;max-width:90ch}
+.mn-noia{background:var(--warn-bg);color:var(--warn);border-radius:8px;padding:6px 10px}
+.mn-orgs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:8px;margin-top:6px}
+.mn-org{display:grid;gap:2px;text-align:left;border:1px solid var(--line);background:var(--brand-08);border-radius:12px;padding:9px 12px}
+.mn-org b{font-size:.9rem;color:var(--ink)}.mn-org span{font-size:.78rem;color:var(--ink-2)}.mn-org em{font-style:normal;color:#9a5b00;font-weight:700}
+.mn-org.on{border-color:var(--brand);box-shadow:0 0 0 2px var(--brand-soft);background:#fff}
+.mn-fg{display:grid;grid-template-columns:2fr repeat(3,minmax(0,1fr)) repeat(2,minmax(0,150px));gap:8px 10px;align-items:end}
+.mn-fg label{display:grid;gap:3px;font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.mn-fg input,.mn-fg select{border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:.88rem;text-transform:none;letter-spacing:0;font-weight:500;color:var(--ink);min-width:0;width:100%;background:#fff}
+.mn-fg #mnQ{border:2px solid var(--brand)}
+.mn-fg .mn-chk{display:flex;align-items:center;gap:6px;text-transform:none;font-size:.82rem;color:var(--ink-2);font-weight:700}.mn-fg .mn-chk input{width:auto}
+.mn-list{display:grid;gap:8px}
+.mn-it{border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:12px;padding:10px 12px;display:grid;gap:5px;background:#fff;cursor:pointer;outline:none}
+.mn-it:hover,.mn-it:focus{box-shadow:0 6px 18px -10px rgba(15,47,65,.45);border-color:#9cc4dc}
+.mn-ih{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}.mn-ih b{font-size:.95rem}
+.mn-date{font-weight:800;color:var(--brand-ink);font-size:.86rem}
+.mn-sn{margin:0;font-size:.86rem;color:var(--ink-2);line-height:1.45}.mn-sn mark{background:#ffe58a;color:inherit;border-radius:3px;padding:0 1px}
+.mn-if{display:flex;flex-wrap:wrap;gap:5px 8px;align-items:center}.mn-act{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}.mn-act .lnk{font-size:.82rem}.mn-del{color:var(--down)!important}
+.mn-miss-t{font-size:.72rem;font-weight:800;background:#fff3c4;color:#7a5600;border-radius:999px;padding:1px 8px}
+.mn-pop{position:fixed;z-index:88;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 44px -14px rgba(10,30,40,.45);padding:12px 14px;max-height:min(78vh,620px);overflow:auto;font-size:.86rem}
+.mn-pop .mnp-h{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.mn-pop .mnp-h b{font-size:1rem}
+.mnp-x{border:0;background:var(--brand-08);border-radius:50%;width:26px;height:26px;font-size:1rem;line-height:1;flex:none}
+.mn-pop dl{display:grid;grid-template-columns:100px minmax(0,1fr);gap:6px 10px;margin:8px 0}.mn-pop dt{font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase;padding-top:2px}.mn-pop dd{margin:0}
+.mn-pop ul{margin:0;padding-left:16px;display:grid;gap:2px}.mn-ok{text-decoration:line-through;color:var(--muted)}
+.mn-pop.touch,.mn-pop[style*="left: ;"]{left:12px!important;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));top:auto!important;width:auto!important;max-height:70vh}
+.mn-fm{width:min(860px,100%)!important}
+.mn-drop{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;border:2px dashed var(--line);border-radius:12px;padding:12px}
+.mn-msg{margin:0;background:var(--brand-08);border-radius:8px;padding:8px 12px;font-size:.88rem}
+.mn-misshint{margin:0;background:#fff3c4;color:#6b4b00;border-radius:8px;padding:8px 12px;font-size:.86rem}
+.mn-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
+.mn-grid>label,.mn-grid>fieldset{display:grid;gap:4px;font-size:.8rem;font-weight:700;color:var(--ink-2);border:0;margin:0;padding:6px;border-radius:10px}
+.mn-grid input,.mn-grid select,.mn-grid textarea{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:.9rem;font-weight:500;color:var(--ink);width:100%;background:#fff}
+.mn-grid textarea{resize:vertical}.mn-w2{grid-column:1/-1}
+.mn-grid .mn-miss{background:#fff3c4;box-shadow:inset 0 0 0 2px #f0c64a}
+.mn-temas{display:flex;flex-wrap:wrap;gap:4px 14px}.mn-temas label{display:flex;gap:5px;align-items:center;font-weight:500;color:var(--ink)}.mn-temas input{width:auto}
+.mn-grid details summary{cursor:pointer;font-size:.82rem;color:var(--brand-ink);font-weight:700}
+.mn-vm{width:min(980px,100%)!important}.mn-vpdf{width:100%;height:70vh;border:1px solid var(--line);border-radius:8px}.mn-vimg{max-width:100%;border-radius:8px}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--brand-soft);border-top-color:var(--brand);border-radius:50%;animation:spin 1s linear infinite;vertical-align:-2px;margin-right:4px}
+.mn-pt td,.mn-pt th{vertical-align:top}
+@media (max-width:900px){.mn-fg{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.mn-fg label:first-child{grid-column:1/-1}}
+@media (max-width:560px){.mn-grid{grid-template-columns:minmax(0,1fr)}.mn-pop dl{grid-template-columns:minmax(0,1fr)}.mn-act{margin-left:0}}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
@@ -1378,6 +1420,7 @@ svg text.val{fill:var(--ink-2);font-weight:700}
     <button role="tab" data-tab="negociacion" aria-selected="false">Negociación</button>
     <button role="tab" data-tab="poder" aria-selected="false">Poder e interés</button>
     <button role="tab" data-tab="rca" aria-selected="false">Exigencias ambientales</button>
+    <button role="tab" data-tab="minutas" aria-selected="false">Minutas</button>
     <button role="tab" data-tab="detalle" aria-selected="false">Detalle</button>
     <button role="tab" data-tab="admin" aria-selected="false" id="tabAdmin" hidden>Administración</button>
   </nav>
@@ -1548,6 +1591,7 @@ svg text.val{fill:var(--ink-2);font-weight:700}
       </section>
 
       <section data-pane="cmp" style="display:grid;gap:14px" hidden></section>
+      <section data-pane="minutas" style="display:grid;gap:14px" hidden></section>
       <section data-pane="detalle" style="display:grid;gap:14px" hidden>
         <div class="card">
           <div class="tbar">
@@ -5320,6 +5364,229 @@ function cgScan(){document.querySelectorAll(".card h3, .card h4, .np-viz h4").fo
     if(ev.target.closest("#cmpClr")){const d=defDim();S.f[d].clear();render();return}
     if(ev.target.closest("#cmpCsv")&&CMP.csv){saveFile(`comparacion_${defDim()}.csv`,CMP.csv(),"text/csv;charset=utf-8")}});
   const _rp=renderPane;renderPane=function(){const r=_rp.apply(this,arguments);try{cmpRender()}catch(e){console.error("cmp",e)}return r};
+}
+
+// ===== Minutas de reuniones con organizaciones (pestaña «Minutas») =====
+{
+  const MN={list:[],loaded:false,loading:false,ia:null,warn:"",f:{cal:"",org:"",tema:"",d0:"",d1:"",q:"",soloPend:false},edit:null,busy:false,page:0};
+  const ORG0=[["El Cobre","Cooperativa de Pescadores Caleta El Cobre"],["Michilla","Asociación de Pescadores de Michilla"],["Michilla","Sindicato de Pescadores de Michilla"]];
+  const TEMAS=["Compensación","AMERB y planes de manejo","Vedas y recursos","Compromisos RCA","Infraestructura y caleta","Empleo local y capacitación","Medio ambiente","Seguridad y navegación","Conflictos y reclamos","Coordinación y seguimiento","Otros"];
+  const ART=()=>!!S.db;
+  const nid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+  const adm=()=>!!(S.perm&&S.perm.admin);
+  const nrm=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+  const fmtF=s=>{if(!s)return"Sin fecha";const [y,m,d]=String(s).split("-");return d?`${+d} de ${MESL[+m-1]} de ${y}`:s};
+  const help=txt=>`<button type="button" class="hi" title="${esc(txt)}" aria-label="Ayuda: ${esc(txt)}" data-c2help="${esc(txt)}">i</button>`;
+  const orgs=()=>{const m=new Map(ORG0.map(([c,o])=>[nrm(o),{c,o}]));MN.list.forEach(x=>{const o=(x.datos||{}).organizacion;if(o&&!m.has(nrm(o)))m.set(nrm(o),{c:(x.datos||{}).caleta||"",o})});return[...m.values()]};
+  const cals=()=>[...new Set(["El Cobre","Michilla",...MN.list.map(x=>(x.datos||{}).caleta).filter(Boolean)])];
+
+  /* ---------- Almacenamiento: artefacto (db cifrada) o versión web (/api/minutas) ---------- */
+  const ST2={
+    async list(){if(ART()){const s=await S.db.collection("minutas").get();const out=[];for(const d of s.docs){try{const o=await decJ(d.data().enc);out.push({...o,id:d.id})}catch(e){}}let ia=false;try{const sm=await claude.use("sample");ia=!!sm}catch(e){}return{list:out,ia}}
+      const r=await api("minutas");if(r.falta)MN.warn="Falta crear la tabla de minutas en Supabase: ejecuta el SQL actualizado (supabase/schema.sql).";return{list:(r.minutas||[]).map(x=>({id:x.id,datos:x.datos||{},texto:x.texto||"",archivo:x.archivo,archivo_nombre:x.archivo_nombre,archivo_tipo:x.archivo_tipo,por:x.por,creado:x.creado})),ia:!!r.ia}},
+    async upload(file,id){if(ART()){const bytes=new Uint8Array(await file.arrayBuffer());const b64=await aesEnc(S.key,bytes);const n=await bigPut(`minutasf/${id}/partes`,b64);return{archivo:{partes:n},archivo_nombre:file.name,archivo_tipo:file.type||""}}
+      const s=await api("minutas",{method:"POST",body:{accion:"subida",nombre:file.name,tipo:file.type}});
+      const r=await fetch(s.url,{method:"PUT",headers:{"Content-Type":file.type||"application/octet-stream","x-upsert":"true"},body:file});if(!r.ok)throw new Error("No se pudo subir el archivo ("+r.status+")");
+      return{archivo:s.path,archivo_nombre:file.name,archivo_tipo:file.type||""}},
+    async save(rec){if(ART()){const id=rec.id||nid();const {id:_,...rest}=rec;rest.ts=Date.now();rest.por=rest.por||(S.acct&&S.acct.usuario)||"";await S.db.doc("minutas/"+id).set({enc:await encJ(rest),ts:Date.now()});return id}
+      const r=await api("minutas",{method:"POST",body:{accion:"guardar",ficha:rec}});return r.id},
+    async del(rec){if(ART()){if(rec.archivo&&rec.archivo.partes){for(let i=0;i<rec.archivo.partes;i++){try{await S.db.doc(`minutasf/${rec.id}/partes/p${i}`).delete()}catch(e){}}}await S.db.doc("minutas/"+rec.id).delete();return}
+      await api("minutas",{method:"POST",body:{accion:"borrar",id:rec.id}})},
+    async blob(rec){if(ART()){const b=await aesDec(S.key,await bigGet(`minutasf/${rec.id}/partes`,rec.archivo.partes));return new Blob([b],{type:rec.archivo_tipo||"application/octet-stream"})}return null},
+    async ia(texto,imgs,instr){if(ART()){const sm=await claude.use("sample");if(!sm)throw{code:"no_ia"};const o={modelTier:"default",cache:false};if(imgs.length)o.images=imgs.map(x=>x.blob);const r=await sm(instr+(texto?"\n\nTEXTO DE LA MINUTA:\n"+texto.slice(0,120000):""),o);return r.text}
+      const r=await api("minutas",{method:"POST",body:{accion:"ia",texto:texto.slice(0,120000),imagenes:imgs.map(x=>x.b64),instrucciones:instr}});if(r.sinIA)throw{code:"no_ia"};return r.texto}
+  };
+
+  /* ---------- Lectura del archivo: texto (PDF, Word, texto) e imágenes (fotos o PDF escaneado) ---------- */
+  const SCR={};function loadJs(u){return SCR[u]||(SCR[u]=new Promise((ok,ko)=>{const s=document.createElement("script");s.src=u;s.onload=ok;s.onerror=()=>{delete SCR[u];ko(new Error("No se pudo cargar "+u))};document.head.appendChild(s)}))}
+  const PDFJS="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",PDFW="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js",JSZ="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";
+  async function canvasImg(cv){const blob=await new Promise(r=>cv.toBlob(r,"image/jpeg",.82));const b64=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(String(fr.result).split(",")[1]);fr.readAsDataURL(blob)});return{blob,b64}}
+  async function imgFromFile(file){const url=URL.createObjectURL(file);try{const im=await new Promise((ok,ko)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=ko;i.src=url});const k=Math.min(1,1800/Math.max(im.naturalWidth,im.naturalHeight));const cv=document.createElement("canvas");cv.width=Math.round(im.naturalWidth*k);cv.height=Math.round(im.naturalHeight*k);cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);return canvasImg(cv)}finally{URL.revokeObjectURL(url)}}
+  async function extraer(file,prog){const nm=nrm(file.name),ty=file.type||"";
+    if(/^image\//.test(ty)||/\.(jpe?g|png|webp|heic|gif)$/.test(nm)){prog("Preparando la imagen…");return{texto:"",imgs:[await imgFromFile(file)]}}
+    if(/pdf/.test(ty)||/\.pdf$/.test(nm)){prog("Leyendo el PDF…");await loadJs(PDFJS);const lib=window.pdfjsLib;lib.GlobalWorkerOptions.workerSrc=PDFW;
+      const doc=await lib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;let txt="";const N=Math.min(doc.numPages,40);
+      for(let p=1;p<=N;p++){const pg=await doc.getPage(p);const tc=await pg.getTextContent();txt+=tc.items.map(i=>i.str+(i.hasEOL?"\n":" ")).join("")+"\n\n"}
+      if(txt.replace(/\s/g,"").length>=300)return{texto:txt,imgs:[]};
+      prog("El PDF parece escaneado: preparando las páginas como imágenes…");const imgs=[];for(let p=1;p<=Math.min(doc.numPages,6);p++){const pg=await doc.getPage(p);const vp0=pg.getViewport({scale:1}),sc=Math.min(2,1700/Math.max(vp0.width,vp0.height));const vp=pg.getViewport({scale:sc});const cv=document.createElement("canvas");cv.width=vp.width;cv.height=vp.height;await pg.render({canvasContext:cv.getContext("2d"),viewport:vp}).promise;imgs.push(await canvasImg(cv))}
+      return{texto:txt,imgs,paginas:doc.numPages}}
+    if(/\.docx$/.test(nm)||/wordprocessingml/.test(ty)){prog("Leyendo el documento Word…");await loadJs(JSZ);const z=await window.JSZip.loadAsync(await file.arrayBuffer());const x=await z.file("word/document.xml").async("string");
+      const t=x.replace(/<w:tab\/>/g,"\t").replace(/<\/w:p>/g,"\n").replace(/<w:br\/>/g,"\n").replace(/<[^>]+>/g,"").replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&apos;/g,"'");return{texto:t,imgs:[]}}
+    if(/^text\//.test(ty)||/\.(txt|md|csv)$/.test(nm))return{texto:await file.text(),imgs:[]};
+    throw new Error("Formato no reconocido. Usa PDF, Word (.docx), foto (JPG o PNG) o texto.")}
+
+  function instr(conImg){return`Eres asistente de la Plataforma de Gestión Borde Costero (relacionamiento con pesca artesanal, región de Antofagasta, Chile). Lee esta minuta de reunión${conImg?" (viene como imágenes; puede estar escrita a mano)":""} y devuelve SOLO un objeto JSON válido, sin texto antes ni después, con esta forma:
+{"fecha":"AAAA-MM-DD o null","hora":"HH:MM o null","lugar":"texto o null","caleta":"El Cobre | Michilla | otra caleta | null","organizacion":"texto o null","otras_organizaciones":["..."],"participantes":[{"nombre":"...","cargo":"...","organizacion":"..."}],"temas":["..."],"resumen":"3 a 5 frases en español","acuerdos":[{"texto":"...","responsable":"... o null","plazo":"AAAA-MM-DD o texto o null"}],"transcripcion":"${conImg?"texto completo de la minuta tal como se lee, en español":""}","no_legible":["campos que no pudiste leer con seguridad"]}
+Reglas:
+- Organizaciones conocidas (usa exactamente este nombre si corresponde): ${ORG0.map(x=>x[1]+" (Caleta "+x[0]+")").join("; ")}.
+- "temas": elige solo de esta lista: ${TEMAS.join("; ")}.
+- Si un dato no aparece o no se puede leer con seguridad, usa null y agrégalo a "no_legible" (fecha, lugar, organizacion, participantes, temas, resumen o acuerdos). No inventes datos.
+- Fechas en formato AAAA-MM-DD; si el año no aparece, null.
+- No incluyas RUT, teléfonos ni correos.`}
+  function parseJ(t){const a=String(t||"").indexOf("{"),b=String(t||"").lastIndexOf("}");if(a<0||b<a)throw new Error("La IA no devolvió una ficha válida.");return JSON.parse(t.slice(a,b+1))}
+
+  /* ---------- Carga ---------- */
+  async function mnLoad(force){if(MN.loading||(MN.loaded&&!force))return;MN.loading=true;try{const r=await ST2.list();MN.list=r.list;MN.ia=r.ia;if(!ART()&&MN.warn&&!/Falta/.test(MN.warn))MN.warn=""}catch(e){MN.warn=e&&e.message||"No se pudieron cargar las minutas."}MN.loaded=true;MN.u=(S.acct&&S.acct.usuario)||"";MN.loading=false;mnRender()}
+
+  /* ---------- Filtros y resultados ---------- */
+  function filtrar(){const f=MN.f,q=nrm(f.q).trim(),words=q?q.split(/\s+/).filter(w=>w.length>1):[];
+    return MN.list.filter(m=>{const d=m.datos||{};if(f.cal&&nrm(d.caleta)!==nrm(f.cal))return false;if(f.org&&nrm(d.organizacion)!==nrm(f.org))return false;if(f.tema&&!(d.temas||[]).includes(f.tema))return false;
+      if(f.d0&&(!d.fecha||d.fecha<f.d0))return false;if(f.d1&&(!d.fecha||d.fecha>f.d1))return false;
+      if(f.soloPend&&!(d.acuerdos||[]).some(a=>a.estado!=="cumplido"))return false;
+      if(words.length){const hay=nrm([d.organizacion,d.lugar,d.caleta,d.resumen,(d.temas||[]).join(" "),(d.participantes||[]).map(p=>p.nombre+" "+(p.cargo||"")).join(" "),(d.acuerdos||[]).map(a=>a.texto+" "+(a.responsable||"")).join(" "),m.texto].join(" "));if(!words.every(w=>hay.includes(w)))return false}
+      return true}).sort((a,b)=>String((b.datos||{}).fecha||"").localeCompare(String((a.datos||{}).fecha||"")))}
+  function snip(m){const q=nrm(MN.f.q).trim();const d=m.datos||{};const base=d.resumen||m.texto||"";if(!q)return esc(base.slice(0,220))+(base.length>220?"…":"");
+    const words=q.split(/\s+/).filter(w=>w.length>1);const src=[d.resumen,m.texto].filter(Boolean).join(" · ");const n=nrm(src);let i=-1;for(const w of words){i=n.indexOf(w);if(i>=0)break}
+    let s=i>=0?src.slice(Math.max(0,i-90),i+170):src.slice(0,240);let h=esc(s);words.forEach(w=>{const re=new RegExp("("+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&").split("").map(c=>{const m={a:"[aáà]",e:"[eéè]",i:"[iíì]",o:"[oóò]",u:"[uúüù]",n:"[nñ]"}[c];return m||c}).join("")+")","gi");h=h.replace(re,"<mark>$1</mark>")});return(i>90?"…":"")+h+"…"}
+
+  function mnRender(){const p=document.querySelector('[data-pane="minutas"]');if(!p||S.tab!=="minutas")return;const who=(S.acct&&S.acct.usuario)||"";if(MN.loaded&&MN.u!==who){MN.loaded=false;MN.list=[]}MN.u=MN.u||who;if(!MN.loaded){p.innerHTML=`<div class="card"><p class="cs">Cargando minutas…</p></div>`;mnLoad();return}
+    const f=MN.f,os=orgs(),res=filtrar(),A=adm();
+    const pend=[];res.forEach(m=>((m.datos||{}).acuerdos||[]).forEach((a,k)=>{if(a.estado!=="cumplido")pend.push({m,a,k})}));
+    const byOrg=os.map(o=>{const l=MN.list.filter(m=>nrm((m.datos||{}).organizacion)===nrm(o.o));const last=l.map(m=>(m.datos||{}).fecha).filter(Boolean).sort().pop();const pe=l.reduce((s,m)=>s+((m.datos||{}).acuerdos||[]).filter(a=>a.estado!=="cumplido").length,0);return{...o,n:l.length,last,pe}});
+    p.innerHTML=`<div class="card mn-head"><div class="tbar"><div><h2>Minutas de reuniones</h2><p class="cs">Reuniones con las organizaciones de pescadores. ${A?"Agrega una minuta (PDF, Word o foto) y la IA propone la ficha: fecha, lugar, organización, participantes, temas, acuerdos y resumen; tú la revisas antes de guardar.":"Busca por organización, fecha o palabras clave; pasa el cursor sobre un resultado para ver el detalle."}</p></div>
+        <div class="l">${A?`<button class="btn" id="mnAdd" type="button">+ Agregar minuta</button>`:""}<button class="btn ghost small" id="mnCsv" type="button">Exportar CSV</button></div></div>
+        ${MN.warn?`<p class="warnbox">${esc(MN.warn)}</p>`:""}${A&&MN.ia===false?`<p class="cs mn-noia">${ART()?"La lectura con IA no está disponible en esta vista: puedes completar la ficha a mano.":"La lectura automática con IA requiere configurar ANTHROPIC_API_KEY en Vercel. Mientras tanto, completa la ficha a mano."}</p>`:""}
+        <div class="mn-orgs">${byOrg.map(o=>`<button type="button" class="mn-org ${nrm(f.org)===nrm(o.o)?"on":""}" data-mnorg="${esc(o.o)}"><b>${esc(o.o)}</b><span>${o.c?"Caleta "+esc(o.c)+" · ":""}${o.n} minuta${o.n===1?"":"s"}${o.last?" · última: "+esc(fmtF(o.last)):""}${o.pe?` · <em>${o.pe} acuerdo${o.pe===1?"":"s"} pendiente${o.pe===1?"":"s"}</em>`:""}</span></button>`).join("")}</div></div>
+      <div class="card mn-filt"><div class="mn-fg">
+        <label>Buscar<input type="search" id="mnQ" placeholder="Palabras clave: muelle, cuota, compensación…" value="${esc(f.q)}"></label>
+        <label>Caleta<select id="mnCal"><option value="">Todas</option>${cals().map(c=>`<option ${f.cal===c?"selected":""}>${esc(c)}</option>`).join("")}</select></label>
+        <label>Organización<select id="mnOrgS"><option value="">Todas</option>${os.filter(o=>!f.cal||nrm(o.c)===nrm(f.cal)).map(o=>`<option ${nrm(f.org)===nrm(o.o)?"selected":""}>${esc(o.o)}</option>`).join("")}</select></label>
+        <label>Tema<select id="mnTema"><option value="">Todos</option>${TEMAS.map(t=>`<option ${f.tema===t?"selected":""}>${esc(t)}</option>`).join("")}</select></label>
+        <label>Desde<input type="date" id="mnD0" value="${esc(f.d0)}"></label><label>Hasta<input type="date" id="mnD1" value="${esc(f.d1)}"></label>
+        <label class="mn-chk"><input type="checkbox" id="mnPend" ${f.soloPend?"checked":""}> Con acuerdos pendientes</label>
+        <button type="button" class="btn ghost small" id="mnClr">✕ Limpiar filtros</button></div>
+        <p class="cs">${res.length} de ${MN.list.length} minuta${MN.list.length===1?"":"s"}</p></div>
+      <div class="card"><div class="tbar"><h3>Resultados${help("Pasa el cursor (o toca) un resultado para ver organización, lugar, fecha, participantes y resumen. Desde ahí puedes ver o descargar la minuta original.")}</h3></div>
+        ${res.length?`<div class="mn-list">${res.slice(0,(MN.page+1)*30).map(m=>{const d=m.datos||{};return`<article class="mn-it" data-mnid="${esc(m.id)}" tabindex="0">
+          <div class="mn-ih"><span class="mn-date">${esc(fmtF(d.fecha))}</span><b>${esc(d.organizacion||"Organización sin identificar")}</b>${d.caleta?`<span class="tg">Caleta ${esc(d.caleta)}</span>`:""}${d.lugar?`<span class="cs">· ${esc(d.lugar)}</span>`:""}${(d.pendientes||[]).length?`<span class="mn-miss-t">Por completar: ${esc(d.pendientes.join(", "))}</span>`:""}</div>
+          <p class="mn-sn">${snip(m)}</p>
+          <div class="mn-if">${(d.temas||[]).map(t=>`<span class="tg">${esc(t)}</span>`).join("")}${(d.acuerdos||[]).length?`<span class="cs">${d.acuerdos.length} acuerdo${d.acuerdos.length===1?"":"s"}${d.acuerdos.some(a=>a.estado!=="cumplido")?` (${d.acuerdos.filter(a=>a.estado!=="cumplido").length} pendiente${d.acuerdos.filter(a=>a.estado!=="cumplido").length===1?"":"s"})`:""}</span>`:""}
+            <span class="mn-act">${m.archivo?`<button type="button" class="lnk" data-mnver="${esc(m.id)}">Ver original</button><button type="button" class="lnk" data-mndl="${esc(m.id)}">Descargar</button>`:`<span class="cs">Sin archivo</span>`}${A?`<button type="button" class="lnk" data-mned="${esc(m.id)}">Editar</button><button type="button" class="lnk mn-del" data-mndel="${esc(m.id)}">Eliminar</button>`:""}</span></div></article>`}).join("")}</div>${res.length>(MN.page+1)*30?`<button type="button" class="btn ghost small" id="mnMore">Ver más</button>`:""}`
+          :`<p class="empty">${MN.list.length?"No hay minutas que coincidan con los filtros.":A?"Aún no hay minutas. Usa «+ Agregar minuta» para cargar la primera.":"Aún no hay minutas cargadas."}</p>`}</div>
+      <div class="card"><div class="tbar"><h3>Acuerdos pendientes${help("Acuerdos y compromisos de las minutas filtradas que aún no se marcan como cumplidos.")}</h3><span class="cs">${pend.length}</span></div>
+        ${pend.length?`<div class="tbl"><table class="mn-pt"><thead><tr><th>Fecha</th><th>Organización</th><th>Acuerdo</th><th>Responsable</th><th>Plazo</th>${A?"<th></th>":""}</tr></thead><tbody>${pend.slice(0,200).map(x=>{const d=x.m.datos||{};return`<tr><td>${esc(fmtF(d.fecha))}</td><td>${esc(d.organizacion||"—")}</td><td style="white-space:normal;min-width:240px">${esc(x.a.texto)}</td><td>${esc(x.a.responsable||"—")}</td><td>${esc(x.a.plazo||"—")}</td>${A?`<td><button type="button" class="btn ghost small" data-mnok="${esc(x.m.id)}|${x.k}">Marcar cumplido</button></td>`:""}</tr>`}).join("")}</tbody></table></div>`:`<p class="cs">Sin acuerdos pendientes en las minutas filtradas.</p>`}</div>`;
+  }
+
+  /* ---------- Ventana emergente (hover / toque) ---------- */
+  let popT=null,popFor=null;const PXY={x:0,y:0};document.addEventListener("pointermove",ev=>{if(ev.pointerType==="mouse"&&!(ev.target.closest&&ev.target.closest("#mnPop"))){PXY.x=ev.clientX;PXY.y=ev.clientY}},{passive:true});
+  function popHtml(m){const d=m.datos||{};return`<div class="mnp-h"><b>${esc(d.organizacion||"Organización sin identificar")}</b><button type="button" class="mnp-x" aria-label="Cerrar">×</button></div>
+    <dl><dt>Fecha</dt><dd>${esc(fmtF(d.fecha))}${d.hora?" · "+esc(d.hora):""}</dd><dt>Lugar</dt><dd>${esc(d.lugar||"—")}${d.caleta?" · Caleta "+esc(d.caleta):""}</dd>
+    <dt>Participantes</dt><dd>${(d.participantes||[]).length?`<ul>${d.participantes.slice(0,14).map(p=>`<li>${esc(p.nombre)}${p.cargo?` <span class="cs">· ${esc(p.cargo)}</span>`:""}${p.organizacion&&nrm(p.organizacion)!==nrm(d.organizacion)?` <span class="cs">(${esc(p.organizacion)})</span>`:""}</li>`).join("")}${d.participantes.length>14?`<li class="cs">y ${d.participantes.length-14} más</li>`:""}</ul>`:"—"}</dd>
+    <dt>Resumen</dt><dd>${esc(d.resumen||"—")}</dd>${(d.acuerdos||[]).length?`<dt>Acuerdos</dt><dd><ul>${d.acuerdos.slice(0,6).map(a=>`<li class="${a.estado==="cumplido"?"mn-ok":""}">${esc(a.texto)}${a.responsable?` <span class="cs">· ${esc(a.responsable)}</span>`:""}${a.plazo?` <span class="cs">· ${esc(a.plazo)}</span>`:""}</li>`).join("")}</ul></dd>`:""}</dl>
+    <div class="row" style="justify-content:flex-start">${m.archivo?`<button type="button" class="btn small" data-mnver="${esc(m.id)}">Ver minuta original</button><button type="button" class="btn ghost small" data-mndl="${esc(m.id)}">Descargar</button>`:`<span class="cs">Esta minuta no tiene archivo adjunto.</span>`}</div>`}
+  function popShow(card,touch){const m=MN.list.find(x=>x.id===card.dataset.mnid);if(!m)return;let el=document.getElementById("mnPop");if(!el){el=document.createElement("div");el.id="mnPop";el.className="mn-pop";el.setAttribute("role","dialog");document.body.appendChild(el);
+      el.addEventListener("pointerenter",()=>clearTimeout(popT));el.addEventListener("pointerleave",ev=>{if(ev.pointerType==="mouse")popHide(250)})}
+    el.innerHTML=popHtml(m);el.hidden=false;popFor=m.id;el.classList.toggle("touch",!!touch||innerWidth<700);
+    if(touch||innerWidth<700){el.style.left="";el.style.top="";return}
+    const r=card.getBoundingClientRect(),w=Math.min(440,innerWidth-24);el.style.width=w+"px";const h=el.offsetHeight;
+    let x=(PXY.x||r.left+40)+18,y=(PXY.y||r.top)+14;if(x+w>innerWidth-12)x=Math.max(12,(PXY.x||r.right)-w-18);if(y+h>innerHeight-12)y=Math.max(12,(PXY.y||r.bottom)-h-14);
+    el.style.left=x+"px";el.style.top=y+"px"}
+  function popHide(ms){clearTimeout(popT);popT=setTimeout(()=>{const el=document.getElementById("mnPop");if(el)el.hidden=true;popFor=null},ms||0)}
+  document.addEventListener("pointerover",ev=>{if(ev.pointerType!=="mouse")return;const c=ev.target.closest&&ev.target.closest(".mn-it");if(!c)return;clearTimeout(popT);if(popFor===c.dataset.mnid)return;popT=setTimeout(()=>popShow(c,false),220)});
+  document.addEventListener("pointerout",ev=>{if(ev.pointerType!=="mouse")return;const c=ev.target.closest&&ev.target.closest(".mn-it");if(!c)return;if(ev.relatedTarget&&(c.contains(ev.relatedTarget)||ev.relatedTarget.closest&&ev.relatedTarget.closest("#mnPop")))return;popHide(300)});
+  document.addEventListener("focusin",ev=>{const c=ev.target.closest&&ev.target.closest(".mn-it");if(c&&ev.target===c){const r=c.getBoundingClientRect();PXY.x=r.left+60;PXY.y=r.bottom-10;popShow(c,false)}});
+
+  /* ---------- Ver y descargar el original ---------- */
+  async function verOrig(id,dl){const m=MN.list.find(x=>x.id===id);if(!m||!m.archivo)return;
+    if(!ART()){const u=`/api/minutas?archivo=${encodeURIComponent(id)}${dl?"&dl=1":""}`;if(dl){const a=document.createElement("a");a.href=u;a.rel="noopener";document.body.appendChild(a);a.click();a.remove()}else window.open(u,"_blank","noopener");return}
+    toast("Preparando el archivo…");let b;try{b=await ST2.blob(m)}catch(e){toast("No se pudo abrir el archivo.");return}
+    if(dl){if(S.downloads){try{await S.downloads.save({filename:m.archivo_nombre||"minuta",data:b})}catch(e){}}else saveFile(m.archivo_nombre||"minuta",b,b.type);return}
+    const url=URL.createObjectURL(b);let ov=document.getElementById("mnView");if(!ov){ov=document.createElement("div");ov.id="mnView";ov.className="overlay";document.body.appendChild(ov)}
+    const ty=b.type||"";ov.innerHTML=`<div class="modal mn-vm"><div class="tbar"><h2>${esc(m.archivo_nombre||"Minuta")}</h2><div class="l"><button type="button" class="btn ghost small" data-mndl="${esc(id)}">Descargar</button><button type="button" class="btn small" id="mnVx">Cerrar</button></div></div>
+      ${/^image\//.test(ty)?`<img src="${url}" alt="Minuta original" class="mn-vimg">`:/pdf/.test(ty)?`<iframe src="${url}" title="Minuta original" class="mn-vpdf"></iframe><p class="cs">Si el PDF no se muestra, usa «Descargar».</p>`:`<p>Este formato no se puede previsualizar aquí. Usa «Descargar».</p>`}</div>`;
+    ov.hidden=false;ov.querySelector("#mnVx").onclick=()=>{ov.hidden=true;URL.revokeObjectURL(url)}}
+
+  /* ---------- Formulario: agregar / editar ---------- */
+  function vacio(){return{id:null,datos:{fecha:"",hora:"",lugar:"",caleta:"",organizacion:"",participantes:[],temas:[],resumen:"",acuerdos:[],pendientes:[]},texto:"",archivo:null,archivo_nombre:"",archivo_tipo:"",_file:null}}
+  function abrirForm(rec){MN.edit=rec?JSON.parse(JSON.stringify(rec)):vacio();MN.edit._file=null;let ov=document.getElementById("mnModal");if(!ov){ov=document.createElement("div");ov.id="mnModal";ov.className="overlay";document.body.appendChild(ov)}ov.hidden=false;formRender("")}
+  function formRender(msg){const ov=document.getElementById("mnModal"),r=MN.edit,d=r.datos,os=orgs(),miss=new Set(d.pendientes||[]);const mc=k=>miss.has(k)?" mn-miss":"";
+    const orgIn=d.organizacion&&!os.some(o=>nrm(o.o)===nrm(d.organizacion));
+    ov.innerHTML=`<div class="modal mn-fm" role="dialog" aria-modal="true" aria-labelledby="mnFT"><h2 id="mnFT">${r.id?"Editar minuta":"Agregar minuta"}</h2>
+      <div class="mn-drop"><label class="btn ghost small" for="mnFile">${r.archivo||r._file?"Cambiar archivo":"Elegir archivo"}</label><input type="file" id="mnFile" accept=".pdf,.docx,.txt,image/*" hidden>
+        <span class="cs">${r._file?esc(r._file.name):r.archivo_nombre?esc(r.archivo_nombre):"PDF, Word (.docx), foto o escaneo. También puedes tomar una foto con el celular."}</span>
+        ${r._file&&MN.ia!==false?`<button type="button" class="btn small" id="mnIA">Leer con IA</button>`:""}</div>
+      <p class="mn-msg" id="mnMsg" ${msg?"":"hidden"}>${msg||""}</p>
+      ${miss.size?`<p class="mn-misshint">Los campos marcados en amarillo no se pudieron leer con seguridad: complétalos o corrígelos a mano.</p>`:""}
+      <div class="mn-grid">
+        <label class="${mc("fecha")}">Fecha<input type="date" id="mF" value="${esc(d.fecha||"")}"></label>
+        <label>Hora<input type="time" id="mH" value="${esc(d.hora||"")}"></label>
+        <label class="${mc("lugar")}">Lugar<input id="mL" value="${esc(d.lugar||"")}" placeholder="Ej.: sede de la cooperativa"></label>
+        <label class="${mc("caleta")}">Caleta<input id="mC" list="mnCalL" value="${esc(d.caleta||"")}"><datalist id="mnCalL">${cals().map(c=>`<option value="${esc(c)}">`).join("")}</datalist></label>
+        <label class="mn-w2${mc("organizacion")}">Organización<select id="mO"><option value="">— elige —</option>${os.map(o=>`<option ${nrm(o.o)===nrm(d.organizacion)?"selected":""}>${esc(o.o)}</option>`).join("")}<option value="__otra" ${orgIn?"selected":""}>Otra organización…</option></select>
+          <input id="mO2" placeholder="Nombre de la organización" value="${orgIn?esc(d.organizacion):""}" ${orgIn?"":"hidden"}></label>
+        <fieldset class="mn-w2${mc("temas")}"><legend>Temas de discusión</legend><div class="mn-temas">${TEMAS.map(t=>`<label><input type="checkbox" value="${esc(t)}" ${(d.temas||[]).includes(t)?"checked":""}> ${esc(t)}</label>`).join("")}</div></fieldset>
+        <label class="mn-w2${mc("participantes")}">Participantes <span class="cs">(uno por línea: Nombre — cargo — organización)</span><textarea id="mP" rows="4">${esc((d.participantes||[]).map(p=>[p.nombre,p.cargo,p.organizacion].filter(Boolean).join(" — ")).join("\n"))}</textarea></label>
+        <label class="mn-w2${mc("resumen")}">Resumen de la reunión<textarea id="mR" rows="4">${esc(d.resumen||"")}</textarea></label>
+        <label class="mn-w2${mc("acuerdos")}">Acuerdos y compromisos <span class="cs">(uno por línea: Acuerdo | responsable | plazo)</span><textarea id="mA" rows="4">${esc((d.acuerdos||[]).map(a=>[a.texto,a.responsable||"",a.plazo||""].join(" | ").replace(/( \| )+$/,"")).join("\n"))}</textarea></label>
+        <details class="mn-w2"><summary>Texto completo de la minuta (para la búsqueda por palabras)</summary><textarea id="mT" rows="6">${esc(r.texto||"")}</textarea></details>
+      </div>
+      <div class="row"><button type="button" class="btn ghost" id="mnCancel">Cancelar</button><button type="button" class="btn" id="mnSave">${r.id?"Guardar cambios":"Guardar minuta"}</button></div></div>`;
+    const sel=ov.querySelector("#mO");sel.onchange=()=>{ov.querySelector("#mO2").hidden=sel.value!=="__otra"};
+    ov.querySelector("#mnFile").onchange=ev=>{const fl=ev.target.files[0];if(!fl)return;if(fl.size>(ART()?8:40)*1024*1024){formRender(`El archivo pesa ${t1(fl.size/1048576)} MB: el máximo es ${ART()?8:40} MB.`);return}leerForm();MN.edit._file=fl;formRender("");if(MN.ia!==false)leerIA()};
+    const ia=ov.querySelector("#mnIA");if(ia)ia.onclick=()=>{leerForm();leerIA()};
+    ov.querySelector("#mnCancel").onclick=()=>{ov.hidden=true;MN.edit=null};ov.querySelector("#mnSave").onclick=guardar}
+  function leerForm(){const ov=document.getElementById("mnModal");if(!ov||!MN.edit)return;const d=MN.edit.datos,v=id=>ov.querySelector(id).value.trim();
+    d.fecha=v("#mF");d.hora=v("#mH");d.lugar=v("#mL");d.caleta=v("#mC");const o=ov.querySelector("#mO").value;d.organizacion=o==="__otra"?v("#mO2"):o;
+    d.temas=[...ov.querySelectorAll(".mn-temas input:checked")].map(x=>x.value);
+    d.participantes=v("#mP").split("\n").map(l=>l.trim()).filter(Boolean).map(l=>{const [nombre,cargo,organizacion]=l.split(/\s+[—–-]\s+/);return{nombre:(nombre||"").trim(),cargo:(cargo||"").trim(),organizacion:(organizacion||"").trim()}});
+    d.resumen=v("#mR");const prev=d.acuerdos||[];d.acuerdos=v("#mA").split("\n").map(l=>l.trim()).filter(Boolean).map(l=>{const [texto,responsable,plazo]=l.split("|").map(x=>(x||"").trim());const old=prev.find(a=>nrm(a.texto)===nrm(texto));return{texto,responsable:responsable||"",plazo:plazo||"",estado:old?old.estado:"pendiente"}});
+    MN.edit.texto=ov.querySelector("#mT").value;
+    const miss=[];if(!d.fecha)miss.push("fecha");if(!d.lugar)miss.push("lugar");if(!d.organizacion)miss.push("organizacion");if(!d.participantes.length)miss.push("participantes");if(!d.resumen)miss.push("resumen");d.pendientes=(d.pendientes||[]).filter(k=>miss.includes(k))}
+  async function leerIA(){const r=MN.edit;if(!r||!r._file||MN.busy)return;MN.busy=true;const msg=t=>{const e=document.getElementById("mnMsg");if(e){e.hidden=false;e.innerHTML=t}};
+    try{const x=await extraer(r._file,t=>msg(`<span class="spin"></span> ${esc(t)}`));msg(`<span class="spin"></span> La IA está leyendo la minuta${x.imgs.length?" (imágenes; puede tardar hasta un minuto)":""}…`);
+      const out=parseJ(await ST2.ia(x.texto||"",x.imgs,instr(x.imgs.length>0)));const d=r.datos;
+      const set=(k,v)=>{if(v!=null&&v!==""&&!(Array.isArray(v)&&!v.length))d[k]=v};
+      set("fecha",/^\d{4}-\d{2}-\d{2}$/.test(out.fecha||"")?out.fecha:null);set("hora",/^\d{1,2}:\d{2}$/.test(out.hora||"")?out.hora.padStart(5,"0"):null);set("lugar",out.lugar);
+      const cal=String(out.caleta||"");set("caleta",/cobre/i.test(cal)?"El Cobre":/michilla/i.test(cal)?"Michilla":cal||null);
+      if(out.organizacion){const no=nrm(out.organizacion);const k=ORG0.find(o=>no.includes(nrm(o[1]).split(" ")[0].slice(0,6))&&no.includes(nrm(o[0]).split(" ").pop()));d.organizacion=k?k[1]:out.organizacion;if(k&&!d.caleta)d.caleta=k[0]}
+      set("participantes",(out.participantes||[]).filter(p=>p&&p.nombre).map(p=>({nombre:String(p.nombre),cargo:String(p.cargo||""),organizacion:String(p.organizacion||"")})));
+      set("temas",(out.temas||[]).filter(t=>TEMAS.includes(t)));set("resumen",out.resumen);
+      set("acuerdos",(out.acuerdos||[]).filter(a=>a&&a.texto).map(a=>({texto:String(a.texto),responsable:String(a.responsable||""),plazo:String(a.plazo||""),estado:"pendiente"})));
+      const tx=(out.transcripcion||"").trim();r.texto=x.texto&&x.texto.replace(/\s/g,"").length>=300?x.texto:(tx||x.texto||"");
+      const miss=new Set((out.no_legible||[]).map(s=>nrm(s).replace(/organizaci[oó]n/,"organizacion")));["fecha","lugar","organizacion","participantes","resumen"].forEach(k=>{const v=d[k];if(!v||(Array.isArray(v)&&!v.length))miss.add(k)});
+      if(!(d.temas||[]).length)miss.add("temas");d.pendientes=[...miss].filter(k=>["fecha","lugar","caleta","organizacion","participantes","temas","resumen","acuerdos"].includes(k));d.ia=true;
+      MN.busy=false;formRender(`La IA completó la ficha. ${d.pendientes.length?"Revisa los campos en amarillo.":"Revísala antes de guardar."}`)}
+    catch(e){MN.busy=false;const c=e&&e.code;formRender(c==="no_ia"?"La lectura con IA no está disponible: completa la ficha a mano.":c==="not_granted"?"No se autorizó el uso de Claude en esta vista: completa la ficha a mano.":c==="rate_limited"?"Demasiadas solicitudes a la IA: espera un momento y vuelve a intentar.":`No se pudo leer automáticamente (${esc(e&&e.message||c||"error")}). Completa la ficha a mano.`)}}
+  async function guardar(){if(MN.busy)return;leerForm();const r=MN.edit,d=r.datos;if(!d.organizacion&&!d.fecha&&!d.resumen&&!r._file&&!r.archivo){formRender("Agrega al menos un archivo, la organización, la fecha o un resumen.");return}
+    MN.busy=true;const b=document.getElementById("mnSave");if(b){b.disabled=true;b.textContent="Guardando…"}
+    try{const id=r.id||nid();if(r._file){const up=await ST2.upload(r._file,id);r.archivo=up.archivo;r.archivo_nombre=up.archivo_nombre;r.archivo_tipo=up.archivo_tipo}
+      const rec={id,datos:d,texto:r.texto||"",archivo:r.archivo,archivo_nombre:r.archivo_nombre,archivo_tipo:r.archivo_tipo,por:r.por||(S.acct&&S.acct.usuario)||""};
+      if(ART()){await ST2.save(rec)}else{await ST2.save({...rec,id})}
+      const i=MN.list.findIndex(x=>x.id===id);if(i>=0)MN.list[i]=rec;else MN.list.unshift(rec);MN.busy=false;document.getElementById("mnModal").hidden=true;MN.edit=null;toast("Minuta guardada.");mnRender()}
+    catch(e){MN.busy=false;formRender("No se pudo guardar: "+esc(e&&e.message||"error"))}}
+
+  function csv(){const q=v=>`"${String(v==null?"":v).replace(/"/g,'""')}"`;const rows=[["Fecha","Hora","Caleta","Organización","Lugar","Temas","Participantes","Resumen","Acuerdos","Acuerdos pendientes","Archivo"]];
+    filtrar().forEach(m=>{const d=m.datos||{};rows.push([d.fecha,d.hora,d.caleta,d.organizacion,d.lugar,(d.temas||[]).join("; "),(d.participantes||[]).map(p=>[p.nombre,p.cargo].filter(Boolean).join(" - ")).join("; "),d.resumen,(d.acuerdos||[]).map(a=>a.texto).join("; "),(d.acuerdos||[]).filter(a=>a.estado!=="cumplido").length,m.archivo_nombre||""])});
+    saveFile("minutas.csv","﻿"+rows.map(r=>r.map(q).join(";")).join("\n"),"text/csv;charset=utf-8")}
+
+  /* ---------- Eventos ---------- */
+  let qT=null;
+  document.addEventListener("input",ev=>{if(ev.target.id==="mnQ"){MN.f.q=ev.target.value;clearTimeout(qT);qT=setTimeout(()=>{const pos=ev.target.selectionStart;MN.page=0;mnRender();const q=document.getElementById("mnQ");if(q){q.focus();try{q.setSelectionRange(pos,pos)}catch(e){}}},250)}});
+  document.addEventListener("change",ev=>{const t=ev.target,F=MN.f;if(!t.closest||!t.closest('[data-pane="minutas"]'))return;
+    if(t.id==="mnCal"){F.cal=t.value;if(F.org&&!orgs().some(o=>nrm(o.o)===nrm(F.org)&&(!F.cal||nrm(o.c)===nrm(F.cal))))F.org=""}else if(t.id==="mnOrgS")F.org=t.value;else if(t.id==="mnTema")F.tema=t.value;else if(t.id==="mnD0")F.d0=t.value;else if(t.id==="mnD1")F.d1=t.value;else if(t.id==="mnPend")F.soloPend=t.checked;else return;MN.page=0;mnRender()});
+  document.addEventListener("click",async ev=>{const t=ev.target;
+    const pc=t.closest&&t.closest(".mnp-x");if(pc){popHide(0);return}
+    const ver=t.closest&&t.closest("[data-mnver]");if(ver){ev.stopPropagation();verOrig(ver.dataset.mnver,false);return}
+    const dl=t.closest&&t.closest("[data-mndl]");if(dl){ev.stopPropagation();verOrig(dl.dataset.mndl,true);return}
+    if(!t.closest)return;
+    if(t.closest("#mnAdd")){abrirForm(null);return}
+    if(t.closest("#mnCsv")){csv();return}
+    if(t.closest("#mnMore")){MN.page++;mnRender();return}
+    if(t.closest("#mnClr")){MN.f={cal:"",org:"",tema:"",d0:"",d1:"",q:"",soloPend:false};MN.page=0;mnRender();return}
+    const og=t.closest("[data-mnorg]");if(og){const o=og.dataset.mnorg;MN.f.org=nrm(MN.f.org)===nrm(o)?"":o;MN.page=0;mnRender();return}
+    const ed=t.closest("[data-mned]");if(ed){popHide(0);abrirForm(MN.list.find(x=>x.id===ed.dataset.mned));return}
+    const de=t.closest("[data-mndel]");if(de){popHide(0);const m=MN.list.find(x=>x.id===de.dataset.mndel);if(!m)return;const d=m.datos||{};
+      if(!await askYN(`¿Estás seguro de eliminar la minuta de <b>${esc(d.organizacion||"organización sin identificar")}</b> del ${esc(fmtF(d.fecha))}? Se elimina también el archivo original. Esta acción no se puede deshacer.`,{title:"Eliminar minuta",danger:true,si:"Sí, eliminar",no:"No"}))return;
+      try{await ST2.del(m);MN.list=MN.list.filter(x=>x.id!==m.id);toast("Minuta eliminada.");mnRender()}catch(e){toast("No se pudo eliminar: "+(e&&e.message||"error"))}return}
+    const ok=t.closest("[data-mnok]");if(ok){const [id,k]=ok.dataset.mnok.split("|");const m=MN.list.find(x=>x.id===id);if(!m)return;const a=(m.datos.acuerdos||[])[+k];if(!a)return;
+      if(!await askYN(`¿Marcar como cumplido el acuerdo «${esc(a.texto)}»?`,{title:"Acuerdo cumplido",si:"Sí, cumplido",no:"No"}))return;a.estado="cumplido";
+      try{await ST2.save(m);toast("Acuerdo marcado como cumplido.");mnRender()}catch(e){a.estado="pendiente";toast("No se pudo guardar.")}return}
+    const it=t.closest(".mn-it");if(it&&!t.closest("button")&&(ev.pointerType!=="mouse"||innerWidth<700)){popShow(it,true);return}
+    const pop=document.getElementById("mnPop");if(pop&&!pop.hidden&&!t.closest("#mnPop")&&!t.closest(".mn-it"))popHide(0)});
+  document.addEventListener("keydown",ev=>{if(ev.key==="Escape"){popHide(0);const v=document.getElementById("mnView");if(v&&!v.hidden)v.hidden=true}});
+
+  const _st=setTab;setTab=function(t){_st(t);if(t==="minutas"){["#fab","#period","#aside","#chips"].forEach(s=>{const e=document.querySelector(s);if(e)e.hidden=true});const l=document.querySelector(".layout");if(l)l.style.gridTemplateColumns="minmax(0,1fr)";mnRender()}else popHide(0)};
+  window.mnReset=()=>{MN.list=[];MN.loaded=false;MN.warn=""};
 }
 
 /*CMPJSE*//*C2E*/</script>
