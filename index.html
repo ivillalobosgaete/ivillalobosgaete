@@ -1318,6 +1318,15 @@ svg text.val{fill:var(--ink-2);font-weight:700}
 @media (max-width:700px){.cmp-cards{grid-auto-flow:column;grid-auto-columns:minmax(78%,1fr);grid-template-columns:none;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}.cmp-card{scroll-snap-align:start}.cmp-ctrl select{max-width:100%}.cmp-ctrl label{flex-wrap:wrap}}
 .cmp-head{gap:4px}.cmp-head h2{margin:0;font-size:1.15rem;font-weight:800}.cmp-head p{margin:0}
 
+.cmp-ac{display:flex;gap:6px;align-items:center;font-size:.8rem;font-weight:700;color:var(--ink-2);flex:1 1 280px}
+.cmp-acw{position:relative;flex:1;min-width:200px}
+.cmp-acw input{width:100%;border:2px solid var(--brand);border-radius:8px;padding:7px 10px;font-size:.9rem;font-weight:500;background:#fff}
+.cmp-sug{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:60;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 34px -12px rgba(10,30,40,.4);max-height:330px;overflow:auto;padding:4px}
+.cmp-sgi{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:7px 10px;border-radius:8px;cursor:pointer;font-weight:600;font-size:.88rem;color:var(--ink)}
+.cmp-sgi small{color:var(--muted);font-weight:500;margin-left:4px}.cmp-sgi b{font-size:.78rem;color:var(--ink-2);white-space:nowrap}
+.cmp-sgi.act,.cmp-sgi:hover{background:var(--brand-08)}.cmp-sgi mark{background:#ffe58a;color:inherit;border-radius:2px;padding:0}
+.cmp-sgm{padding:7px 10px;font-size:.8rem;color:var(--muted)}
+
 .mn-head h2{margin:0;font-size:1.15rem;font-weight:800}.mn-head .tbar{align-items:flex-start}.mn-head p{margin:2px 0 0;max-width:90ch}
 .mn-noia{background:var(--warn-bg);color:var(--warn);border-radius:8px;padding:6px 10px}
 .mn-orgs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:8px;margin-top:6px}
@@ -5338,7 +5347,8 @@ function cgScan(){document.querySelectorAll(".card h3, .card h4, .np-viz h4").fo
     const opts=f.opts.map((_,k)=>k).filter(k=>tot[k]>0&&!S.f[dim].has(k)).sort((a,b)=>tot[b]-tot[a]).slice(0,dim==="p"?400:1000);
     const ctrl=`<div class="cmp-ctrl"><label>Comparar por <select id="cmpDim">${DIMS.map(d=>`<option value="${d}" ${d===dim?"selected":""}>${DLBL[d]}${S.f[d]&&S.f[d].size?` (${S.f[d].size})`:""}</option>`).join("")}</select></label>
       <div class="cmp-chips">${all.map(k=>`<span class="cmp-chip">${esc(lbl(dim,k))}<button type="button" data-cmpx="${k}" aria-label="Quitar ${esc(lbl(dim,k))}">×</button></span>`).join("")}</div>
-      <label class="cmp-add">${all.length?"Agregar":"Elegir"} ${esc(DLBL[dim].toLowerCase())} <select id="cmpAdd"><option value="">— elige —</option>${opts.map(k=>`<option value="${k}">${esc(lbl(dim,k))}${dim==="cal"&&f.sub?" · "+esc(f.sub[k]||""):""}</option>`).join("")}</select></label>
+      ${dim==="p"||dim==="esp"?`<div class="cmp-add cmp-ac"><label for="cmpQ">${all.length?"Agregar":"Buscar"} ${esc(DLBL[dim].toLowerCase())}</label><div class="cmp-acw"><input id="cmpQ" type="search" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="cmpSug" placeholder="${dim==="p"?"Escribe nombre, apellido o RPA…":"Escribe el nombre de la especie…"}"><div id="cmpSug" class="cmp-sug" role="listbox" hidden></div></div></div>`
+      :`<label class="cmp-add">${all.length?"Agregar":"Elegir"} ${esc(DLBL[dim].toLowerCase())} <select id="cmpAdd"><option value="">— elige —</option>${opts.map(k=>`<option value="${k}">${esc(lbl(dim,k))}${dim==="cal"&&f.sub?" · "+esc(f.sub[k]||""):""}</option>`).join("")}</select></label>`}
       ${all.length?`<button type="button" class="btn ghost small" id="cmpClr">Quitar todos</button>`:""}</div>`;
     if(all.length<2){box.innerHTML=ctrl+`<p class="cmp-empty">Elige al menos <b>2 ${esc(DPL[dim])}</b> (hasta 6) para compararlas lado a lado. También puedes marcarlas en el filtro «${esc(f.label)}». Los demás filtros y el período se siguen aplicando.</p>`;return}
     let keys=all.slice();let warn="";
@@ -5415,6 +5425,23 @@ function cgScan(){document.querySelectorAll(".card h3, .card h4, .np-viz h4").fo
     CMP.csv=()=>{const q=v=>`"${String(v).replace(/"/g,'""')}"`;const rows=[["Indicador",...names],...mets.map(([key,lab,fm])=>[lab,...K.map(k=>key==="t"||key==="tp"?(k[key]||0).toFixed(3).replace(".",","):key==="w"||key==="act"?(k[key]||0).toFixed(1).replace(".",","):key==="val"?Math.round(k.val):key==="var"?(k.var==null?"":k.var.toFixed(1).replace(".",",")):k[key])]),["Meses de mayor desembarque",...K.map(k=>k.seas.ms.map(x=>MES[x]).join(" "))],...yrsAll.map(y=>["Toneladas "+(R.y0+y),...O.map(o=>o.yT[y].toFixed(3).replace(".",","))])];
       return"﻿"+rows.map(r=>r.map(q).join(";")).join("\n")};
   }
+  /* Búsqueda predictiva (pescador y especie) */
+  const AC={k:[],i:-1};
+  function acRun(){const inp=document.getElementById("cmpQ"),box=document.getElementById("cmpSug");if(!inp||!box)return;const dim=defDim(),f=fOf(dim),tot=totals(dim);
+    const q=norm(inp.value).trim(),w=q.split(/\s+/).filter(Boolean);if(!w.length){box.hidden=true;inp.setAttribute("aria-expanded","false");AC.k=[];return}
+    const hits=[];for(let k=0;k<f.opts.length;k++){if(!(tot[k]>0)||S.f[dim].has(k))continue;const nm=norm(String(f.opts[k])),sb=norm(String((f.sub&&f.sub[k])||""));const hay=nm+" "+sb;
+      if(!w.every(x=>hay.includes(x)))continue;const sc=(nm.startsWith(w[0])?2:0)+(nm.split(/\s+/).some(t=>t.startsWith(w[0]))?1:0);hits.push([k,sc])}
+    hits.sort((a,b)=>b[1]-a[1]||tot[b[0]]-tot[a[0]]);AC.k=hits.slice(0,12).map(x=>x[0]);AC.i=AC.k.length?0:-1;
+    const mark=t=>{let h=esc(t);w.forEach(x=>{const re=new RegExp("("+x.replace(/[.*+?^${}()|[\]\\]/g,"\\$&").split("").map(c=>({a:"[aáà]",e:"[eéè]",i:"[iíì]",o:"[oóò]",u:"[uúü]",n:"[nñ]"})[c]||c).join("")+")","gi");h=h.replace(re,"<mark>$1</mark>")});return h};
+    box.innerHTML=AC.k.length?AC.k.map((k,j)=>`<div class="cmp-sgi${j===AC.i?" act":""}" role="option" id="cmpSg${j}" aria-selected="${j===AC.i}" data-cmpk="${k}"><span>${mark(lbl(dim,k))}${f.sub&&f.sub[k]?` <small>${mark(String(f.sub[k]))}</small>`:""}</span><b>${tt(tot[k]/1000)} t</b></div>`).join("")+(hits.length>12?`<div class="cmp-sgm">${hits.length-12} más: sigue escribiendo para acotar</div>`:""):`<div class="cmp-sgm">Sin coincidencias${dim==="p"?" (busca por nombre, apellido o número RPA)":""}</div>`;
+    box.hidden=false;inp.setAttribute("aria-expanded","true");if(AC.i>=0)inp.setAttribute("aria-activedescendant","cmpSg"+AC.i)}
+  function acPick(k){const d=defDim();if(S.f[d].size>=6&&!S.f[d].has(k))toast("Se comparan hasta 6 elementos: se usarán los 6 con más toneladas.");S.f[d].add(+k);S.page=0;render();setTimeout(()=>{const i=document.getElementById("cmpQ");if(i)i.focus()},30)}
+  document.addEventListener("input",ev=>{if(ev.target.id==="cmpQ")acRun()});
+  document.addEventListener("keydown",ev=>{if(ev.target.id!=="cmpQ")return;const box=document.getElementById("cmpSug");if(!box||box.hidden||!AC.k.length){if(ev.key==="Escape"&&box)box.hidden=true;return}
+    if(ev.key==="ArrowDown"||ev.key==="ArrowUp"){ev.preventDefault();AC.i=(AC.i+(ev.key==="ArrowDown"?1:-1)+AC.k.length)%AC.k.length;box.querySelectorAll(".cmp-sgi").forEach((e,j)=>{e.classList.toggle("act",j===AC.i);e.setAttribute("aria-selected",String(j===AC.i));if(j===AC.i)e.scrollIntoView({block:"nearest"})});ev.target.setAttribute("aria-activedescendant","cmpSg"+AC.i)}
+    else if(ev.key==="Enter"){ev.preventDefault();if(AC.i>=0)acPick(AC.k[AC.i])}else if(ev.key==="Escape"){box.hidden=true;ev.target.setAttribute("aria-expanded","false")}});
+  document.addEventListener("mousedown",ev=>{const it=ev.target.closest&&ev.target.closest("[data-cmpk]");if(it){ev.preventDefault();acPick(it.dataset.cmpk);return}const box=document.getElementById("cmpSug");if(box&&!box.hidden&&!(ev.target.closest&&ev.target.closest(".cmp-acw")))box.hidden=true});
+  document.addEventListener("focusin",ev=>{if(ev.target.id==="cmpQ"&&ev.target.value)acRun()});
   document.addEventListener("change",ev=>{const t=ev.target;if(t.id==="cmpDim"){sv("dim",t.value);cmpRender()}
     else if(t.id==="cmpAdd"&&t.value!==""){const d=defDim();S.f[d].add(+t.value);S.page=0;render()}});
   document.addEventListener("click",ev=>{const x=ev.target.closest("[data-cmpx]");if(x){const d=defDim();S.f[d].delete(+x.dataset.cmpx);render();return}
