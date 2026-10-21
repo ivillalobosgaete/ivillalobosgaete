@@ -1316,6 +1316,7 @@ svg text.val{fill:var(--ink-2);font-weight:700}
 .cmp-tbl td,.cmp-tbl th{white-space:nowrap}
 .cmp-concl ul{gap:7px}
 @media (max-width:700px){.cmp-cards{grid-auto-flow:column;grid-auto-columns:minmax(78%,1fr);grid-template-columns:none;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}.cmp-card{scroll-snap-align:start}.cmp-ctrl select{max-width:100%}.cmp-ctrl label{flex-wrap:wrap}}
+.cmp-head{gap:4px}.cmp-head h2{margin:0;font-size:1.15rem;font-weight:800}.cmp-head p{margin:0}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
@@ -1371,6 +1372,7 @@ svg text.val{fill:var(--ink-2);font-weight:700}
   </header>
   <nav class="tabs gut" role="tablist" id="tabs">
     <button role="tab" data-tab="resumen" aria-selected="true">Resumen ejecutivo</button>
+    <button role="tab" data-tab="cmp" aria-selected="false">Comparación</button>
     <button role="tab" data-tab="pescadores" aria-selected="false">Pescadores</button>
     <button role="tab" data-tab="especies" aria-selected="false">Especies y caletas</button>
     <button role="tab" data-tab="negociacion" aria-selected="false">Negociación</button>
@@ -1545,6 +1547,7 @@ svg text.val{fill:var(--ink-2);font-weight:700}
         </div>
       </section>
 
+      <section data-pane="cmp" style="display:grid;gap:14px" hidden></section>
       <section data-pane="detalle" style="display:grid;gap:14px" hidden>
         <div class="card">
           <div class="tbar">
@@ -5196,12 +5199,8 @@ function cgScan(){document.querySelectorAll(".card h3, .card h4, .np-viz h4").fo
   function totals(dim){if(CMP.tot[dim])return CMP.tot[dim];const R=S.R,f=fOf(dim),t=new Float64Array(f.opts.length);for(let i=0;i<R.n;i++)t[f.arr[i]]+=R.q[i];return CMP.tot[dim]=t}
   function defDim(){const s=st("dim","");if(s&&DIMS.includes(s))return s;return DIMS.find(d=>S.f[d]&&S.f[d].size>=2)||"cal"}
 
-  function ensureSec(){if(document.getElementById("cmpBox"))return true;const pane=document.querySelector('[data-pane="resumen"]');if(!pane)return false;
-    const d=document.createElement("details");d.className="sec";d.dataset.sec="cmp";d.open=st("open","1")==="1";
-    d.innerHTML=`<summary><span class="sec-t">Comparación</span><span class="sec-s">Compara 2 a 6 caletas, especies, comunas u otros elementos de los filtros, lado a lado y con interpretación</span><span class="sec-c" aria-hidden="true"></span></summary><div class="sec-b"><div id="cmpBox" class="cmp"></div></div>`;
-    const ref=pane.querySelector('details.sec[data-sec="zon"]')||pane.querySelector("details.sec");if(ref)pane.insertBefore(d,ref);else pane.appendChild(d);
-    d.addEventListener("toggle",()=>{sv("open",d.open?"1":"0");if(d.open)cmpRender()});return true}
-
+  function ensureSec(){if(document.getElementById("cmpBox"))return true;const pane=document.querySelector('[data-pane="cmp"]');if(!pane)return false;
+    pane.innerHTML=`<div class="card cmp-head"><h2>Comparación</h2><p class="cs">Compara lado a lado de 2 a 6 caletas, especies, comunas, zonas u otros elementos de los filtros, con gráficos e interpretación. Los demás filtros y el período se siguen aplicando.</p></div><div id="cmpBox" class="cmp"></div>`;return true}
   function agg(dim,keys){const R=S.R,m=R.m,f=fOf(dim),pass=LAST.pass,ix=new Map(keys.map((k,j)=>[k,j])),nY=R.y1-R.y0+1,mj=m.sexes.indexOf("Mujer");
     const compDim=dim==="esp"?"cal":"esp",cf=fOf(compDim);
     const O=keys.map(k=>({k,t:0,val:0,fis:new Set(),muj:new Set(),ym:new Set(),yT:new Float64Array(nY),mT:new Float64Array(12),comp:new Map(),priced:0}));
@@ -5233,7 +5232,7 @@ function cgScan(){document.querySelectorAll(".card h3, .card h4, .np-viz h4").fo
         h+=`<td class="${vd?"cmp-vd":""}" title="${esc(names[j])} · ${MES[mo]}: ${fmtP(p)} del volumen${vd?" · mes con veda":""}"><i style="background:${CC[j]};opacity:${p>0?(.12+.88*a).toFixed(2):0}"></i><span>${p>=1?t0(p):p>0?"<1":""}</span></td>`}
       h+=`</tr>`});box.innerHTML=h+`</tbody></table></div>`}
 
-  function cmpRender(){if(!S.R||!LAST||S.tab!=="resumen")return;if(!ensureSec())return;const sec=document.querySelector('details.sec[data-sec="cmp"]');if(sec&&!sec.open)return;
+  function cmpRender(){if(!S.R||!LAST||S.tab!=="cmp")return;if(!ensureSec())return;
     const box=document.getElementById("cmpBox"),R=S.R,m=R.m;let dim=defDim();const f=fOf(dim);const all=[...S.f[dim]];const tot=totals(dim);
     const opts=f.opts.map((_,k)=>k).filter(k=>tot[k]>0&&!S.f[dim].has(k)).sort((a,b)=>tot[b]-tot[a]).slice(0,dim==="p"?400:1000);
     const ctrl=`<div class="cmp-ctrl"><label>Comparar por <select id="cmpDim">${DIMS.map(d=>`<option value="${d}" ${d===dim?"selected":""}>${DLBL[d]}${S.f[d]&&S.f[d].size?` (${S.f[d].size})`:""}</option>`).join("")}</select></label>
