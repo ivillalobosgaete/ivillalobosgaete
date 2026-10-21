@@ -1426,6 +1426,14 @@ svg text.val{fill:var(--ink-2);font-weight:700}
 @media (max-width:719px){.mn-rgg{grid-template-columns:repeat(7,minmax(36px,1fr))}.mn-rgw{grid-column:1/-1}}
 .mn-rgm{align-content:start;align-self:start}.mn-rgms{align-items:flex-start}
 .mn-idle{display:flex;gap:14px;align-items:center;background:var(--brand-08);border:1px dashed var(--line);border-radius:12px;padding:18px}.mn-idle svg{width:34px;height:34px;flex:none;color:var(--brand-ink)}.mn-idle p{margin:0;font-size:.92rem;color:var(--ink-2)}
+
+.mn-delnp{color:var(--down)!important;border-color:#f3c1bd!important}
+.mn-np-t{font-size:.72rem;font-weight:800;background:#ffe3e0;color:#a52a1f;border-radius:999px;padding:1px 8px}
+.mn-npm{width:min(760px,100%)!important}
+.mn-npl{display:grid;gap:4px;border:1px solid var(--line);border-radius:12px;padding:8px 10px;max-height:44vh;overflow:auto}
+.mn-npl summary{cursor:pointer;padding:4px 0}.mn-nph{display:flex;justify-content:space-between;gap:8px;padding:2px 0 6px;border-bottom:1px solid var(--line)}
+.mn-npr{display:flex;gap:10px;align-items:flex-start;padding:7px 4px;border-radius:8px;cursor:pointer}.mn-npr:hover{background:var(--brand-08)}
+.mn-npr input{margin-top:3px;width:18px;height:18px;accent-color:var(--down)}.mn-npr span{display:grid;gap:2px;font-size:.88rem}.mn-npr small{color:var(--muted)}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
@@ -5501,12 +5509,13 @@ function cgScan(){document.querySelectorAll(".card h3, .card h4, .np-viz h4").fo
     throw new Error("Formato no reconocido. Usa PDF, Word (.docx), foto (JPG o PNG) o texto.")}
 
   function instr(conImg){return`Eres asistente de la Plataforma de Gestión Borde Costero (relacionamiento con pesca artesanal, región de Antofagasta, Chile). Lee esta minuta de reunión${conImg?" (viene como imágenes; puede estar escrita a mano)":""} y devuelve SOLO un objeto JSON válido, sin texto antes ni después, con esta forma:
-{"fecha":"AAAA-MM-DD o null","hora":"HH:MM o null","lugar":"texto o null","caleta":"El Cobre | Michilla | otra caleta | null","organizacion":"texto o null","otras_organizaciones":["..."],"participantes":[{"nombre":"...","cargo":"...","organizacion":"..."}],"temas":["..."],"resumen":"3 a 5 frases en español","acuerdos":[{"texto":"...","responsable":"... o null","plazo":"AAAA-MM-DD o texto o null"}],"transcripcion":"${conImg?"texto completo de la minuta tal como se lee, en español":""}","no_legible":["campos que no pudiste leer con seguridad"]}
+{"fecha":"AAAA-MM-DD o null","hora":"HH:MM o null","lugar":"texto o null","caleta":"El Cobre | Michilla | otra caleta | null","organizacion":"texto o null","otras_organizaciones":["..."],"participantes":[{"nombre":"...","cargo":"...","organizacion":"..."}],"temas":["..."],"resumen":"3 a 5 frases en español","acuerdos":[{"texto":"...","responsable":"... o null","plazo":"AAAA-MM-DD o texto o null"}],"transcripcion":"${conImg?"texto completo de la minuta tal como se lee, en español":""}","no_legible":["campos que no pudiste leer con seguridad"],"es_organizacion_pescadores":true o false}
 Reglas:
 - Organizaciones conocidas (usa exactamente este nombre si corresponde): ${ORG0.map(x=>x[1]+" (Caleta "+x[0]+")").join("; ")}.
 - "temas": elige solo de esta lista: ${TEMAS.join("; ")}.
 - Si un dato no aparece o no se puede leer con seguridad, usa null y agrégalo a "no_legible" (fecha, lugar, organizacion, participantes, temas, resumen o acuerdos). No inventes datos.
 - Fechas en formato AAAA-MM-DD; si el año no aparece, null.
+- "es_organizacion_pescadores": true si la reunión es con una organización de pescadores artesanales, buzos, recolectores, algueros o de una caleta (sindicato, cooperativa, asociación gremial, etc.); false si es con otro tipo de actor (familias, juntas de vecinos, empresas, servicios públicos, municipios, comunidades no pesqueras).
 - No incluyas RUT, teléfonos ni correos.`}
   function parseJ(t){const a=String(t||"").indexOf("{"),b=String(t||"").lastIndexOf("}");if(a<0||b<a)throw new Error("La IA no devolvió una ficha válida.");return JSON.parse(t.slice(a,b+1))}
 
@@ -5531,7 +5540,7 @@ Reglas:
     const PT={n:0,v:0,m:0,o:[]};{const om=new Map();MN.list.forEach(m=>{const pa=((m.datos||{}).acuerdos||[]).filter(a=>a.estado!=="cumplido");if(!pa.length)return;PT.m++;PT.n+=pa.length;PT.v+=pa.filter(vencido).length;const o=(m.datos||{}).organizacion||"Sin organización";om.set(o,(om.get(o)||0)+pa.length)});PT.o=[...om].sort((a,b)=>b[1]-a[1])}
     const byOrg=os.map(o=>{const l=MN.list.filter(m=>nrm((m.datos||{}).organizacion)===nrm(o.o));const last=l.map(m=>(m.datos||{}).fecha).filter(Boolean).sort().pop();const pe=l.reduce((s,m)=>s+((m.datos||{}).acuerdos||[]).filter(a=>a.estado!=="cumplido").length,0);return{...o,n:l.length,last,pe}});
     p.innerHTML=`<div class="card mn-head"><div class="tbar"><div><h2>Minutas de reuniones</h2><p class="cs">Reuniones con las organizaciones de pescadores. ${A?"Agrega una minuta (PDF, Word o foto) y la IA propone la ficha: fecha, lugar, organización, participantes, temas, acuerdos y resumen; tú la revisas antes de guardar.":"Busca por organización, fecha o palabras clave; pasa el cursor sobre un resultado para ver el detalle."}</p></div>
-        <div class="l">${A?`<button class="btn" id="mnBulkB" type="button">⇪ Carga masiva</button><button class="btn ghost" id="mnAdd" type="button">+ Agregar una</button>`:""}<button class="btn ghost small" id="mnCsv" type="button">Exportar CSV</button></div></div>
+        <div class="l">${A?`<button class="btn" id="mnBulkB" type="button">⇪ Carga masiva</button><button class="btn ghost" id="mnAdd" type="button">+ Agregar una</button>`:""}${A&&MN.list.length?`<button class="btn ghost small mn-delnp" id="mnNoPesca" type="button" title="Eliminar minutas de reuniones con actores que no son organizaciones de pescadores">🗑 Eliminar no pesqueras${(()=>{const n=MN.list.filter(noPesca).length;return n?` (${n})`:""})()}</button>`:""}<button class="btn ghost small" id="mnCsv" type="button">Exportar CSV</button></div></div>
         ${MN.warn?`<p class="warnbox">${esc(MN.warn)}</p>`:""}${A&&MN.ia===false?`<p class="cs mn-noia">${ART()?"La lectura con IA no está disponible en esta vista: puedes completar la ficha a mano.":"La lectura automática con IA requiere configurar ANTHROPIC_API_KEY en Vercel. Mientras tanto, completa la ficha a mano."}</p>`:""}
         <div class="mn-orgs">${byOrg.map(o=>`<button type="button" class="mn-org ${nrm(f.org)===nrm(o.o)?"on":""}" data-mnorg="${esc(o.o)}"><b>${esc(o.o)}</b><span>${o.c?"Caleta "+esc(o.c)+" · ":""}${o.n} minuta${o.n===1?"":"s"}${o.last?" · última: "+esc(fmtF(o.last)):""}${o.pe?` · <em>${o.pe} compromiso${o.pe===1?"":"s"} pendiente${o.pe===1?"":"s"}</em>`:""}</span></button>`).join("")}</div></div>
       ${PT.n?`<div class="mn-alert" role="alert"><span class="mn-al-ic" aria-hidden="true">!</span><div><p><b>${PT.n} compromiso${PT.n===1?"":"s"} pendiente${PT.n===1?"":"s"}</b> en ${PT.m} minuta${PT.m===1?"":"s"}${PT.v?` · <b>${PT.v} vencido${PT.v===1?"":"s"}</b>`:""}</p><span>${PT.o.slice(0,3).map(o=>esc(o[0])+" ("+o[1]+")").join(" · ")}${PT.o.length>3?" · …":""}</span></div><button type="button" class="btn small" id="mnVerPend">${f.soloPend?"Ver todas las minutas":"Ver compromisos pendientes"}</button></div>`:""}
@@ -5547,7 +5556,7 @@ Reglas:
       <div class="card"><div class="tbar"><h3>Resultados${help("Pasa el cursor (o toca) un resultado para ver organización, lugar, fecha, participantes y resumen. Desde ahí puedes ver o descargar la minuta original.")}</h3></div>
         ${!activo&&MN.list.length?`<div class="mn-idle"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><p><b>Busca para ver las minutas.</b> Escribe palabras clave, elige caleta, organización, tema o fechas, o haz clic en una organización${PT.n?" o en «Ver compromisos pendientes»":""}.</p></div>`:res.length?`<div class="mn-list">${res.slice(0,(MN.page+1)*30).map(m=>{const d=m.datos||{},pa=(d.acuerdos||[]).filter(a=>a.estado!=="cumplido"),pv=pa.filter(vencido).length,op=MN.open.has(m.id);return`<article class="mn-it${pa.length?" pend":""}${op?" open":""}" data-mnid="${esc(m.id)}" tabindex="0">
           ${pa.length?`<div class="mn-pb"><span>!</span>${pa.length} compromiso${pa.length===1?"":"s"} pendiente${pa.length===1?"":"s"}${pv?` · ${pv} vencido${pv===1?"":"s"}`:""}</div>`:""}
-          <div class="mn-ih"><span class="mn-date">${esc(fmtF(d.fecha))}</span><b>${esc(d.organizacion||"Organización sin identificar")}</b>${d.caleta?`<span class="tg">Caleta ${esc(d.caleta)}</span>`:""}${d.lugar?`<span class="cs">· ${esc(d.lugar)}</span>`:""}${(d.pendientes||[]).length?`<span class="mn-miss-t">Por completar: ${esc(d.pendientes.join(", "))}</span>`:""}</div>
+          <div class="mn-ih"><span class="mn-date">${esc(fmtF(d.fecha))}</span><b>${esc(d.organizacion||"Organización sin identificar")}</b>${d.caleta?`<span class="tg">Caleta ${esc(d.caleta)}</span>`:""}${d.lugar?`<span class="cs">· ${esc(d.lugar)}</span>`:""}${noPesca(m)?`<span class="mn-np-t" title="La organización no parece ser de pescadores">No pesquera</span>`:""}${(d.pendientes||[]).length?`<span class="mn-miss-t">Por completar: ${esc(d.pendientes.join(", "))}</span>`:""}</div>
           <p class="mn-sn">${snip(m)}</p>
           <div class="mn-if">${(d.temas||[]).map(t=>`<span class="tg">${esc(t)}</span>`).join("")}${(d.acuerdos||[]).length?`<span class="cs">${d.acuerdos.length} acuerdo${d.acuerdos.length===1?"":"s"}${d.acuerdos.some(a=>a.estado!=="cumplido")?` (${d.acuerdos.filter(a=>a.estado!=="cumplido").length} pendiente${d.acuerdos.filter(a=>a.estado!=="cumplido").length===1?"":"s"})`:""}</span>`:""}
             <span class="mn-act">${m.archivo?`<button type="button" class="lnk" data-mnver="${esc(m.id)}">Ver original</button><button type="button" class="lnk" data-mndl="${esc(m.id)}">Descargar</button>`:`<span class="cs">Sin archivo</span>`}${A?`<button type="button" class="lnk" data-mned="${esc(m.id)}">Editar</button><button type="button" class="lnk mn-del" data-mndel="${esc(m.id)}">Eliminar</button>`:""}</span></div>
@@ -5585,6 +5594,24 @@ Reglas:
   async function verifDel(v){if(ART()){if(v.archivo&&v.archivo.partes)for(let i=0;i<v.archivo.partes;i++){try{await S.db.doc(`minutasf/${v.vid}/partes/p${i}`).delete()}catch(e){}}}}
   function host(){return MN.inl?document.querySelector(`.mn-it[data-mnid="${CSS.escape(MN.inl)}"] .mn-inl`):document.getElementById("mnModal")}
   function cerrarEditor(){if(MN.inl){MN.inl=null;MN.edit=null;mnRender()}else{const o=document.getElementById("mnModal");if(o)o.hidden=true;MN.edit=null}}
+
+  /* ---------- Minutas que no corresponden a organizaciones de pescadores ---------- */
+  const RX_PESCA=/pescador|pesca|sindicato|cooperativa|\bsti\b|buzo|mariscador|recolector|alguer|caleta|gremial|\ba\.?\s?g\.?\b|armador|tripulante|ribere/;
+  function noPesca(m){const d=m.datos||{};if(d.esPesca===true)return false;if(d.esPesca===false)return true;const o=nrm(d.organizacion);if(!o)return false;if(ORG0.some(x=>nrm(x[1])===o))return false;return!RX_PESCA.test(o)}
+  function npOpen(){const cand=MN.list.filter(noPesca),sinOrg=MN.list.filter(m=>!(m.datos||{}).organizacion);let ov=document.getElementById("mnNP");if(!ov){ov=document.createElement("div");ov.id="mnNP";ov.className="overlay";document.body.appendChild(ov)}
+    const row=(m,chk)=>{const d=m.datos||{};return`<label class="mn-npr"><input type="checkbox" value="${esc(m.id)}" ${chk?"checked":""}><span><b>${esc(d.organizacion||"Organización sin identificar")}</b> · ${esc(fmtF(d.fecha))}${d.lugar?" · "+esc(d.lugar):""}<small>${m.archivo_nombre?"Archivo «"+esc(m.archivo_nombre)+"»":"Sin archivo"}${d.esPesca===false?" · la IA indicó que no es una organización de pescadores":""}</small></span></label>`};
+    ov.innerHTML=`<div class="modal mn-npm" role="dialog" aria-modal="true" aria-labelledby="mnNPT"><h2 id="mnNPT">Eliminar minutas que no son de organizaciones de pescadores</h2>
+      <p class="cs">Se listan las minutas cuya organización no parece ser de pescadores (no menciona sindicato, cooperativa, pescadores, buzos, recolectores, caleta, etc.) o que la IA marcó así. Revisa la lista y desmarca las que quieras conservar. Se eliminan la ficha, el archivo original y los verificadores.</p>
+      ${cand.length?`<div class="mn-npl"><div class="mn-nph"><b>Detectadas (${cand.length})</b><span><button type="button" class="lnk" data-npall="1">Marcar todas</button> · <button type="button" class="lnk" data-npall="0">Desmarcar todas</button></span></div>${cand.map(m=>row(m,true)).join("")}</div>`:`<p class="mn-msg">No se detectaron minutas de organizaciones no pesqueras.</p>`}
+      ${sinOrg.length?`<details class="mn-npl"><summary><b>Sin organización identificada (${sinOrg.length})</b> <span class="cs">— revisa y marca si corresponde</span></summary>${sinOrg.map(m=>row(m,false)).join("")}</details>`:""}
+      <div class="row"><button type="button" class="btn ghost" id="mnNPx">Cancelar</button><button type="button" class="btn danger" id="mnNPgo">Eliminar seleccionadas</button></div></div>`;
+    ov.hidden=false;const upd=()=>{const n=ov.querySelectorAll(".mn-npr input:checked").length;const b=ov.querySelector("#mnNPgo");b.textContent=`Eliminar seleccionadas (${n})`;b.disabled=!n};upd();
+    ov.onchange=upd;ov.onclick=async ev=>{const a=ev.target.closest("[data-npall]");if(a){ov.querySelectorAll(".mn-npl:not(details) .mn-npr input").forEach(i=>i.checked=a.dataset.npall==="1");upd();return}
+      if(ev.target.closest("#mnNPx")){ov.hidden=true;return}
+      if(ev.target.closest("#mnNPgo")){const ids=[...ov.querySelectorAll(".mn-npr input:checked")].map(i=>i.value);if(!ids.length)return;
+        if(!await askYN(`¿Estás seguro de eliminar <b>${ids.length} minuta${ids.length===1?"":"s"}</b>? Se eliminan también sus archivos originales y verificadores. Esta acción no se puede deshacer.`,{title:"Eliminar minutas",danger:true,si:"Sí, eliminar",no:"No"}))return;
+        const b=ov.querySelector("#mnNPgo");b.disabled=true;let ok=0,er=0;for(const id of ids){const m=MN.list.find(x=>x.id===id);if(!m)continue;b.textContent=`Eliminando… ${ok+er+1} de ${ids.length}`;try{await ST2.del(m);MN.list=MN.list.filter(x=>x.id!==id);MN.open.delete(id);ok++}catch(e){er++}}
+        ov.hidden=true;toast(`${ok} minuta${ok===1?"":"s"} eliminada${ok===1?"":"s"}${er?` · ${er} no se pudieron eliminar`:""}.`);mnRender()}}}
 
   /* ---------- Calendario de rango (desde – hasta) ---------- */
   const MESC=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
@@ -5712,7 +5739,7 @@ Reglas:
     const cal=String(out.caleta||"");set("caleta",/cobre/i.test(cal)?"El Cobre":/michilla/i.test(cal)?"Michilla":cal||null);
     if(out.organizacion){const no=nrm(out.organizacion);const k=ORG0.find(o=>no.includes(nrm(o[1]).split(" ")[0].slice(0,6))&&no.includes(nrm(o[0]).split(" ").pop()));d.organizacion=k?k[1]:out.organizacion;if(k&&!d.caleta)d.caleta=k[0]}
     set("participantes",(out.participantes||[]).filter(p=>p&&p.nombre).map(p=>({nombre:String(p.nombre),cargo:String(p.cargo||""),organizacion:String(p.organizacion||"")})));
-    set("temas",(out.temas||[]).filter(t=>TEMAS.includes(t)));set("resumen",out.resumen);
+    set("temas",(out.temas||[]).filter(t=>TEMAS.includes(t)));set("resumen",out.resumen);if(typeof out.es_organizacion_pescadores==="boolean")d.esPesca=out.es_organizacion_pescadores;
     set("acuerdos",(out.acuerdos||[]).filter(a=>a&&a.texto).map(a=>({texto:String(a.texto),responsable:String(a.responsable||""),plazo:String(a.plazo||""),estado:"pendiente"})));
     const tx=(out.transcripcion||"").trim();r.texto=x.texto&&x.texto.replace(/\s/g,"").length>=300?x.texto:(tx||x.texto||"");
     const miss=new Set((out.no_legible||[]).map(s=>nrm(s).replace(/organizaci[oó]n/,"organizacion")));faltan(d).forEach(k=>miss.add(k));
@@ -5807,6 +5834,7 @@ Reglas:
     if(!t.closest)return;
     if(t.closest("#mnAdd")){abrirForm(null);return}
     if(t.closest("#mnBulkB")){bulkOpen();return}
+    if(t.closest("#mnNoPesca")){npOpen();return}
     if(t.closest("#mnVerPend")){MN.f.soloPend=!MN.f.soloPend;if(MN.f.soloPend)MN.list.forEach(m=>{if(((m.datos||{}).acuerdos||[]).some(a=>a.estado!=="cumplido"))MN.open.add(m.id)});MN.page=0;mnRender();return}
     const tg=t.closest("[data-mntog]");if(tg){const id=tg.dataset.mntog;popHide(0);if(MN.open.has(id)){if(MN.inl===id){MN.inl=null;MN.edit=null}MN.open.delete(id)}else MN.open.add(id);mnRender();return}
     const il=t.closest("[data-mninl]");if(il){popHide(0);const m=MN.list.find(x=>x.id===il.dataset.mninl);if(m){abrirForm(m,true);setTimeout(()=>{const c=document.querySelector(`.mn-it[data-mnid="${CSS.escape(m.id)}"] .mn-inl`);if(c){c.scrollIntoView({behavior:"smooth",block:"start"});const f=c.querySelector("#mF");if(f)f.focus({preventScroll:true})}},60)}return}
