@@ -1425,6 +1425,7 @@ svg text.val{fill:var(--ink-2);font-weight:700}
 .mn-rgf{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:8px}.mn-rgbt{display:flex;gap:6px}
 @media (max-width:719px){.mn-rgg{grid-template-columns:repeat(7,minmax(36px,1fr))}.mn-rgw{grid-column:1/-1}}
 .mn-rgm{align-content:start;align-self:start}.mn-rgms{align-items:flex-start}
+.mn-idle{display:flex;gap:14px;align-items:center;background:var(--brand-08);border:1px dashed var(--line);border-radius:12px;padding:18px}.mn-idle svg{width:34px;height:34px;flex:none;color:var(--brand-ink)}.mn-idle p{margin:0;font-size:.92rem;color:var(--ink-2)}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
@@ -5525,7 +5526,7 @@ Reglas:
     let s=i>=0?src.slice(Math.max(0,i-90),i+170):src.slice(0,240);let h=esc(s);words.forEach(w=>{const re=new RegExp("("+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&").split("").map(c=>{const m={a:"[aáà]",e:"[eéè]",i:"[iíì]",o:"[oóò]",u:"[uúüù]",n:"[nñ]"}[c];return m||c}).join("")+")","gi");h=h.replace(re,"<mark>$1</mark>")});return(i>90?"…":"")+h+"…"}
 
   function mnRender(){const p=document.querySelector('[data-pane="minutas"]');if(!p||S.tab!=="minutas")return;const who=(S.acct&&S.acct.usuario)||"";if(MN.loaded&&MN.u!==who){MN.loaded=false;MN.list=[]}MN.u=MN.u||who;if(!MN.loaded){p.innerHTML=`<div class="card"><p class="cs">Cargando minutas…</p></div>`;mnLoad();return}
-    const f=MN.f,os=orgs(),res=filtrar(),A=adm();
+    const f=MN.f,os=orgs(),A=adm(),activo=!!(f.cal||f.org||f.tema||f.d0||f.d1||f.soloPend||f.porComp||nrm(f.q).trim().length>=2),res=activo?filtrar():[];
     if(MN.inl&&MN.edit&&host())leerForm();
     const PT={n:0,v:0,m:0,o:[]};{const om=new Map();MN.list.forEach(m=>{const pa=((m.datos||{}).acuerdos||[]).filter(a=>a.estado!=="cumplido");if(!pa.length)return;PT.m++;PT.n+=pa.length;PT.v+=pa.filter(vencido).length;const o=(m.datos||{}).organizacion||"Sin organización";om.set(o,(om.get(o)||0)+pa.length)});PT.o=[...om].sort((a,b)=>b[1]-a[1])}
     const byOrg=os.map(o=>{const l=MN.list.filter(m=>nrm((m.datos||{}).organizacion)===nrm(o.o));const last=l.map(m=>(m.datos||{}).fecha).filter(Boolean).sort().pop();const pe=l.reduce((s,m)=>s+((m.datos||{}).acuerdos||[]).filter(a=>a.estado!=="cumplido").length,0);return{...o,n:l.length,last,pe}});
@@ -5542,9 +5543,9 @@ Reglas:
         <div class="mn-rgw"><span class="mn-rgl">Fechas</span><button type="button" class="mn-rgb${f.d0||f.d1?" on":""}" id="mnRgB" aria-haspopup="dialog" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2"/></svg><span>${rgTxt()}</span></button></div>
         <label class="mn-chk"><input type="checkbox" id="mnPend" ${f.soloPend?"checked":""}> Con compromisos pendientes</label><label class="mn-chk"><input type="checkbox" id="mnPC" ${f.porComp?"checked":""}> Por completar (${MN.list.filter(m=>((m.datos||{}).pendientes||[]).length).length})</label>
         <button type="button" class="btn ghost small" id="mnClr">✕ Limpiar filtros</button></div>
-        <p class="cs">${res.length} de ${MN.list.length} minuta${MN.list.length===1?"":"s"}</p></div>
+        <p class="cs">${activo?`${res.length} de ${MN.list.length} minuta${MN.list.length===1?"":"s"}`:`${MN.list.length} minuta${MN.list.length===1?"":"s"} cargada${MN.list.length===1?"":"s"} · usa la búsqueda o un filtro para verlas`}</p></div>
       <div class="card"><div class="tbar"><h3>Resultados${help("Pasa el cursor (o toca) un resultado para ver organización, lugar, fecha, participantes y resumen. Desde ahí puedes ver o descargar la minuta original.")}</h3></div>
-        ${res.length?`<div class="mn-list">${res.slice(0,(MN.page+1)*30).map(m=>{const d=m.datos||{},pa=(d.acuerdos||[]).filter(a=>a.estado!=="cumplido"),pv=pa.filter(vencido).length,op=MN.open.has(m.id);return`<article class="mn-it${pa.length?" pend":""}${op?" open":""}" data-mnid="${esc(m.id)}" tabindex="0">
+        ${!activo&&MN.list.length?`<div class="mn-idle"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><p><b>Busca para ver las minutas.</b> Escribe palabras clave, elige caleta, organización, tema o fechas, o haz clic en una organización${PT.n?" o en «Ver compromisos pendientes»":""}.</p></div>`:res.length?`<div class="mn-list">${res.slice(0,(MN.page+1)*30).map(m=>{const d=m.datos||{},pa=(d.acuerdos||[]).filter(a=>a.estado!=="cumplido"),pv=pa.filter(vencido).length,op=MN.open.has(m.id);return`<article class="mn-it${pa.length?" pend":""}${op?" open":""}" data-mnid="${esc(m.id)}" tabindex="0">
           ${pa.length?`<div class="mn-pb"><span>!</span>${pa.length} compromiso${pa.length===1?"":"s"} pendiente${pa.length===1?"":"s"}${pv?` · ${pv} vencido${pv===1?"":"s"}`:""}</div>`:""}
           <div class="mn-ih"><span class="mn-date">${esc(fmtF(d.fecha))}</span><b>${esc(d.organizacion||"Organización sin identificar")}</b>${d.caleta?`<span class="tg">Caleta ${esc(d.caleta)}</span>`:""}${d.lugar?`<span class="cs">· ${esc(d.lugar)}</span>`:""}${(d.pendientes||[]).length?`<span class="mn-miss-t">Por completar: ${esc(d.pendientes.join(", "))}</span>`:""}</div>
           <p class="mn-sn">${snip(m)}</p>
