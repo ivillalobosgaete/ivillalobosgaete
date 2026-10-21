@@ -1396,6 +1396,26 @@ svg text.val{fill:var(--ink-2);font-weight:700}
 .mn-cpa{display:flex;flex-wrap:wrap;gap:6px}.mn-cpa label.btn{cursor:pointer}.mn-okb{background:#2e7d32!important;color:#fff!important}
 .mn-fm-in{display:grid;gap:12px;border:2px solid var(--brand);border-radius:12px;padding:12px;background:#fff}.mn-fm-in h4{margin:0}
 .mn-alert p{margin:0}.mn-alert .btn.small,.mn-alert .btn{background:#fff!important;color:#b71c1c!important;border:0!important;font-weight:800}.mn-org em{color:#c62828!important;font-weight:800}
+
+.mn-rgw{display:grid;gap:3px;grid-column:span 2}.mn-rgl{font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.mn-rgb{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;font-size:.88rem;font-weight:600;color:var(--ink);text-align:left;min-height:36px}
+.mn-rgb svg{width:16px;height:16px;flex:none;color:var(--brand-ink)}.mn-rgb.on{border-color:var(--brand);box-shadow:0 0 0 2px var(--brand-soft)}
+.mn-rg{position:fixed;z-index:90;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 22px 50px -16px rgba(10,30,40,.45);padding:12px 14px;display:grid;gap:10px;width:max-content;max-width:calc(100vw - 24px)}
+.mn-rg.sheet{left:8px!important;right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px));top:auto!important;width:auto;max-height:88vh;overflow:auto}
+.mn-rgh{display:flex;gap:6px;align-items:center;justify-content:center}.mn-rgh select{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-weight:700;background:#fff}
+.mn-rgn{border:1px solid var(--line);background:#fff;border-radius:50%;width:32px;height:32px;font-size:1.2rem;line-height:1;color:var(--brand-ink)}
+.mn-rgms{display:flex;gap:18px;justify-content:center}
+.mn-rgm{display:grid;gap:6px}.mn-rgt{text-align:center;font-weight:800;font-size:.92rem}
+.mn-rgg{display:grid;grid-template-columns:repeat(7,38px);gap:2px}
+.mn-rgd{text-align:center;font-size:.68rem;font-weight:800;color:var(--muted);text-transform:uppercase;padding:2px 0}
+.mn-rgc{position:relative;height:36px;border:0;background:none;border-radius:8px;font-size:.86rem;font-weight:600;color:var(--ink)}
+.mn-rgc:hover{background:var(--brand-08)}.mn-rgc.hoy{box-shadow:inset 0 0 0 1px var(--brand)}
+.mn-rgc.in{background:var(--brand-soft);border-radius:0}.mn-rgc.sel{background:var(--brand);color:#fff}.mn-rgc.ini{border-radius:8px 0 0 8px}.mn-rgc.fin{border-radius:0 8px 8px 0}
+.mn-rgc.con::after{content:"";position:absolute;left:50%;bottom:4px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:#e8743b}.mn-rgc.sel.con::after{background:#fff}
+.mn-rgp{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.mn-rgf{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:8px}.mn-rgbt{display:flex;gap:6px}
+@media (max-width:719px){.mn-rgg{grid-template-columns:repeat(7,minmax(36px,1fr))}.mn-rgw{grid-column:1/-1}}
+.mn-rgm{align-content:start;align-self:start}.mn-rgms{align-items:flex-start}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
@@ -5492,7 +5512,7 @@ Reglas:
         <label>Caleta<select id="mnCal"><option value="">Todas</option>${cals().map(c=>`<option ${f.cal===c?"selected":""}>${esc(c)}</option>`).join("")}</select></label>
         <label>Organización<select id="mnOrgS"><option value="">Todas</option>${os.filter(o=>!f.cal||nrm(o.c)===nrm(f.cal)).map(o=>`<option ${nrm(f.org)===nrm(o.o)?"selected":""}>${esc(o.o)}</option>`).join("")}</select></label>
         <label>Tema<select id="mnTema"><option value="">Todos</option>${TEMAS.map(t=>`<option ${f.tema===t?"selected":""}>${esc(t)}</option>`).join("")}</select></label>
-        <label>Desde<input type="date" id="mnD0" value="${esc(f.d0)}"></label><label>Hasta<input type="date" id="mnD1" value="${esc(f.d1)}"></label>
+        <div class="mn-rgw"><span class="mn-rgl">Fechas</span><button type="button" class="mn-rgb${f.d0||f.d1?" on":""}" id="mnRgB" aria-haspopup="dialog" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2"/></svg><span>${rgTxt()}</span></button></div>
         <label class="mn-chk"><input type="checkbox" id="mnPend" ${f.soloPend?"checked":""}> Con compromisos pendientes</label><label class="mn-chk"><input type="checkbox" id="mnPC" ${f.porComp?"checked":""}> Por completar (${MN.list.filter(m=>((m.datos||{}).pendientes||[]).length).length})</label>
         <button type="button" class="btn ghost small" id="mnClr">✕ Limpiar filtros</button></div>
         <p class="cs">${res.length} de ${MN.list.length} minuta${MN.list.length===1?"":"s"}</p></div>
@@ -5537,6 +5557,50 @@ Reglas:
   async function verifDel(v){if(ART()){if(v.archivo&&v.archivo.partes)for(let i=0;i<v.archivo.partes;i++){try{await S.db.doc(`minutasf/${v.vid}/partes/p${i}`).delete()}catch(e){}}}}
   function host(){return MN.inl?document.querySelector(`.mn-it[data-mnid="${CSS.escape(MN.inl)}"] .mn-inl`):document.getElementById("mnModal")}
   function cerrarEditor(){if(MN.inl){MN.inl=null;MN.edit=null;mnRender()}else{const o=document.getElementById("mnModal");if(o)o.hidden=true;MN.edit=null}}
+
+  /* ---------- Calendario de rango (desde – hasta) ---------- */
+  const MESC=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  const isoD=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  const fCorta=s=>{if(!s)return"";const [y,m,d]=s.split("-");return`${+d} ${MESC[+m-1].slice(0,3)} ${y}`};
+  function rgTxt(){const f=MN.f;return f.d0&&f.d1?(f.d0===f.d1?fCorta(f.d0):`${fCorta(f.d0)} – ${fCorta(f.d1)}`):f.d0?`Desde ${fCorta(f.d0)}`:f.d1?`Hasta ${fCorta(f.d1)}`:"Todas las fechas"}
+  const RG={a:"",b:"",y:0,m:0,hov:""};
+  function rgOpen(){const f=MN.f;RG.a=f.d0;RG.b=f.d1;RG.hov="";const base=f.d1||f.d0||(MN.list.map(m=>(m.datos||{}).fecha).filter(Boolean).sort().pop())||isoD(new Date());const [y,m]=base.split("-").map(Number);
+    const two=innerWidth>=720;let mm=m-1-(two?1:0),yy=y;if(mm<0){mm+=12;yy--}RG.y=yy;RG.m=mm;
+    let el=document.getElementById("mnRg");if(!el){el=document.createElement("div");el.id="mnRg";el.className="mn-rg";el.setAttribute("role","dialog");el.setAttribute("aria-label","Elegir rango de fechas");document.body.appendChild(el)}
+    el.hidden=false;rgRender();const bt=document.getElementById("mnRgB");if(bt)bt.setAttribute("aria-expanded","true");rgPos()}
+  function rgPos(){const el=document.getElementById("mnRg"),bt=document.getElementById("mnRgB");if(!el||!bt||el.hidden)return;if(innerWidth<720){el.classList.add("sheet");el.style.left=el.style.top="";return}el.classList.remove("sheet");
+    const r=bt.getBoundingClientRect(),w=el.offsetWidth,h=el.offsetHeight;let x=Math.min(r.left,innerWidth-w-12),y=r.bottom+6;if(y+h>innerHeight-8)y=Math.max(8,r.top-h-6);el.style.left=Math.max(12,x)+"px";el.style.top=y+"px"}
+  function rgClose(){const el=document.getElementById("mnRg");if(el)el.hidden=true;const bt=document.getElementById("mnRgB");if(bt)bt.setAttribute("aria-expanded","false")}
+  function rgMonth(y,m){const con=new Map();MN.list.forEach(x=>{const f=(x.datos||{}).fecha;if(f)con.set(f,(con.get(f)||0)+1)});const first=new Date(y,m,1),off=(first.getDay()+6)%7,n=new Date(y,m+1,0).getDate(),hoy=isoD(new Date());
+    const lo=RG.a&&RG.b?RG.a:RG.a,hi=RG.a&&RG.b?RG.b:(RG.a&&RG.hov?(RG.hov>RG.a?RG.hov:RG.a):RG.a),lo2=RG.a&&!RG.b&&RG.hov&&RG.hov<RG.a?RG.hov:lo;
+    let h=`<div class="mn-rgm"><div class="mn-rgt">${MESC[m][0].toUpperCase()+MESC[m].slice(1)} ${y}</div><div class="mn-rgg">${["lu","ma","mi","ju","vi","sá","do"].map(d=>`<span class="mn-rgd">${d}</span>`).join("")}${"<span></span>".repeat(off)}`;
+    for(let d=1;d<=n;d++){const iso=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`,sel=iso===RG.a||iso===RG.b,inr=lo2&&hi&&iso>lo2&&iso<hi,c=con.get(iso);
+      h+=`<button type="button" class="mn-rgc${sel?" sel":""}${inr?" in":""}${iso===lo2&&hi&&hi!==lo2?" ini":""}${iso===hi&&lo2&&hi!==lo2?" fin":""}${iso===hoy?" hoy":""}${c?" con":""}" data-rgd="${iso}" title="${c?c+" minuta"+(c===1?"":"s"):""}">${d}</button>`}
+    return h+`</div></div>`}
+  function rgRender(){const el=document.getElementById("mnRg");if(!el)return;const two=innerWidth>=720;let y2=RG.y,m2=RG.m+1;if(m2>11){m2=0;y2++}
+    const yrs=[...new Set([...MN.list.map(m=>+(String((m.datos||{}).fecha||"").slice(0,4))).filter(Boolean),new Date().getFullYear()])].sort();const ymin=Math.min(...yrs,new Date().getFullYear()-5),ymax=new Date().getFullYear()+1;
+    const ya=new Date().getFullYear(),hoy=isoD(new Date()),d30=isoD(new Date(Date.now()-29*864e5)),d90=isoD(new Date(Date.now()-89*864e5));
+    el.innerHTML=`<div class="mn-rgh"><button type="button" class="mn-rgn" data-rgnav="-1" aria-label="Mes anterior">‹</button>
+        <select id="mnRgM" aria-label="Mes">${MESC.map((x,i)=>`<option value="${i}" ${i===RG.m?"selected":""}>${x[0].toUpperCase()+x.slice(1)}</option>`).join("")}</select>
+        <select id="mnRgY" aria-label="Año">${Array.from({length:ymax-ymin+1},(_,i)=>ymin+i).map(y=>`<option ${y===RG.y?"selected":""}>${y}</option>`).join("")}</select>
+        <button type="button" class="mn-rgn" data-rgnav="1" aria-label="Mes siguiente">›</button></div>
+      <div class="mn-rgms">${rgMonth(RG.y,RG.m)}${two?rgMonth(y2,m2):""}</div>
+      <div class="mn-rgp">${[["Últimos 30 días",d30,hoy],["Últimos 90 días",d90,hoy],[`Año ${ya}`,`${ya}-01-01`,`${ya}-12-31`],[`Año ${ya-1}`,`${ya-1}-01-01`,`${ya-1}-12-31`]].map(x=>`<button type="button" class="qchip${RG.a===x[1]&&RG.b===x[2]?" on":""}" data-rgp="${x[1]}|${x[2]}">${x[0]}</button>`).join("")}</div>
+      <div class="mn-rgf"><span class="cs">${RG.a&&!RG.b?"Ahora elige la fecha <b>hasta</b> (o aplica para un solo día).":RG.a&&RG.b?`<b>${fCorta(RG.a)}${RG.a!==RG.b?" – "+fCorta(RG.b):""}</b>`:"Elige la fecha <b>desde</b>. Los días con punto tienen minutas."}</span>
+        <span class="mn-rgbt"><button type="button" class="btn ghost small" data-rgx="clr">Limpiar</button><button type="button" class="btn ghost small" data-rgx="cancel">Cancelar</button><button type="button" class="btn small" data-rgx="ok">Aplicar</button></span></div>`;
+    el.querySelector("#mnRgM").onchange=e=>{RG.m=+e.target.value;rgRender()};el.querySelector("#mnRgY").onchange=e=>{RG.y=+e.target.value;rgRender()};rgPos()}
+  function rgApply(){if(RG.a&&!RG.b)RG.b=RG.a;MN.f.d0=RG.a||"";MN.f.d1=RG.b||"";MN.page=0;rgClose();mnRender()}
+  document.addEventListener("click",ev=>{const t=ev.target;if(!t.closest)return;
+    if(t.closest("#mnRgB")){ev.stopPropagation();const el=document.getElementById("mnRg");if(el&&!el.hidden)rgClose();else rgOpen();return}
+    const el=document.getElementById("mnRg");if(!el||el.hidden)return;
+    if(!t.closest("#mnRg")){rgClose();return}
+    const d=t.closest("[data-rgd]");if(d){const v=d.dataset.rgd;if(!RG.a||RG.b){RG.a=v;RG.b=""}else if(v<RG.a){RG.b=RG.a;RG.a=v}else RG.b=v;RG.hov="";rgRender();return}
+    const nv=t.closest("[data-rgnav]");if(nv){RG.m+= +nv.dataset.rgnav;if(RG.m<0){RG.m=11;RG.y--}if(RG.m>11){RG.m=0;RG.y++}rgRender();return}
+    const pr=t.closest("[data-rgp]");if(pr){[RG.a,RG.b]=pr.dataset.rgp.split("|");rgApply();return}
+    const x=t.closest("[data-rgx]");if(x){const k=x.dataset.rgx;if(k==="clr"){RG.a=RG.b="";rgApply()}else if(k==="cancel")rgClose();else rgApply()}},true);
+  document.addEventListener("pointerover",ev=>{if(ev.pointerType!=="mouse")return;const d=ev.target.closest&&ev.target.closest("#mnRg [data-rgd]");if(!d||!RG.a||RG.b)return;if(RG.hov!==d.dataset.rgd){RG.hov=d.dataset.rgd;const el=document.getElementById("mnRg");el.querySelectorAll("[data-rgd]").forEach(b=>{const v=b.dataset.rgd,lo=RG.hov<RG.a?RG.hov:RG.a,hi=RG.hov<RG.a?RG.a:RG.hov;b.classList.toggle("in",v>lo&&v<hi)})}});
+  document.addEventListener("keydown",ev=>{if(ev.key==="Escape")rgClose()});
+  addEventListener("resize",()=>{const el=document.getElementById("mnRg");if(el&&!el.hidden)rgRender()});
 
   /* ---------- Ventana emergente (hover / toque) ---------- */
   let popT=null,popFor=null;const PXY={x:0,y:0};document.addEventListener("pointermove",ev=>{if(ev.pointerType==="mouse"&&!(ev.target.closest&&ev.target.closest("#mnPop"))){PXY.x=ev.clientX;PXY.y=ev.clientY}},{passive:true});
@@ -5707,7 +5771,7 @@ Reglas:
   document.addEventListener("change",ev=>{const t=ev.target,F=MN.f;if(!t.closest||!t.closest('[data-pane="minutas"]'))return;
     if(t.dataset&&t.dataset.mnvu){const fl=t.files&&t.files[0];if(fl)verifUp(t.dataset.mnvu,fl);t.value="";return}
     if(t.closest(".mn-inl"))return;
-    if(t.id==="mnCal"){F.cal=t.value;if(F.org&&!orgs().some(o=>nrm(o.o)===nrm(F.org)&&(!F.cal||nrm(o.c)===nrm(F.cal))))F.org=""}else if(t.id==="mnOrgS")F.org=t.value;else if(t.id==="mnTema")F.tema=t.value;else if(t.id==="mnD0")F.d0=t.value;else if(t.id==="mnD1")F.d1=t.value;else if(t.id==="mnPend")F.soloPend=t.checked;else if(t.id==="mnPC")F.porComp=t.checked;else return;MN.page=0;mnRender()});
+    if(t.id==="mnCal"){F.cal=t.value;if(F.org&&!orgs().some(o=>nrm(o.o)===nrm(F.org)&&(!F.cal||nrm(o.c)===nrm(F.cal))))F.org=""}else if(t.id==="mnOrgS")F.org=t.value;else if(t.id==="mnTema")F.tema=t.value;else if(t.id==="mnPend")F.soloPend=t.checked;else if(t.id==="mnPC")F.porComp=t.checked;else return;MN.page=0;mnRender()});
   document.addEventListener("click",async ev=>{const t=ev.target;
     const pc=t.closest&&t.closest(".mnp-x");if(pc){popHide(0);return}
     const ver=t.closest&&t.closest("[data-mnver]");if(ver){ev.stopPropagation();verOrig(ver.dataset.mnver,false);return}
