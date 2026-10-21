@@ -59,6 +59,32 @@ async function capasDeServicio(u, t, out) {
   const j = await getJ(u + "?f=json");
   for (const l of j.layers || []) if (!l.subLayerIds) out.push({ u: u + "/" + l.id, t: (t ? t + " · " : "") + l.name });
 }
+// Geoportal de Subpesca (el mismo que usa su visor IDE, mapas.subpesca.cl/ideviewer): todas las capas públicas
+// de la carpeta IDE_PUBLICO, descubiertas desde el catálogo REST y recortadas al área de interés (regiones II a IV).
+const SUB = process.env.GEO_BASE || "https://geoportal.subpesca.cl/server/rest/services/IDE_PUBLICO/";
+const SUB_BBOX = process.env.SUB_BBOX || "-72.8,-32.6,-67.9,-20.9";
+const SUB_G = "Subpesca · ";
+const bonito = (t) => String(t || "").replace(/^.*\./, "").replace(/^(SRMPUB|IDE|REP)_/i, "").replace(/_/g, " ").replace(/\s+/g, " ").trim().toLowerCase().replace(/^./, (c) => c.toUpperCase()).replace(/\b(amerb|ecmpo|amcp|aaa|ama|ssp|rae|ppa|aappa|ccmm)\b/gi, (m) => m.toUpperCase());
+let SP = null;
+async function subCapas() {
+  if (SP && Date.now() - SP.t < 12 * 3600e3) return SP.d;
+  const cat = await getJ(SUB + "?f=json");
+  const svcs = (cat.services || []).filter((x) => /MapServer|FeatureServer/.test(x.type));
+  const res = [];
+  await Promise.all(svcs.map(async (sv) => {
+    const nm = String(sv.name).split("/").pop(), base = SUB + nm + "/" + sv.type;
+    try {
+      const j = await getJ(base + "/layers?f=json");
+      for (const l of j.layers || []) {
+        if (!l.geometryType || (l.type && l.type !== "Feature Layer") || (l.capabilities && !/Query/i.test(l.capabilities))) continue;
+        res.push({ k: "sp_" + nm.replace(/[^A-Za-z0-9]/g, "") + "_" + l.id, n: bonito(l.name) || nm, g: SUB_G + bonito(nm), u: base + "/" + l.id, sub: true });
+      }
+    } catch { /* servicio no disponible */ }
+  }));
+  res.sort((a, b) => a.g.localeCompare(b.g, "es") || a.n.localeCompare(b.n, "es"));
+  SP = { t: Date.now(), d: res };
+  return res;
+}
 let ZBC = null;
 async function zbcCapas() {
   if (ZBC && Date.now() - ZBC.t < 12 * 3600e3) return ZBC.d;
@@ -95,24 +121,28 @@ async function zbcCapas() {
 }
 async function catalogo() {
   const of = Object.entries(CAPAS).map(([k, c]) => ({ k, ...c }));
-  let z = [], zErr = "";
-  try { z = await zbcCapas(); } catch (e) { zErr = String(e.message || e); }
-  return { lista: [...z, ...of], zErr };
+  let z = [], zErr = "", sp = [], spErr = "";
+  await Promise.all([
+    zbcCapas().then((x) => { z = x; }).catch((e) => { zErr = String(e.message || e); }),
+    subCapas().then((x) => { sp = x; }).catch((e) => { spErr = String(e.message || e); }),
+  ]);
+  return { lista: [...z, ...of, ...sp], zErr, spErr };
 }
 
 async function capa(k) {
-  const c = k.startsWith("zbc_") ? (await zbcCapas()).find((x) => x.k === k) : CAPAS[k]; if (!c) throw new Error("Capa desconocida");
+  const c = k.startsWith("zbc_") ? (await zbcCapas()).find((x) => x.k === k) : k.startsWith("sp_") ? (await subCapas()).find((x) => x.k === k) : CAPAS[k]; if (!c) throw new Error("Capa desconocida");
+  const env = c.sub ? `&geometry=${encodeURIComponent(SUB_BBOX)}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects` : "";
   const hit = cache.get(k); if (hit && Date.now() - hit.t < 12 * 3600e3) return hit.d;
   const feats = [];
   for (let off = 0; off < 20000; off += 1000) {
-    const u = `${c.u}/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&maxAllowableOffset=0.00015&geometryPrecision=5&resultOffset=${off}&resultRecordCount=1000&f=json`;
+    const u = `${c.u}/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&maxAllowableOffset=0.00015&geometryPrecision=5${env}&resultOffset=${off}&resultRecordCount=1000&f=json`;
     const r = await fetch(u, { signal: AbortSignal.timeout(20000), headers: UA });
     if (!r.ok) throw new Error("GeoIDE MINVU " + r.status);
     const j = await r.json(); if (j.error) throw new Error((j.error && j.error.message) || "GeoIDE MINVU");
-    for (const f of j.features || []) { const g = toGeo(f.geometry); if (g) feats.push({ type: "Feature", properties: f.attributes || {}, geometry: g }); }
+    for (const f of j.features || []) { const g = toGeo(f.geometry); if (!g) continue; let pr = f.attributes || {}; if (c.sub) { const q = {}; for (const [a, v] of Object.entries(pr)) q[a.replace(/^.*\./, "")] = v; pr = q; } feats.push({ type: "Feature", properties: pr, geometry: g }); }
     if (!j.exceededTransferLimit && (j.features || []).length < 1000) break;
   }
-  const d = { type: "FeatureCollection", nombre: c.n, grupo: c.g, fuente: k.startsWith("zbc_") ? "Anteproyecto ZBC Antofagasta (ArcGIS Online)" : "GeoIDE MINVU (" + c.u.replace(G, "") + ")", obtenido: new Date().toISOString(), features: feats };
+  const d = { type: "FeatureCollection", nombre: c.n, grupo: c.g, fuente: k.startsWith("zbc_") ? "Anteproyecto ZBC Antofagasta (ArcGIS Online)" : c.sub ? "Geoportal Subpesca (" + c.u.replace(SUB, "") + ")" : "GeoIDE MINVU (" + c.u.replace(G, "") + ")", obtenido: new Date().toISOString(), features: feats };
   cache.set(k, { t: Date.now(), d });
   return d;
 }
@@ -137,7 +167,7 @@ export default handler(async (req, res) => {
   const me = await current(req);
   if (!me) return send(res, 401, { error: "Sin sesión" });
   const u = new URL(req.url, "http://x");
-  if (u.searchParams.get("capas")) { const c = await catalogo(); return send(res, 200, { capas: c.lista.map((x) => ({ k: x.k, n: x.n, g: x.g, f: x.k.startsWith("zbc_") ? "Anteproyecto ZBC (GORE Antofagasta)" : "GeoIDE MINVU" })), zbcErr: c.zErr, mar: !!(process.env.OPENMETEO_APIKEY || process.env.OPENMETEO_FREE === "1") }); }
+  if (u.searchParams.get("capas")) { const c = await catalogo(); return send(res, 200, { capas: c.lista.map((x) => ({ k: x.k, n: x.n, g: x.g, f: x.k.startsWith("zbc_") ? "Anteproyecto ZBC (GORE Antofagasta)" : x.sub ? "Geoportal Subpesca" : "GeoIDE MINVU" })), zbcErr: c.zErr, spErr: c.spErr, mar: !!(process.env.OPENMETEO_APIKEY || process.env.OPENMETEO_FREE === "1") }); }
   const k = u.searchParams.get("capa");
   if (k) { try { return send(res, 200, await capa(k), { "Cache-Control": "private, max-age=3600" }); } catch (e) { return send(res, 502, { error: String(e.message || e) }); } }
   if (u.searchParams.get("mar")) {
