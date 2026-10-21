@@ -1475,6 +1475,13 @@ svg text.val{fill:var(--ink-2);font-weight:700}
 .bc-ord>*{min-width:0}[data-pane="borde"] .tbar{flex-wrap:wrap;gap:8px}[data-pane="borde"] .tbl{max-width:100%;overflow:auto}
 [data-pane="borde"] .card{min-width:0}[data-pane="borde"] .card>*{min-width:0;max-width:100%}
 [data-pane="borde"] .card{grid-template-columns:minmax(0,1fr)}
+
+.bc-mapc{position:relative}.bc-mapc .leaflet-container{cursor:grab}
+.bc-mbtn a{font-weight:800;font-size:16px;line-height:30px!important;text-decoration:none;color:#0b2230}
+.bc-mapc.bc-full{position:fixed;inset:0;z-index:88;border-radius:0;margin:0;padding:8px}.bc-mapc.bc-full .bc-map{height:calc(100vh - 16px)!important}
+body.bc-noscroll{overflow:hidden}
+.bc-mapc::after{content:"Rueda del mouse: acercar o alejar · arrastra para moverte";position:absolute;left:50%;transform:translateX(-50%);top:24px;font-size:.7rem;background:rgba(255,255,255,.85);border-radius:6px;padding:2px 6px;color:#33505e;pointer-events:none;z-index:500}
+.bc-mapc.bc-full::after{display:none}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
@@ -6069,13 +6076,23 @@ Compromisos: ${(d.acuerdos||[]).map(a=>`- ${a.texto} | responsable: ${a.responsa
       <div class="card bc-cruce"><div class="tbar"><h3>Caletas y ordenamiento${help("Para cada caleta con ubicación, indica en qué zona de cada capa activa se encuentra o cuál es la zona más cercana (hasta 3 km).")}</h3></div><p class="concl" id="bcCruceC"></p><div id="bcCruce">${act.length?"":`<p class="cs">Activa una o más capas para ver en qué zona queda cada caleta.</p>`}</div></div>
       <div class="card bc-ins"><div class="tbar"><h3>Instrumentos territoriales${help("Seguimiento de los instrumentos de planificación del borde costero: zonificación, planes reguladores, seccionales, etc. Registra su estado, etapa y próxima fecha.")}</h3>${A?`<button type="button" class="btn small" id="bcInsAdd">+ Agregar instrumento</button>`:""}</div><div id="bcIns"></div></div></div>`;
     insRender();bcMap(act,cal);cruce(act,cal)}
+  function bcFit(m){if(!BC.map)return;const cal=BC.cal||[];const pts=(m==="reg"?cal.filter(c=>c.lat>-26.2&&c.lat<-21):cal).map(c=>[c.lat,c.lon]);if(pts.length)BC.map.fitBounds(pts,{padding:[30,30],maxZoom:12});else BC.map.setView([-23.6,-70.4],8)}
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"){const c=document.querySelector(".bc-mapc.bc-full");if(c){c.classList.remove("bc-full");document.body.classList.remove("bc-noscroll");setTimeout(()=>BC.map&&BC.map.invalidateSize(),80)}}});
   async function bcMap(act,cal){const el=document.getElementById("bcMap");if(!el)return;let L0=null;try{L0=LL()?await LL()():window.L}catch(e){L0=null}if(!L0){el.innerHTML=`<p class="cs">No se pudo cargar el mapa.</p>`;return}if(!L0||!document.getElementById("bcMap"))return;
-    if(!BC.map||BC.map.getContainer()!==el){if(BC.map)try{BC.map.remove()}catch(e){}BC.map=L0.map(el,{scrollWheelZoom:false});L0.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,referrerPolicy:"strict-origin-when-cross-origin",attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(BC.map);BC.lay=new Map();BC.calL=null;
-      const pts=cal.map(c=>[c.lat,c.lon]);if(pts.length)BC.map.fitBounds(pts,{padding:[30,30]});else BC.map.setView([-23.6,-70.4],8)}
+    if(!BC.map||BC.map.getContainer()!==el){if(BC.map){try{BC.view={c:BC.map.getCenter(),z:BC.map.getZoom()};BC.map.remove()}catch(e){}}
+      BC.map=L0.map(el,{scrollWheelZoom:true,wheelPxPerZoomLevel:90,zoomSnap:.5,zoomDelta:.5,doubleClickZoom:true,dragging:true,tap:true});
+      const osm=L0.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,referrerPolicy:"strict-origin-when-cross-origin",attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'});
+      const sat=L0.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,attribution:"Imágenes &copy; Esri, Maxar, Earthstar Geographics"});
+      (BC.base==="sat"?sat:osm).addTo(BC.map);BC.map.on("baselayerchange",e=>{BC.base=e.layer===sat?"sat":"osm"});
+      L0.control.layers({"Mapa":osm,"Satélite":sat},null,{position:"topright"}).addTo(BC.map);L0.control.scale({imperial:false,position:"bottomleft"}).addTo(BC.map);
+      const Btn=L0.Control.extend({options:{position:"topleft"},onAdd(){const d=L0.DomUtil.create("div","leaflet-bar bc-mbtn");d.innerHTML=`<a href="#" role="button" title="Ver Región de Antofagasta" data-mv="reg">◎</a><a href="#" role="button" title="Ver todas las caletas" data-mv="all">⌂</a><a href="#" role="button" title="Pantalla completa" data-mv="fs">⛶</a>`;L0.DomEvent.disableClickPropagation(d);
+        d.addEventListener("click",ev=>{const a=ev.target.closest("[data-mv]");if(!a)return;ev.preventDefault();const m=a.dataset.mv;if(m==="fs"){const c=document.querySelector(".bc-mapc");c.classList.toggle("bc-full");document.body.classList.toggle("bc-noscroll",c.classList.contains("bc-full"));setTimeout(()=>BC.map.invalidateSize(),80)}else bcFit(m)});return d}});
+      new Btn().addTo(BC.map);BC.lay=new Map();BC.calL=null;BC.cal=cal;
+      if(BC.view)BC.map.setView(BC.view.c,BC.view.z);else bcFit("reg")}
     if(!BC.calL){BC.calL=L0.layerGroup(cal.map(c=>L0.circleMarker([c.lat,c.lon],{radius:6,color:"#0b2230",weight:2,fillColor:"#ffd54f",fillOpacity:1}).bindTooltip(`<b>${esc(c.n)}</b> · ${esc(c.com)}`))).addTo(BC.map)}
     for(const [k,l] of BC.lay){if(!BC.on.has(k)){BC.map.removeLayer(l);BC.lay.delete(k)}}
     for(const c of act){if(BC.lay.has(c.key))continue;const gj=BC.geo.get(c.key)||await geoDe(c.key);if(!gj||!BC.on.has(c.key)||BC.lay.has(c.key))continue;
-      const l=L0.geoJSON(gj,{style:f=>({color:c.col,weight:1.5,fillColor:c.col,fillOpacity:.18}),pointToLayer:(f,ll)=>L0.circleMarker(ll,{radius:5,color:c.col}),onEachFeature:(f,ly)=>{const e=etiqueta(f.properties);ly.bindPopup(`<div class="mpop"><b>${esc(c.n)}</b>${e?`<br>Zona: <b>${esc(e)}</b>`:""}<div class="bc-attr">${attrsHtml(f.properties)}</div></div>`,{maxWidth:340})}}).addTo(BC.map);BC.lay.set(c.key,l)}
+      const l=L0.geoJSON(gj,{style:f=>({color:c.col,weight:1.5,fillColor:c.col,fillOpacity:.18}),pointToLayer:(f,ll)=>L0.circleMarker(ll,{radius:5,color:c.col}),onEachFeature:(f,ly)=>{const e=etiqueta(f.properties);ly.bindPopup(`<div class="mpop"><b>${esc(c.n)}</b>${e?`<br>Zona: <b>${esc(e)}</b>`:""}<div class="bc-attr">${attrsHtml(f.properties)}</div></div>`,{maxWidth:340})}}).addTo(BC.map);BC.lay.set(c.key,l);if(BC.fitKey===c.key){BC.fitKey=null;try{const bb=l.getBounds();if(bb.isValid())BC.map.fitBounds(bb,{padding:[20,20],maxZoom:13})}catch(e){}}}
     if(BC.calL)BC.calL.bringToFront&&BC.calL.eachLayer(x=>x.bringToFront&&x.bringToFront());setTimeout(()=>BC.map&&BC.map.invalidateSize(),60)}
   async function cruce(act,cal){const box=document.getElementById("bcCruce");if(!box||!act.length){bcSetC("bcCruceC","");return}
     for(const c of act)if(!BC.geo.has(c.key))await geoDe(c.key);if(!document.getElementById("bcCruce"))return;
@@ -6199,7 +6216,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
     const ad=t.closest("[data-bcavdel]");if(ad){const r=(MN.avisos||[]).find(x=>x.id===ad.dataset.bcavdel);if(!r)return;if(!await askYN(`¿Eliminar el aviso «${esc(r.datos.titulo||"")}»?`,{title:"Eliminar aviso",danger:true,si:"Sí, eliminar",no:"No"}))return;try{await ST2.del(r);MN.avisos=MN.avisos.filter(x=>x.id!==r.id);bcRender()}catch(e){toast("No se pudo eliminar.")}return}
   });
   document.addEventListener("change",ev=>{const t=ev.target;if(!t.closest||!t.closest('[data-pane="borde"]'))return;
-    if(t.dataset&&t.dataset.bccap){const k=t.dataset.bccap;if(t.checked)BC.on.add(k);else BC.on.delete(k);ordRender();return}
+    if(t.dataset&&t.dataset.bccap){const k=t.dataset.bccap;if(t.checked){BC.on.add(k);BC.fitKey=k}else BC.on.delete(k);ordRender();return}
     if(t.id==="bcFAv"){BC.fAv=t.value;marRender()}});
   {const _st=setTab;setTab=function(t){_st(t);if(t==="borde"){["#fab","#period","#aside","#chips"].forEach(s=>{const e=document.querySelector(s);if(e)e.hidden=true});const l=document.querySelector(".layout");if(l)l.style.gridTemplateColumns="minmax(0,1fr)";bcRender()}}}
 
