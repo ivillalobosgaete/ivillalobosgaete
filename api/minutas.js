@@ -3,6 +3,7 @@
 // (nunca público: se entrega con enlaces firmados de corta duración y solo con sesión iniciada).
 // GET  /api/minutas                         → lista de fichas (cualquier usuario con sesión)
 // GET  /api/minutas?archivo=<id>[&dl=1]     → redirige a un enlace firmado (2 min) del archivo original
+// GET  /api/minutas?ruta=<ruta>&nombre=…[&dl=1] → enlace firmado de un verificador de compromiso
 // POST /api/minutas {accion:"subida", nombre, tipo}        → (admin) enlace firmado para subir el archivo
 // POST /api/minutas {accion:"ia", texto, imagenes:[b64]}   → (admin) lectura con IA (requiere ANTHROPIC_API_KEY; ANTHROPIC_WORKSPACE_ID si la clave no está asociada a un espacio de trabajo)
 // POST /api/minutas {accion:"guardar", ficha}              → (admin) crea o actualiza la ficha
@@ -47,6 +48,14 @@ export default handler(async (req, res) => {
   const u = new URL(req.url, "http://x");
 
   if (req.method === "GET") {
+    const ruta = u.searchParams.get("ruta");
+    if (ruta) {
+      if (!/^\d{4}\/[A-Za-z0-9._-]+$/.test(ruta)) return send(res, 400, { error: "Ruta no válida" });
+      const dl = u.searchParams.get("dl") === "1";
+      const s = await storage(`object/sign/${BUCKET}/${ruta}`, { expiresIn: 120 });
+      const url = SBU() + "/storage/v1" + s.signedURL + (dl ? "&download=" + encodeURIComponent(u.searchParams.get("nombre") || "verificador") : "");
+      res.statusCode = 302; res.setHeader("Location", url); res.setHeader("Cache-Control", "no-store"); return res.end();
+    }
     const aid = u.searchParams.get("archivo");
     if (aid) {
       const rows = await sb(`minutas?id=eq.${encodeURIComponent(aid)}&select=archivo,archivo_nombre`);
@@ -89,9 +98,12 @@ export default handler(async (req, res) => {
     return send(res, 200, { ok: true, id });
   }
   if (b.accion === "borrar") {
-    const rows = await sb(`minutas?id=eq.${encodeURIComponent(b.id)}&select=archivo`);
-    const a = rows && rows[0] && rows[0].archivo;
-    if (a) { try { await fetch(`${SBU()}/storage/v1/object/${BUCKET}`, { method: "DELETE", headers: hdr(), body: JSON.stringify({ prefixes: [a] }) }); } catch { /* el archivo puede no existir */ } }
+    const rows = await sb(`minutas?id=eq.${encodeURIComponent(b.id)}&select=archivo,datos`);
+    const r0 = rows && rows[0];
+    const rutas = [];
+    if (r0 && r0.archivo) rutas.push(r0.archivo);
+    for (const ac of ((r0 && r0.datos && r0.datos.acuerdos) || [])) for (const v of (ac.verificadores || [])) if (typeof v.archivo === "string") rutas.push(v.archivo);
+    if (rutas.length) { try { await fetch(`${SBU()}/storage/v1/object/${BUCKET}`, { method: "DELETE", headers: hdr(), body: JSON.stringify({ prefixes: rutas }) }); } catch { /* los archivos pueden no existir */ } }
     await sb(`minutas?id=eq.${encodeURIComponent(b.id)}`, { method: "DELETE", prefer: "return=minimal" });
     await logAct(me.usuario, "minuta eliminada", b.id);
     return send(res, 200, { ok: true });

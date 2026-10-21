@@ -1368,6 +1368,34 @@ svg text.val{fill:var(--ink-2);font-weight:700}
 .mn-btbl{max-height:46vh;overflow:auto}.mn-btbl td{font-size:.84rem}.mn-btbl tr.b-error td:nth-child(2){color:var(--down);font-weight:700}.mn-btbl tr.b-ok td:nth-child(2){color:var(--up);font-weight:700}
 .mn-dl{margin:8px 0;padding-left:18px;display:grid;gap:3px;font-size:.88rem;max-height:40vh;overflow:auto}.mn-rep{font-size:.72rem;font-weight:800;background:#e8f0ff;color:#1f4fa0;border-radius:999px;padding:1px 8px}.mn-btbl tr.b-dup td:nth-child(2),.mn-btbl tr.b-dup2 td:nth-child(2){color:#9a5b00;font-weight:800}.mn-btbl tr.b-omitida td{color:var(--muted)}
 #ynModal{z-index:92!important}
+
+.mn-alert{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:linear-gradient(135deg,#c62828,#e53935);color:#fff;border-radius:16px;padding:14px 18px;box-shadow:0 10px 28px -10px rgba(198,40,40,.7);animation:mnPulse 2.4s ease-in-out infinite}
+.mn-alert>div{flex:1;min-width:220px;display:grid;gap:2px;font-size:1rem}.mn-alert>div span{font-size:.82rem;opacity:.92}
+.mn-alert .btn{background:#fff;color:#b71c1c;border:0;font-weight:800}.mn-alert .btn:hover{background:#ffebee}
+.mn-al-ic{flex:none;width:34px;height:34px;border-radius:50%;background:#fff;color:#c62828;display:grid;place-items:center;font-weight:900;font-size:1.2rem}
+@keyframes mnPulse{0%,100%{box-shadow:0 10px 28px -10px rgba(198,40,40,.7)}50%{box-shadow:0 10px 34px -6px rgba(198,40,40,.95)}}
+@media (prefers-reduced-motion:reduce){.mn-alert{animation:none}}
+.mn-it.pend{border-left-color:#d32f2f;background:#fff8f8}
+.mn-pb{justify-self:start;display:inline-flex;align-items:center;gap:7px;background:#d32f2f;color:#fff;font-weight:800;font-size:.8rem;border-radius:999px;padding:3px 12px 3px 4px}
+.mn-pb span{width:18px;height:18px;border-radius:50%;background:#fff;color:#d32f2f;display:grid;place-items:center;font-weight:900;font-size:.75rem}
+.mn-tog{justify-self:start;border:0;background:none;color:var(--brand-ink);font-weight:800;font-size:.84rem;padding:2px 0;cursor:pointer}
+.mn-it.open{cursor:default}
+.mn-pan{border-top:1px dashed var(--line);padding-top:10px;display:grid;gap:10px;cursor:auto}
+.mn-ph{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.mn-ph h4{margin:0;font-size:.92rem}
+.mn-fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr));gap:8px}
+.mn-fields>div{background:var(--brand-08);border-radius:10px;padding:7px 10px;display:grid;gap:2px;min-width:0}.mn-fields>div>span{font-size:.68rem;font-weight:800;color:var(--muted);text-transform:uppercase}
+.mn-fields>div>b{font-weight:600;font-size:.86rem;overflow-wrap:anywhere}.mn-fields .mn-wide{grid-column:1/-1}.mn-fields .mn-miss{background:#fff3c4;box-shadow:inset 0 0 0 2px #f0c64a}
+.mn-cps{display:grid;gap:8px}
+.mn-cp{border:1px solid var(--line);border-left:5px solid #d32f2f;border-radius:10px;padding:9px 12px;display:grid;gap:5px;background:#fff}
+.mn-cp.ok{border-left-color:#2e7d32;background:#f6fbf6}.mn-cp.venc{border-left-color:#b71c1c;background:#fff1f1}
+.mn-cph{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.mn-cph b{font-weight:700;font-size:.9rem}
+.mn-cpe{font-size:.72rem;font-weight:900;border-radius:999px;padding:2px 9px;background:#d32f2f;color:#fff;white-space:nowrap}.mn-cp.ok .mn-cpe{background:#2e7d32}.mn-cp.venc .mn-cpe{background:#7f0000}
+.mn-obs{margin:0;font-size:.86rem;background:var(--brand-08);border-radius:8px;padding:6px 10px}
+.mn-obsed textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:.9rem}
+.mn-vfs{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}.mn-vf{display:inline-flex;gap:2px;align-items:center;background:var(--brand-08);border-radius:999px;padding:1px 8px}
+.mn-cpa{display:flex;flex-wrap:wrap;gap:6px}.mn-cpa label.btn{cursor:pointer}.mn-okb{background:#2e7d32!important;color:#fff!important}
+.mn-fm-in{display:grid;gap:12px;border:2px solid var(--brand);border-radius:12px;padding:12px;background:#fff}.mn-fm-in h4{margin:0}
+.mn-alert p{margin:0}.mn-alert .btn.small,.mn-alert .btn{background:#fff!important;color:#b71c1c!important;border:0!important;font-weight:800}.mn-org em{color:#c62828!important;font-weight:800}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
@@ -5377,7 +5405,7 @@ function cgScan(){document.querySelectorAll(".card h3, .card h4, .np-viz h4").fo
 
 // ===== Minutas de reuniones con organizaciones (pestaña «Minutas») =====
 {
-  const MN={list:[],loaded:false,loading:false,ia:null,warn:"",f:{cal:"",org:"",tema:"",d0:"",d1:"",q:"",soloPend:false,porComp:false},edit:null,busy:false,page:0};
+  const MN={list:[],loaded:false,loading:false,ia:null,warn:"",f:{cal:"",org:"",tema:"",d0:"",d1:"",q:"",soloPend:false,porComp:false},edit:null,busy:false,page:0,open:new Set(),inl:null,obs:null};
   const ORG0=[["El Cobre","Cooperativa de Pescadores Caleta El Cobre"],["Michilla","Asociación de Pescadores de Michilla"],["Michilla","Sindicato de Pescadores de Michilla"]];
   const TEMAS=["Compensación","AMERB y planes de manejo","Vedas y recursos","Compromisos RCA","Infraestructura y caleta","Empleo local y capacitación","Medio ambiente","Seguridad y navegación","Conflictos y reclamos","Coordinación y seguimiento","Otros"];
   const ART=()=>!!S.db;
@@ -5399,7 +5427,7 @@ function cgScan(){document.querySelectorAll(".card h3, .card h4, .np-viz h4").fo
       return{archivo:s.path,archivo_nombre:file.name,archivo_tipo:file.type||""}},
     async save(rec){if(ART()){const id=rec.id||nid();const {id:_,...rest}=rec;rest.ts=Date.now();rest.por=rest.por||(S.acct&&S.acct.usuario)||"";await S.db.doc("minutas/"+id).set({enc:await encJ(rest),ts:Date.now()});return id}
       const r=await api("minutas",{method:"POST",body:{accion:"guardar",ficha:rec}});return r.id},
-    async del(rec){if(ART()){if(rec.archivo&&rec.archivo.partes){for(let i=0;i<rec.archivo.partes;i++){try{await S.db.doc(`minutasf/${rec.id}/partes/p${i}`).delete()}catch(e){}}}await S.db.doc("minutas/"+rec.id).delete();return}
+    async del(rec){if(ART()){for(const a of ((rec.datos||{}).acuerdos||[]))for(const v of (a.verificadores||[]))if(v.archivo&&v.archivo.partes)for(let i=0;i<v.archivo.partes;i++){try{await S.db.doc(`minutasf/${v.vid}/partes/p${i}`).delete()}catch(e){}}if(rec.archivo&&rec.archivo.partes){for(let i=0;i<rec.archivo.partes;i++){try{await S.db.doc(`minutasf/${rec.id}/partes/p${i}`).delete()}catch(e){}}}await S.db.doc("minutas/"+rec.id).delete();return}
       await api("minutas",{method:"POST",body:{accion:"borrar",id:rec.id}})},
     async blob(rec){if(ART()){const b=await aesDec(S.key,await bigGet(`minutasf/${rec.id}/partes`,rec.archivo.partes));return new Blob([b],{type:rec.archivo_tipo||"application/octet-stream"})}return null},
     async ia(texto,imgs,instr){if(ART()){const sm=await claude.use("sample");if(!sm)throw{code:"no_ia"};const o={modelTier:"default",cache:false};if(imgs.length)o.images=imgs.map(x=>x.blob);const r=await sm(instr+(texto?"\n\nTEXTO DE LA MINUTA:\n"+texto.slice(0,120000):""),o);return r.text}
@@ -5451,31 +5479,64 @@ Reglas:
 
   function mnRender(){const p=document.querySelector('[data-pane="minutas"]');if(!p||S.tab!=="minutas")return;const who=(S.acct&&S.acct.usuario)||"";if(MN.loaded&&MN.u!==who){MN.loaded=false;MN.list=[]}MN.u=MN.u||who;if(!MN.loaded){p.innerHTML=`<div class="card"><p class="cs">Cargando minutas…</p></div>`;mnLoad();return}
     const f=MN.f,os=orgs(),res=filtrar(),A=adm();
-    const pend=[];res.forEach(m=>((m.datos||{}).acuerdos||[]).forEach((a,k)=>{if(a.estado!=="cumplido")pend.push({m,a,k})}));
+    if(MN.inl&&MN.edit&&host())leerForm();
+    const PT={n:0,v:0,m:0,o:[]};{const om=new Map();MN.list.forEach(m=>{const pa=((m.datos||{}).acuerdos||[]).filter(a=>a.estado!=="cumplido");if(!pa.length)return;PT.m++;PT.n+=pa.length;PT.v+=pa.filter(vencido).length;const o=(m.datos||{}).organizacion||"Sin organización";om.set(o,(om.get(o)||0)+pa.length)});PT.o=[...om].sort((a,b)=>b[1]-a[1])}
     const byOrg=os.map(o=>{const l=MN.list.filter(m=>nrm((m.datos||{}).organizacion)===nrm(o.o));const last=l.map(m=>(m.datos||{}).fecha).filter(Boolean).sort().pop();const pe=l.reduce((s,m)=>s+((m.datos||{}).acuerdos||[]).filter(a=>a.estado!=="cumplido").length,0);return{...o,n:l.length,last,pe}});
     p.innerHTML=`<div class="card mn-head"><div class="tbar"><div><h2>Minutas de reuniones</h2><p class="cs">Reuniones con las organizaciones de pescadores. ${A?"Agrega una minuta (PDF, Word o foto) y la IA propone la ficha: fecha, lugar, organización, participantes, temas, acuerdos y resumen; tú la revisas antes de guardar.":"Busca por organización, fecha o palabras clave; pasa el cursor sobre un resultado para ver el detalle."}</p></div>
         <div class="l">${A?`<button class="btn" id="mnBulkB" type="button">⇪ Carga masiva</button><button class="btn ghost" id="mnAdd" type="button">+ Agregar una</button>`:""}<button class="btn ghost small" id="mnCsv" type="button">Exportar CSV</button></div></div>
         ${MN.warn?`<p class="warnbox">${esc(MN.warn)}</p>`:""}${A&&MN.ia===false?`<p class="cs mn-noia">${ART()?"La lectura con IA no está disponible en esta vista: puedes completar la ficha a mano.":"La lectura automática con IA requiere configurar ANTHROPIC_API_KEY en Vercel. Mientras tanto, completa la ficha a mano."}</p>`:""}
-        <div class="mn-orgs">${byOrg.map(o=>`<button type="button" class="mn-org ${nrm(f.org)===nrm(o.o)?"on":""}" data-mnorg="${esc(o.o)}"><b>${esc(o.o)}</b><span>${o.c?"Caleta "+esc(o.c)+" · ":""}${o.n} minuta${o.n===1?"":"s"}${o.last?" · última: "+esc(fmtF(o.last)):""}${o.pe?` · <em>${o.pe} acuerdo${o.pe===1?"":"s"} pendiente${o.pe===1?"":"s"}</em>`:""}</span></button>`).join("")}</div></div>
+        <div class="mn-orgs">${byOrg.map(o=>`<button type="button" class="mn-org ${nrm(f.org)===nrm(o.o)?"on":""}" data-mnorg="${esc(o.o)}"><b>${esc(o.o)}</b><span>${o.c?"Caleta "+esc(o.c)+" · ":""}${o.n} minuta${o.n===1?"":"s"}${o.last?" · última: "+esc(fmtF(o.last)):""}${o.pe?` · <em>${o.pe} compromiso${o.pe===1?"":"s"} pendiente${o.pe===1?"":"s"}</em>`:""}</span></button>`).join("")}</div></div>
+      ${PT.n?`<div class="mn-alert" role="alert"><span class="mn-al-ic" aria-hidden="true">!</span><div><p><b>${PT.n} compromiso${PT.n===1?"":"s"} pendiente${PT.n===1?"":"s"}</b> en ${PT.m} minuta${PT.m===1?"":"s"}${PT.v?` · <b>${PT.v} vencido${PT.v===1?"":"s"}</b>`:""}</p><span>${PT.o.slice(0,3).map(o=>esc(o[0])+" ("+o[1]+")").join(" · ")}${PT.o.length>3?" · …":""}</span></div><button type="button" class="btn small" id="mnVerPend">${f.soloPend?"Ver todas las minutas":"Ver compromisos pendientes"}</button></div>`:""}
       <div class="card mn-filt"><div class="mn-fg">
         <label>Buscar<input type="search" id="mnQ" placeholder="Palabras clave: muelle, cuota, compensación…" value="${esc(f.q)}"></label>
         <label>Caleta<select id="mnCal"><option value="">Todas</option>${cals().map(c=>`<option ${f.cal===c?"selected":""}>${esc(c)}</option>`).join("")}</select></label>
         <label>Organización<select id="mnOrgS"><option value="">Todas</option>${os.filter(o=>!f.cal||nrm(o.c)===nrm(f.cal)).map(o=>`<option ${nrm(f.org)===nrm(o.o)?"selected":""}>${esc(o.o)}</option>`).join("")}</select></label>
         <label>Tema<select id="mnTema"><option value="">Todos</option>${TEMAS.map(t=>`<option ${f.tema===t?"selected":""}>${esc(t)}</option>`).join("")}</select></label>
         <label>Desde<input type="date" id="mnD0" value="${esc(f.d0)}"></label><label>Hasta<input type="date" id="mnD1" value="${esc(f.d1)}"></label>
-        <label class="mn-chk"><input type="checkbox" id="mnPend" ${f.soloPend?"checked":""}> Con acuerdos pendientes</label><label class="mn-chk"><input type="checkbox" id="mnPC" ${f.porComp?"checked":""}> Por completar (${MN.list.filter(m=>((m.datos||{}).pendientes||[]).length).length})</label>
+        <label class="mn-chk"><input type="checkbox" id="mnPend" ${f.soloPend?"checked":""}> Con compromisos pendientes</label><label class="mn-chk"><input type="checkbox" id="mnPC" ${f.porComp?"checked":""}> Por completar (${MN.list.filter(m=>((m.datos||{}).pendientes||[]).length).length})</label>
         <button type="button" class="btn ghost small" id="mnClr">✕ Limpiar filtros</button></div>
         <p class="cs">${res.length} de ${MN.list.length} minuta${MN.list.length===1?"":"s"}</p></div>
       <div class="card"><div class="tbar"><h3>Resultados${help("Pasa el cursor (o toca) un resultado para ver organización, lugar, fecha, participantes y resumen. Desde ahí puedes ver o descargar la minuta original.")}</h3></div>
-        ${res.length?`<div class="mn-list">${res.slice(0,(MN.page+1)*30).map(m=>{const d=m.datos||{};return`<article class="mn-it" data-mnid="${esc(m.id)}" tabindex="0">
+        ${res.length?`<div class="mn-list">${res.slice(0,(MN.page+1)*30).map(m=>{const d=m.datos||{},pa=(d.acuerdos||[]).filter(a=>a.estado!=="cumplido"),pv=pa.filter(vencido).length,op=MN.open.has(m.id);return`<article class="mn-it${pa.length?" pend":""}${op?" open":""}" data-mnid="${esc(m.id)}" tabindex="0">
+          ${pa.length?`<div class="mn-pb"><span>!</span>${pa.length} compromiso${pa.length===1?"":"s"} pendiente${pa.length===1?"":"s"}${pv?` · ${pv} vencido${pv===1?"":"s"}`:""}</div>`:""}
           <div class="mn-ih"><span class="mn-date">${esc(fmtF(d.fecha))}</span><b>${esc(d.organizacion||"Organización sin identificar")}</b>${d.caleta?`<span class="tg">Caleta ${esc(d.caleta)}</span>`:""}${d.lugar?`<span class="cs">· ${esc(d.lugar)}</span>`:""}${(d.pendientes||[]).length?`<span class="mn-miss-t">Por completar: ${esc(d.pendientes.join(", "))}</span>`:""}</div>
           <p class="mn-sn">${snip(m)}</p>
           <div class="mn-if">${(d.temas||[]).map(t=>`<span class="tg">${esc(t)}</span>`).join("")}${(d.acuerdos||[]).length?`<span class="cs">${d.acuerdos.length} acuerdo${d.acuerdos.length===1?"":"s"}${d.acuerdos.some(a=>a.estado!=="cumplido")?` (${d.acuerdos.filter(a=>a.estado!=="cumplido").length} pendiente${d.acuerdos.filter(a=>a.estado!=="cumplido").length===1?"":"s"})`:""}</span>`:""}
-            <span class="mn-act">${m.archivo?`<button type="button" class="lnk" data-mnver="${esc(m.id)}">Ver original</button><button type="button" class="lnk" data-mndl="${esc(m.id)}">Descargar</button>`:`<span class="cs">Sin archivo</span>`}${A?`<button type="button" class="lnk" data-mned="${esc(m.id)}">Editar</button><button type="button" class="lnk mn-del" data-mndel="${esc(m.id)}">Eliminar</button>`:""}</span></div></article>`}).join("")}</div>${res.length>(MN.page+1)*30?`<button type="button" class="btn ghost small" id="mnMore">Ver más</button>`:""}`
-          :`<p class="empty">${MN.list.length?"No hay minutas que coincidan con los filtros.":A?"Aún no hay minutas. Usa «+ Agregar minuta» para cargar la primera.":"Aún no hay minutas cargadas."}</p>`}</div>
-      <div class="card"><div class="tbar"><h3>Acuerdos pendientes${help("Acuerdos y compromisos de las minutas filtradas que aún no se marcan como cumplidos.")}</h3><span class="cs">${pend.length}</span></div>
-        ${pend.length?`<div class="tbl"><table class="mn-pt"><thead><tr><th>Fecha</th><th>Organización</th><th>Acuerdo</th><th>Responsable</th><th>Plazo</th>${A?"<th></th>":""}</tr></thead><tbody>${pend.slice(0,200).map(x=>{const d=x.m.datos||{};return`<tr><td>${esc(fmtF(d.fecha))}</td><td>${esc(d.organizacion||"—")}</td><td style="white-space:normal;min-width:240px">${esc(x.a.texto)}</td><td>${esc(x.a.responsable||"—")}</td><td>${esc(x.a.plazo||"—")}</td>${A?`<td><button type="button" class="btn ghost small" data-mnok="${esc(x.m.id)}|${x.k}">Marcar cumplido</button></td>`:""}</tr>`}).join("")}</tbody></table></div>`:`<p class="cs">Sin acuerdos pendientes en las minutas filtradas.</p>`}</div>`;
+            <span class="mn-act">${m.archivo?`<button type="button" class="lnk" data-mnver="${esc(m.id)}">Ver original</button><button type="button" class="lnk" data-mndl="${esc(m.id)}">Descargar</button>`:`<span class="cs">Sin archivo</span>`}${A?`<button type="button" class="lnk" data-mned="${esc(m.id)}">Editar</button><button type="button" class="lnk mn-del" data-mndel="${esc(m.id)}">Eliminar</button>`:""}</span></div>
+          <button type="button" class="mn-tog" data-mntog="${esc(m.id)}" aria-expanded="${op}">${op?"▴ Ocultar ficha y compromisos":`▾ Ver ficha y compromisos${(d.acuerdos||[]).length?` (${d.acuerdos.length})`:""}`}</button>
+          ${op?`<div class="mn-pan">${MN.inl===m.id?`<div class="mn-inl"></div>`:panel(m)}</div>`:""}</article>`}).join("")}</div>${res.length>(MN.page+1)*30?`<button type="button" class="btn ghost small" id="mnMore">Ver más</button>`:""}`
+          :`<p class="empty">${MN.list.length?"No hay minutas que coincidan con los filtros.":A?"Aún no hay minutas. Usa «+ Agregar minuta» para cargar la primera.":"Aún no hay minutas cargadas."}</p>`}</div>`;
+    if(MN.inl&&MN.edit&&host())formRender(MN.fmsg||"");
   }
+
+  function vencido(a){return a.estado!=="cumplido"&&/^\d{4}-\d{2}-\d{2}$/.test(a.plazo||"")&&a.plazo<todayISO()}
+  function panel(m){const d=m.datos||{},A=adm(),miss=new Set(d.pendientes||[]);const F=(k,l,v)=>`<div class="${miss.has(k)?"mn-miss":""}"><span>${l}</span><b>${v||'<em class="cs">Sin dato</em>'}</b></div>`;
+    const ac=d.acuerdos||[];
+    return`<div class="mn-ph"><h4>Información de la minuta${d.ia?' <span class="tg">leída con IA</span>':""}</h4>${A?`<button type="button" class="btn ghost small" data-mninl="${esc(m.id)}">✎ Editar información</button>`:""}</div>
+      ${miss.size?`<p class="mn-misshint">Campos por completar: ${esc([...miss].map(k=>LBLC[k]||k).join(", "))}.</p>`:""}
+      <div class="mn-fields">${F("fecha","Fecha",esc(fmtF(d.fecha))+(d.hora?" · "+esc(d.hora):""))}${F("lugar","Lugar",esc(d.lugar||""))}${F("caleta","Caleta",esc(d.caleta||""))}${F("organizacion","Organización",esc(d.organizacion||""))}
+        ${F("participantes","Participantes",(d.participantes||[]).map(p=>esc(p.nombre)+(p.cargo?` <span class="cs">· ${esc(p.cargo)}</span>`:"")).join("<br>"))}${F("temas","Temas",(d.temas||[]).map(t=>`<span class="tg">${esc(t)}</span>`).join(" "))}
+        <div class="mn-wide ${miss.has("resumen")?"mn-miss":""}"><span>Resumen</span><b>${esc(d.resumen||"")||'<em class="cs">Sin dato</em>'}</b></div></div>
+      <div class="mn-ph"><h4>Compromisos y acuerdos</h4><span class="cs">${ac.filter(a=>a.estado==="cumplido").length} de ${ac.length} cumplidos</span></div>
+      ${ac.length?`<div class="mn-cps">${ac.map((a,k)=>{const ok=a.estado==="cumplido",ve=vencido(a),key=m.id+"|"+k;return`<div class="mn-cp ${ok?"ok":ve?"venc":"pend"}">
+        <div class="mn-cph"><span class="mn-cpe">${ok?"✓ Cumplido":ve?"⚠ Vencido":"● Pendiente"}</span><b>${esc(a.texto)}</b></div>
+        <div class="cs">${a.responsable?"Responsable: "+esc(a.responsable):"Sin responsable"}${a.plazo?" · Plazo: "+esc(/^\d{4}-\d{2}-\d{2}$/.test(a.plazo)?fmtF(a.plazo):a.plazo):""}${ok&&a.fechaCumplido?` · Cumplido el ${esc(fmtF(a.fechaCumplido))}${a.porCumplido?" por "+esc(a.porCumplido):""}`:""}</div>
+        ${MN.obs===key?`<div class="mn-obsed"><textarea id="mnObsT" rows="3" placeholder="Observación sobre el avance o cumplimiento">${esc(a.obs||"")}</textarea><div class="row" style="justify-content:flex-start"><button type="button" class="btn small" data-mnobss="${esc(key)}">Guardar observación</button><button type="button" class="btn ghost small" data-mnobsc="1">Cancelar</button></div></div>`:a.obs?`<p class="mn-obs"><b>Observación:</b> ${esc(a.obs)}</p>`:""}
+        ${(a.verificadores||[]).length?`<div class="mn-vfs"><span class="cs">Verificadores:</span>${a.verificadores.map((v,j)=>`<span class="mn-vf"><button type="button" class="lnk" data-mnvf="${esc(key)}|${j}">📎 ${esc(v.nombre||"archivo")}</button><button type="button" class="lnk" data-mnvfd="${esc(key)}|${j}" title="Descargar">↓</button>${A?`<button type="button" class="lnk mn-del" data-mnvfx="${esc(key)}|${j}" title="Quitar verificador">✕</button>`:""}</span>`).join("")}</div>`:""}
+        ${A?`<div class="mn-cpa">${ok?`<button type="button" class="btn ghost small" data-mncr="${esc(key)}">Reabrir</button>`:`<button type="button" class="btn small mn-okb" data-mnck="${esc(key)}">✓ Marcar cumplido</button>`}${MN.obs===key?"":`<button type="button" class="btn ghost small" data-mnobs="${esc(key)}">${a.obs?"Editar observación":"Agregar observación"}</button>`}<label class="btn ghost small">📎 Cargar verificador<input type="file" data-mnvu="${esc(key)}" accept=".pdf,.docx,.xlsx,.txt,image/*" hidden></label></div>`:""}
+      </div>`}).join("")}</div>`:`<p class="cs">Esta minuta no registra compromisos.${A?" Puedes agregarlos con «Editar información» (campo «Acuerdos y compromisos»).":""}</p>`}`}
+  async function guardarMin(m,msg){try{await ST2.save(m);if(msg)toast(msg);return true}catch(e){toast("No se pudo guardar: "+(e&&e.message||"error"));return false}}
+  async function verifUp(key,file){const [id,k]=key.split("|"),m=MN.list.find(x=>x.id===id),a=m&&(m.datos.acuerdos||[])[+k];if(!a)return;if(file.size>(ART()?8:40)*1048576){toast(`El verificador pesa ${t1(file.size/1048576)} MB: el máximo es ${ART()?8:40} MB.`);return}
+    toast("Subiendo verificador…");const vid=id+"v"+nid();try{const up=await ST2.upload(file,vid);(a.verificadores=a.verificadores||[]).push({vid,archivo:up.archivo,nombre:up.archivo_nombre,tipo:up.archivo_tipo,fecha:todayISO(),por:(S.acct&&S.acct.usuario)||""});
+      if(await guardarMin(m,"Verificador cargado."))mnRender()}catch(e){toast("No se pudo subir el verificador: "+(e&&e.message||"error"))}}
+  async function verifGet(key,dl){const [id,k,j]=key.split("|"),m=MN.list.find(x=>x.id===id),v=m&&(((m.datos.acuerdos||[])[+k]||{}).verificadores||[])[+j];if(!v)return;
+    if(!ART()){const u=`/api/minutas?ruta=${encodeURIComponent(v.archivo)}&nombre=${encodeURIComponent(v.nombre||"verificador")}${dl?"&dl=1":""}`;if(dl){const a=document.createElement("a");a.href=u;document.body.appendChild(a);a.click();a.remove()}else window.open(u,"_blank","noopener");return}
+    toast("Preparando el archivo…");try{const b=new Blob([await aesDec(S.key,await bigGet(`minutasf/${v.vid}/partes`,v.archivo.partes))],{type:v.tipo||"application/octet-stream"});
+      if(dl||!/^image\/|pdf/.test(b.type)){if(S.downloads){try{await S.downloads.save({filename:v.nombre||"verificador",data:b})}catch(e){}}else saveFile(v.nombre||"verificador",b,b.type);return}
+      verBlob(b,v.nombre||"Verificador",null)}catch(e){toast("No se pudo abrir el verificador.")}}
+  async function verifDel(v){if(ART()){if(v.archivo&&v.archivo.partes)for(let i=0;i<v.archivo.partes;i++){try{await S.db.doc(`minutasf/${v.vid}/partes/p${i}`).delete()}catch(e){}}}}
+  function host(){return MN.inl?document.querySelector(`.mn-it[data-mnid="${CSS.escape(MN.inl)}"] .mn-inl`):document.getElementById("mnModal")}
+  function cerrarEditor(){if(MN.inl){MN.inl=null;MN.edit=null;mnRender()}else{const o=document.getElementById("mnModal");if(o)o.hidden=true;MN.edit=null}}
 
   /* ---------- Ventana emergente (hover / toque) ---------- */
   let popT=null,popFor=null;const PXY={x:0,y:0};document.addEventListener("pointermove",ev=>{if(ev.pointerType==="mouse"&&!(ev.target.closest&&ev.target.closest("#mnPop"))){PXY.x=ev.clientX;PXY.y=ev.clientY}},{passive:true});
@@ -5492,7 +5553,7 @@ Reglas:
     let x=(PXY.x||r.left+40)+18,y=(PXY.y||r.top)+14;if(x+w>innerWidth-12)x=Math.max(12,(PXY.x||r.right)-w-18);if(y+h>innerHeight-12)y=Math.max(12,(PXY.y||r.bottom)-h-14);
     el.style.left=x+"px";el.style.top=y+"px"}
   function popHide(ms){clearTimeout(popT);popT=setTimeout(()=>{const el=document.getElementById("mnPop");if(el)el.hidden=true;popFor=null},ms||0)}
-  document.addEventListener("pointerover",ev=>{if(ev.pointerType!=="mouse")return;const c=ev.target.closest&&ev.target.closest(".mn-it");if(!c)return;clearTimeout(popT);if(popFor===c.dataset.mnid)return;popT=setTimeout(()=>popShow(c,false),220)});
+  document.addEventListener("pointerover",ev=>{if(ev.pointerType!=="mouse")return;const c=ev.target.closest&&ev.target.closest(".mn-it");if(!c)return;if(c.classList.contains("open")||ev.target.closest(".mn-pan,.mn-tog")){popHide(150);return}clearTimeout(popT);if(popFor===c.dataset.mnid)return;popT=setTimeout(()=>popShow(c,false),220)});
   document.addEventListener("pointerout",ev=>{if(ev.pointerType!=="mouse")return;const c=ev.target.closest&&ev.target.closest(".mn-it");if(!c)return;if(ev.relatedTarget&&(c.contains(ev.relatedTarget)||ev.relatedTarget.closest&&ev.relatedTarget.closest("#mnPop")))return;popHide(300)});
   document.addEventListener("focusin",ev=>{const c=ev.target.closest&&ev.target.closest(".mn-it");if(c&&ev.target===c){const r=c.getBoundingClientRect();PXY.x=r.left+60;PXY.y=r.bottom-10;popShow(c,false)}});
 
@@ -5501,17 +5562,18 @@ Reglas:
     if(!ART()){const u=`/api/minutas?archivo=${encodeURIComponent(id)}${dl?"&dl=1":""}`;if(dl){const a=document.createElement("a");a.href=u;a.rel="noopener";document.body.appendChild(a);a.click();a.remove()}else window.open(u,"_blank","noopener");return}
     toast("Preparando el archivo…");let b;try{b=await ST2.blob(m)}catch(e){toast("No se pudo abrir el archivo.");return}
     if(dl){if(S.downloads){try{await S.downloads.save({filename:m.archivo_nombre||"minuta",data:b})}catch(e){}}else saveFile(m.archivo_nombre||"minuta",b,b.type);return}
-    const url=URL.createObjectURL(b);let ov=document.getElementById("mnView");if(!ov){ov=document.createElement("div");ov.id="mnView";ov.className="overlay";document.body.appendChild(ov)}
-    const ty=b.type||"";ov.innerHTML=`<div class="modal mn-vm"><div class="tbar"><h2>${esc(m.archivo_nombre||"Minuta")}</h2><div class="l"><button type="button" class="btn ghost small" data-mndl="${esc(id)}">Descargar</button><button type="button" class="btn small" id="mnVx">Cerrar</button></div></div>
+    verBlob(b,m.archivo_nombre||"Minuta",id)}
+  function verBlob(b,nombre,id){const url=URL.createObjectURL(b);let ov=document.getElementById("mnView");if(!ov){ov=document.createElement("div");ov.id="mnView";ov.className="overlay";document.body.appendChild(ov)}
+    const ty=b.type||"";ov.innerHTML=`<div class="modal mn-vm"><div class="tbar"><h2>${esc(nombre)}</h2><div class="l">${id?`<button type="button" class="btn ghost small" data-mndl="${esc(id)}">Descargar</button>`:""}<button type="button" class="btn small" id="mnVx">Cerrar</button></div></div>
       ${/^image\//.test(ty)?`<img src="${url}" alt="Minuta original" class="mn-vimg">`:/pdf/.test(ty)?`<iframe src="${url}" title="Minuta original" class="mn-vpdf"></iframe><p class="cs">Si el PDF no se muestra, usa «Descargar».</p>`:`<p>Este formato no se puede previsualizar aquí. Usa «Descargar».</p>`}</div>`;
     ov.hidden=false;ov.querySelector("#mnVx").onclick=()=>{ov.hidden=true;URL.revokeObjectURL(url)}}
 
   /* ---------- Formulario: agregar / editar ---------- */
   function vacio(){return{id:null,datos:{fecha:"",hora:"",lugar:"",caleta:"",organizacion:"",participantes:[],temas:[],resumen:"",acuerdos:[],pendientes:[]},texto:"",archivo:null,archivo_nombre:"",archivo_tipo:"",_file:null}}
-  function abrirForm(rec){MN.edit=rec?JSON.parse(JSON.stringify(rec)):vacio();MN.edit._file=null;MN.edit._orig=rec?rec.id:null;let ov=document.getElementById("mnModal");if(!ov){ov=document.createElement("div");ov.id="mnModal";ov.className="overlay";document.body.appendChild(ov)}ov.hidden=false;formRender("")}
-  function formRender(msg){const ov=document.getElementById("mnModal"),r=MN.edit,d=r.datos,os=orgs(),miss=new Set(d.pendientes||[]);const mc=k=>miss.has(k)?" mn-miss":"";
+  function abrirForm(rec,inline){MN.edit=rec?JSON.parse(JSON.stringify(rec)):vacio();MN.edit._file=null;MN.edit._orig=rec?rec.id:null;MN.fmsg="";if(inline&&rec){MN.inl=rec.id;MN.open.add(rec.id);mnRender();return}MN.inl=null;let ov=document.getElementById("mnModal");if(!ov){ov=document.createElement("div");ov.id="mnModal";ov.className="overlay";document.body.appendChild(ov)}ov.hidden=false;formRender("")}
+  function formRender(msg){MN.fmsg=msg;const ov=host(),r=MN.edit,d=r.datos,os=orgs(),miss=new Set(d.pendientes||[]);const mc=k=>miss.has(k)?" mn-miss":"";
     const orgIn=d.organizacion&&!os.some(o=>nrm(o.o)===nrm(d.organizacion));
-    ov.innerHTML=`<div class="modal mn-fm" role="dialog" aria-modal="true" aria-labelledby="mnFT"><h2 id="mnFT">${r.id?"Editar minuta":"Agregar minuta"}</h2>
+    if(!ov)return;ov.innerHTML=`<div class="${MN.inl?"mn-fm mn-fm-in":"modal mn-fm"}" ${MN.inl?"":'role="dialog" aria-modal="true"'} aria-labelledby="mnFT"><h${MN.inl?4:2} id="mnFT">${MN.inl?"Editar información de la minuta":r.id?"Editar minuta":"Agregar minuta"}</h${MN.inl?4:2}>
       <div class="mn-drop"><label class="btn ghost small" for="mnFile">${r.archivo||r._file?"Cambiar archivo":"Elegir archivo"}</label><input type="file" id="mnFile" accept=".pdf,.docx,.txt,image/*" hidden>
         <span class="cs">${r._file?esc(r._file.name):r.archivo_nombre?esc(r.archivo_nombre):"PDF, Word (.docx), foto o escaneo. También puedes tomar una foto con el celular."}</span>
         ${(r._file||r.archivo)&&MN.ia!==false?`<button type="button" class="btn small" id="mnIA">${r._file?"Leer con IA":"Volver a leer con IA"}</button>`:""}</div>
@@ -5538,12 +5600,12 @@ Reglas:
         if(!ok){formRender("Subida cancelada: esa minuta ya estaba cargada.");return}r.id=dup.id;r._replace=dup;r.por=dup.por}
       r._file=fl;r.datos.hash=h;r.datos.tam=fl.size;formRender(r._replace?"Se reemplazará la minuta existente al guardar.":"");if(MN.ia!==false)leerIA()};
     const ia=ov.querySelector("#mnIA");if(ia)ia.onclick=()=>{leerForm();leerIA()};
-    ov.querySelector("#mnCancel").onclick=()=>{ov.hidden=true;MN.edit=null};ov.querySelector("#mnSave").onclick=guardar}
-  function leerForm(){const ov=document.getElementById("mnModal");if(!ov||!MN.edit)return;const d=MN.edit.datos,v=id=>ov.querySelector(id).value.trim();
+    ov.querySelector("#mnCancel").onclick=cerrarEditor;ov.querySelector("#mnSave").onclick=guardar}
+  function leerForm(){const ov=host();if(!ov||!MN.edit)return;const d=MN.edit.datos,v=id=>ov.querySelector(id).value.trim();
     d.fecha=v("#mF");d.hora=v("#mH");d.lugar=v("#mL");d.caleta=v("#mC");const o=ov.querySelector("#mO").value;d.organizacion=o==="__otra"?v("#mO2"):o;
     d.temas=[...ov.querySelectorAll(".mn-temas input:checked")].map(x=>x.value);
     d.participantes=v("#mP").split("\n").map(l=>l.trim()).filter(Boolean).map(l=>{const [nombre,cargo,organizacion]=l.split(/\s+[—–-]\s+/);return{nombre:(nombre||"").trim(),cargo:(cargo||"").trim(),organizacion:(organizacion||"").trim()}});
-    d.resumen=v("#mR");const prev=d.acuerdos||[];d.acuerdos=v("#mA").split("\n").map(l=>l.trim()).filter(Boolean).map(l=>{const [texto,responsable,plazo]=l.split("|").map(x=>(x||"").trim());const old=prev.find(a=>nrm(a.texto)===nrm(texto));return{texto,responsable:responsable||"",plazo:plazo||"",estado:old?old.estado:"pendiente"}});
+    d.resumen=v("#mR");const prev=d.acuerdos||[];d.acuerdos=v("#mA").split("\n").map(l=>l.trim()).filter(Boolean).map(l=>{const [texto,responsable,plazo]=l.split("|").map(x=>(x||"").trim());const old=prev.find(a=>nrm(a.texto)===nrm(texto));return old?{...old,texto,responsable:responsable||"",plazo:plazo||""}:{texto,responsable:responsable||"",plazo:plazo||"",estado:"pendiente"}});
     MN.edit.texto=ov.querySelector("#mT").value;
     const miss=[];if(!d.fecha)miss.push("fecha");if(!d.lugar)miss.push("lugar");if(!d.organizacion)miss.push("organizacion");if(!d.participantes.length)miss.push("participantes");if(!d.resumen)miss.push("resumen");d.pendientes=(d.pendientes||[]).filter(k=>miss.includes(k))}
   const CAMPOS=["fecha","lugar","caleta","organizacion","participantes","temas","resumen","acuerdos"];
@@ -5632,7 +5694,7 @@ Reglas:
     try{const id=r.id||nid();if(r._file){const up=await ST2.upload(r._file,id,r._replace||(r._orig?MN.list.find(x=>x.id===r._orig):null));r.archivo=up.archivo;r.archivo_nombre=up.archivo_nombre;r.archivo_tipo=up.archivo_tipo}
       const rec={id,datos:d,texto:r.texto||"",archivo:r.archivo,archivo_nombre:r.archivo_nombre,archivo_tipo:r.archivo_tipo,por:r.por||(S.acct&&S.acct.usuario)||""};
       if(ART()){await ST2.save(rec)}else{await ST2.save({...rec,id})}
-      const i=MN.list.findIndex(x=>x.id===id);if(i>=0)MN.list[i]=rec;else MN.list.unshift(rec);MN.busy=false;document.getElementById("mnModal").hidden=true;MN.edit=null;toast(r._replace?"Minuta reemplazada.":"Minuta guardada.");mnRender()}
+      const i=MN.list.findIndex(x=>x.id===id);if(i>=0)MN.list[i]=rec;else MN.list.unshift(rec);MN.busy=false;MN.edit=null;if(MN.inl)MN.inl=null;else document.getElementById("mnModal").hidden=true;toast(r._replace?"Minuta reemplazada.":"Minuta guardada.");mnRender()}
     catch(e){MN.busy=false;formRender("No se pudo guardar: "+esc(e&&e.message||"error"))}}
 
   function csv(){const q=v=>`"${String(v==null?"":v).replace(/"/g,'""')}"`;const rows=[["Fecha","Hora","Caleta","Organización","Lugar","Temas","Participantes","Resumen","Acuerdos","Acuerdos pendientes","Archivo"]];
@@ -5643,6 +5705,8 @@ Reglas:
   let qT=null;
   document.addEventListener("input",ev=>{if(ev.target.id==="mnQ"){MN.f.q=ev.target.value;clearTimeout(qT);qT=setTimeout(()=>{const pos=ev.target.selectionStart;MN.page=0;mnRender();const q=document.getElementById("mnQ");if(q){q.focus();try{q.setSelectionRange(pos,pos)}catch(e){}}},250)}});
   document.addEventListener("change",ev=>{const t=ev.target,F=MN.f;if(!t.closest||!t.closest('[data-pane="minutas"]'))return;
+    if(t.dataset&&t.dataset.mnvu){const fl=t.files&&t.files[0];if(fl)verifUp(t.dataset.mnvu,fl);t.value="";return}
+    if(t.closest(".mn-inl"))return;
     if(t.id==="mnCal"){F.cal=t.value;if(F.org&&!orgs().some(o=>nrm(o.o)===nrm(F.org)&&(!F.cal||nrm(o.c)===nrm(F.cal))))F.org=""}else if(t.id==="mnOrgS")F.org=t.value;else if(t.id==="mnTema")F.tema=t.value;else if(t.id==="mnD0")F.d0=t.value;else if(t.id==="mnD1")F.d1=t.value;else if(t.id==="mnPend")F.soloPend=t.checked;else if(t.id==="mnPC")F.porComp=t.checked;else return;MN.page=0;mnRender()});
   document.addEventListener("click",async ev=>{const t=ev.target;
     const pc=t.closest&&t.closest(".mnp-x");if(pc){popHide(0);return}
@@ -5651,6 +5715,22 @@ Reglas:
     if(!t.closest)return;
     if(t.closest("#mnAdd")){abrirForm(null);return}
     if(t.closest("#mnBulkB")){bulkOpen();return}
+    if(t.closest("#mnVerPend")){MN.f.soloPend=!MN.f.soloPend;if(MN.f.soloPend)MN.list.forEach(m=>{if(((m.datos||{}).acuerdos||[]).some(a=>a.estado!=="cumplido"))MN.open.add(m.id)});MN.page=0;mnRender();return}
+    const tg=t.closest("[data-mntog]");if(tg){const id=tg.dataset.mntog;popHide(0);if(MN.open.has(id)){if(MN.inl===id){MN.inl=null;MN.edit=null}MN.open.delete(id)}else MN.open.add(id);mnRender();return}
+    const il=t.closest("[data-mninl]");if(il){const m=MN.list.find(x=>x.id===il.dataset.mninl);if(m)abrirForm(m,true);return}
+    const ck=t.closest("[data-mnck]");if(ck){const [id,k]=ck.dataset.mnck.split("|"),m=MN.list.find(x=>x.id===id),a=m&&m.datos.acuerdos[+k];if(!a)return;
+      if(!await askYN(`¿Marcar como <b>cumplido</b> el compromiso «${esc(a.texto)}»?<br><span class="cs">Después puedes agregar una observación y cargar un verificador.</span>`,{title:"Compromiso cumplido",si:"Sí, marcar cumplido",no:"No"}))return;
+      const prev={...a};a.estado="cumplido";a.fechaCumplido=todayISO();a.porCumplido=(S.acct&&S.acct.usuario)||"";if(await guardarMin(m,"Compromiso marcado como cumplido."))mnRender();else{Object.assign(a,prev)}return}
+    const cr=t.closest("[data-mncr]");if(cr){const [id,k]=cr.dataset.mncr.split("|"),m=MN.list.find(x=>x.id===id),a=m&&m.datos.acuerdos[+k];if(!a)return;
+      if(!await askYN(`¿Volver a dejar como <b>pendiente</b> el compromiso «${esc(a.texto)}»?`,{title:"Reabrir compromiso",si:"Sí, reabrir",no:"No"}))return;a.estado="pendiente";delete a.fechaCumplido;delete a.porCumplido;if(await guardarMin(m,"Compromiso reabierto."))mnRender();return}
+    const ob=t.closest("[data-mnobs]");if(ob){MN.obs=ob.dataset.mnobs;mnRender();const ta=document.getElementById("mnObsT");if(ta)ta.focus();return}
+    if(t.closest("[data-mnobsc]")){MN.obs=null;mnRender();return}
+    const os=t.closest("[data-mnobss]");if(os){const [id,k]=os.dataset.mnobss.split("|"),m=MN.list.find(x=>x.id===id),a=m&&m.datos.acuerdos[+k];if(!a)return;const ta=document.getElementById("mnObsT");const prev=a.obs;a.obs=(ta?ta.value:"").trim();a.obsFecha=todayISO();
+      if(await guardarMin(m,"Observación guardada.")){MN.obs=null;mnRender()}else a.obs=prev;return}
+    const vf=t.closest("[data-mnvf]");if(vf){verifGet(vf.dataset.mnvf,false);return}
+    const vd=t.closest("[data-mnvfd]");if(vd){verifGet(vd.dataset.mnvfd,true);return}
+    const vx=t.closest("[data-mnvfx]");if(vx){const [id,k,j]=vx.dataset.mnvfx.split("|"),m=MN.list.find(x=>x.id===id),a=m&&m.datos.acuerdos[+k],v=a&&(a.verificadores||[])[+j];if(!v)return;
+      if(!await askYN(`¿Quitar el verificador «${esc(v.nombre||"archivo")}»?`,{title:"Quitar verificador",danger:true,si:"Sí, quitar",no:"No"}))return;a.verificadores.splice(+j,1);if(await guardarMin(m,"Verificador quitado.")){await verifDel(v);mnRender()}else a.verificadores.splice(+j,0,v);return}
     if(t.closest("#mnBGo")){bulkGo();return}
     if(t.closest("#mnBStop")){BULK.stop=true;toast("Se detendrá al terminar la minuta actual.");return}
     if(t.closest("#mnBHide")){document.getElementById("mnBulk").hidden=true;toast("La carga sigue en segundo plano. Vuelve a «Carga masiva» para ver el avance.");return}
@@ -5669,7 +5749,7 @@ Reglas:
     const ok=t.closest("[data-mnok]");if(ok){const [id,k]=ok.dataset.mnok.split("|");const m=MN.list.find(x=>x.id===id);if(!m)return;const a=(m.datos.acuerdos||[])[+k];if(!a)return;
       if(!await askYN(`¿Marcar como cumplido el acuerdo «${esc(a.texto)}»?`,{title:"Acuerdo cumplido",si:"Sí, cumplido",no:"No"}))return;a.estado="cumplido";
       try{await ST2.save(m);toast("Acuerdo marcado como cumplido.");mnRender()}catch(e){a.estado="pendiente";toast("No se pudo guardar.")}return}
-    const it=t.closest(".mn-it");if(it&&!t.closest("button")&&(ev.pointerType!=="mouse"||innerWidth<700)){popShow(it,true);return}
+    const it=t.closest(".mn-it");if(it&&!t.closest("button,label,input,textarea,.mn-pan")&&!it.classList.contains("open")&&(ev.pointerType!=="mouse"||innerWidth<700)){popShow(it,true);return}
     const pop=document.getElementById("mnPop");if(pop&&!pop.hidden&&!t.closest("#mnPop")&&!t.closest(".mn-it"))popHide(0)});
   document.addEventListener("keydown",ev=>{if(ev.key==="Escape"){popHide(0);const v=document.getElementById("mnView");if(v&&!v.hidden)v.hidden=true}});
 
