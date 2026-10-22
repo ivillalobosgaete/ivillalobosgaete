@@ -74,7 +74,14 @@ export default handler(async (req, res) => {
         // Usuarios con caletas específicas: solo minutas de esas caletas (y relatos construidos solo con ellas).
         const nz = (x) => String(x || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\(.*?\)/g, " ").replace(/\b(caleta|iv reg)\b/g, " ").replace(/\s+/g, " ").trim();
         const ok = new Set(cals.map(nz));
-        const okMin = (d) => { if (d.caleta) return ok.has(nz(d.caleta)); const t = " " + nz(d.organizacion) + " "; return [...ok].some((k) => k.length > 2 && t.includes(" " + k + " ")); };
+        const KC = ["michilla", "el cobre", "mejillones", "hornitos", "el blanco", "cobija", "coloso", "taltal", "paposo", "tocopilla", "juan lopez", "la chimba", "caleta buena", "maitencillo", "puerto oscuro", "puerto manso", "huentelauquen", "chigualoco", "san pedro", "los vilos", "las conchas", "cascabeles", "totoralillo", "pichidangui"];
+        const otras = KC.filter((k) => ![...ok].some((a) => a === k || a.includes(k) || k.includes(a)));
+        const okMin = (d) => {
+          const t = " " + nz([d.organizacion, d.caleta, d.lugar].join(" ")).replace(/\b(comuna|region|provincia) de [a-z]+( [a-z]+)?/g, " ") + " ";
+          const mine = [...ok].some((k) => k.length > 2 && t.includes(" " + k + " ")), other = otras.some((k) => t.includes(" " + k + " "));
+          return mine && !(other && !nzOrgMine(d));
+        };
+        const nzOrgMine = (d) => [...ok].some((k) => (" " + nz(d.organizacion) + " ").includes(" " + k + " "));
         const mins = new Set(vis.filter((r) => !(r.datos || {}).tipo && okMin(r.datos || {})).map((r) => r.id));
         vis = vis.filter((r) => { const t = (r.datos || {}).tipo; if (!t) return mins.has(r.id); if (t === "relato") return ((r.datos || {}).ids || []).length && r.datos.ids.every((i) => mins.has(i)); return true; });
       }
