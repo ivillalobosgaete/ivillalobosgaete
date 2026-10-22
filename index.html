@@ -1535,6 +1535,9 @@ body.bc-noscroll{overflow:hidden}
   body.igprinting .ig-kpis{grid-template-columns:repeat(5,minmax(0,1fr))}body.igprinting .ig-g2{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)}
   body.igprinting .concl{display:block!important;-webkit-line-clamp:unset!important}}
 .pcal{display:grid!important;gap:6px}.pcal-g{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}.pcal-g b{min-width:110px;font-size:.8rem;color:var(--ink-2)}
+.ig-legt{margin:4px 0 8px}.ig-bf{display:inline-block;width:14px;height:14px;border-radius:50%;margin-right:5px;vertical-align:-2px;border:1px solid rgba(0,0,0,.15);opacity:.85}
+.leaflet-tooltip.ig-tlab{background:rgba(255,255,255,.88);border:0;box-shadow:none;font-size:11px;font-weight:700;color:#0b2230;padding:1px 5px}.leaflet-tooltip.ig-tlab::before{display:none}.ig-lowz .ig-tlab{display:none}
+.ig-map svg,.ig-map canvas,.bc-map svg,.bc-map canvas{max-width:none!important;width:auto!important;height:auto!important}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
@@ -6395,15 +6398,25 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
   function igFocus(z){const m=IG.mk.get(IG.cal);if(!IG.map||!m)return;IG.map.setView(m.getLatLng(),z||Math.max(IG.map.getZoom(),11),{animate:true});try{IG.mk.forEach(x=>x.closeTooltip());m.openTooltip()}catch(e){}}
   async function igMap0(refresh){const box=document.getElementById("igMapC");if(!box)return;const cal=caletasGeo();
     if(WEBna()||!LL()){box.innerHTML=`<p class="cs">El mapa de caletas se muestra en la versión web.</p>`;box.classList.add("ig-nomap");return}
-    if(!document.getElementById("igMap")){box.innerHTML=`<div class="ig-mh"><h3>Mapa de caletas</h3><div class="ig-leg">${["ok","warn","bad","na"].map(k=>`<span><i style="background:${STC[k][1]}"></i>${STC[k][0]}</span>`).join("")}<span class="cs">Tamaño: desembarque de los últimos 12 meses · haz clic en una caleta para ver su ficha</span></div></div><div id="igMap" class="ig-map"></div>`;IG.map=null}
+    if(!document.getElementById("igMap")){box.innerHTML=`<div class="ig-mh"><h3>Mapa de caletas</h3><div class="ig-leg">${["ok","warn","bad","na"].map(k=>`<span><i style="background:${STC[k][1]}"></i>${STC[k][0]}</span>`).join("")}<span class="cs">Punto: estado de la caleta (más grande = más toneladas) · haz clic en una caleta para ver su ficha</span></div></div><div class="ig-leg ig-legt" id="igLegT"></div><div id="igMap" class="ig-map"></div>`;IG.map=null}
     let L0;try{L0=await LL()()}catch(e){L0=null}const el=document.getElementById("igMap");if(!L0||!el){if(el)el.innerHTML=`<p class="cs">No se pudo cargar el mapa.</p>`;return}
     if(!IG.map||IG.map.getContainer()!==el){IG.map=L0.map(el,{scrollWheelZoom:true,zoomSnap:.5});L0.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,referrerPolicy:"strict-origin-when-cross-origin",attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(IG.map);L0.control.scale({imperial:false}).addTo(IG.map);IG.mk=new Map();IG.lay=L0.layerGroup().addTo(IG.map);
       IG.pts=cal.map(c=>[c.lat,c.lon]);IG.map.setView([-23.6,-70.4],7);IG.focus=true;refresh=true;
       const Bt=L0.Control.extend({options:{position:"topleft"},onAdd(){const d=L0.DomUtil.create("div","leaflet-bar bc-mbtn");d.innerHTML=`<a href="#" role="button" title="Ir a la caleta seleccionada" data-igmv="cal">◎</a><a href="#" role="button" title="Ver todas las caletas" data-igmv="all">⌂</a>`;L0.DomEvent.disableClickPropagation(d);d.addEventListener("click",ev=>{const a=ev.target.closest("[data-igmv]");if(!a)return;ev.preventDefault();if(a.dataset.igmv==="all"){const pts=caletasGeo().map(c=>[c.lat,c.lon]);if(pts.length)IG.map.fitBounds(pts,{padding:[30,30]})}else igFocus(11)});return d}});new Bt().addTo(IG.map)}
-    if(refresh){IG.lay.clearLayers();IG.mk=new Map();const st=igStats(),mx=Math.max(1,...st.C.map(o=>o.q12));
-      cal.forEach(k=>{const e=estadoCal(k.i),o=st.C[k.i],r=6+20*Math.sqrt(o.q12/mx),col=getComputedStyle(document.documentElement).getPropertyValue({ok:"--st-ok",warn:"--st-warn",bad:"--st-bad",na:"--st-na"}[e.s]||"--st-na").trim()||"#888";
-        const m=L0.circleMarker([k.lat,k.lon],{radius:r,color:"#0b2230",weight:k.i===IG.cal?3:1,fillColor:col,fillOpacity:.75}).bindTooltip(`<b>${esc(k.n)}</b> · ${esc(k.com)}<br>${t0(o.q12)} t en 12 meses${e.d!=null?` (${pctTxt(e.d)})`:""}${e.why.length?"<br>"+esc(e.why.join(" · ")):""}`).on("click",()=>{IG.cal=k.i;const s=document.getElementById("igCal");if(s)s.value=String(k.i);igMarks();igFocus();igFicha()});m.addTo(IG.lay);IG.mk.set(k.i,m)})}
+    if(refresh){IG.lay.clearLayers();IG.mk=new Map();const st=igStats(),mx=Math.max(1,...st.C.map(o=>o.q12)),Q=igClases(cal.map(k=>st.C[k.i].q12));IG.Q=Q;igLeyenda();
+      cal.slice().sort((a,b)=>st.C[b.i].q12-st.C[a.i].q12).forEach(k=>{const o=st.C[k.i];if(o.q12<=0)return;const ci=Q.cls(o.q12);
+        L0.circle([k.lat,k.lon],{radius:500+5500*Math.sqrt(o.q12/mx),color:IGC[ci],weight:1.5,fillColor:IGC[ci],fillOpacity:.32,interactive:false}).addTo(IG.lay)});
+      cal.forEach(k=>{const e=estadoCal(k.i),o=st.C[k.i],col=getComputedStyle(document.documentElement).getPropertyValue({ok:"--st-ok",warn:"--st-warn",bad:"--st-bad",na:"--st-na"}[e.s]||"--st-na").trim()||"#888";
+        const m=L0.circleMarker([k.lat,k.lon],{radius:o.q12>0?5+2*(Q.cls(o.q12)-(IGC.length-Q.lab.length)):4,color:"#0b2230",weight:k.i===IG.cal?3:1.5,fillColor:col,fillOpacity:1}).bindTooltip(`<b>${esc(k.n)}</b> · ${esc(k.com)}<br>${t0(o.q12)} t en 12 meses${o.q12>0?` · clase: ${esc(Q.labOf(Q.cls(o.q12)))}`:""}${e.d!=null?` (${pctTxt(e.d)})`:""}${e.why.length?"<br>"+esc(e.why.join(" · ")):""}`).on("click",()=>{IG.cal=k.i;const s=document.getElementById("igCal");if(s)s.value=String(k.i);igMarks();igFocus();igFicha()});m.addTo(IG.lay);IG.mk.set(k.i,m);
+        if(o.q12>0)L0.tooltip({permanent:true,direction:"right",offset:[9,0],className:"ig-tlab",interactive:false}).setLatLng([k.lat,k.lon]).setContent(`${esc(k.n)} · ${t0(o.q12)} t`).addTo(IG.lay)});
+      const tz=()=>{const c=IG.map.getContainer();c.classList.toggle("ig-lowz",IG.map.getZoom()<9)};IG.map.off("zoomend",IG.tz);IG.tz=tz;IG.map.on("zoomend",tz);tz()}
     igMarks();setTimeout(()=>{if(!IG.map)return;IG.map.invalidateSize();if(IG.focus&&IG.mk.has(IG.cal)){IG.focus=false;igFocus(11)}},80)}
+  const IGC=["#c6e3f2","#8ec4e3","#4f9fd1","#2271b3","#123f78"];
+  function igClases(vals){const v=vals.filter(x=>x>0).sort((a,b)=>a-b);const nice=x=>{if(x<=0)return 0;const p=Math.pow(10,Math.floor(Math.log10(x)));return Math.round(x/p*2)/2*p};
+    const br=v.length>=5?[.2,.4,.6,.8].map(q=>nice(v[Math.min(v.length-1,Math.floor(q*v.length))])):[];const B=[...new Set(br)].filter(x=>x>0);
+    const lab=B.length?[`menos de ${t0(B[0])} t`,...B.slice(1).map((x,j)=>`${t0(B[j])} a ${t0(x)} t`),`${t0(B[B.length-1])} t o más`]:["con desembarque"];
+    const off=IGC.length-lab.length;return{lab:lab.map((l,i)=>l),col:lab.map((_,i)=>IGC[i+off]),cls:x=>{let i=0;while(i<B.length&&x>=B[i])i++;return i+off},labOf:i=>lab[i-off]}}
+  function igLeyenda(){const el=document.getElementById("igLegT");if(!el||!IG.Q)return;el.innerHTML=`<span class="cs">Desembarque 12 meses (área):</span>${IG.Q.lab.map((l,i)=>`<span><i class="ig-bf" style="background:${IG.Q.col[i]}"></i>${esc(l)}</span>`).join("")}`}
   function igMarks(){IG.mk.forEach((m,i)=>{m.setStyle({weight:i===IG.cal?3.5:1});if(i===IG.cal&&m.bringToFront)m.bringToFront()})}
   function igFicha(){const box=document.getElementById("igFicha");if(!box||IG.cal==null)return;box.innerHTML=fichaHtml(IG.cal)}
 
