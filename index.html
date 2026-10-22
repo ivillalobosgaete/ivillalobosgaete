@@ -2358,7 +2358,7 @@ function renderKpis(A){
 }
 const ZAIM="Asociación de Industriales de Mejillones";
 /* Caletas Mejillones y Hornitos: se analizan en la zona de la Asociación de Industriales de Mejillones (no en Asuntos Públicos Norte) */
-function isAIM(c){return!!c&&/(^|\s)(mejillones|hornitos)(\s|$)/.test(norm(String(c[0]||"")).replace(/\(.*?\)/g," "))}
+function isAIM(c){const n=norm(String(c&&c[0]||""));return!!c&&!/michilla/.test(n)&&/(^|\s)(mejillones|hornitos)(\s|$)/.test(n.replace(/\(.*?\)/g," "))}
 function calZone(c){return isAIM(c)?ZAIM:regLabel(c[3])}
 function regLabel(r){const s=String(r).trim();if(/^II\s+REGI/i.test(s))return"Asuntos Públicos Norte";if(/^IV\s+REGI/i.test(s))return"Asuntos Públicos Los Pelambres";return regName(s)}
 function regName(r){const s=String(r).trim();const m=s.match(/^(\S+)\s+REGI[OÓ]N\s+(.*)$/i);if(!m)return s;const nm=m[2].toLowerCase().replace(/(^|\s)\S/g,c=>c.toUpperCase());return`${m[1].toUpperCase()} Región de ${nm}`}
