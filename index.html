@@ -1913,7 +1913,7 @@ body.bc-noscroll{overflow:hidden}
       <label><input type="checkbox" id="pNombres" checked> <span>Ver nombres de pescadores <span class="cs">(si no, se muestra solo el RPA)</span></span></label>
       <label><input type="checkbox" id="pExport"> <span>Exportar tablas a CSV</span></label>
     </div>
-    <div class="field"><label>Comunas que puede ver <span class="cs">(ninguna marcada = todas)</span></label><div class="comunas" id="pCom"></div></div><div class="field"><label>Caletas que puede ver <span class="cs">(ninguna marcada = todas las de sus comunas). Solo verá la información de esas caletas: ningún gráfico, comparación ni listado incluirá otras.</span></label><div class="comunas pcal" id="pCal"></div></div>
+    <div class="field"><label>Zonas que puede ver <span class="cs">(ninguna marcada = todas). Por ejemplo, un perfil de la Asociación de Industriales de Mejillones solo verá Mejillones y Hornitos.</span></label><div class="comunas" id="pZon"></div></div><div class="field"><label>Comunas que puede ver <span class="cs">(ninguna marcada = todas)</span></label><div class="comunas" id="pCom"></div></div><div class="field"><label>Caletas que puede ver <span class="cs">(ninguna marcada = todas las de sus comunas). Solo verá la información de esas caletas: ningún gráfico, comparación ni listado incluirá otras.</span></label><div class="comunas pcal" id="pCal"></div></div>
     <p class="err" id="pErr"></p>
     <div class="row"><button class="btn ghost" id="pCancel" type="button">Cancelar</button><button class="btn" id="pSave" type="button">Guardar</button></div>
   </div>
@@ -2008,7 +2008,7 @@ function showLogin(msg){
     catch(e){err.textContent=e.code==="pend"?"Tu cuenta está pendiente de aprobación por un administrador.":e.code==="susp"?"Tu cuenta está suspendida. Contacta al administrador.":e.code==="rate"?"Demasiados intentos. Espera unos minutos.":e.status===401?"Usuario o contraseña incorrectos.":"No se pudo iniciar sesión. Intenta de nuevo.";b.disabled=false;b.textContent="Iniciar sesión"}});
 }
 function setPerm(c){const adm=c.rol==="administrador",p=c.permisos||{};
-  S.perm={rol:c.rol,admin:adm,carga:adm,exportar:adm||!!p.exportar,nombres:adm||p.nombres!==false,comunas:adm?[]:(c.comunas||[]),caletas:adm?[]:(Array.isArray(p.caletas)?p.caletas:[])};S.restr=!adm&&!!(S.perm.comunas.length||S.perm.caletas.length)}
+  S.perm={rol:c.rol,admin:adm,carga:adm,exportar:adm||!!p.exportar,nombres:adm||p.nombres!==false,comunas:adm?[]:(c.comunas||[]),caletas:adm?[]:(Array.isArray(p.caletas)?p.caletas:[]),zonas:adm?[]:(Array.isArray(p.zonas)?p.zonas:[])};S.restr=!adm&&!!(S.perm.comunas.length||S.perm.caletas.length||S.perm.zonas.length)}
 function showRegister(){
   gate(`<p>Crea tu usuario. Un administrador revisará tu solicitud y te asignará un perfil.</p>
   <form id="regForm" style="display:grid;gap:11px">
@@ -2367,6 +2367,8 @@ function otherCal(txt){if(!S.restr||!S.R)return false;const t=" "+ckey(txt).repl
   if(al.some(a=>t.includes(" "+a+" ")))return false;const g=window.__bc&&window.__bc.GEOD&&window.__bc.GEOD.d&&window.__bc.GEOD.d.caletas||[];
   const known=[...KCAL0,...g.map(x=>ckey(x.n))].filter(k=>k&&k.length>2&&!al.some(a=>a===k||a.includes(k)||k.includes(a)));return known.some(k=>t.includes(" "+k+" "))}
 function calZone(c){return isAIM(c)?ZAIM:regLabel(c[3])}
+const ZKEY=c=>isAIM(c)?"aim":/^II\s+REGI/i.test(String(c[3]||"").trim())?"norte":/^IV\s+REGI/i.test(String(c[3]||"").trim())?"pelambres":"otra";
+const ZOPTS=[["norte","Asuntos Públicos Norte"],["pelambres","Asuntos Públicos Los Pelambres"],["aim",ZAIM]];
 function regLabel(r){const s=String(r).trim();if(/^II\s+REGI/i.test(s))return"Asuntos Públicos Norte";if(/^IV\s+REGI/i.test(s))return"Asuntos Públicos Los Pelambres";return regName(s)}
 function regName(r){const s=String(r).trim();const m=s.match(/^(\S+)\s+REGI[OÓ]N\s+(.*)$/i);if(!m)return s;const nm=m[2].toLowerCase().replace(/(^|\s)\S/g,c=>c.toUpperCase());return`${m[1].toUpperCase()} Región de ${nm}`}
 function renderClaves(A){
@@ -3530,7 +3532,7 @@ async function adminRender(){
   $("#uSum").innerHTML=`<span><b>${rows.length}</b> usuarios</span><span><b>${n("activo")}</b> activos</span><span><b>${n("pendiente")}</b> pendientes</span><span><b>${activeAdmins()}</b> administradores</span>`;
   const btn=(act,id,txt,cls="ghost")=>`<button class="btn ${cls} small" data-act="${act}" data-id="${esc(id)}" type="button">${txt}</button>`;
   $("#uTbl").innerHTML=`<thead><tr><th>Usuario</th><th>Nombre</th><th>Cargo y área</th><th>Estado</th><th>Nivel y permisos</th><th>Acciones</th></tr></thead><tbody>`+(rows.map(x=>{const me=isMe(x),p=x.permisos||{};
-    const perms=x.estado==="activo"?(x.rol==="administrador"?"Todo":[p.nombres===false?"Sin nombres":"",p.exportar?"Exporta CSV":"",x.comunas&&x.comunas.length?x.comunas.join(", "):"Todas las comunas",p.caletas&&p.caletas.length?"Caletas: "+p.caletas.map(n=>n.replace(/\s*\(.*\)$/,"")).join(", "):""].filter(Boolean).join(" · ")):"";
+    const perms=x.estado==="activo"?(x.rol==="administrador"?"Todo":[p.nombres===false?"Sin nombres":"",p.exportar?"Exporta CSV":"",x.comunas&&x.comunas.length?x.comunas.join(", "):"Todas las comunas",p.zonas&&p.zonas.length?"Zonas: "+p.zonas.map(k=>(ZOPTS.find(x=>x[0]===k)||[k,k])[1]).join(", "):"",p.caletas&&p.caletas.length?"Caletas: "+p.caletas.map(n=>n.replace(/\s*\(.*\)$/,"")).join(", "):""].filter(Boolean).join(" · ")):"";
     let acts;
     if(x.estado==="pendiente")acts=btn("aprobar",x.usuario,"Aprobar","")+btn("rechazar",x.usuario,"Rechazar")+btn("eliminar",x.usuario,"Eliminar");
     else if(x.estado==="activo")acts=btn("editar",x.usuario,"Editar")+btn("password",x.usuario,"Contraseña")+(me?"":btn("suspender",x.usuario,"Suspender")+btn("eliminar",x.usuario,"Eliminar"));
@@ -3557,11 +3559,11 @@ function openUser(mode,x){editing={mode,x};const nuevo=mode==="nuevo",me=x&&isMe
   $("#pRol").value=x&&x.estado==="activo"?x.rol:(x&&x.rol)||"visualizador";$("#pRol").disabled=!!me;$("#uMeNote").hidden=!me;
   const p=(x&&x.permisos)||{nombres:true};$("#pExport").checked=!!p.exportar;$("#pNombres").checked=p.nombres!==false;
   $("#pCom").innerHTML=S.full?[...new Set(S.full.C.map(cc=>cc[1]))].map(cc=>`<label><input type="checkbox" value="${esc(cc)}" ${x&&x.comunas&&x.comunas.includes(cc)?"checked":""}> ${esc(cc)}</label>`).join(""):"";
-  {const cs=(p.caletas||[]);const byCom=new Map();(S.full?S.full.C:[]).forEach(cc=>{if(!byCom.has(cc[1]))byCom.set(cc[1],[]);byCom.get(cc[1]).push(cc[0])});$("#pCal").innerHTML=[...byCom].map(([co,l])=>`<div class="pcal-g"><b>${esc(co)}</b>${[...new Set(l)].map(n=>`<label><input type="checkbox" value="${esc(n)}" ${cs.includes(n)?"checked":""}> ${esc(n.replace(/\s*\(.*\)$/,"").replace(/ Iv Reg$/i,""))}</label>`).join("")}</div>`).join("")}syncRol();$("#pSave").textContent=nuevo?"Crear usuario":mode==="aprobar"?"Aprobar":"Guardar cambios";$("#pErr").textContent="";$("#pModal").hidden=false;(nuevo?$("#uUsr"):$("#uNom")).focus()}
-function syncRol(){const adm=$("#pRol").value==="administrador";document.querySelectorAll("#pExtra input,#pCom input,#pCal input").forEach(i=>{i.disabled=adm});$("#pExtra").style.opacity=adm?.5:1;$("#pCom").style.opacity=adm?.5:1;$("#pCal").style.opacity=adm?.5:1}
+  {const cs=(p.caletas||[]);const byCom=new Map();(S.full?S.full.C:[]).forEach(cc=>{if(!byCom.has(cc[1]))byCom.set(cc[1],[]);byCom.get(cc[1]).push(cc[0])});$("#pCal").innerHTML=[...byCom].map(([co,l])=>`<div class="pcal-g"><b>${esc(co)}</b>${[...new Set(l)].map(n=>`<label><input type="checkbox" value="${esc(n)}" ${cs.includes(n)?"checked":""}> ${esc(n.replace(/\s*\(.*\)$/,"").replace(/ Iv Reg$/i,""))}</label>`).join("")}</div>`).join("")}$("#pZon").innerHTML=ZOPTS.map(([k,l])=>`<label><input type="checkbox" value="${k}" ${(p.zonas||[]).includes(k)?"checked":""}> ${esc(l)}</label>`).join("");syncRol();$("#pSave").textContent=nuevo?"Crear usuario":mode==="aprobar"?"Aprobar":"Guardar cambios";$("#pErr").textContent="";$("#pModal").hidden=false;(nuevo?$("#uUsr"):$("#uNom")).focus()}
+function syncRol(){const adm=$("#pRol").value==="administrador";document.querySelectorAll("#pExtra input,#pCom input,#pCal input,#pZon input").forEach(i=>{i.disabled=adm});$("#pZon").style.opacity=adm?.5:1;$("#pExtra").style.opacity=adm?.5:1;$("#pCom").style.opacity=adm?.5:1;$("#pCal").style.opacity=adm?.5:1}
 $("#pRol").onchange=syncRol;$("#pCancel").onclick=()=>$("#pModal").hidden=true;
 $("#pSave").onclick=async()=>{const b=$("#pSave"),err=$("#pErr");err.textContent="";const {mode,x}=editing;
-  const rol=$("#pRol").value,data={nombre:$("#uNom").value.trim(),cargo:$("#uCargo").value.trim(),area:$("#uArea").value.trim(),rol,permisos:{exportar:$("#pExport").checked,nombres:$("#pNombres").checked,caletas:rol==="administrador"?[]:[...document.querySelectorAll("#pCal input:checked")].map(i=>i.value)},comunas:rol==="administrador"?[]:[...document.querySelectorAll("#pCom input:checked")].map(i=>i.value)};
+  const rol=$("#pRol").value,data={nombre:$("#uNom").value.trim(),cargo:$("#uCargo").value.trim(),area:$("#uArea").value.trim(),rol,permisos:{exportar:$("#pExport").checked,nombres:$("#pNombres").checked,caletas:rol==="administrador"?[]:[...document.querySelectorAll("#pCal input:checked")].map(i=>i.value),zonas:rol==="administrador"?[]:[...document.querySelectorAll("#pZon input:checked")].map(i=>i.value)},comunas:rol==="administrador"?[]:[...document.querySelectorAll("#pCom input:checked")].map(i=>i.value)};
   if(!data.nombre){err.textContent="Escribe el nombre.";return}
   if(x&&x.rol==="administrador"&&x.estado==="activo"&&rol!=="administrador"&&activeAdmins()<=1){err.textContent="Debe quedar al menos un administrador activo.";return}
   b.disabled=true;
@@ -6478,6 +6480,9 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
   {const _st=setTab;setTab=function(t){_st(t);if(t==="ficha"){["#fab","#period","#aside","#chips"].forEach(s=>{const e=document.querySelector(s);if(e)e.hidden=true});const l=document.querySelector(".layout");if(l)l.style.gridTemplateColumns="minmax(0,1fr)";igRender()}}}
   {const _ba=window.__bcAfter;window.__bcAfter=()=>{_ba&&_ba();try{IG.st=IG.st;if(S.tab==="resumen")igEstado();if(S.tab==="ficha"){igMap(true);igFicha()}}catch(e){}}}
   {const _mr=window.mnReset;window.mnReset=()=>{_mr&&_mr();IG.st=null;IG.cal=null;IG.geoAsk=false;IG.rcAsk=false;const e=document.getElementById("igEstado");if(e)e.remove();const f=document.querySelector('[data-pane="ficha"]');if(f)f.innerHTML=""}}
+  /* Versión web: si el administrador cambia los permisos de la cuenta abierta, se aplican sin cerrar sesión */
+  if(!ART())setInterval(async()=>{try{if(!S.acct||!S.R||document.hidden)return;const r=await api("me");const u=r&&r.user;if(!u)return;const k=x=>JSON.stringify([x.rol,x.permisos||{},x.comunas||[]]);
+    if(k(u)!==k(S.acct)){S.acct={...S.acct,...u};setPerm(u);applyPerms();window.mnReset&&window.mnReset();await loadData();toast("Tus permisos fueron actualizados.")}}catch(e){}},60000);
 
 }
 
