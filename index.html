@@ -1449,6 +1449,14 @@ svg text.val{fill:var(--ink-2);font-weight:700}
 .mn-relx p{margin:4px 0}.mn-relx ul,.mn-relx ol{margin:4px 0;padding-left:20px;display:grid;gap:3px}
 .mn-ref{border:0;background:var(--brand-soft);color:var(--brand-ink);font-weight:800;font-size:.72rem;border-radius:5px;padding:0 5px;margin:0 1px;cursor:pointer;vertical-align:1px}
 .mn-relref{border-top:1px dashed var(--line);padding-top:8px;margin-top:12px!important}
+
+.mn-tblc>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}.mn-tblc>summary::-webkit-details-marker{display:none}
+.mn-tblc>summary h3::before{content:"▸ ";color:var(--brand-ink)}.mn-tblc[open]>summary h3::before{content:"▾ "}
+.mn-tbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
+.mn-tbl td{vertical-align:top}.mn-tbl tr.on>td{background:var(--brand-08)}.mn-tbl th.sort{white-space:nowrap}
+.mn-trx>td{background:var(--brand-08);white-space:normal}.mn-it-tbl{border:0;padding:0;background:none}
+.mn-tp{font-size:.72rem;font-weight:800;color:#ef6c00}.mn-tv{font-size:.72rem;font-weight:800;color:#c62828}.mn-tok{color:#16794a;font-weight:800}
+.mn-tblc{grid-template-columns:minmax(0,1fr)}.mn-tblc>*{min-width:0}
 .bc-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}.bc-head h2{margin:0}
 .bc-tabs{flex-wrap:wrap}.bc-badge{display:inline-block;background:#c62828;color:#fff;border-radius:999px;padding:0 7px;font-size:.72rem;margin-left:4px}
 .bc-ord{display:grid;grid-template-columns:minmax(240px,320px) minmax(0,1fr);gap:14px;align-items:start}
@@ -5511,7 +5519,7 @@ function cgScan(){document.querySelectorAll(".card h3, .card h4, .np-viz h4").fo
 
 // ===== Minutas de reuniones con organizaciones (pestaña «Minutas») =====
 {
-  const MN={list:[],loaded:false,loading:false,ia:null,warn:"",f:{cal:"",org:"",tema:"",d0:"",d1:"",q:"",soloPend:false,porComp:false},edit:null,busy:false,page:0,rel:[],relAbierto:null,relBusy:false,relEdit:false,relOpen:false,open:new Set(),inl:null,obs:null};
+  const MN={sort:"desc",tblOpen:true,tblx:null,tpage:0,list:[],loaded:false,loading:false,ia:null,warn:"",f:{cal:"",org:"",tema:"",d0:"",d1:"",q:"",soloPend:false,porComp:false},edit:null,busy:false,page:0,rel:[],relAbierto:null,relBusy:false,relEdit:false,relOpen:false,open:new Set(),inl:null,obs:null};
   const ORG0=[["El Cobre","Cooperativa de Pescadores Caleta El Cobre"],["Michilla","Asociación de Pescadores de Michilla"],["Michilla","Sindicato de Pescadores de Michilla"]];
   const TEMAS=["Compensación","AMERB y planes de manejo","Vedas y recursos","Compromisos RCA","Infraestructura y caleta","Empleo local y capacitación","Medio ambiente","Seguridad y navegación","Conflictos y reclamos","Coordinación y seguimiento","Otros"];
   const ART=()=>!!S.db;
@@ -5592,7 +5600,19 @@ Reglas:
       if(f.soloPend&&!(d.acuerdos||[]).some(a=>a.estado!=="cumplido"))return false;
       if(f.porComp&&!(d.pendientes||[]).length)return false;
       if(words.length){const hay=nrm([d.organizacion,d.lugar,d.caleta,d.resumen,(d.temas||[]).join(" "),(d.participantes||[]).map(p=>p.nombre+" "+(p.cargo||"")).join(" "),(d.acuerdos||[]).map(a=>a.texto+" "+(a.responsable||"")).join(" "),m.texto].join(" "));if(!words.every(w=>hay.includes(w)))return false}
-      return true}).sort((a,b)=>String((b.datos||{}).fecha||"").localeCompare(String((a.datos||{}).fecha||"")))}
+      return true}).sort(ordFecha)}
+  function ordFecha(a,b){const fa=String((a.datos||{}).fecha||""),fb=String((b.datos||{}).fecha||"");if(!fa!==!fb)return fa?-1:1;return MN.sort==="asc"?fa.localeCompare(fb):fb.localeCompare(fa)}
+  function tblCard(res,activo){const L=(activo?res:MN.list.slice().sort(ordFecha)),A=adm(),n=(MN.tpage+1)*50,asc=MN.sort==="asc";if(!MN.list.length)return"";
+    return`<details class="card mn-tblc" id="mnTblC" ${MN.tblOpen?"open":""}><summary><h3>Cuadro de minutas</h3><span class="cs">${L.length} minuta${L.length===1?"":"s"}${activo?" (con los filtros aplicados)":" (todas)"} · ordenadas por fecha, ${asc?"de la más antigua a la más reciente":"de la más reciente a la más antigua"}</span></summary>
+      <div class="mn-tbar"><span class="cs">Ordenar por fecha:</span><div class="seg" role="group" aria-label="Orden por fecha"><button type="button" data-mnsort="desc" aria-pressed="${!asc}">↓ Más recientes primero</button><button type="button" data-mnsort="asc" aria-pressed="${asc}">↑ Más antiguas primero</button></div></div>
+      <div class="tbl"><table class="mn-tbl"><thead><tr><th class="sort" data-mnsort="${asc?"desc":"asc"}" aria-sort="${asc?"ascending":"descending"}" title="Cambiar orden">Fecha</th><th>Organización</th><th>Caleta</th><th>Lugar</th><th>Temas</th><th class="r">Acuerdos</th><th>Minuta</th><th></th></tr></thead><tbody>
+      ${L.slice(0,n).map(m=>{const d=m.datos||{},ac=d.acuerdos||[],pe=ac.filter(a=>a.estado!=="cumplido").length,ve=ac.filter(vencido).length,x=MN.tblx===m.id;
+        return`<tr class="${x?"on":""}"><td><b>${d.fecha?esc(fmtF(d.fecha)):'<em class="cs">Sin fecha</em>'}</b></td><td style="white-space:normal;min-width:180px">${esc(d.organizacion||"—")}${noPesca(m)?' <span class="mn-np-t">No pesquera</span>':""}</td><td>${esc(d.caleta||"—")}</td><td style="white-space:normal">${esc(d.lugar||"—")}</td><td style="white-space:normal">${(d.temas||[]).slice(0,3).map(t=>`<span class="tg">${esc(t)}</span>`).join(" ")}${(d.temas||[]).length>3?` <span class="cs">+${d.temas.length-3}</span>`:""}</td>
+          <td class="r">${ac.length?`${ac.length}${pe?` <span class="${ve?"mn-tv":"mn-tp"}">${pe} pend.${ve?` · ${ve} venc.`:""}</span>`:' <span class="mn-tok">✓</span>'}`:"—"}</td>
+          <td>${m.archivo?`<button type="button" class="lnk" data-mnver="${esc(m.id)}">Ver</button><button type="button" class="lnk" data-mndl="${esc(m.id)}">↓</button>`:'<span class="cs">—</span>'}</td>
+          <td><button type="button" class="lnk" data-mntx="${esc(m.id)}" aria-expanded="${x}">${x?"▴ Cerrar":"▾ Ficha"}</button></td></tr>
+          ${x?`<tr class="mn-trx"><td colspan="8"><div class="mn-it mn-it-tbl" data-mnid="${esc(m.id)}"><div class="mn-pan">${MN.inl===m.id?`<div class="mn-inl"></div>`:panel(m)}</div></div></td></tr>`:""}`}).join("")}</tbody></table></div>
+      ${L.length>n?`<button type="button" class="btn ghost small" id="mnTblMore">Ver más (${L.length-n} restantes)</button>`:""}</details>`}
   function snip(m){const q=nrm(MN.f.q).trim();const d=m.datos||{};const base=d.resumen||m.texto||"";if(!q)return esc(base.slice(0,220))+(base.length>220?"…":"");
     const words=q.split(/\s+/).filter(w=>w.length>1);const src=[d.resumen,m.texto].filter(Boolean).join(" · ");const n=nrm(src);let i=-1;for(const w of words){i=n.indexOf(w);if(i>=0)break}
     let s=i>=0?src.slice(Math.max(0,i-90),i+170):src.slice(0,240);let h=esc(s);words.forEach(w=>{const re=new RegExp("("+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&").split("").map(c=>{const m={a:"[aáà]",e:"[eéè]",i:"[iíì]",o:"[oóò]",u:"[uúüù]",n:"[nñ]"}[c];return m||c}).join("")+")","gi");h=h.replace(re,"<mark>$1</mark>")});return(i>90?"…":"")+h+"…"}
@@ -5617,6 +5637,7 @@ Reglas:
         <label class="mn-chk"><input type="checkbox" id="mnPend" ${f.soloPend?"checked":""}> Con compromisos pendientes</label><label class="mn-chk"><input type="checkbox" id="mnPC" ${f.porComp?"checked":""}> Por completar (${MN.list.filter(m=>((m.datos||{}).pendientes||[]).length).length})</label>
         <button type="button" class="btn ghost small" id="mnClr">✕ Limpiar filtros</button></div>
         <p class="cs">${activo?`${res.length} de ${MN.list.length} minuta${MN.list.length===1?"":"s"}`:`${MN.list.length} minuta${MN.list.length===1?"":"s"} cargada${MN.list.length===1?"":"s"} · usa la búsqueda o un filtro para verlas`}</p></div>
+      ${tblCard(res,activo)}
       <div class="card"><div class="tbar"><h3>Resultados${help("Pasa el cursor (o toca) un resultado para ver organización, lugar, fecha, participantes y resumen. Desde ahí puedes ver o descargar la minuta original.")}</h3></div>
         ${!activo&&MN.list.length?`<div class="mn-idle"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><p><b>Busca para ver las minutas.</b> Escribe palabras clave, elige caleta, organización, tema o fechas, o haz clic en una organización${PT.n?" o en «Ver compromisos pendientes»":""}.</p></div>`:res.length?`<div class="mn-list">${res.slice(0,(MN.page+1)*30).map(m=>{const d=m.datos||{},pa=(d.acuerdos||[]).filter(a=>a.estado!=="cumplido"),pv=pa.filter(vencido).length,op=MN.open.has(m.id);return`<article class="mn-it${pa.length?" pend":""}${op?" open":""}" data-mnid="${esc(m.id)}" tabindex="0">
           ${pa.length?`<div class="mn-pb"><span>!</span>${pa.length} compromiso${pa.length===1?"":"s"} pendiente${pa.length===1?"":"s"}${pv?` · ${pv} vencido${pv===1?"":"s"}`:""}</div>`:""}
@@ -5968,6 +5989,9 @@ Compromisos: ${(d.acuerdos||[]).map(a=>`- ${a.texto} | responsable: ${a.responsa
     if(t.closest("#mnBulkB")){bulkOpen();return}
     if(t.closest("#mnNoPesca")){npOpen();return}
     if(t.closest("#mnVerPend")){MN.f.soloPend=!MN.f.soloPend;if(MN.f.soloPend)MN.list.forEach(m=>{if(((m.datos||{}).acuerdos||[]).some(a=>a.estado!=="cumplido"))MN.open.add(m.id)});MN.page=0;mnRender();return}
+    const so=t.closest("[data-mnsort]");if(so){MN.sort=so.dataset.mnsort;MN.tpage=0;mnRender();return}
+    const tx=t.closest("[data-mntx]");if(tx){const id=tx.dataset.mntx;popHide(0);if(MN.tblx===id){if(MN.inl===id){MN.inl=null;MN.edit=null}MN.tblx=null}else{if(MN.inl&&MN.inl!==id){MN.inl=null;MN.edit=null}MN.open.delete(id);MN.tblx=id}mnRender();return}
+    if(t.closest("#mnTblMore")){MN.tpage++;mnRender();return}
     const tg=t.closest("[data-mntog]");if(tg){const id=tg.dataset.mntog;popHide(0);if(MN.open.has(id)){if(MN.inl===id){MN.inl=null;MN.edit=null}MN.open.delete(id)}else MN.open.add(id);mnRender();return}
     const il=t.closest("[data-mninl]");if(il){popHide(0);const m=MN.list.find(x=>x.id===il.dataset.mninl);if(m){abrirForm(m,true);setTimeout(()=>{const c=document.querySelector(`.mn-it[data-mnid="${CSS.escape(m.id)}"] .mn-inl`);if(c){c.scrollIntoView({behavior:"smooth",block:"start"});const f=c.querySelector("#mF");if(f)f.focus({preventScroll:true})}},60)}return}
     const mo=t.closest("[data-mnopen]");if(mo){popHide(0);const id=mo.dataset.mnopen;MN.open.add(id);mnRender();setTimeout(()=>{const c=document.querySelector(`.mn-it[data-mnid="${CSS.escape(id)}"] .mn-pan`);if(c)c.scrollIntoView({behavior:"smooth",block:"start"})},60);return}
@@ -6007,6 +6031,7 @@ Compromisos: ${(d.acuerdos||[]).map(a=>`- ${a.texto} | responsable: ${a.responsa
   document.addEventListener("keydown",ev=>{if(ev.key==="Escape"){popHide(0);const v=document.getElementById("mnView");if(v&&!v.hidden)v.hidden=true}});
 
   const _st=setTab;setTab=function(t){_st(t);if(t==="minutas"){["#fab","#period","#aside","#chips"].forEach(s=>{const e=document.querySelector(s);if(e)e.hidden=true});const l=document.querySelector(".layout");if(l)l.style.gridTemplateColumns="minmax(0,1fr)";mnRender()}else popHide(0)};
+  document.addEventListener("toggle",e=>{if(e.target&&e.target.id==="mnTblC")MN.tblOpen=e.target.open},true);
   window.mnReset=()=>{MN.list=[];MN.capas=[];MN.instr=[];MN.avisos=[];MN.loaded=false;MN.warn=""};
 
   /* ===================== Pestaña «Borde costero»: ordenamiento territorial y condiciones del mar ===================== */
