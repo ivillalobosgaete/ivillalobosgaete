@@ -6108,7 +6108,10 @@ Compromisos: ${(d.acuerdos||[]).map(a=>`- ${a.texto} | responsable: ${a.responsa
   const bcSetC=(id,h)=>{const e=document.getElementById(id);if(e)e.innerHTML=h};
   const LL=()=>bcGeo()&&bcGeo().loadLeaflet;
   const WEB=()=>!ART();
-  function caletasGeo(){const g=bcGeo();if(!g||!S.R)return[];const out=[];S.R.m.C.forEach((c,i)=>{const p=g.geoOf(c);if(p)out.push({i,n:g.calLab(c[0]),com:c[1],lat:p[0],lon:p[1]})});return out}
+  /* Ubicación de respaldo para caletas que no traen coordenadas ni aparecen en el registro de Subpesca */
+  const GEO2={"mejillones":[-23.0995,-70.4488],"hornitos":[-22.9135,-70.2878],"michilla":[-22.7251,-70.2794],"el cobre":[-24.255,-70.522],"cobija":[-22.554,-70.263],"el blanco":[-24.215,-70.523],"coloso":[-23.7615,-70.4615],"taltal":[-25.405,-70.484],"paposo":[-25.006,-70.465],"tocopilla":[-22.088,-70.205],"juan lopez":[-23.513,-70.523],"la chimba":[-23.554,-70.405]};
+  const g2key=n=>nrm(String(n||"")).replace(/\(.*?\)/g," ").replace(/\b(caleta|iv reg|ii reg)\b/g," ").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+  function caletasGeo(){const g=bcGeo();if(!g||!S.R)return[];const out=[];S.R.m.C.forEach((c,i)=>{const p=g.geoOf(c)||GEO2[g2key(c[0])];if(p)out.push({i,n:g.calLab(c[0]),com:c[1],lat:p[0],lon:p[1]})});return out}
   function avEstado(a){const d=a.datos||a,h=todayISO();if(d.finalizado)return"fin";if(d.desde&&d.desde>h)return"prog";if(d.hasta&&d.hasta<h)return"fin";return"vig"}
   const AVEST={vig:["Vigente","#c62828"],prog:["Programado","#ef6c00"],fin:["Finalizado","#607d8b"]};
   const vigentes=()=>(MN.avisos||[]).filter(a=>avEstado(a)==="vig");
@@ -6393,9 +6396,10 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
     document.getElementById("igHead").innerHTML=`<div class="tbar"><div><h2>Ficha por caleta</h2><p class="cs">Toda la información de gestión de una caleta en un solo lugar: actividad pesquera, recursos, manejo, vedas, avisos, exigencias ambientales y línea de tiempo.</p></div>
       <div class="l"><label class="ig-sel">Caleta<select id="igCal">${zones.map(z=>`<optgroup label="${esc(z)}">${R.m.C.map((c,i)=>[c,i]).filter(([c])=>calZone(c)===z).sort((a,b)=>st.C[b[1]].q12-st.C[a[1]].q12).map(([c,i])=>`<option value="${i}" ${i===IG.cal?"selected":""}>${esc(calLab(c[0]))} · ${esc(c[1])}</option>`).join("")}</optgroup>`).join("")}</select></label>
       <button type="button" class="btn ghost small" id="igPrint">🖨 Imprimir ficha</button><select id="igPrintZ" class="ig-pz" aria-label="Imprimir todas las caletas de una zona"><option value="">🖨 Imprimir zona completa…</option>${zones.map(z=>`<option>${esc(z)}</option>`).join("")}</select></div></div>`;
-    igMap(false);igFicha()}
+    igMap(false);igFicha();
+    if(g&&!IG.geoDone&&!WEBna())Promise.resolve(g.geoLoad()).then(()=>{if(S.tab==="ficha"&&!IG.geoDone){IG.geoDone=true;IG.st=IG.st;igMap(true);igFicha()}}).catch(()=>{})}
   async function igMap(refresh){if(IG.mbusy){IG.magain=IG.magain||refresh||"x";return}IG.mbusy=true;try{await igMap0(refresh)}catch(e){console.error(e)}IG.mbusy=false;if(IG.magain){const r=IG.magain===true;IG.magain=false;igMap(r)}}
-  function igFocus(z){const m=IG.mk.get(IG.cal);if(!IG.map||!m)return;IG.map.setView(m.getLatLng(),z||Math.max(IG.map.getZoom(),11),{animate:true});try{IG.mk.forEach(x=>x.closeTooltip());m.openTooltip()}catch(e){}}
+  function igFocus(z){const m=IG.mk.get(IG.cal);if(IG.map&&!m&&IG.cal!=null){toast("No hay ubicación registrada para la caleta "+calLab(S.R.m.C[IG.cal][0])+".");return}if(!IG.map||!m)return;IG.map.setView(m.getLatLng(),z||Math.max(IG.map.getZoom(),11),{animate:true});try{IG.mk.forEach(x=>x.closeTooltip());m.openTooltip()}catch(e){}}
   async function igMap0(refresh){const box=document.getElementById("igMapC");if(!box)return;const cal=caletasGeo();
     if(WEBna()||!LL()){box.innerHTML=`<p class="cs">El mapa de caletas se muestra en la versión web.</p>`;box.classList.add("ig-nomap");return}
     if(!document.getElementById("igMap")){box.innerHTML=`<div class="ig-mh"><h3>Mapa de caletas</h3><div class="ig-leg">${["ok","warn","bad","na"].map(k=>`<span><i style="background:${STC[k][1]}"></i>${STC[k][0]}</span>`).join("")}<span class="cs">Punto: estado de la caleta (más grande = más toneladas) · haz clic en una caleta para ver su ficha</span></div></div><div class="ig-leg ig-legt" id="igLegT"></div><div id="igMap" class="ig-map"></div>`;IG.map=null}
@@ -6492,7 +6496,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
   {const _rp=renderPane;renderPane=function(){_rp.apply(this,arguments);try{if(S.tab==="resumen")igEstado();if(S.tab==="ficha")igRender()}catch(e){console.error(e)}}}
   {const _st=setTab;setTab=function(t){_st(t);if(t==="ficha"){["#fab","#period","#aside","#chips"].forEach(s=>{const e=document.querySelector(s);if(e)e.hidden=true});const l=document.querySelector(".layout");if(l)l.style.gridTemplateColumns="minmax(0,1fr)";igRender()}}}
   {const _ba=window.__bcAfter;window.__bcAfter=()=>{_ba&&_ba();try{IG.st=IG.st;if(S.tab==="resumen")igEstado();if(S.tab==="ficha"){igMap(true);igFicha()}}catch(e){}}}
-  {const _mr=window.mnReset;window.mnReset=()=>{_mr&&_mr();IG.st=null;IG.cal=null;IG.geoAsk=false;IG.rcAsk=false;const e=document.getElementById("igEstado");if(e)e.remove();const f=document.querySelector('[data-pane="ficha"]');if(f)f.innerHTML=""}}
+  {const _mr=window.mnReset;window.mnReset=()=>{_mr&&_mr();IG.st=null;IG.cal=null;IG.geoAsk=false;IG.rcAsk=false;IG.geoDone=false;IG.map=null;const e=document.getElementById("igEstado");if(e)e.remove();const f=document.querySelector('[data-pane="ficha"]');if(f)f.innerHTML=""}}
   /* Versión web: si el administrador cambia los permisos de la cuenta abierta, se aplican sin cerrar sesión */
   if(!ART())setInterval(async()=>{try{if(!S.acct||!S.R||document.hidden)return;const r=await api("me");const u=r&&r.user;if(!u)return;const k=x=>JSON.stringify([x.rol,x.permisos||{},x.comunas||[]]);
     if(k(u)!==k(S.acct)){S.acct={...S.acct,...u};setPerm(u);applyPerms();window.mnReset&&window.mnReset();await loadData();toast("Tus permisos fueron actualizados.")}}catch(e){}},60000);
