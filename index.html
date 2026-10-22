@@ -2076,7 +2076,7 @@ async function saveData(m,archivo,nuevas,modo){
 function prepare(m){
   const c=m.cols,n=c.d.length;
   const uniq=arr=>{const u=[],ix=new Map();const map=arr.map(v=>{if(!ix.has(v)){ix.set(v,u.length);u.push(v)}return ix.get(v)});return{u,map}};
-  const comp=uniq(m.C.map(x=>x[4])),reg=uniq(m.C.map(x=>x[3])),com=uniq(m.C.map(x=>x[1]));
+  const comp=uniq(m.C.map(x=>x[4])),reg=uniq(m.C.map(x=>isAIM(x)?"AIM|"+x[3]:x[3])),com=uniq(m.C.map(x=>x[1]));
   const order=["Algas","Moluscos","Peces","Crustáceos","Otros"];const g0=uniq(m.E.map(x=>x[2]));
   const grps=[...g0.u].sort((a,b)=>(order.indexOf(a)+1||9)-(order.indexOf(b)+1||9));const gmap=m.E.map(x=>grps.indexOf(x[2]));
   let minD=Infinity,maxD=-Infinity;for(let i=0;i<n;i++){const d=c.d[i];if(d<minD)minD=d;if(d>maxD)maxD=d}
@@ -2084,7 +2084,7 @@ function prepare(m){
   const y0=new Date(BASE+minD*DAY).getUTCFullYear(),y1=new Date(BASE+maxD*DAY).getUTCFullYear();
   const R={n,m,d:c.d,p:c.p,c:c.c,e:c.e,k:c.k,q:c.q,x:c.x,yr:new Int16Array(n),mo:new Int8Array(n),ym:new Int32Array(n),
     comp:new Int16Array(n),reg:new Int16Array(n),com:new Int16Array(n),grp:new Int16Array(n),sex:new Int8Array(n),
-    comps:comp.u,regs:reg.u.map(regLabel),regRaw:reg.u,coms:com.u,grps,y0,y1,minD,maxD};
+    comps:comp.u,regs:reg.u.map(k=>k.startsWith("AIM|")?ZAIM:regLabel(k)),regRaw:reg.u.map(k=>k.replace(/^AIM\|/,"")),coms:com.u,grps,y0,y1,minD,maxD};
   R.grpColor=grps.map((g,i)=>({"Algas":"var(--g-algas)","Moluscos":"var(--g-moluscos)","Peces":"var(--g-peces)","Crustáceos":"var(--g-crust)","Otros":"var(--g-otros)"})[g]||COLS[i%6]);
   for(let i=0;i<n;i++){const dt=new Date(BASE+c.d[i]*DAY);R.yr[i]=dt.getUTCFullYear()-y0;R.mo[i]=dt.getUTCMonth();R.ym[i]=R.yr[i]*12+R.mo[i];
     const ci=c.c[i];R.comp[i]=comp.map[ci];R.reg[i]=reg.map[ci];R.com[i]=com.map[ci];R.grp[i]=gmap[c.e[i]];R.sex[i]=m.P[c.p[i]][2]}
@@ -2262,7 +2262,7 @@ function calHeat(A){
   const my=MES.map((_,j)=>monthYears(j));
   const val=(c,j)=>{const t=T[c*12+j];if(ms==="mes")return my[j]?t/my[j]:0;if(ms==="pesc"){const f=F[c*12+j];return f&&f.size?t/f.size:0}return t};
   const tot=c=>V(A.cal[c],A.calFis[c],A.nMonths);
-  const zones=new Map();m.C.forEach((c,i)=>{if(A.cal[i]<=0)return;const z=regLabel(c[3]);if(!zones.has(z))zones.set(z,{raw:c[3],rows:[]});zones.get(z).rows.push(i)});
+  const zones=new Map();m.C.forEach((c,i)=>{if(A.cal[i]<=0)return;const z=calZone(c);if(!zones.has(z))zones.set(z,{raw:c[3],rows:[]});zones.get(z).rows.push(i)});
   const zl=[...zones.entries()].sort((a,b)=>String(a[1].raw).localeCompare(String(b[1].raw)));zl.forEach(([,z])=>z.rows.sort((a,b)=>tot(b)-tot(a)));
   const W=vw("gCalHeat",1000);if(!zl.length){emptyMsg(svg,W,120);return}
   const narrow=W<640,L=narrow?104:170,BW=narrow?62:150,cw=(W-L-BW-12)/12,ch=narrow?24:26,zh=26;
@@ -2355,6 +2355,10 @@ function renderKpis(A){
     (hasPrices()?(()=>{const v=A.esp.reduce((a,t,e)=>a+t*1000*priceOf(e),0),pv=A.P.esp.reduce((a,t,e)=>a+t*1000*priceOf(e),0);return["Valor estimado",money(v),(deltaHtml(v,pv,on)||"")+`<span class="d">${priceNote(A.esp.entries())}</span>`,"coin",""]})():["% del total de la base",`${t1(share)} <small>%</small>`,`<div class="meter" aria-hidden="true"><i style="width:${Math.min(100,share)}%"></i></div>`,"pie",""])
   ].map(([k,v,d,ic,sp],j)=>`<div class="kpi${j===0?" hero":""}"><div class="kh">${icon(ic)}<span class="k">${k}</span></div><span class="v">${v}</span>${d}${sp}</div>`).join("");
 }
+const ZAIM="Asociación de Industriales de Mejillones";
+/* Caletas Mejillones y Hornitos: se analizan en la zona de la Asociación de Industriales de Mejillones (no en Asuntos Públicos Norte) */
+function isAIM(c){return!!c&&/(^|\s)(mejillones|hornitos)(\s|$)/.test(norm(String(c[0]||"")).replace(/\(.*?\)/g," "))}
+function calZone(c){return isAIM(c)?ZAIM:regLabel(c[3])}
 function regLabel(r){const s=String(r).trim();if(/^II\s+REGI/i.test(s))return"Asuntos Públicos Norte";if(/^IV\s+REGI/i.test(s))return"Asuntos Públicos Los Pelambres";return regName(s)}
 function regName(r){const s=String(r).trim();const m=s.match(/^(\S+)\s+REGI[OÓ]N\s+(.*)$/i);if(!m)return s;const nm=m[2].toLowerCase().replace(/(^|\s)\S/g,c=>c.toUpperCase());return`${m[1].toUpperCase()} Región de ${nm}`}
 function renderClaves(A){
@@ -3768,7 +3772,7 @@ document.addEventListener("click",ev=>{const b=ev.target.closest(".rm-b");if(!b)
 /*C2S*/
 /* ================= Gráficos 2.0: mejores diseños, cruces de variables y gráficos de exigencias por compañía ================= */
 (function(){
-const ZC=z=>/norte/i.test(z)?"var(--s1)":"var(--s4)";
+const ZC=z=>/norte/i.test(z)?"var(--s1)":/mejillones/i.test(z)?"var(--s3)":"var(--s4)";
 const CC=e=>{const n=norm(e);return n.includes("zaldivar")?"var(--s1)":n.includes("antucoya")?"var(--s2)":n.includes("centinela")?"var(--s3)":n.includes("pelambres")?"var(--s4)":"var(--s6)"};
 const RED="#d0453b",GREEN="#16794a",GRAY="#b9b6ae";
 const pc=v=>t0(v)+" %",pc1=v=>t1(v)+" %";
@@ -4273,7 +4277,7 @@ function loadLeaflet(){if(LEAF)return LEAF;LEAF=(async()=>{const l=document.crea
 
 const calLab=n=>n.replace(/\s*\(.*\)$/,"").replace(/ Iv Reg$/i,"");window.__bc={geoOf:c=>geoOf(c),calLab,geoLoad:()=>geoLoad(),loadLeaflet:()=>loadLeaflet(),get GEOD(){return GEOD},amCal:(a,b,c)=>amCal(a,b,c),am3:a=>am3(a),pmSt:p=>pmSt(p),ecSt:e=>ecSt(e),polyDist:(a,b,g)=>polyDist(a,b,g),hav:(a,b,c,d)=>hav(a,b,c,d),cent:g=>cent(g),vedasHoy:()=>vedasHoy()};
 function mapData(A){const R=S.R,m=R.m,nm=A.nMonths,zones=new Map(),all=[];
-  m.C.forEach((c,i)=>{const g=geoOf(c);if(!g)return;const z=regLabel(c[3]);if(!zones.has(z))zones.set(z,{name:z,raw:c[3],pts:[]});
+  m.C.forEach((c,i)=>{const g=geoOf(c);if(!g)return;const z=calZone(c);if(!zones.has(z))zones.set(z,{name:z,raw:c[3],pts:[]});
     const p={i,name:c[0],com:c[1],comp:c[4],lat:g[0],lon:g[1],aprox:!!g[2],off:g[3]||null,t:A.cal[i],fis:A.calFis[i].size,muj:A.calMuj[i].size,v:V(A.cal[i],A.calFis[i],nm)};zones.get(z).pts.push(p);all.push(p)});
   const list=[...zones.values()].sort((a,b)=>String(a.raw).localeCompare(String(b.raw)));const mx=Math.max(0,...all.map(p=>p.v));return{list,mx,all}}
 const vTxt=v=>S.measure==="total"?t0(v)+" t":tt(v)+" "+MEAS[S.measure].short;
@@ -4287,7 +4291,7 @@ async function mapa2(A){if(!$("#gmList")||!S.R)return;if(typeof api==="function"
   if(rk.length&&tot){const t3=rk.slice(0,3),s3=t3.reduce((s,p)=>s+p.t,0)/tot*100,coms=[...new Set(t3.map(p=>p.com))];const zt=list.map(z=>({n:z.name,t:z.pts.reduce((s,p)=>s+p.t,0)})).sort((a,b)=>b.t-a.t);
     setC("cMapaC",`La mayor actividad está en <b>${esc(calLab(rk[0].name))}</b> (${t0(rk[0].t/tot*100)} % de las toneladas).${t3.length>1?` Las ${t3.length} caletas más activas (${t3.map(p=>esc(calLab(p.name))).join(", ")}) suman el ${t0(s3)} % y están en ${coms.map(esc).join(" y ")}`:""}${zt.length>1?`; ${esc(shortZ(zt[0].n))} concentra el ${t0(zt[0].t/tot*100)} % del volumen`:""}. Son las caletas donde una faena, veda o acuerdo tendría mayor impacto en la pesca local.${(()=>{const wo=all.filter(p=>p.off&&(p.off.h!=null||p.off.m!=null));if(!wo.length)return"";const reg=wo.reduce((s,p)=>s+(+p.off.h||0)+(+p.off.m||0),0),act=wo.reduce((s,p)=>s+p.fis,0);return reg?` Según el registro oficial de Subpesca, ${wo.length===1?"esa caleta tiene":`esas ${wo.length} caletas tienen`} ${t0(reg)} pescadores inscritos y ${t0(act)} tuvieron desembarque en el período${act<=reg?` (${t0(act/reg*100)} %): el resto está inscrito pero sin actividad registrada`:": hay más pescadores activos que inscritos en el último registro anual, lo que indica rotación en el período o un registro desactualizado"}.`:""})()}`)}else setC("cMapaC","")}
 function gmPanel(A,all,mx){const box=$("#gmList");if(!box)return;const rk=all.slice().sort((a,b)=>b.v-a.v);if(!rk.length){box.innerHTML="";return}const sel=S.f.cal;
-  box.innerHTML=rk.map((p,j)=>`<button type="button" class="gmi${sel.has(p.i)?" on":""}" data-gmfil="${p.i}" title="${sel.has(p.i)?"Quitar filtro":"Filtrar el dashboard por esta caleta"}"><span class="gmr">${j+1}</span><i style="background:${p.v>0?heatCol(mx?p.v/mx:0):"#c9d5d9"}"></i><span class="gmn">${esc(calLab(p.name))}<span class="cs">${esc(p.com)}${p.off&&(p.off.h!=null||p.off.m!=null)?` · ${t0(p.fis)} activos de ${t0((+p.off.h||0)+(+p.off.m||0))} inscritos`:""}</span></span><span class="gmbar"><i style="width:${mx?Math.max(1,p.v/mx*100):0}%;background:${ZC(regLabel(S.R.m.C[p.i][3]))}"></i></span><b>${p.v>0?vTxt(p.v):"—"}</b></button>`).join("")}
+  box.innerHTML=rk.map((p,j)=>`<button type="button" class="gmi${sel.has(p.i)?" on":""}" data-gmfil="${p.i}" title="${sel.has(p.i)?"Quitar filtro":"Filtrar el dashboard por esta caleta"}"><span class="gmr">${j+1}</span><i style="background:${p.v>0?heatCol(mx?p.v/mx:0):"#c9d5d9"}"></i><span class="gmn">${esc(calLab(p.name))}<span class="cs">${esc(p.com)}${p.off&&(p.off.h!=null||p.off.m!=null)?` · ${t0(p.fis)} activos de ${t0((+p.off.h||0)+(+p.off.m||0))} inscritos`:""}</span></span><span class="gmbar"><i style="width:${mx?Math.max(1,p.v/mx*100):0}%;background:${ZC(calZone(S.R.m.C[p.i]))}"></i></span><b>${p.v>0?vTxt(p.v):"—"}</b></button>`).join("")}
 function amLegend(){const el=$("#amLeg");if(!el)return;const d=GEOD.d;if(!d||!d.amerb||!d.amerb.length){el.innerHTML="";return}const cnt={};d.amerb.forEach(a=>{const k=amStage(a);cnt[k]=(cnt[k]||0)+1});const hid=amHidden(),on=ST2.get("amerb","1")==="1";
   el.innerHTML=`<label class="amtog"><input type="checkbox" id="amTog" ${on?"checked":""}> <b>Áreas de manejo (AMERB)</b> por estado del trámite:</label>`+AMST.filter(x=>cnt[x[0]]).map(x=>`<label class="amtog amst-l${on?"":" off"}"><input type="checkbox" data-amst="${x[0]}" ${hid.has(x[0])?"":"checked"} ${on?"":"disabled"}><i class="amk" style="background:${x[3]};border:1.5px ${x[5]?"dashed":"solid"} ${x[2]}"></i>${esc(x[1])} <span class="cs">(${t0(cnt[x[0]])})</span></label>`).join("");
   $("#amTog").onchange=ev=>{ST2.set("amerb",ev.target.checked?"1":"0");mapa2(LAST.A)};el.querySelectorAll("[data-amst]").forEach(c=>c.onchange=()=>{const h=amHidden();c.checked?h.delete(c.dataset.amst):h.add(c.dataset.amst);ST2.set("amHide",[...h].join(","));mapa2(LAST.A)})}
@@ -4391,7 +4395,7 @@ function crBars(id,rows,cols,names,o={}){const svg=$("#"+id),W=vw(id,640),narrow
 function crScatter(id,pts){const svg=$("#"+id),W=vw(id,640);const rows=pts.filter(p=>p.ha>0).map(p=>({...p,r:p.n/p.ha})).sort((a,b)=>b.r-a.r);const narrow=W<520,labW=narrow?110:170,rh=28,T=4,H=T+Math.max(1,rows.length)*rh+22,L=labW,Rr=W-(narrow?120:190);clear(svg,W,H);if(!rows.length){emptyMsg(svg,W,120);return}
   const mx=niceMax(Math.max(.01,...rows.map(r=>r.r))),sc=v=>v/mx*(Rr-L);
   [0,.5,1].forEach(k=>{const x=L+sc(mx*k);E("line",{x1:x,x2:x,y1:T,y2:H-18,class:"gl"},svg);E("text",{x,y:H-4,"text-anchor":"middle"},svg).textContent=t1(mx*k)});
-  rows.forEach((o,j)=>{const y=T+j*rh+4,h=rh-10,col=ZC(regLabel(S.R.m.C[o.p.i][3]));E("text",{x:L-8,y:y+h/2+4,"text-anchor":"end"},svg).textContent=calLab(o.p.name);
+  rows.forEach((o,j)=>{const y=T+j*rh+4,h=rh-10,col=ZC(calZone(S.R.m.C[o.p.i]));E("text",{x:L-8,y:y+h/2+4,"text-anchor":"end"},svg).textContent=calLab(o.p.name);
     const re=E("rect",{x:L,y,width:Math.max(1,sc(o.r)),height:h,rx:3,fill:col},svg);E("text",{x:L+sc(o.r)+6,y:y+h/2+4,class:"val",style:"font-size:10.5px"},svg).textContent=`${t1(o.r)} por ha · ${t0(o.n)} pesc. · ${t0(o.ha)} ha`;
     hover(re,()=>`<b>${esc(o.p.name)}</b><br>${t0(o.ha)} ha de AMERB decretadas<br>${t0(o.n)} pescadores activos · ${t1(o.r)} por ha<br>${t0(o.t)} t en el período`,add=>toggle("cal",o.p.i,add))})}
 function ecSt(e){const t=norm(e.est||"");if(/decret|destinad|otorgad|convenio|firmad|vigente/.test(t)&&!/no\s/.test(t))return["ok","Decretada o con convenio de uso","#127a4c"];if(/rechaz|desist|caduc|termin|denegad|inadmis/.test(t))return["re","Rechazada, desistida o caducada","#b4372f"];return["tr","En trámite","#c98700"]}
@@ -6293,7 +6297,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
   /* ===================== Gestión integral: estado del territorio y ficha por caleta ===================== */
   const IG={cal:null,st:null,map:null,mk:new Map(),geoAsk:false,rcAsk:false};
   const STC={ok:["Al día","var(--st-ok)"],warn:["Atención","var(--st-warn)"],bad:["Requiere acción","var(--st-bad)"],na:["Sin datos","var(--st-na)"],info:["Informativo","var(--st-info)"]};
-  const ZCOL=z=>/norte/i.test(z)?"var(--s1)":"var(--s4)";
+  const ZCOL=z=>/norte/i.test(z)?"var(--s1)":/mejillones/i.test(z)?"var(--s3)":"var(--s4)";
   const pctTxt=d=>d==null||!isFinite(d)?"":`${d>=0?"+":"−"}${t0(Math.abs(d))} %`;
   const ymISO=ym=>(S.R.y0+Math.floor(ym/12))+"-"+String(ym%12+1).padStart(2,"0")+"-01";
   const ymTxt=ym=>MESL[ym%12]+" de "+(S.R.y0+Math.floor(ym/12));
@@ -6338,7 +6342,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
       const td=document.getElementById("today");if(td&&td.parentNode===pane)pane.appendChild(td)}
     const g=bcGeo();if(g&&!IG.geoAsk&&!WEBna()){IG.geoAsk=true;Promise.resolve(g.geoLoad()).then(()=>{IG.st=null;if(S.tab==="resumen")igEstado();if(S.tab==="ficha")igRender()}).catch(()=>{})}
     if(!IG.rcAsk&&typeof rcLoad==="function"){IG.rcAsk=true;Promise.resolve(rcLoad()).then(()=>{if(S.tab==="resumen")igEstado();if(S.tab==="ficha")igFicha()}).catch(()=>{})}
-    const st=igStats(),R=S.R;let q12=0,qP=0;const zs=new Map();st.C.forEach((o,i)=>{q12+=o.q12;qP+=o.qP12;const z=regLabel(R.m.C[i][3]);const a=zs.get(z)||{q:0,p:0};a.q+=o.q12;a.p+=o.qP12;zs.set(z,a)});
+    const st=igStats(),R=S.R;let q12=0,qP=0;const zs=new Map();st.C.forEach((o,i)=>{q12+=o.q12;qP+=o.qP12;const z=calZone(R.m.C[i]);const a=zs.get(z)||{q:0,p:0};a.q+=o.q12;a.p+=o.qP12;zs.set(z,a)});
     const f12=new Set();st.C.forEach(o=>o.f12.forEach(x=>f12.add(x)));const dT=qP>=1?(q12-qP)/qP*100:null;
     const H=g&&g.vedasHoy?g.vedasHoy():{now:[],next:[]};const vg=vigentes(),al=(typeof computeAlerts==="function"?computeAlerts():[]).filter(a=>a.s>=2);
     const d=g&&g.GEOD&&g.GEOD.d;let man=null;if(d){const all=geoAll();let dec=0,tra=0;(d.amerb||[]).forEach(a=>{const c=g.cent(a.g);if(!c)return;const w=g.amCal(a,all,c);if(!w)return;const s=g.am3(a);if(s==="dec")dec++;else if(s==="tra")tra++});
@@ -6365,10 +6369,10 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
     if(IG.cal==null||!R.m.C[IG.cal]){let b=0;st.C.forEach((o,i)=>{if(o.q12>st.C[b].q12)b=i});IG.cal=b}
     const g=bcGeo();if(g&&!IG.geoAsk&&!WEBna()){IG.geoAsk=true;Promise.resolve(g.geoLoad()).then(()=>{if(S.tab==="ficha"){igMap(true);igFicha()}}).catch(()=>{})}
     if(!IG.rcAsk&&typeof rcLoad==="function"){IG.rcAsk=true;Promise.resolve(rcLoad()).then(()=>{if(S.tab==="ficha")igFicha()}).catch(()=>{})}
-    const zones=[...new Set(R.m.C.map(c=>regLabel(c[3])))];
+    const zones=[...new Set(R.m.C.map(c=>calZone(c)))];
     if(!document.getElementById("igHead")){p.innerHTML=`<div class="card ig-head" id="igHead"></div><div class="card ig-mapc" id="igMapC"></div><div id="igFicha"></div>`}
     document.getElementById("igHead").innerHTML=`<div class="tbar"><div><h2>Ficha por caleta</h2><p class="cs">Toda la información de gestión de una caleta en un solo lugar: actividad pesquera, recursos, manejo, vedas, avisos, exigencias ambientales y línea de tiempo.</p></div>
-      <div class="l"><label class="ig-sel">Caleta<select id="igCal">${zones.map(z=>`<optgroup label="${esc(z)}">${R.m.C.map((c,i)=>[c,i]).filter(([c])=>regLabel(c[3])===z).sort((a,b)=>st.C[b[1]].q12-st.C[a[1]].q12).map(([c,i])=>`<option value="${i}" ${i===IG.cal?"selected":""}>${esc(calLab(c[0]))} · ${esc(c[1])}</option>`).join("")}</optgroup>`).join("")}</select></label>
+      <div class="l"><label class="ig-sel">Caleta<select id="igCal">${zones.map(z=>`<optgroup label="${esc(z)}">${R.m.C.map((c,i)=>[c,i]).filter(([c])=>calZone(c)===z).sort((a,b)=>st.C[b[1]].q12-st.C[a[1]].q12).map(([c,i])=>`<option value="${i}" ${i===IG.cal?"selected":""}>${esc(calLab(c[0]))} · ${esc(c[1])}</option>`).join("")}</optgroup>`).join("")}</select></label>
       <button type="button" class="btn ghost small" id="igPrint">🖨 Imprimir ficha</button><select id="igPrintZ" class="ig-pz" aria-label="Imprimir todas las caletas de una zona"><option value="">🖨 Imprimir zona completa…</option>${zones.map(z=>`<option>${esc(z)}</option>`).join("")}</select></div></div>`;
     igMap(false);igFicha()}
   async function igMap(refresh){if(IG.mbusy){IG.magain=IG.magain||refresh||"x";return}IG.mbusy=true;try{await igMap0(refresh)}catch(e){console.error(e)}IG.mbusy=false;if(IG.magain){const r=IG.magain===true;IG.magain=false;igMap(r)}}
@@ -6411,7 +6415,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
     const IC={mar:"🌊",veda:"🚫",man:"🗺️",baja:"📉",alza:"📈"};const li=e=>`<li class="ig-tl-${e.k}"><span class="ig-tf">${esc(e.lab||fmtF(e.f))}</span><span>${IC[e.k]} ${esc(e.t)}</span></li>`;
     return ev.length?`${fut.length?`<h4>Próximo</h4><ul class="ig-tl">${fut.reverse().map(li).join("")}</ul>`:""}<h4>Reciente</h4><ul class="ig-tl">${pas.map(li).join("")||'<li class="cs">Sin hechos registrados.</li>'}</ul>`:`<p class="cs">Sin hechos registrados para esta caleta.</p>`}
 
-  function fichaHtml(i){const R=S.R,m=R.m,c=m.C[i],st=igStats(),o=st.C[i],e=estadoCal(i),z=regLabel(c[3]),g=bcGeo(),gp=g?g.geoOf(c):null,off=gp&&gp[3]?gp[3]:null,man=WEBna()?null:manejoCal(i),rc=rcaCal(i),vc=vedasCal(i);
+  function fichaHtml(i){const R=S.R,m=R.m,c=m.C[i],st=igStats(),o=st.C[i],e=estadoCal(i),z=calZone(c),g=bcGeo(),gp=g?g.geoOf(c):null,off=gp&&gp[3]?gp[3]:null,man=WEBna()?null:manejoCal(i),rc=rcaCal(i),vc=vedasCal(i);
     const esp=[...o.esp12].sort((a,b)=>b[1]-a[1]),sp1=esp[0],avC=(MN.avisos||[]).filter(a=>avisoAfecta(a,c)&&avEstado(a)!=="fin");
     const marks=(MN.avisos||[]).filter(a=>avisoAfecta(a,c)&&a.datos.desde).map(a=>{const d=new Date(a.datos.desde+"T12:00:00");return{ym:(d.getFullYear()-R.y0)*12+d.getMonth(),t:`${fmtF(a.datos.desde)}: ${a.datos.titulo||AV(a.datos.categoria)[1]}`,col:"var(--st-bad)"}});
     const vedaCode=new Set(vc.now.map(x=>String(x.c)));const g3=s=>({dec:["Decretada","var(--st-ok)"],tra:["En trámite","var(--st-warn)"],rec:["Rechazada","var(--st-bad)"],otr:["Caducada u otro","var(--st-na)"]})[s]||["—","var(--st-na)"];
@@ -6454,7 +6458,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
     if(t.closest("#igPrint")){igPrint([IG.cal]);return}
     const cc=t.closest(".concl");if(cc&&!t.closest("a,button")){cc.classList.toggle("open");return}});
   document.addEventListener("change",ev=>{const t=ev.target;if(t.id==="igCal"){IG.cal=+t.value;igMarks();igFocus(11);igFicha();return}
-    if(t.id==="igPrintZ"&&t.value){const z=t.value;t.value="";const st=igStats();igPrint(S.R.m.C.map((c,i)=>i).filter(i=>regLabel(S.R.m.C[i][3])===z&&(st.C[i].q12||st.C[i].qP12)).sort((a,b)=>st.C[b].q12-st.C[a].q12))}});
+    if(t.id==="igPrintZ"&&t.value){const z=t.value;t.value="";const st=igStats();igPrint(S.R.m.C.map((c,i)=>i).filter(i=>calZone(S.R.m.C[i])===z&&(st.C[i].q12||st.C[i].qP12)).sort((a,b)=>st.C[b].q12-st.C[a].q12))}});
   document.addEventListener("mouseover",ev=>{const c=ev.target.closest&&ev.target.closest(".concl");if(c&&!c.title&&c.scrollHeight>c.clientHeight+4)c.title="Clic para leer la interpretación completa"});
   {const _rp=renderPane;renderPane=function(){_rp.apply(this,arguments);try{if(S.tab==="resumen")igEstado();if(S.tab==="ficha")igRender()}catch(e){console.error(e)}}}
   {const _st=setTab;setTab=function(t){_st(t);if(t==="ficha"){["#fab","#period","#aside","#chips"].forEach(s=>{const e=document.querySelector(s);if(e)e.hidden=true});const l=document.querySelector(".layout");if(l)l.style.gridTemplateColumns="minmax(0,1fr)";igRender()}}}
