@@ -6371,16 +6371,19 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
       <div class="l"><label class="ig-sel">Caleta<select id="igCal">${zones.map(z=>`<optgroup label="${esc(z)}">${R.m.C.map((c,i)=>[c,i]).filter(([c])=>regLabel(c[3])===z).sort((a,b)=>st.C[b[1]].q12-st.C[a[1]].q12).map(([c,i])=>`<option value="${i}" ${i===IG.cal?"selected":""}>${esc(calLab(c[0]))} · ${esc(c[1])}</option>`).join("")}</optgroup>`).join("")}</select></label>
       <button type="button" class="btn ghost small" id="igPrint">🖨 Imprimir ficha</button><select id="igPrintZ" class="ig-pz" aria-label="Imprimir todas las caletas de una zona"><option value="">🖨 Imprimir zona completa…</option>${zones.map(z=>`<option>${esc(z)}</option>`).join("")}</select></div></div>`;
     igMap(false);igFicha()}
-  async function igMap(refresh){const box=document.getElementById("igMapC");if(!box)return;const cal=caletasGeo();
+  async function igMap(refresh){if(IG.mbusy){IG.magain=IG.magain||refresh||"x";return}IG.mbusy=true;try{await igMap0(refresh)}catch(e){console.error(e)}IG.mbusy=false;if(IG.magain){const r=IG.magain===true;IG.magain=false;igMap(r)}}
+  function igFocus(z){const m=IG.mk.get(IG.cal);if(!IG.map||!m)return;IG.map.setView(m.getLatLng(),z||Math.max(IG.map.getZoom(),11),{animate:true});try{IG.mk.forEach(x=>x.closeTooltip());m.openTooltip()}catch(e){}}
+  async function igMap0(refresh){const box=document.getElementById("igMapC");if(!box)return;const cal=caletasGeo();
     if(WEBna()||!LL()){box.innerHTML=`<p class="cs">El mapa de caletas se muestra en la versión web.</p>`;box.classList.add("ig-nomap");return}
     if(!document.getElementById("igMap")){box.innerHTML=`<div class="ig-mh"><h3>Mapa de caletas</h3><div class="ig-leg">${["ok","warn","bad","na"].map(k=>`<span><i style="background:${STC[k][1]}"></i>${STC[k][0]}</span>`).join("")}<span class="cs">Tamaño: desembarque de los últimos 12 meses · haz clic en una caleta para ver su ficha</span></div></div><div id="igMap" class="ig-map"></div>`;IG.map=null}
     let L0;try{L0=await LL()()}catch(e){L0=null}const el=document.getElementById("igMap");if(!L0||!el){if(el)el.innerHTML=`<p class="cs">No se pudo cargar el mapa.</p>`;return}
     if(!IG.map||IG.map.getContainer()!==el){IG.map=L0.map(el,{scrollWheelZoom:true,zoomSnap:.5});L0.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,referrerPolicy:"strict-origin-when-cross-origin",attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(IG.map);L0.control.scale({imperial:false}).addTo(IG.map);IG.mk=new Map();IG.lay=L0.layerGroup().addTo(IG.map);
-      const pts=cal.map(c=>[c.lat,c.lon]);if(pts.length)IG.map.fitBounds(pts,{padding:[30,30]});refresh=true}
+      IG.pts=cal.map(c=>[c.lat,c.lon]);IG.map.setView([-23.6,-70.4],7);IG.focus=true;refresh=true;
+      const Bt=L0.Control.extend({options:{position:"topleft"},onAdd(){const d=L0.DomUtil.create("div","leaflet-bar bc-mbtn");d.innerHTML=`<a href="#" role="button" title="Ir a la caleta seleccionada" data-igmv="cal">◎</a><a href="#" role="button" title="Ver todas las caletas" data-igmv="all">⌂</a>`;L0.DomEvent.disableClickPropagation(d);d.addEventListener("click",ev=>{const a=ev.target.closest("[data-igmv]");if(!a)return;ev.preventDefault();if(a.dataset.igmv==="all"){const pts=caletasGeo().map(c=>[c.lat,c.lon]);if(pts.length)IG.map.fitBounds(pts,{padding:[30,30]})}else igFocus(11)});return d}});new Bt().addTo(IG.map)}
     if(refresh){IG.lay.clearLayers();IG.mk=new Map();const st=igStats(),mx=Math.max(1,...st.C.map(o=>o.q12));
       cal.forEach(k=>{const e=estadoCal(k.i),o=st.C[k.i],r=6+20*Math.sqrt(o.q12/mx),col=getComputedStyle(document.documentElement).getPropertyValue({ok:"--st-ok",warn:"--st-warn",bad:"--st-bad",na:"--st-na"}[e.s]||"--st-na").trim()||"#888";
-        const m=L0.circleMarker([k.lat,k.lon],{radius:r,color:"#0b2230",weight:k.i===IG.cal?3:1,fillColor:col,fillOpacity:.75}).bindTooltip(`<b>${esc(k.n)}</b> · ${esc(k.com)}<br>${t0(o.q12)} t en 12 meses${e.d!=null?` (${pctTxt(e.d)})`:""}${e.why.length?"<br>"+esc(e.why.join(" · ")):""}`).on("click",()=>{IG.cal=k.i;const s=document.getElementById("igCal");if(s)s.value=String(k.i);igMarks();igFicha()});m.addTo(IG.lay);IG.mk.set(k.i,m)})}
-    igMarks();setTimeout(()=>IG.map&&IG.map.invalidateSize(),60)}
+        const m=L0.circleMarker([k.lat,k.lon],{radius:r,color:"#0b2230",weight:k.i===IG.cal?3:1,fillColor:col,fillOpacity:.75}).bindTooltip(`<b>${esc(k.n)}</b> · ${esc(k.com)}<br>${t0(o.q12)} t en 12 meses${e.d!=null?` (${pctTxt(e.d)})`:""}${e.why.length?"<br>"+esc(e.why.join(" · ")):""}`).on("click",()=>{IG.cal=k.i;const s=document.getElementById("igCal");if(s)s.value=String(k.i);igMarks();igFocus();igFicha()});m.addTo(IG.lay);IG.mk.set(k.i,m)})}
+    igMarks();setTimeout(()=>{if(!IG.map)return;IG.map.invalidateSize();if(IG.focus&&IG.mk.has(IG.cal)){IG.focus=false;igFocus(11)}},80)}
   function igMarks(){IG.mk.forEach((m,i)=>{m.setStyle({weight:i===IG.cal?3.5:1});if(i===IG.cal&&m.bringToFront)m.bringToFront()})}
   function igFicha(){const box=document.getElementById("igFicha");if(!box||IG.cal==null)return;box.innerHTML=fichaHtml(IG.cal)}
 
@@ -6450,7 +6453,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
   document.addEventListener("click",ev=>{const t=ev.target;if(!t.closest)return;const to=t.closest("[data-igto]");if(to&&(t.closest("#igEstado")||t.closest('[data-pane="ficha"]'))){igGo(to.dataset.igto);return}
     if(t.closest("#igPrint")){igPrint([IG.cal]);return}
     const cc=t.closest(".concl");if(cc&&!t.closest("a,button")){cc.classList.toggle("open");return}});
-  document.addEventListener("change",ev=>{const t=ev.target;if(t.id==="igCal"){IG.cal=+t.value;igMarks();igFicha();return}
+  document.addEventListener("change",ev=>{const t=ev.target;if(t.id==="igCal"){IG.cal=+t.value;igMarks();igFocus(11);igFicha();return}
     if(t.id==="igPrintZ"&&t.value){const z=t.value;t.value="";const st=igStats();igPrint(S.R.m.C.map((c,i)=>i).filter(i=>regLabel(S.R.m.C[i][3])===z&&(st.C[i].q12||st.C[i].qP12)).sort((a,b)=>st.C[b].q12-st.C[a].q12))}});
   document.addEventListener("mouseover",ev=>{const c=ev.target.closest&&ev.target.closest(".concl");if(c&&!c.title&&c.scrollHeight>c.clientHeight+4)c.title="Clic para leer la interpretación completa"});
   {const _rp=renderPane;renderPane=function(){_rp.apply(this,arguments);try{if(S.tab==="resumen")igEstado();if(S.tab==="ficha")igRender()}catch(e){console.error(e)}}}
