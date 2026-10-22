@@ -68,7 +68,16 @@ export default handler(async (req, res) => {
     }
     try {
       const rows = await sb("minutas?select=id,datos,texto,archivo,archivo_nombre,archivo_tipo,por,creado,actualizado&order=creado.desc&limit=2000");
-      const vis = (rows || []).filter((r) => adm || !(r.datos && r.datos.tipo === "relato" && !r.datos.visible));
+      let vis = (rows || []).filter((r) => adm || !(r.datos && r.datos.tipo === "relato" && !r.datos.visible));
+      const cals = adm ? [] : ((me.permisos || {}).caletas || []);
+      if (cals.length) {
+        // Usuarios con caletas específicas: solo minutas de esas caletas (y relatos construidos solo con ellas).
+        const nz = (x) => String(x || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\(.*?\)/g, " ").replace(/\b(caleta|iv reg)\b/g, " ").replace(/\s+/g, " ").trim();
+        const ok = new Set(cals.map(nz));
+        const okMin = (d) => { if (d.caleta) return ok.has(nz(d.caleta)); const t = " " + nz(d.organizacion) + " "; return [...ok].some((k) => k.length > 2 && t.includes(" " + k + " ")); };
+        const mins = new Set(vis.filter((r) => !(r.datos || {}).tipo && okMin(r.datos || {})).map((r) => r.id));
+        vis = vis.filter((r) => { const t = (r.datos || {}).tipo; if (!t) return mins.has(r.id); if (t === "relato") return ((r.datos || {}).ids || []).length && r.datos.ids.every((i) => mins.has(i)); return true; });
+      }
       return send(res, 200, { minutas: vis, ia: !!process.env.ANTHROPIC_API_KEY });
     } catch (e) { if (tableMissing(e)) return send(res, 200, { minutas: [], falta: true, ia: !!process.env.ANTHROPIC_API_KEY }); throw e; }
   }
