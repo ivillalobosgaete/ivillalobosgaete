@@ -126,10 +126,11 @@ async function catalogo() {
     zbcCapas().then((x) => { z = x; }).catch((e) => { zErr = String(e.message || e); }),
     subCapas().then((x) => { sp = x; }).catch((e) => { spErr = String(e.message || e); }),
   ]);
-  return { lista: [...z, ...of, ...sp], zErr, spErr };
+  return { lista: [{ k: "infra", n: "Infraestructura del borde costero (OpenStreetMap)", g: "Infraestructura costera", u: "" }, ...z, ...of, ...sp], zErr, spErr };
 }
 
 async function capa(k) {
+  if (k === "infra") return infra();
   const c = k.startsWith("zbc_") ? (await zbcCapas()).find((x) => x.k === k) : k.startsWith("sp_") ? (await subCapas()).find((x) => x.k === k) : CAPAS[k]; if (!c) throw new Error("Capa desconocida");
   const env = c.sub ? `&geometry=${encodeURIComponent(SUB_BBOX)}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects` : "";
   const hit = cache.get(k); if (hit && Date.now() - hit.t < 12 * 3600e3) return hit.d;
@@ -163,11 +164,46 @@ async function mar(pts) {
   return d;
 }
 
+// Infraestructura del borde costero desde OpenStreetMap (Overpass): puertos, muelles, desaladoras, centrales y emisarios
+// en la franja costera de las regiones de Antofagasta y Coquimbo. Datos © colaboradores de OpenStreetMap (ODbL). Caché 24 h.
+const OVERPASS = process.env.OVERPASS_URL || "https://overpass-api.de/api/interpreter";
+const FRANJAS = ["-26.2,-70.9,-21.0,-69.95", "-32.3,-71.9,-29.9,-71.2"];
+let INFRA = null;
+function claseInfra(t) {
+  if (t.harbour || t.landuse === "port" || t.industrial === "port" || /port|terminal/i.test(t["seamark:type"] || "") || t.amenity === "ferry_terminal") return "puerto";
+  if (t.man_made === "pier" || t.man_made === "breakwater" || t["seamark:type"] === "harbour") return t.man_made === "breakwater" ? "rompeolas" : "muelle";
+  if (t.water_works === "desalination" || /desal/i.test((t.name || "") + " " + (t.description || ""))) return "desaladora";
+  if (t.power === "plant" || t.power === "generator") return "energia";
+  if (t.man_made === "pipeline" || t.man_made === "outfall" || /emisario|aducci|captaci/i.test(t.name || "")) return "ducto";
+  if (t.man_made === "lighthouse") return "faro";
+  return "otro";
+}
+async function infra() {
+  if (INFRA && Date.now() - INFRA.t < 24 * 3600e3) return INFRA.d;
+  const parts = FRANJAS.map((b) => `nwr["harbour"](${b});nwr["landuse"="port"](${b});nwr["industrial"="port"](${b});nwr["man_made"~"^(pier|breakwater|lighthouse)$"](${b});nwr["water_works"="desalination"](${b});nwr["man_made"="water_works"]["name"~"[Dd]esal"](${b});nwr["power"="plant"](${b});nwr["amenity"="ferry_terminal"](${b});`).join("");
+  const q = `[out:json][timeout:50];(${parts});out center tags 2000;`;
+  const r = await fetch(OVERPASS, { method: "POST", signal: AbortSignal.timeout(55000), headers: { ...UA, "Content-Type": "application/x-www-form-urlencoded" }, body: "data=" + encodeURIComponent(q) });
+  if (!r.ok) throw new Error("Overpass " + r.status);
+  const j = await r.json();
+  const feats = [];
+  for (const e of j.elements || []) {
+    const lat = e.lat ?? (e.center && e.center.lat), lon = e.lon ?? (e.center && e.center.lon);
+    if (lat == null || lon == null) continue;
+    const t = e.tags || {};
+    if (t.power === "plant" && !/(gas|coal|oil|diesel|thermal|termo|steam)/i.test((t["plant:source"] || "") + " " + (t.name || "")) && lon > -70.2 && lat > -26.5) continue; // descarta parques solares del interior
+    feats.push({ type: "Feature", geometry: { type: "Point", coordinates: [lon, lat] }, properties: { clase: claseInfra(t), nombre: t.name || t.operator || "", operador: t.operator || "", tipo: t.man_made || t.harbour || t.power || t.landuse || t.industrial || t.water_works || t.amenity || "", osm: e.type + "/" + e.id } });
+  }
+  const d = { type: "FeatureCollection", fuente: "© colaboradores de OpenStreetMap (ODbL), vía Overpass", obtenido: new Date().toISOString(), features: feats };
+  INFRA = { t: Date.now(), d };
+  return d;
+}
+
 export default handler(async (req, res) => {
   const me = await current(req);
   if (!me) return send(res, 401, { error: "Sin sesión" });
   const u = new URL(req.url, "http://x");
-  if (u.searchParams.get("capas")) { const c = await catalogo(); return send(res, 200, { capas: c.lista.map((x) => ({ k: x.k, n: x.n, g: x.g, f: x.k.startsWith("zbc_") ? "Anteproyecto ZBC (GORE Antofagasta)" : x.sub ? "Geoportal Subpesca" : "GeoIDE MINVU" })), zbcErr: c.zErr, spErr: c.spErr, mar: !!(process.env.OPENMETEO_APIKEY || process.env.OPENMETEO_FREE === "1") }); }
+  if (u.searchParams.get("capas")) { const c = await catalogo(); return send(res, 200, { capas: c.lista.map((x) => ({ k: x.k, n: x.n, g: x.g, f: x.k === "infra" ? "© colaboradores de OpenStreetMap" : x.k.startsWith("zbc_") ? "Anteproyecto ZBC (GORE Antofagasta)" : x.sub ? "Geoportal Subpesca" : "GeoIDE MINVU" })), zbcErr: c.zErr, spErr: c.spErr, mar: !!(process.env.OPENMETEO_APIKEY || process.env.OPENMETEO_FREE === "1") }); }
+  if (u.searchParams.get("infra")) { try { return send(res, 200, await infra()); } catch (e) { return send(res, 502, { error: String(e.message || e) }); } }
   const k = u.searchParams.get("capa");
   if (k) { try { return send(res, 200, await capa(k), { "Cache-Control": "private, max-age=3600" }); } catch (e) { return send(res, 502, { error: String(e.message || e) }); } }
   if (u.searchParams.get("mar")) {

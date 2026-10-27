@@ -1567,6 +1567,14 @@ body.nav2 #tabs{display:none!important}[data-vh]{display:none!important}
 .vw-k span{font-size:.68rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.vw-k b{font-size:1.15rem;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.vw-k small{font-size:.74rem;color:var(--ink-2)}
 @media(max-width:900px){.vw-head{grid-template-columns:minmax(0,1fr)}}
 .viz>.card.vw-main{grid-column:1/-1!important}
+
+/* contexto minero */
+.mi-ops{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.mi-op{border-top:5px solid var(--oc)}.mi-oh{display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap;align-items:baseline}.mi-oh h3{margin:0}
+.mi-ok{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mi-ok>div{background:var(--brand-08);border-radius:10px;padding:7px 10px;display:grid}.mi-ok span{font-size:.68rem;font-weight:800;color:var(--muted);text-transform:uppercase}.mi-ok b{font-size:1.2rem}.mi-ok small{font-size:.74rem;color:var(--ink-2)}
+.mi-cal{font-size:.84rem;border-top:1px dashed var(--line);padding-top:6px}.mi-json{width:100%;font-family:ui-monospace,monospace;font-size:.78rem}
+.mi-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c);margin:0 4px 0 2px}.mi-src{line-height:1.6}
+#miMap svg,#miMap canvas{max-width:none!important;width:auto!important;height:auto!important}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
@@ -1628,7 +1636,7 @@ body.nav2 #tabs{display:none!important}[data-vh]{display:none!important}
     <button role="tab" data-tab="negociacion" aria-selected="false">Negociación</button>
     <button role="tab" data-tab="poder" aria-selected="false">Poder e interés</button>
     <button role="tab" data-tab="rca" aria-selected="false">Exigencias ambientales</button>
-    <button role="tab" data-tab="minutas" aria-selected="false">Minutas</button><button role="tab" data-tab="borde" aria-selected="false">Borde costero</button>
+    <button role="tab" data-tab="minutas" aria-selected="false">Minutas</button><button role="tab" data-tab="borde" aria-selected="false">Borde costero</button><button role="tab" data-tab="mineria" aria-selected="false">Contexto minero</button>
     <button role="tab" data-tab="detalle" aria-selected="false">Detalle</button>
     <button role="tab" data-tab="admin" aria-selected="false" id="tabAdmin" hidden>Administración</button>
   </nav>
@@ -1799,7 +1807,7 @@ body.nav2 #tabs{display:none!important}[data-vh]{display:none!important}
       </section>
 
       <section data-pane="cmp" style="display:grid;gap:14px" hidden></section>
-      <section data-pane="minutas" style="display:grid;gap:14px" hidden></section><section data-pane="borde" style="display:grid;gap:14px" hidden></section><section data-pane="ficha" style="display:grid;gap:14px" hidden></section>
+      <section data-pane="minutas" style="display:grid;gap:14px" hidden></section><section data-pane="borde" style="display:grid;gap:14px" hidden></section><section data-pane="mineria" style="display:grid;gap:14px" hidden></section><section data-pane="ficha" style="display:grid;gap:14px" hidden></section>
       <section data-pane="detalle" style="display:grid;gap:14px" hidden>
         <div class="card">
           <div class="tbar">
@@ -5713,7 +5721,7 @@ Reglas:
       t=await ST2.ia("",[],`Corrige este JSON para que sea válido (escapa las comillas internas o reemplázalas por « », no cambies el contenido) y devuelve SOLO el JSON corregido:\n\n${String(t).slice(0,60000)}`);return parseJ(t)}}
 
   /* ---------- Carga ---------- */
-  async function mnLoad(force){if(MN.loading||(MN.loaded&&!force))return;MN.loading=true;try{const r=await ST2.list();MN.rel=r.list.filter(x=>(x.datos||{}).tipo==="relato").sort((a,b)=>(b.datos.generado||0)-(a.datos.generado||0));const TX=new Set(["relato","capa","instrumento","aviso"]);MN.list=r.list.filter(x=>!TX.has((x.datos||{}).tipo));MN.capas=r.list.filter(x=>(x.datos||{}).tipo==="capa");MN.instr=r.list.filter(x=>(x.datos||{}).tipo==="instrumento");MN.avisos=r.list.filter(x=>(x.datos||{}).tipo==="aviso");if(S.restr)restrMN();MN.ia=r.ia;if(!ART()&&MN.warn&&!/Falta/.test(MN.warn))MN.warn=""}catch(e){MN.warn=e&&e.message||"No se pudieron cargar las minutas."}MN.loaded=true;MN.u=(S.acct&&S.acct.usuario)||"";MN.loading=false;mnRender();try{window.__bcAfter&&window.__bcAfter()}catch(e){}}
+  async function mnLoad(force){if(MN.loading||(MN.loaded&&!force))return;MN.loading=true;try{const r=await ST2.list();MN.rel=r.list.filter(x=>(x.datos||{}).tipo==="relato").sort((a,b)=>(b.datos.generado||0)-(a.datos.generado||0));const TX=new Set(["relato","capa","instrumento","aviso","mineria"]);MN.extra=r.list.filter(x=>(x.datos||{}).tipo==="mineria");MN.list=r.list.filter(x=>!TX.has((x.datos||{}).tipo));MN.capas=r.list.filter(x=>(x.datos||{}).tipo==="capa");MN.instr=r.list.filter(x=>(x.datos||{}).tipo==="instrumento");MN.avisos=r.list.filter(x=>(x.datos||{}).tipo==="aviso");if(S.restr)restrMN();MN.ia=r.ia;if(!ART()&&MN.warn&&!/Falta/.test(MN.warn))MN.warn=""}catch(e){MN.warn=e&&e.message||"No se pudieron cargar las minutas."}MN.loaded=true;MN.u=(S.acct&&S.acct.usuario)||"";MN.loading=false;mnRender();try{window.__bcAfter&&window.__bcAfter()}catch(e){}}
 
   /* ---------- Filtros y resultados ---------- */
   function filtrar(){const f=MN.f,q=nrm(f.q).trim(),words=q?q.split(/\s+/).filter(w=>w.length>1):[];
@@ -6596,6 +6604,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
       {id:"vedas",q:"¿Qué especies están en veda y cuándo comienzan las próximas?",main:"Calendario de vedas",kp:"kVed",l:"Vedas",pane:"especies",card:el=>cardT(el,"Calendario de vedas")},
       {id:"amerb",q:"¿Qué áreas de manejo, planes y espacios costeros hay junto a cada caleta?",main:"Caletas por nivel de actividad",kp:"",l:"AMERB, planes de manejo y ECMPO",pane:"resumen",top:el=>secT(el,"Caletas, AMERB"),open:true}]},
     {g:"borde",l:"Borde costero",v:[{id:"borde",l:"Borde costero",pane:"borde"}]},
+    {g:"mineria",l:"Contexto minero",v:[{id:"mineria",l:"Contexto minero",pane:"mineria"}]},
     {g:"rel",l:"Relacionamiento",v:[{id:"minutas",l:"Minutas y compromisos",pane:"minutas"},{id:"poder",l:"Poder e interés",pane:"poder"},{id:"rca",l:"Exigencias ambientales",pane:"rca"},{id:"negociacion",l:"Negociación",pane:"negociacion"}]},
     {g:"datos",l:"Datos",v:[{id:"detalle",l:"Detalle de registros",pane:"detalle"},{id:"admin",l:"Administración",pane:"admin"}]}];
   const VW=new Map();NAV.forEach(G=>G.v.forEach(v=>VW.set(v.id,{...v,g:G.g})));
@@ -6640,6 +6649,107 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
     const s=t.closest("[data-vn]");if(s){goView(s.dataset.vn);return}});
   /* al iniciar sesión o recargar datos: abrir la última vista usada */
   {let done=false;setInterval(()=>{if(!S.R||!document.getElementById("tabs")){done=false;return}if(done)return;done=true;const v=VW.get(NV.cur);if(v&&vOK(v))goView(v.id);else goView("inicio")},700)}
+
+  /* ===================== Contexto minero: producción de cobre por faena, precio y vínculo con caletas ===================== */
+  /* Cifras públicas de Antofagasta Minerals (reportes de producción y memoria anual). Zaldívar: 50 % atribuible a Antofagasta Minerals (operación conjunta con Barrick).
+     Los administradores pueden actualizar con el reporte trimestral en PDF (lectura con IA y revisión) o editar a mano; los cambios se guardan como registro «mineria». */
+  const MIN0={
+    ops:[{k:"lp",n:"Los Pelambres",comp:"Minera Los Pelambres",lugar:"Salamanca, Región de Coquimbo",col:"#1f77b4"},{k:"cen",n:"Centinela",comp:"Minera Centinela",lugar:"Sierra Gorda, Región de Antofagasta",col:"#d97706"},{k:"zal",n:"Zaldívar",comp:"Minera Zaldívar",lugar:"Antofagasta, Región de Antofagasta",col:"#7c3aed",nota:"Cifras del 50 % atribuible a Antofagasta Minerals (operación conjunta con Barrick)."},{k:"ant",n:"Antucoya",comp:"Minera Antucoya",lugar:"María Elena, Región de Antofagasta",col:"#94a3b8"}],
+    anual:{2023:{lp:300.3,cen:242.0,ant:77.8,zal:40.5},2024:{lp:319.6,cen:223.8,ant:80.4,zal:40.1},2025:{lp:295.3,cen:240.4,ant:81.2,zal:36.7}},
+    grupo:{2021:721.5,2022:646.2,2023:660.6,2024:664.0,2025:653.7},
+    trim:{"2024-3":{lp:92.0,cen:57.7,ant:19.3,zal:10.0},"2024-4":{lp:95.2,cen:73.1,ant:20.8,zal:11.2},"2025-3":{lp:73.0,cen:61.1,ant:18.6,zal:9.0},"2025-4":{lp:79.2,cen:63.1,ant:23.0,zal:11.7},"2026-1":{lp:66.3,cen:48.8,ant:19.6,zal:8.3,deriv:true},"2026-2":{lp:67.5,cen:48.3,ant:17.4,zal:8.7},"2026-3":{lp:79.3,cen:46.8,ant:18.8,zal:7.1}},
+    ytd:{anio:2026,hasta:3,act:{lp:213.1,cen:143.9,ant:55.8,zal:24.1},prev:{lp:216.2,cen:177.3,ant:58.1,zal:25.1}},
+    op:{lp:{ley:"0,54 %",rec:"90,0 %",cc:"0,82 US$/lb (neto)",sub:"Oro 54,8 koz · molibdeno 12,4 kt"},cen:{ley:"0,56 % concentrado · 0,46 % cátodos",rec:"83,4 % concentrado · 68,2 % cátodos",cc:"0,75 US$/lb (neto)",sub:"Oro 156,5 koz · molibdeno 3,4 kt"},zal:{ley:"0,68 %",rec:"54,2 %",cc:"3,44 US$/lb (antes de subproductos)",sub:""},ant:{ley:"0,32 %",rec:"70,6 %",cc:"2,82 US$/lb (antes de subproductos)",sub:""}},
+    guia:{anio:2026,lp:"340–360 kt (inicial)",cen:"195–215 kt (inicial)",zal:"30–35 kt (inicial)",ant:"85–90 kt (inicial)",grupo:"625–655 kt (revisada en octubre de 2026; inicial 650–700 kt)"},
+    notas:{lp:"Expansión de la planta desaladora en precomisionamiento y concentraducto en pruebas hidráulicas (reporte del 3.er trimestre de 2026).",cen:"Segunda Concentradora: inicio de operación del chancador primario y la correa transportadora (3.er trimestre de 2026).",zal:"",ant:""},
+    infra:[
+      {k:"lp",n:"Puerto Punta Chungo (embarque de concentrado de Los Pelambres)",t:"puerto",lat:-31.877,lon:-71.512,apx:true},
+      {k:"lp",n:"Planta desaladora de Los Pelambres (Punta Chungo)",t:"desaladora",lat:-31.874,lon:-71.509,apx:true},
+      {k:"cen",n:"Terminal marítimo e instalaciones de agua de mar de Minera Centinela (bahía de Michilla)",t:"puerto",lat:-22.705,lon:-70.268,apx:true}],
+    fuentes:[["Antofagasta plc · Reporte de producción 3.er trimestre 2026 (15-10-2026)","https://www.antofagasta.co.uk/media/4976/20261015_aplc26q3prodreport-oct26-vf.pdf"],["Antofagasta plc · Reporte de producción 4.º trimestre 2025 (29-01-2026)","https://www.antofagasta.co.uk/media/4885/20260129_aplc25q4prodreport-jan26-vf.pdf"],["Antofagasta plc · Reporte de producción 4.º trimestre 2024 (16-01-2025)","https://www.antofagasta.co.uk/media/4739/20250116_aplc24q4prodreport-dec24-vf.pdf"],["Antofagasta plc · Memoria anual 2025","https://www.antofagasta.co.uk/media/4905/49913-antofagasta-ar25-web-ready.pdf"]],
+    act:"2026-10-27"};
+  const MI={d:null,rec:null,cu:null,cuErr:"",osm:null,osmErr:"",map:null,edit:false,busy:false,msg:""};
+  const miData=()=>MI.d||MIN0;
+  async function miLoad(){if(MI.loading)return;MI.loading=true;try{if(!MN.loaded)await mnLoad();const r=(MN.extra||[]).find(x=>(x.datos||{}).tipo==="mineria");MI.rec=r||null;MI.d=r&&r.datos&&r.datos.data?r.datos.data:null}catch(e){}
+    if(!ART()&&!MI.cu){try{MI.cu=await api("indicadores?cobreAnual=1")}catch(e){MI.cuErr=e.message||"error"}}MI.loading=false;miRender()}
+  const kt=v=>v==null?"—":t1(v)+" kt";const pc=(a,b)=>a!=null&&b?(a-b)/b*100:null;const pTxt=d=>d==null?"":`${d>=0?"+":"−"}${t1(Math.abs(d))} %`;
+  const relOps=()=>{const D=miData();if(!S.restr||!S.R)return D.ops;const cs=new Set(S.R.m.C.map(c=>nrm(c[4])));const L=D.ops.filter(o=>cs.has(nrm(o.comp)));return L.length?L:D.ops};
+
+  function miRender(){const p=document.querySelector('[data-pane="mineria"]');if(!p||S.tab!=="mineria")return;if(!MI.d&&!MI.tried){MI.tried=true;miLoad()}
+    const D=miData(),ops=relOps(),A=adm(),anos=Object.keys(D.anual).map(Number).sort();const yL=anos[anos.length-1],yP=yL-1;
+    const tot=y=>ops.filter(o=>o.k!=="ant").reduce((s,o)=>s+((D.anual[y]||{})[o.k]||0),0);const tL=tot(yL),tP=tot(yP);
+    const Y=D.ytd||{},yA=ops.filter(o=>o.k!=="ant").reduce((s,o)=>s+((Y.act||{})[o.k]||0),0),yB=ops.filter(o=>o.k!=="ant").reduce((s,o)=>s+((Y.prev||{})[o.k]||0),0);
+    const cu=MI.cu&&MI.cu.anos||[],cuL=cu.find(x=>x.anio===yL),cuN=cu[cu.length-1];
+    p.innerHTML=`<section class="card vw-head"><div class="vw-t"><h2>Contexto minero</h2><p>¿Cuánto cobre producen las faenas vinculadas a las caletas y en qué contexto de precio?</p></div>
+      <div class="vw-k"><div><span>Producción ${yL} (${ops.filter(o=>o.k!=="ant").map(o=>o.n).join(", ")})</span><b>${kt(tL)}</b><small>${pTxt(pc(tL,tP))} frente a ${yP}</small></div>
+      ${Y.anio?`<div><span>Acumulado ${Y.anio} (hasta el ${Y.hasta}.er trimestre)</span><b>${kt(yA)}</b><small>${pTxt(pc(yA,yB))} frente al mismo período de ${Y.anio-1}</small></div>`:""}
+      <div><span>Precio del cobre ${cuN?cuN.anio:""}</span><b>${cuN?`US$ ${t1(cuN.prom).replace(/(\d),(\d)$/,"$1,$2")}/lb`:"—"}</b><small>${cuN?`promedio${cuN.parcial?" del año en curso":""}${cuL&&cuL!==cuN?` · ${yL}: US$ ${t1(cuL.prom)}`:""}`:ART()?"disponible en la versión web":"cargando…"}</small></div>
+      <div><span>Grupo Antofagasta Minerals ${yL}</span><b>${kt((D.grupo||{})[yL])}</b><small>incluye Antucoya; Zaldívar al 50 %</small></div></div></section>
+    <div class="card"><div class="tbar"><h3>${(()=>{const b=ops.filter(o=>o.k!=="ant").map(o=>({o,d:pc((D.anual[yL]||{})[o.k],(D.anual[yP]||{})[o.k])})).filter(x=>x.d!=null).sort((a,b)=>b.d-a.d);return b.length?`En ${yL}, ${esc(b[0].o.n)} ${b[0].d>=0?"creció":"cayó"} ${t1(Math.abs(b[0].d))} % y ${esc(b[b.length-1].o.n)} ${b[b.length-1].d>=0?"creció":"cayó"} ${t1(Math.abs(b[b.length-1].d))} %`:"Producción anual de cobre por faena"})()}</h3>${A?`<div class="l"><button type="button" class="btn small" id="miPdf">⇪ Actualizar con reporte trimestral (PDF)</button><button type="button" class="btn ghost small" id="miEd">✎ Editar cifras</button></div>`:""}</div>
+      <p class="cs">Cobre producido por año (miles de toneladas, kt). ${Y.anio?`La barra de ${Y.anio} es el acumulado hasta el ${Y.hasta}.er trimestre (año incompleto). `:""}La línea es el precio promedio anual del cobre (US$/lb, eje derecho).</p>
+      <div class="hlegend">${ops.map(o=>`<span><i style="background:${o.col}"></i>${esc(o.n)}</span>`).join("")}<span><span class="ln"></span>Precio del cobre</span></div>${miBars(D,ops,cu)}</div>
+    <div class="card"><h3>Producción trimestral (kt)</h3><p class="cs">Últimos trimestres publicados. ${Object.values(D.trim).some(x=>x.deriv)?"Los valores marcados con * se calculan como acumulado menos los trimestres informados.":""}</p>${miTrim(D,ops)}</div>
+    <div class="mi-ops">${ops.map(o=>miCard(D,o,yL,yP)).join("")}</div>
+    <div class="card"><div class="tbar"><h3>Infraestructura del borde costero</h3><div class="l mi-ml"></div></div><p class="cs">Instalaciones costeras de las faenas (ubicación aproximada) e infraestructura del borde costero registrada en OpenStreetMap: puertos, muelles, rompeolas, desaladoras, centrales y faros, junto a las caletas.</p>
+      ${!ART()?`<div id="miMap" class="ig-map"></div><p class="cs" id="miMapN"></p>`:`<p class="cs">El mapa se muestra en la versión web.</p>`}
+      <div class="tbl"><table class="em-t"><thead><tr><th>Instalación</th><th>Faena</th><th>Tipo</th><th>Caleta más cercana</th></tr></thead><tbody>${D.infra.filter(x=>ops.some(o=>o.k===x.k)).map(x=>{const n=miNear(x.lat,x.lon);return`<tr><td style="white-space:normal">${esc(x.n)}${x.apx?' <span class="cs">(ubicación aproximada)</span>':""}</td><td>${esc((D.ops.find(o=>o.k===x.k)||{}).n||"")}</td><td>${esc(INFT[x.t]||x.t)}</td><td>${n?`${esc(n.n)} · ${t1(n.d)} km`:"—"}</td></tr>`}).join("")||'<tr><td colspan="4" class="cs">Sin instalaciones costeras registradas para estas faenas.</td></tr>'}</tbody></table></div></div>
+    ${MI.edit?`<div class="card" id="miEdit">${miEditHtml(D)}</div>`:""}
+    <p class="cs mi-src">Fuentes: ${D.fuentes.map(([t,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)}</a>`).join(" · ")}. Precio del cobre: Banco Central de Chile vía mindicador.cl. Infraestructura: © colaboradores de OpenStreetMap. Cifras actualizadas al ${esc(fmtF(D.act||""))}. No se cruza estadísticamente la producción minera con el desembarque: se muestran lado a lado para dar contexto.</p>`;
+    if(!ART())miMap(ops)}
+  const INFT={puerto:"Puerto o terminal",muelle:"Muelle",rompeolas:"Rompeolas",desaladora:"Desaladora",energia:"Central eléctrica",ducto:"Ducto, aducción o emisario",faro:"Faro",otro:"Otra"};
+  const INFC={puerto:"#0b4f8a",muelle:"#2a78d6",rompeolas:"#64748b",desaladora:"#0ea5a5",energia:"#b45309",ducto:"#7c3aed",faro:"#ca8a04",otro:"#94a3b8"};
+  function miNear(lat,lon){const c=caletasGeo();let b=null;c.forEach(k=>{const d=hkm(lat,lon,k.lat,k.lon);if(!b||d<b.d)b={n:k.n,d}});return b}
+  const hkm=(a,b,c,d)=>{const R=6371,t=x=>x*Math.PI/180,dl=t(c-a),dn=t(d-b),h=Math.sin(dl/2)**2+Math.cos(t(a))*Math.cos(t(c))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))};
+  function miBars(D,ops,cu){const Y=D.ytd||{};const anos=[...Object.keys(D.anual).map(Number)];if(Y.anio&&!anos.includes(Y.anio))anos.push(Y.anio);anos.sort();
+    const val=(y,k)=>y===Y.anio&&!(D.anual[y]||{})[k]?(Y.act||{})[k]:(D.anual[y]||{})[k];const W=860,H=260,l=46,r=W-52,T=16,B=H-30,mx=niceMax(Math.max(1,...anos.flatMap(y=>ops.map(o=>val(y,o.k)||0))));
+    const cuY=new Map(cu.map(x=>[x.anio,x.prom])),cmx=niceMax(Math.max(1,...anos.map(y=>cuY.get(y)||0))),gw=(r-l)/anos.length,bw=Math.min(28,(gw-16)/ops.length),sy=v=>B-v/mx*(B-T),sc=v=>B-v/cmx*(B-T);
+    let g=`<svg class="ig-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Producción anual por faena">`;[0,.5,1].forEach(k=>{g+=`<line x1="${l}" x2="${r}" y1="${sy(mx*k)}" y2="${sy(mx*k)}" class="gl"/><text x="${l-6}" y="${sy(mx*k)+4}" text-anchor="end">${t0(mx*k)}</text>${cu.length?`<text x="${r+6}" y="${sc(cmx*k)+4}">${t1(cmx*k)}</text>`:""}`});
+    anos.forEach((y,i)=>{const x0=l+i*gw+(gw-bw*ops.length)/2;ops.forEach((o,j)=>{const v=val(y,o.k);if(v==null)return;const part=y===Y.anio&&!(D.anual[y]||{})[o.k];g+=`<rect x="${x0+j*bw+1}" y="${sy(v)}" width="${bw-2}" height="${B-sy(v)}" rx="2" fill="${o.col}" ${part?'fill-opacity=".45" stroke="'+o.col+'" stroke-dasharray="3 2"':""}><title>${esc(o.n)} ${y}${part?` (hasta el ${Y.hasta}.er trimestre)`:""}: ${t1(v)} kt</title></rect>`;if(bw>=18)g+=`<text x="${x0+j*bw+bw/2}" y="${sy(v)-3}" text-anchor="middle" style="font-size:9.5px">${t0(v)}</text>`});
+      g+=`<text x="${l+i*gw+gw/2}" y="${B+15}" text-anchor="middle">${y}${y===Y.anio?"*":""}</text>`});
+    const pts=anos.map((y,i)=>cuY.has(y)?`${l+i*gw+gw/2},${sc(cuY.get(y))}`:"").filter(Boolean);if(pts.length>1)g+=`<polyline fill="none" stroke="#111827" stroke-width="2" points="${pts.join(" ")}"/>`;
+    anos.forEach((y,i)=>{if(cuY.has(y))g+=`<circle cx="${l+i*gw+gw/2}" cy="${sc(cuY.get(y))}" r="3.5" fill="#111827"><title>Precio promedio ${y}: US$ ${t1(cuY.get(y))}/lb</title></circle>`});
+    return g+`<line x1="${l}" x2="${r}" y1="${B}" y2="${B}" stroke="var(--ink-2)"/></svg>${Y.anio?`<p class="cs">* ${Y.anio}: acumulado hasta el ${Y.hasta}.er trimestre.</p>`:""}`}
+  function miTrim(D,ops){const ks=Object.keys(D.trim).sort((a,b)=>{const[x,y]=a.split("-").map(Number),[u,v]=b.split("-").map(Number);return x-u||y-v});
+    return`<div class="tbl"><table class="em-t"><thead><tr><th>Faena</th>${ks.map(k=>{const[y,q]=k.split("-");return`<th class="r">T${q} ${y}${D.trim[k].deriv?"*":""}</th>`}).join("")}</tr></thead><tbody>${ops.map(o=>`<tr><td><i class="bc-sw" style="background:${o.col}"></i>${esc(o.n)}</td>${ks.map(k=>`<td class="r">${D.trim[k][o.k]!=null?t1(D.trim[k][o.k]):"—"}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`}
+  function miCard(D,o,yL,yP){const a=(D.anual[yL]||{})[o.k],b=(D.anual[yP]||{})[o.k],d=pc(a,b),op=(D.op||{})[o.k]||{};
+    const cals=S.R?S.R.m.C.map((c,i)=>[c,i]).filter(([c])=>nrm(c[4])===nrm(o.comp)):[];const st=typeof igStats==="function"&&S.R?igStats():null;const q12=st?cals.reduce((s,[c,i])=>s+st.C[i].q12,0):0,f12=st?new Set(cals.flatMap(([c,i])=>[...st.C[i].f12])).size:0;
+    return`<div class="card mi-op" style="--oc:${o.col}"><div class="mi-oh"><h3>${esc(o.n)}</h3><span class="cs">${esc(o.lugar)}</span></div>
+      <div class="mi-ok"><div><span>Producción ${yL}</span><b>${kt(a)}</b><small>${pTxt(d)} frente a ${yP} (${kt(b)})</small></div><div><span>Guía ${D.guia.anio}</span><b style="font-size:.95rem">${esc(D.guia[o.k]||"—")}</b></div></div>
+      <ul class="ig-ul"><li><b>Ley de cobre:</b> ${esc(op.ley||"—")}</li><li><b>Recuperación:</b> ${esc(op.rec||"—")}</li><li><b>Costo:</b> ${esc(op.cc||"—")}</li>${op.sub?`<li><b>Subproductos:</b> ${esc(op.sub)}</li>`:""}${o.nota?`<li class="cs">${esc(o.nota)}</li>`:""}${(D.notas||{})[o.k]?`<li><b>Hitos:</b> ${esc(D.notas[o.k])}</li>`:""}</ul>
+      <div class="mi-cal"><b>Caletas de su área de influencia:</b> ${cals.length?`${cals.map(([c])=>esc(calLab(c[0]))).join(", ")} · ${t0(q12)} t desembarcadas y ${t0(f12)} pescadores activos en los últimos 12 meses`:'<span class="cs">sin caletas asociadas en la base</span>'}</div></div>`}
+  async function miMap(ops){const el=document.getElementById("miMap");if(!el)return;let L0;try{L0=await LL()()}catch(e){L0=null}if(!L0||!document.getElementById("miMap")){if(el)el.innerHTML=`<p class="cs">No se pudo cargar el mapa.</p>`;return}
+    if(MI.map)try{MI.map.remove()}catch(e){}const m=MI.map=L0.map(el,{scrollWheelZoom:true,zoomSnap:.5});L0.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,referrerPolicy:"strict-origin-when-cross-origin",attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(m);L0.control.scale({imperial:false}).addTo(m);
+    const cal=caletasGeo(),D=miData();const gCal=L0.layerGroup(cal.map(k=>L0.circleMarker([k.lat,k.lon],{radius:6,color:"#0b2230",weight:1.5,fillColor:"#ffd54f",fillOpacity:1}).bindTooltip(`<b>Caleta ${esc(k.n)}</b> · ${esc(k.com)}`))).addTo(m);
+    const gMin=L0.layerGroup(D.infra.filter(x=>ops.some(o=>o.k===x.k)).map(x=>{const o=D.ops.find(z=>z.k===x.k)||{};return L0.circleMarker([x.lat,x.lon],{radius:9,color:"#111827",weight:2,fillColor:o.col||"#333",fillOpacity:.9}).bindTooltip(`<b>${esc(x.n)}</b><br>${esc(o.n||"")} · ${esc(INFT[x.t]||x.t)}${x.apx?"<br><i>Ubicación aproximada</i>":""}`)})).addTo(m);
+    const gOsm=L0.layerGroup().addTo(m);L0.control.layers(null,{"Caletas":gCal,"Instalaciones costeras de las faenas":gMin,"Infraestructura costera (OpenStreetMap)":gOsm},{collapsed:false}).addTo(m);
+    const pts=[...cal.map(k=>[k.lat,k.lon]),...D.infra.map(x=>[x.lat,x.lon])];if(pts.length)m.fitBounds(pts,{padding:[30,30]});setTimeout(()=>m.invalidateSize(),60);
+    const note=t=>{const n=document.getElementById("miMapN");if(n)n.innerHTML=t};
+    if(!MI.osm&&!MI.osmErr){note('<span class="spin"></span> Cargando infraestructura costera de OpenStreetMap…');try{MI.osm=await api("territorio?infra=1")}catch(e){MI.osmErr=e.message||"error"}}
+    if(MI.osm){const F=(MI.osm.features||[]).filter(f=>!S.restr||!otherCal(f.properties.nombre||""));F.forEach(f=>{const p=f.properties,[lon,lat]=f.geometry.coordinates;L0.circleMarker([lat,lon],{radius:5,color:INFC[p.clase]||"#888",weight:1.5,fillColor:INFC[p.clase]||"#888",fillOpacity:.7}).bindTooltip(`<b>${esc(p.nombre||INFT[p.clase]||"Instalación")}</b><br>${esc(INFT[p.clase]||p.clase)}${p.operador&&p.operador!==p.nombre?` · ${esc(p.operador)}`:""}`).addTo(gOsm)});
+      const cnt={};F.forEach(f=>{cnt[f.properties.clase]=(cnt[f.properties.clase]||0)+1});note(`${t0(F.length)} elementos de OpenStreetMap: ${Object.entries(cnt).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`<span class="mi-dot" style="--c:${INFC[k]}"></span>${esc(INFT[k]||k)} (${n})`).join(" · ")}. Los datos de OpenStreetMap son colaborativos: pueden faltar instalaciones o haber nombres desactualizados.`)}
+    else note(`No se pudo leer OpenStreetMap (${esc(MI.osmErr)}). Se muestran las caletas y las instalaciones de las faenas.`)}
+
+  /* ---- edición y actualización con IA (solo administradores) ---- */
+  function miEditHtml(D){return`<h3>Editar cifras</h3><p class="cs">Formato JSON con producción anual (kt), trimestral, acumulado, guía, hitos e instalaciones. Revisa con cuidado: los cambios se ven en toda la plataforma.</p><textarea id="miJson" rows="16" class="mi-json">${esc(JSON.stringify(D,null,1))}</textarea><p class="mn-msg" id="miMsg" ${MI.msg?"":"hidden"}>${MI.msg||""}</p><div class="row"><button type="button" class="btn ghost" id="miX">Cancelar</button><button type="button" class="btn ghost" id="miRst">Volver a las cifras de origen</button><button type="button" class="btn" id="miS">Guardar</button></div>`}
+  async function miGuardar(D){const id=(MI.rec&&MI.rec.id)||"mineria";const rec={id,datos:{tipo:"mineria",data:D},texto:""};await ST2.save(rec);MI.rec=rec;MI.d=D;MN.extra=[rec,...(MN.extra||[]).filter(x=>x.id!==id)]}
+  async function miPdf(file){MI.msg='<span class="spin"></span> Leyendo el reporte…';miRender();try{const x=await extraer(file,()=>{});const D=JSON.parse(JSON.stringify(miData()));
+      const out=await iaJSON(x.texto||"",x.imgs||[],`Lee este reporte de producción de Antofagasta plc (o Antofagasta Minerals) y devuelve SOLO un JSON válido (dentro de los textos usa « » en vez de comillas dobles):
+{"anio":AAAA,"trimestre":1-4,"trim":{"lp":kt,"cen":kt,"ant":kt,"zal":kt},"ytd":{"lp":kt,"cen":kt,"ant":kt,"zal":kt},"ytd_prev":{"lp":kt,"cen":kt,"ant":kt,"zal":kt},"anual":{"lp":kt,"cen":kt,"ant":kt,"zal":kt} o null si no es el 4.º trimestre,"grupo_anual":kt o null,"guia":{"anio":AAAA,"grupo":"texto","lp":"texto","cen":"texto","ant":"texto","zal":"texto"},"notas":{"lp":"1 frase","cen":"1 frase"}}
+lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). Producción de cobre en miles de toneladas (kt). Si un dato no aparece usa null. No inventes cifras.`);
+      const a=+out.anio,q=+out.trimestre;if(!a||!q)throw new Error("No se reconoció el año o el trimestre del reporte.");const num=o=>{const r={};["lp","cen","ant","zal"].forEach(k=>{if(o&&isFinite(+o[k])&&o[k]!==null)r[k]=+o[k]});return r};
+      if(out.trim&&Object.keys(num(out.trim)).length)D.trim[a+"-"+q]=num(out.trim);if(out.ytd)D.ytd={anio:a,hasta:q,act:num(out.ytd),prev:out.ytd_prev?num(out.ytd_prev):(D.ytd&&D.ytd.anio===a-1?D.ytd.prev:{})};
+      if(out.anual&&Object.keys(num(out.anual)).length){D.anual[a]=num(out.anual);if(q===4)D.ytd=null}if(isFinite(+out.grupo_anual)&&out.grupo_anual)D.grupo[a]=+out.grupo_anual;
+      if(out.guia&&out.guia.anio)D.guia={...D.guia,...out.guia};if(out.notas)D.notas={...D.notas,...out.notas};D.act=todayISO();D.fuentes=[[`Reporte de producción ${q}.º trimestre ${a} (cargado el ${fmtF(todayISO())})`,"#"],...D.fuentes];
+      MI.edit=true;MI.msg="La IA leyó el reporte: revisa las cifras en el editor y pulsa «Guardar».";MI.pend=D;miRender();const t=document.getElementById("miJson");if(t)t.value=JSON.stringify(D,null,1)}
+    catch(e){MI.msg="No se pudo leer el reporte: "+esc(e.message||iaErr(e));miRender()}}
+  document.addEventListener("click",async ev=>{const t=ev.target;if(!t.closest||!t.closest('[data-pane="mineria"]'))return;
+    if(t.closest("#miEd")){MI.edit=!MI.edit;MI.msg="";miRender();return}
+    if(t.closest("#miX")){MI.edit=false;MI.msg="";miRender();return}
+    if(t.closest("#miRst")){if(!await askYN("¿Volver a las cifras públicas de origen? Se descartan los cambios guardados.",{title:"Restablecer cifras",danger:true,si:"Sí, restablecer",no:"No"}))return;try{await miGuardar(JSON.parse(JSON.stringify(MIN0)));MI.edit=false;toast("Cifras restablecidas.");miRender()}catch(e){toast("No se pudo guardar.")}return}
+    if(t.closest("#miS")){let D;try{D=JSON.parse(document.getElementById("miJson").value)}catch(e){MI.msg="El JSON no es válido: "+esc(e.message);miRender();return}if(!D.ops||!D.anual){MI.msg="Faltan las secciones «ops» o «anual».";miRender();return}
+      try{await miGuardar(D);MI.edit=false;MI.msg="";toast("Cifras guardadas.");miRender()}catch(e){toast("No se pudo guardar: "+(e.message||""))}return}
+    if(t.closest("#miPdf")){const i=document.createElement("input");i.type="file";i.accept=".pdf";i.onchange=()=>{if(i.files[0])miPdf(i.files[0])};i.click();return}});
+  {const _st=setTab;setTab=function(t){_st(t);if(t==="mineria"){["#fab","#period","#aside","#chips"].forEach(s=>{const e=document.querySelector(s);if(e)e.hidden=true});const l=document.querySelector(".layout");if(l)l.style.gridTemplateColumns="minmax(0,1fr)";miRender()}}}
 
 }
 
