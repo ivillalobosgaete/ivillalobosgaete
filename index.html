@@ -1542,6 +1542,17 @@ body.bc-noscroll{overflow:hidden}
 .em-bat td{vertical-align:top;white-space:normal}.em-bat td:first-child{min-width:170px}.em-ebs{min-width:260px}.em-eb{font-size:.82rem;line-height:1.4;margin-bottom:3px}
 .em-es{display:inline-block;font-size:.68rem;font-weight:800;color:#fff;background:var(--c);border-radius:999px;padding:0 7px}
 .em-fl{cursor:pointer}.em-fl:hover td{background:var(--brand-08);text-decoration:underline}
+
+/* navegación en dos niveles */
+body.nav2 #tabs{display:none!important}[data-vh]{display:none!important}
+.gnav{background:var(--surface);border-bottom:1px solid var(--line);display:grid;gap:6px;padding-block:8px}
+.gn-1,.gn-2{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}.gn-1::-webkit-scrollbar,.gn-2::-webkit-scrollbar{display:none}
+.gn-1 button{border:0;background:none;border-radius:999px;padding:8px 16px;font-weight:800;color:var(--ink-2);white-space:nowrap;cursor:pointer;font-size:.92rem}
+.gn-1 button:hover{background:var(--brand-08);color:var(--brand-ink)}.gn-1 button[aria-selected="true"]{background:var(--brand);color:var(--on-brand,#fff)}
+.gn-2{padding-top:6px;border-top:1px dashed var(--line)}.gn-2[hidden]{display:none!important}
+.gn-2 button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-weight:700;font-size:.82rem;color:var(--ink-2);white-space:nowrap;cursor:pointer}
+.gn-2 button:hover{border-color:var(--brand);color:var(--brand-ink)}.gn-2 button[aria-selected="true"]{background:var(--brand-08);border-color:var(--brand);color:var(--brand-ink)}
+@media(max-width:700px){.gn-1 button{padding:7px 12px;font-size:.84rem}}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
@@ -6518,9 +6529,9 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
     pv.innerHTML=list.map(fichaHtml).join("");document.body.classList.add("igprinting");const done=()=>{document.body.classList.remove("igprinting");pv.innerHTML="";window.removeEventListener("afterprint",done)};window.addEventListener("afterprint",done);setTimeout(()=>{try{window.print()}catch(e){done()}},120)}
 
   /* ---- navegación desde las tarjetas ---- */
-  function igGo(to){const go=(t,sel)=>{setTab(t);if(sel)setTimeout(()=>{const e=document.querySelector(sel);if(e)e.scrollIntoView({behavior:"smooth",block:"start"})},350)};
-    if(to==="act"||to==="ficha")return go("ficha");if(to==="vedas")return go("especies");if(to==="mar"){BC.sub="mar";return go("borde")}if(to==="rca")return go("rca");
-    if(to==="manejo")return go("resumen","#amBox");if(to==="alertas")return go("resumen","#alerts")}
+  function igGo(to){const gv=window.goView;if(!gv){setTab(to==="vedas"?"especies":to==="mar"?"borde":to==="rca"?"rca":to==="act"||to==="ficha"?"ficha":"resumen");return}
+    if(to==="act"||to==="ficha")return gv("ficha");if(to==="vedas")return gv("vedas");if(to==="mar"){BC.sub="mar";return gv("borde")}if(to==="rca")return gv("rca");
+    if(to==="manejo")return gv("amerb","#amBox");if(to==="alertas")return gv("inicio","#alerts")}
   document.addEventListener("click",ev=>{const t=ev.target;if(!t.closest)return;const to=t.closest("[data-igto]");if(to&&(t.closest("#igEstado")||t.closest('[data-pane="ficha"]'))){igGo(to.dataset.igto);return}
     if(t.closest("#igPrint")){igPrint([IG.cal]);return}
     const cc=t.closest(".concl");if(cc&&!t.closest("a,button")){cc.classList.toggle("open");return}});
@@ -6534,6 +6545,51 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
   /* Versión web: si el administrador cambia los permisos de la cuenta abierta, se aplican sin cerrar sesión */
   if(!ART())setInterval(async()=>{try{if(!S.acct||!S.R||document.hidden)return;const r=await api("me");const u=r&&r.user;if(!u)return;const k=x=>JSON.stringify([x.rol,x.permisos||{},x.comunas||[]]);
     if(k(u)!==k(S.acct)){S.acct={...S.acct,...u};setPerm(u);applyPerms();window.mnReset&&window.mnReset();await loadData();toast("Tus permisos fueron actualizados.")}}catch(e){}},60000);
+
+  /* ===================== Navegación en dos niveles: pestañas principales y subpestañas ===================== */
+  /* Cada subpestaña es una vista sobre un panel existente: muestra solo las secciones que le corresponden. */
+  const secT=(el,txt)=>{const s=el.matches&&el.matches("details.sec")?el.querySelector(":scope>summary"):null;return!!s&&nrm(s.textContent).startsWith(nrm(txt))};
+  const cardT=(el,txt)=>{const h=el.querySelector&&el.querySelector("h3,h2");return!!h&&nrm(h.textContent).startsWith(nrm(txt))};
+  const NAV=[
+    {g:"inicio",l:"Inicio",v:[{id:"inicio",l:"Estado y alertas",pane:"resumen",top:el=>["vdBan","igEstado","kpis","alerts","today","ficha"].includes(el.id)||secT(el,"Claves del período")}]},
+    {g:"caletas",l:"Caletas",v:[{id:"ficha",l:"Ficha por caleta",pane:"ficha"},{id:"cmp",l:"Comparar caletas y especies",pane:"cmp"},{id:"zonas",l:"Comparar zonas",pane:"resumen",top:el=>secT(el,"Comparación de zonas"),open:true}]},
+    {g:"actividad",l:"Actividad pesquera",v:[
+      {id:"desemb",l:"Desembarque y estacionalidad",pane:"resumen",top:el=>secT(el,"Actividad y estacionalidad"),open:true},
+      {id:"especies",l:"Recursos y especies",pane:"especies",card:el=>!cardT(el,"Calendario de vedas")},
+      {id:"espcal",l:"Especies por caleta y comuna",pane:"resumen",top:el=>secT(el,"Especies, caletas y comunas"),open:true},
+      {id:"pesc",l:"Pescadores",pane:"pescadores",top:el=>el.id!=="embSec"},
+      {id:"flota",l:"Flota y registro Sernapesca",pane:"pescadores",top:el=>el.id==="embSec"},
+      {id:"genero",l:"Sexo y compañías",pane:"resumen",top:el=>secT(el,"Pescadores y compañías"),open:true}]},
+    {g:"manejo",l:"Manejo y regulación",v:[
+      {id:"vedas",l:"Vedas",pane:"especies",card:el=>cardT(el,"Calendario de vedas")},
+      {id:"amerb",l:"AMERB, planes de manejo y ECMPO",pane:"resumen",top:el=>secT(el,"Caletas, AMERB"),open:true}]},
+    {g:"borde",l:"Borde costero",v:[{id:"borde",l:"Borde costero",pane:"borde"}]},
+    {g:"rel",l:"Relacionamiento",v:[{id:"minutas",l:"Minutas y compromisos",pane:"minutas"},{id:"poder",l:"Poder e interés",pane:"poder"},{id:"rca",l:"Exigencias ambientales",pane:"rca"},{id:"negociacion",l:"Negociación",pane:"negociacion"}]},
+    {g:"datos",l:"Datos",v:[{id:"detalle",l:"Detalle de registros",pane:"detalle"},{id:"admin",l:"Administración",pane:"admin"}]}];
+  const VW=new Map();NAV.forEach(G=>G.v.forEach(v=>VW.set(v.id,{...v,g:G.g})));
+  const NV={cur:"inicio",want:null};try{const s=localStorage.getItem("nav.v");if(s&&VW.has(s))NV.cur=s}catch(e){}
+  const tabBtn=p=>document.querySelector(`#tabs [data-tab="${p}"]`);
+  const vOK=v=>{const b=tabBtn(v.pane);return!!b&&!b.hidden&&getComputedStyle(b).display!=="none"};
+  function navBuild(){let n=document.getElementById("gnav");const tabs=document.getElementById("tabs");if(!tabs)return;
+    if(!n){n=document.createElement("div");n.id="gnav";n.className="gnav gut";n.innerHTML=`<div class="gn-1" role="tablist" aria-label="Secciones"></div><div class="gn-2" role="tablist" aria-label="Subsecciones"></div>`;tabs.after(n);document.body.classList.add("nav2")}
+    const cur=VW.get(NV.cur)||VW.get("inicio");
+    n.querySelector(".gn-1").innerHTML=NAV.filter(G=>G.v.some(vOK)).map(G=>`<button type="button" role="tab" data-gn="${G.g}" aria-selected="${G.g===cur.g}">${esc(G.l)}</button>`).join("");
+    const G=NAV.find(x=>x.g===cur.g),vs=G?G.v.filter(vOK):[];const s2=n.querySelector(".gn-2");s2.hidden=vs.length<2;
+    s2.innerHTML=vs.map(v=>`<button type="button" role="tab" data-vn="${v.id}" aria-selected="${v.id===cur.id}">${esc(v.l)}</button>`).join("")}
+  function navApply(){const v=VW.get(NV.cur);if(!v)return;const pane=document.querySelector(`[data-pane="${v.pane}"]`);if(!pane)return;
+    document.querySelectorAll("[data-vh]").forEach(e=>{if(!pane.contains(e))e.removeAttribute("data-vh")});
+    [...pane.children].forEach(el=>{const show=!v.top||v.top(el);if(show)el.removeAttribute("data-vh");else el.setAttribute("data-vh","1");if(show&&v.open&&el.matches("details.sec")&&!el.open)el.open=true});
+    pane.querySelectorAll(":scope .viz > .card").forEach(el=>{if(!v.card){el.removeAttribute("data-vh");return}if(v.card(el))el.removeAttribute("data-vh");else el.setAttribute("data-vh","1")});
+    navBuild()}
+  function goView(id,sel){const v=VW.get(id);if(!v)return;NV.cur=id;NV.last=NV.last||{};NV.last[v.g]=id;try{localStorage.setItem("nav.v",id)}catch(e){}NV.want=id;setTab(v.pane);NV.want=null;navApply();window.scrollTo({top:0,behavior:"smooth"});
+    if(sel)setTimeout(()=>{const e=document.querySelector(sel);if(e)e.scrollIntoView({behavior:"smooth",block:"start"})},350)}
+  window.goView=goView;
+  {const _st=setTab;setTab=function(t){_st(t);const c=VW.get(NV.cur);if(!NV.want&&(!c||c.pane!==t)){const d=[...VW.values()].find(v=>v.pane===t);if(d)NV.cur=d.id}setTimeout(navApply,0)}}
+  {const _rp=renderPane;renderPane=function(){const r=_rp.apply(this,arguments);try{navApply()}catch(e){}return r}}
+  document.addEventListener("click",ev=>{const t=ev.target;if(!t.closest)return;const g=t.closest("[data-gn]");if(g){const G=NAV.find(x=>x.g===g.dataset.gn);const v=G&&(G.v.find(x=>x.id===NV.last?.[G.g]&&vOK(x))||G.v.find(vOK));if(v)goView(v.id);return}
+    const s=t.closest("[data-vn]");if(s){goView(s.dataset.vn);return}});
+  /* al iniciar sesión o recargar datos: abrir la última vista usada */
+  {let done=false;setInterval(()=>{if(!S.R||!document.getElementById("tabs")){done=false;return}if(done)return;done=true;const v=VW.get(NV.cur);if(v&&vOK(v))goView(v.id);else goView("inicio")},700)}
 
 }
 
