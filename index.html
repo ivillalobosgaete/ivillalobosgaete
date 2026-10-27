@@ -1553,6 +1553,11 @@ body.nav2 #tabs{display:none!important}[data-vh]{display:none!important}
 .gn-2 button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-weight:700;font-size:.82rem;color:var(--ink-2);white-space:nowrap;cursor:pointer}
 .gn-2 button:hover{border-color:var(--brand);color:var(--brand-ink)}.gn-2 button[aria-selected="true"]{background:var(--brand-08);border-color:var(--brand);color:var(--brand-ink)}
 @media(max-width:700px){.gn-1 button{padding:7px 12px;font-size:.84rem}}
+
+/* Inicio más liviano */
+#kpis .kpi[data-kx]{display:none!important}
+@media(min-width:1201px){#kpis{grid-template-columns:repeat(var(--kn,6),minmax(0,1fr))!important}}
+.ig-main .tbar h3{font-size:1.02rem}.ig-main .ig-svg text{font-size:11px}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
@@ -6466,6 +6471,24 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
     const lab=B.length?[`menos de ${t0(B[0])} t`,...B.slice(1).map((x,j)=>`${t0(B[j])} a ${t0(x)} t`),`${t0(B[B.length-1])} t o más`]:["con desembarque"];
     const off=IGC.length-lab.length;return{lab:lab.map((l,i)=>l),col:lab.map((_,i)=>IGC[i+off]),cls:x=>{let i=0;while(i<B.length&&x>=B[i])i++;return i+off},labOf:i=>lab[i-off]}}
   function igLeyenda(){const el=document.getElementById("igLegT");if(!el||!IG.Q)return;el.innerHTML=`<span class="cs">Desembarque 12 meses (área):</span>${IG.Q.lab.map((l,i)=>`<span><i class="ig-bf" style="background:${IG.Q.col[i]}"></i>${esc(l)}</span>`).join("")}`}
+  /* ===== Inicio: un gráfico principal (últimos 24 meses frente al año anterior) y KPI sin redundancias ===== */
+  function igPrincipal(){const pane=document.querySelector('[data-pane="resumen"]');if(!pane||!LAST||!S.R)return;let box=document.getElementById("igMain");
+    if(!box){box=document.createElement("div");box.id="igMain";box.className="card ig-main";const k=document.getElementById("kpis");if(k&&k.parentNode===pane)k.after(box);else pane.appendChild(box)}
+    const R=S.R,A=LAST.A,L=lastFullYM(),N=24,yms=[];for(let k=N-1;k>=0;k--)if(L-k>=0)yms.push(L-k);
+    const v=yms.map(ym=>A.ym[ym]||0),pv=yms.map(ym=>ym-12>=0?A.ym[ym-12]||0:null);const q12=v.slice(-12).reduce((a,b)=>a+b,0),p12=v.slice(-24,-12).reduce((a,b)=>a+b,0);const d=p12>=1?(q12-p12)/p12*100:null;
+    const W=900,H=230,l=50,r=W-12,T=16,B=H-28,mx=niceMax(Math.max(1,...v,...pv.filter(x=>x!=null))),bw=(r-l)/yms.length,sy=x=>B-x/mx*(B-T);
+    let mxI=0;v.forEach((x,i)=>{if(x>v[mxI])mxI=i});
+    let g=`<svg class="ig-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Desembarque mensual de los últimos 24 meses">`;
+    [0,.5,1].forEach(k=>{g+=`<line x1="${l}" x2="${r}" y1="${sy(mx*k)}" y2="${sy(mx*k)}" class="gl"/><text x="${l-6}" y="${sy(mx*k)+4}" text-anchor="end">${t0(mx*k)}</text>`});
+    yms.forEach((ym,i)=>{const x=l+i*bw;g+=`<rect x="${x+2}" y="${sy(v[i])}" width="${Math.max(1,bw-4)}" height="${Math.max(0,B-sy(v[i]))}" rx="3" fill="${i>=yms.length-12?"var(--brand)":"var(--brand-soft)"}"><title>${esc(ymTxt(ym))}: ${t1(v[i])} t${pv[i]!=null?` · un año antes: ${t1(pv[i])} t`:""}</title></rect>`;if(ym%12===0||i===0)g+=`<text x="${x+bw/2}" y="${B+15}" text-anchor="middle">${ym%12===0?R.y0+Math.floor(ym/12):MES[ym%12]}</text>`});
+    g+=`<polyline fill="none" stroke="var(--ink-2)" stroke-width="1.5" stroke-dasharray="4 3" points="${yms.map((_,i)=>pv[i]==null?"":`${l+i*bw+bw/2},${sy(pv[i])}`).filter(Boolean).join(" ")}"/>`;
+    g+=`<text x="${l+mxI*bw+bw/2}" y="${sy(v[mxI])-5}" text-anchor="middle" class="val">${t0(v[mxI])} t</text><line x1="${l}" x2="${r}" y1="${B}" y2="${B}" stroke="var(--ink-2)"/></svg>`;
+    const tit=d==null?`${t0(q12)} t desembarcadas en los últimos 12 meses`:`El desembarque de los últimos 12 meses ${d>=0?"subió":"bajó"} ${t0(Math.abs(d))} % frente a los 12 anteriores`;
+    box.innerHTML=`<div class="tbar"><h3>${esc(tit)}</h3><button type="button" class="lnk" data-igvw="desemb">Ver evolución completa →</button></div>
+      <p class="cs">Desembarque mensual de los últimos 24 meses (hasta ${esc(ymTxt(L))}), con los filtros aplicados. Barras oscuras: últimos 12 meses (${t0(q12)} t); barras claras: los 12 anteriores (${t0(p12)} t); línea punteada: mismo mes del año anterior.</p>${g}`}
+  function igKpiLimpia(){const k=document.getElementById("kpis");if(!k)return;const items=[...k.querySelectorAll(".kpi")];items.forEach(el=>{const t=nrm((el.querySelector(".k")||{}).textContent||"");const v=(el.querySelector(".v")||{}).textContent||"";el.toggleAttribute("data-kx",/^% del total/.test(t)&&/^100/.test(v.trim()))});
+    const n=items.filter(e=>!e.hasAttribute("data-kx")).length;k.style.setProperty("--kn",n)}
+  document.addEventListener("click",ev=>{const b=ev.target.closest&&ev.target.closest("[data-igvw]");if(b&&window.goView)window.goView(b.dataset.igvw)});
   function igMarks(){IG.mk.forEach((m,i)=>{m.setStyle({weight:i===IG.cal?3.5:1});if(i===IG.cal&&m.bringToFront)m.bringToFront()})}
   function igFicha(){const box=document.getElementById("igFicha");if(!box||IG.cal==null)return;box.innerHTML=fichaHtml(IG.cal)}
 
@@ -6538,7 +6561,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
   document.addEventListener("change",ev=>{const t=ev.target;if(t.id==="igCal"){IG.cal=+t.value;igMarks();igFocus(11);igFicha();return}
     if(t.id==="igPrintZ"&&t.value){const z=t.value;t.value="";const st=igStats();igPrint(S.R.m.C.map((c,i)=>i).filter(i=>calZone(S.R.m.C[i])===z&&(st.C[i].q12||st.C[i].qP12)).sort((a,b)=>st.C[b].q12-st.C[a].q12))}});
   document.addEventListener("mouseover",ev=>{const c=ev.target.closest&&ev.target.closest(".concl");if(c&&!c.title&&c.scrollHeight>c.clientHeight+4)c.title="Clic para leer la interpretación completa"});
-  {const _rp=renderPane;renderPane=function(){_rp.apply(this,arguments);try{if(S.tab==="resumen")igEstado();if(S.tab==="ficha")igRender()}catch(e){console.error(e)}}}
+  {const _rp=renderPane;renderPane=function(){_rp.apply(this,arguments);try{if(S.tab==="resumen"){igEstado();igPrincipal();igKpiLimpia()}if(S.tab==="ficha")igRender()}catch(e){console.error(e)}}}
   {const _st=setTab;setTab=function(t){_st(t);if(t==="ficha"){["#fab","#period","#aside","#chips"].forEach(s=>{const e=document.querySelector(s);if(e)e.hidden=true});const l=document.querySelector(".layout");if(l)l.style.gridTemplateColumns="minmax(0,1fr)";igRender()}}}
   {const _ba=window.__bcAfter;window.__bcAfter=()=>{_ba&&_ba();try{IG.st=IG.st;if(S.tab==="resumen")igEstado();if(S.tab==="ficha"){igMap(true);igFicha()}}catch(e){}}}
   {const _mr=window.mnReset;window.mnReset=()=>{_mr&&_mr();IG.st=null;IG.cal=null;IG.geoAsk=false;IG.rcAsk=false;IG.geoDone=false;IG.map=null;const e=document.getElementById("igEstado");if(e)e.remove();const f=document.querySelector('[data-pane="ficha"]');if(f)f.innerHTML=""}}
@@ -6551,7 +6574,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
   const secT=(el,txt)=>{const s=el.matches&&el.matches("details.sec")?el.querySelector(":scope>summary"):null;return!!s&&nrm(s.textContent).startsWith(nrm(txt))};
   const cardT=(el,txt)=>{const h=el.querySelector&&el.querySelector("h3,h2");return!!h&&nrm(h.textContent).startsWith(nrm(txt))};
   const NAV=[
-    {g:"inicio",l:"Inicio",v:[{id:"inicio",l:"Estado y alertas",pane:"resumen",top:el=>["vdBan","igEstado","kpis","alerts","today","ficha"].includes(el.id)||secT(el,"Claves del período")}]},
+    {g:"inicio",l:"Inicio",v:[{id:"inicio",l:"Estado y alertas",pane:"resumen",top:el=>["vdBan","igEstado","kpis","igMain","alerts","today","ficha"].includes(el.id)||secT(el,"Claves del período")}]},
     {g:"caletas",l:"Caletas",v:[{id:"ficha",l:"Ficha por caleta",pane:"ficha"},{id:"cmp",l:"Comparar caletas y especies",pane:"cmp"},{id:"zonas",l:"Comparar zonas",pane:"resumen",top:el=>secT(el,"Comparación de zonas"),open:true}]},
     {g:"actividad",l:"Actividad pesquera",v:[
       {id:"desemb",l:"Desembarque y estacionalidad",pane:"resumen",top:el=>secT(el,"Actividad y estacionalidad"),open:true},
