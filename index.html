@@ -1575,6 +1575,7 @@ body.nav2 #tabs{display:none!important}[data-vh]{display:none!important}
 .mi-cal{font-size:.84rem;border-top:1px dashed var(--line);padding-top:6px}.mi-json{width:100%;font-family:ui-monospace,monospace;font-size:.78rem}
 .mi-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c);margin:0 4px 0 2px}.mi-src{line-height:1.6}
 #miMap svg,#miMap canvas{max-width:none!important;width:auto!important;height:auto!important}
+.mi-sel{display:grid;gap:2px;font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase}.mi-sel select{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:.84rem;text-transform:none;font-weight:600;color:var(--ink);background:var(--surface)}.mi-sub{display:grid;gap:14px}.mi-hl td{background:#eef6fb}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
@@ -6604,7 +6605,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
       {id:"vedas",q:"¿Qué especies están en veda y cuándo comienzan las próximas?",main:"Calendario de vedas",kp:"kVed",l:"Vedas",pane:"especies",card:el=>cardT(el,"Calendario de vedas")},
       {id:"amerb",q:"¿Qué áreas de manejo, planes y espacios costeros hay junto a cada caleta?",main:"Caletas por nivel de actividad",kp:"",l:"AMERB, planes de manejo y ECMPO",pane:"resumen",top:el=>secT(el,"Caletas, AMERB"),open:true}]},
     {g:"borde",l:"Borde costero",v:[{id:"borde",l:"Borde costero",pane:"borde"}]},
-    {g:"mineria",l:"Contexto minero",v:[{id:"mineria",l:"Contexto minero",pane:"mineria"}]},
+    {g:"mineria",l:"Contexto minero",v:[{id:"mineria",l:"Compañías mineras en Chile",pane:"mineria",top:el=>el.dataset.sub==="cias"},{id:"amsa",l:"Grupo Antofagasta Minerals",pane:"mineria",top:el=>el.dataset.sub==="amsa"}]},
     {g:"rel",l:"Relacionamiento",v:[{id:"minutas",l:"Minutas y compromisos",pane:"minutas"},{id:"poder",l:"Poder e interés",pane:"poder"},{id:"rca",l:"Exigencias ambientales",pane:"rca"},{id:"negociacion",l:"Negociación",pane:"negociacion"}]},
     {g:"datos",l:"Datos",v:[{id:"detalle",l:"Detalle de registros",pane:"detalle"},{id:"admin",l:"Administración",pane:"admin"}]}];
   const VW=new Map();NAV.forEach(G=>G.v.forEach(v=>VW.set(v.id,{...v,g:G.g})));
@@ -6642,7 +6643,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
     pane.querySelectorAll(".fnote").forEach(n=>{n.style.order="99"})}
   function goView(id,sel){const v=VW.get(id);if(!v)return;NV.cur=id;NV.last=NV.last||{};NV.last[v.g]=id;try{localStorage.setItem("nav.v",id)}catch(e){}NV.want=id;setTab(v.pane);NV.want=null;navApply();window.scrollTo({top:0,behavior:"smooth"});
     if(sel)setTimeout(()=>{const e=document.querySelector(sel);if(e)e.scrollIntoView({behavior:"smooth",block:"start"})},350)}
-  window.goView=goView;
+  window.goView=goView;window.__navApply=()=>navApply();
   {const _st=setTab;setTab=function(t){_st(t);const c=VW.get(NV.cur);if(!NV.want&&(!c||c.pane!==t)){const d=[...VW.values()].find(v=>v.pane===t);if(d)NV.cur=d.id}setTimeout(navApply,0)}}
   {const _rp=renderPane;renderPane=function(){const r=_rp.apply(this,arguments);try{navApply()}catch(e){}return r}}
   document.addEventListener("click",ev=>{const t=ev.target;if(!t.closest)return;const g=t.closest("[data-gn]");if(g){const G=NAV.find(x=>x.g===g.dataset.gn);const v=G&&(G.v.find(x=>x.id===NV.last?.[G.g]&&vOK(x))||G.v.find(vOK));if(v)goView(v.id);return}
@@ -6680,7 +6681,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
     const tot=y=>ops.filter(o=>o.k!=="ant").reduce((s,o)=>s+((D.anual[y]||{})[o.k]||0),0);const tL=tot(yL),tP=tot(yP);
     const Y=D.ytd||{},yA=ops.filter(o=>o.k!=="ant").reduce((s,o)=>s+((Y.act||{})[o.k]||0),0),yB=ops.filter(o=>o.k!=="ant").reduce((s,o)=>s+((Y.prev||{})[o.k]||0),0);
     const cu=MI.cu&&MI.cu.anos||[],cuL=cu.find(x=>x.anio===yL),cuN=cu[cu.length-1];
-    p.innerHTML=`<section class="card vw-head"><div class="vw-t"><h2>Contexto minero</h2><p>¿Cuánto cobre producen las faenas vinculadas a las caletas y en qué contexto de precio?</p></div>
+    p.innerHTML=miCias()+`<div data-sub="amsa" class="mi-sub"><section class="card vw-head"><div class="vw-t"><h2>Grupo Antofagasta Minerals</h2><p>¿Cuánto cobre producen las faenas vinculadas a las caletas y en qué contexto de precio?</p></div>
       <div class="vw-k"><div><span>Producción ${yL} (${ops.filter(o=>o.k!=="ant").map(o=>o.n).join(", ")})</span><b>${kt(tL)}</b><small>${pTxt(pc(tL,tP))} frente a ${yP}</small></div>
       ${Y.anio?`<div><span>Acumulado ${Y.anio} (hasta el ${Y.hasta}.er trimestre)</span><b>${kt(yA)}</b><small>${pTxt(pc(yA,yB))} frente al mismo período de ${Y.anio-1}</small></div>`:""}
       <div><span>Precio del cobre ${cuN?cuN.anio:""}</span><b>${cuN?`US$ ${t1(cuN.prom).replace(/(\d),(\d)$/,"$1,$2")}/lb`:"—"}</b><small>${cuN?`promedio${cuN.parcial?" del año en curso":""}${cuL&&cuL!==cuN?` · ${yL}: US$ ${t1(cuL.prom)}`:""}`:ART()?"disponible en la versión web":"cargando…"}</small></div>
@@ -6690,12 +6691,67 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
       <div class="hlegend">${ops.map(o=>`<span><i style="background:${o.col}"></i>${esc(o.n)}</span>`).join("")}<span><span class="ln"></span>Precio del cobre</span></div>${miBars(D,ops,cu)}</div>
     <div class="card"><h3>Producción trimestral (kt)</h3><p class="cs">Últimos trimestres publicados. ${Object.values(D.trim).some(x=>x.deriv)?"Los valores marcados con * se calculan como acumulado menos los trimestres informados.":""}</p>${miTrim(D,ops)}</div>
     <div class="mi-ops">${ops.map(o=>miCard(D,o,yL,yP)).join("")}</div>
-    <div class="card"><div class="tbar"><h3>Infraestructura del borde costero</h3><div class="l mi-ml"></div></div><p class="cs">Instalaciones costeras de las faenas (ubicación aproximada) e infraestructura del borde costero registrada en OpenStreetMap: puertos, muelles, rompeolas, desaladoras, centrales y faros, junto a las caletas.</p>
-      ${!ART()?`<div id="miMap" class="ig-map"></div><p class="cs" id="miMapN"></p>`:`<p class="cs">El mapa se muestra en la versión web.</p>`}
-      <div class="tbl"><table class="em-t"><thead><tr><th>Instalación</th><th>Faena</th><th>Tipo</th><th>Caleta más cercana</th></tr></thead><tbody>${D.infra.filter(x=>ops.some(o=>o.k===x.k)).map(x=>{const n=miNear(x.lat,x.lon);return`<tr><td style="white-space:normal">${esc(x.n)}${x.apx?' <span class="cs">(ubicación aproximada)</span>':""}</td><td>${esc((D.ops.find(o=>o.k===x.k)||{}).n||"")}</td><td>${esc(INFT[x.t]||x.t)}</td><td>${n?`${esc(n.n)} · ${t1(n.d)} km`:"—"}</td></tr>`}).join("")||'<tr><td colspan="4" class="cs">Sin instalaciones costeras registradas para estas faenas.</td></tr>'}</tbody></table></div></div>
     ${MI.edit?`<div class="card" id="miEdit">${miEditHtml(D)}</div>`:""}
-    <p class="cs mi-src">Fuentes: ${D.fuentes.map(([t,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)}</a>`).join(" · ")}. Precio del cobre: Banco Central de Chile vía mindicador.cl. Infraestructura: © colaboradores de OpenStreetMap. Cifras actualizadas al ${esc(fmtF(D.act||""))}. No se cruza estadísticamente la producción minera con el desembarque: se muestran lado a lado para dar contexto.</p>`;
-    if(!ART())miMap(ops)}
+    <p class="cs mi-src">Fuentes: ${D.fuentes.map(([t,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)}</a>`).join(" · ")}. Precio del cobre: Banco Central de Chile vía mindicador.cl. Cifras actualizadas al ${esc(fmtF(D.act||""))}. No se cruza estadísticamente la producción minera con el desembarque: se muestran lado a lado para dar contexto.</p></div>`;
+    if(typeof window.__navApply==="function")window.__navApply()}
+  /* ===== Comparación de compañías mineras en Chile (Cochilco: producción de cobre de mina por empresa, miles de t de cobre fino, al 100 % de cada operación) ===== */
+  const CHY=[2021,2022,2023,2024];
+  const CHO=[ // [clave, operación, [2021..2024], ene-nov 2025, ene-nov 2024, propietarios [compañía, participación], nota]
+    ["chq","Chuquicamata, R. Tomic y M. Hales",[827.4,721.6,689.3,681.7],613.9,585.9,[["Codelco",1]]],
+    ["sal","Salvador",[52.9,32.1,13.0,5.7],35.5,2.8,[["Codelco",1]]],
+    ["and","Andina",[177.3,177.0,164.5,181.6],157.6,165.3,[["Codelco",1]]],
+    ["ten","El Teniente",[459.8,405.4,351.9,356.4],281.6,315.0,[["Codelco",1]]],
+    ["gab","Gabriela Mistral (Gaby)",[100.9,109.5,105.8,103.1],73.6,94.6,[["Codelco",1]]],
+    ["esc","Escondida",[1011.4,1054.2,1101.4,1277.5],1233.6,1143.9,[["BHP",.575],["Rio Tinto",.30],["JECO (Japón)",.125]]],
+    ["spe","Spence",[203.1,245.5,249.0,255.6],235.1,234.7,[["BHP",1]]],
+    ["cco","Cerro Colorado (cerrada en 2023)",[57.4,51.4,35.4,0],0,0,[["BHP",1]]],
+    ["col","Collahuasi",[630.0,570.8,573.2,558.6],369.9,517.4,[["Anglo American",.44],["Glencore",.44],["Japan Collahuasi",.12]]],
+    ["aas","Anglo American Sur (Los Bronces, El Soldado, Chagres)",[370.0,311.0,255.0,220.6],190.5,202.3,[["Anglo American",.501],["Codelco",.20],["Mitsubishi",.204],["Mitsui",.095]]],
+    ["lom","Lomas Bayas",[64.3,72.5,65.8,74.4],54.8,68.0,[["Glencore",1]]],
+    ["qb","Quebrada Blanca",[11.6,9.5,64.3,207.8],169.2,185.6,[["Teck",.60],["Sumitomo",.30],["ENAMI",.10]]],
+    ["pel","Los Pelambres",[336.3,284.1,310.6,331.2],277.1,301.6,[["Antofagasta Minerals",.60],["Consorcio japonés",.40]]],
+    ["cno","Centinela (óxidos)",[88.8,98.2,79.3,102.0],60.8,92.1,[["Antofagasta Minerals",.70],["Marubeni",.30]]],
+    ["csu","Centinela (sulfuros)",[185.4,149.4,162.7,121.8],157.6,105.3,[["Antofagasta Minerals",.70],["Marubeni",.30]]],
+    ["zal","Zaldívar",[88.0,88.9,80.9,82.8],66.0,74.7,[["Antofagasta Minerals",.50],["Barrick",.50]]],
+    ["abr","El Abra",[72.6,91.7,98.4,99.1],83.8,90.4,[["Freeport-McMoRan",.51],["Codelco",.49]]],
+    ["can","Candelaria",[118.6,126.3,130.9,142.1],114.0,128.4,[["Lundin Mining",.80],["Sumitomo",.20]]],
+    ["man","Mantos Copper (Mantos Blancos y Mantoverde)",[94.7,98.0,85.5,102.3],141.3,89.8,[["Capstone Copper",1]],"Mantoverde es 70 % de Capstone; se asigna completo por simplicidad."]];
+  const CHT={tot:[5624.9,5327.5,5250.4,5505.9],ytd25:4876.1,ytd24:4942.4,otros:[674.4,630.4,633.5,601.6],otrosY25:560.6,otrosY24:544.6,full25:{chile:5415.2,esc:1345.1,codelco:1334.4}};
+  const CHC={"BHP":"#e35205","Codelco":"#b45309","Anglo American":"#1d4ed8","Glencore":"#0f766e","Antofagasta Minerals":"#0b2230","Teck":"#047857","Freeport-McMoRan":"#7c3aed","Lundin Mining":"#be185d","Capstone Copper":"#4d7c0f","Barrick":"#a16207","Rio Tinto":"#dc2626"};
+  const CHI={base:"atr",per:"ytd"};
+  function chAgg(per,base){const m=new Map();CHO.forEach(o=>{const v=per==="ytd"?o[3]:o[2][CHY.indexOf(+per)],pv=per==="ytd"?o[4]:o[2][CHY.indexOf(+per)-1];if(base==="op"){const c=o[5][0][0];const a=m.get(c)||{v:0,p:0,ops:new Set()};a.v+=v||0;a.p+=pv||0;a.ops.add(o[1]);m.set(c,a)}
+      else o[5].forEach(([c,sh])=>{const a=m.get(c)||{v:0,p:0,ops:new Set()};a.v+=(v||0)*sh;a.p+=(pv||0)*sh;a.ops.add(o[1]+(sh<1?` (${t0(sh*100)} %)`:""));m.set(c,a)})});
+    return[...m].map(([c,a])=>({c,...a,ops:[...a.ops]})).filter(x=>x.v>0||x.p>0).sort((a,b)=>b.v-a.v)}
+  function miCias(){const per=CHI.per,base=CHI.base,R=chAgg(per,base).slice(0,12),mx=niceMax(Math.max(1,...R.map(r=>Math.max(r.v,r.p))));const yLab=per==="ytd"?"enero–noviembre 2025":String(per),pLab=per==="ytd"?"enero–noviembre 2024":String(+per-1);
+    const tot=per==="ytd"?CHT.ytd25:CHT.tot[CHY.indexOf(+per)],tp=per==="ytd"?CHT.ytd24:CHT.tot[CHY.indexOf(+per)-1];const am=R.find(r=>r.c==="Antofagasta Minerals");const rk=R.findIndex(r=>r.c==="Antofagasta Minerals")+1;
+    const W=860,rh=30,l=190,r=W-150,H=rh*R.length+30,sc=v=>v/mx*(r-l);
+    let g=`<svg class="ig-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Producción de cobre por compañía">`;[0,.5,1].forEach(k=>{g+=`<line x1="${l+sc(mx*k)}" x2="${l+sc(mx*k)}" y1="4" y2="${H-20}" class="gl"/><text x="${l+sc(mx*k)}" y="${H-6}" text-anchor="middle">${t0(mx*k)} kt</text>`});
+    R.forEach((x,i)=>{const y=6+i*rh,col=CHC[x.c]||"#94a3b8",hl=x.c==="Antofagasta Minerals";const d=x.p>0?(x.v-x.p)/x.p*100:null;
+      g+=`<text x="${l-8}" y="${y+15}" text-anchor="end" style="font-weight:${hl?800:600};fill:var(--ink)">${esc(x.c)}</text>${x.p>0&&tp?`<rect x="${l}" y="${y+2}" width="${sc(x.p)}" height="${rh-12}" rx="3" fill="none" stroke="${col}" stroke-dasharray="3 2" opacity=".7"><title>${esc(pLab)}: ${t1(x.p)} kt</title></rect>`:""}<rect x="${l}" y="${y+4}" width="${Math.max(1,sc(x.v))}" height="${rh-16}" rx="3" fill="${col}" ${hl?'stroke="#000" stroke-width="1.5"':""}><title>${esc(x.c)} · ${esc(yLab)}: ${t1(x.v)} kt${d!=null?` (${pTxt(d)} frente a ${pLab})`:""}&#10;${esc(x.ops.join(", "))}</title></rect><text x="${l+Math.max(sc(x.v),sc(x.p))+6}" y="${y+15}" class="val">${t0(x.v)} kt${d!=null?`  ${pTxt(d)}`:""}</text>`});
+    g+=`</svg>`;
+    const yrs=[...CHY,"ytd"];
+    return`<div data-sub="cias" class="mi-sub"><section class="card vw-head"><div class="vw-t"><h2>Compañías mineras en Chile</h2><p>¿Cuánto cobre produce cada compañía en Chile y cómo se compara el grupo Antofagasta Minerals?</p></div>
+      <div class="vw-k"><div><span>Producción de Chile 2025</span><b>${t1(CHT.full25.chile)} kt</b><small>${pTxt((CHT.full25.chile-CHT.tot[3])/CHT.tot[3]*100)} frente a 2024 (preliminar)</small></div><div><span>Mayor operación 2025</span><b>Escondida</b><small>${t1(CHT.full25.esc)} kt (BHP 57,5 %)</small></div><div><span>Codelco (divisiones) 2025</span><b>${t1(CHT.full25.codelco)} kt</b><small>sin sus participaciones en otras minas</small></div>
+      <div><span>Antofagasta Minerals · ${esc(yLab)}</span><b>${am?t1(am.v)+" kt":"—"}</b><small>${am&&tot?`${t1(am.v/tot*100)} % de Chile · lugar ${rk} de ${R.length}`:""} (${base==="atr"?"atribuible":"operaciones al 100 %"})</small></div></div></section>
+    <div class="card"><div class="tbar"><h3>${R[0]?`${esc(R[0].c)} lidera con ${t0(R[0].v)} kt en ${esc(yLab)}${am?`; Antofagasta Minerals suma ${t0(am.v)} kt (${t1(am.v/tot*100)} % del país)`:""}`:"Producción por compañía"}</h3>
+      <div class="l"><label class="mi-sel">Período<select id="chPer">${yrs.map(y=>`<option value="${y}" ${String(per)===String(y)?"selected":""}>${y==="ytd"?"Ene–nov 2025 (provisorio)":y}</option>`).join("")}</select></label>
+      <label class="mi-sel">Base<select id="chBase"><option value="atr" ${base==="atr"?"selected":""}>Atribuible según participación</option><option value="op" ${base==="op"?"selected":""}>Operaciones al 100 % (por operador)</option></select></label></div></div>
+      <p class="cs">Miles de toneladas de cobre fino. Barra llena: ${esc(yLab)}; contorno punteado: ${esc(pLab)}. ${base==="atr"?"«Atribuible» reparte la producción de cada mina según la participación de cada socio.":"«Al 100 %» asigna toda la mina a su operador principal."} Antofagasta Minerals resaltada.</p>${g}</div>
+    <div class="card"><h3>Evolución anual por compañía (kt, ${base==="atr"?"atribuible":"al 100 %"})</h3>${chLines(base)}</div>
+    <div class="card"><h3>Operaciones y propietarios</h3><p class="cs">Producción de cada operación al 100 % (miles de t de cobre fino) y sus socios. Las cifras de Cochilco pueden diferir de los reportes de cada compañía (por ejemplo, cobre pagable frente a cobre fino).</p>
+      <div class="tbl"><table class="em-t"><thead><tr><th>Operación</th><th>Propietarios</th>${CHY.map(y=>`<th class="r">${y}</th>`).join("")}<th class="r">Ene–nov 2024</th><th class="r">Ene–nov 2025</th><th class="r">Var.</th></tr></thead><tbody>
+      ${CHO.slice().sort((a,b)=>b[3]-a[3]).map(o=>{const am=o[5].some(x=>x[0]==="Antofagasta Minerals");const d=o[4]>0?(o[3]-o[4])/o[4]*100:null;return`<tr${am?' class="mi-hl"':""}><td style="white-space:normal"><b>${esc(o[1])}</b>${o[6]?`<div class="cs">${esc(o[6])}</div>`:""}</td><td style="white-space:normal">${o[5].map(([c,sh])=>`${esc(c)} ${t0(sh*100)} %`).join(" · ")}</td>${o[2].map(v=>`<td class="r">${v?t1(v):"—"}</td>`).join("")}<td class="r">${o[4]?t1(o[4]):"—"}</td><td class="r">${o[3]?t1(o[3]):"—"}</td><td class="r">${d==null?"—":`<span style="color:${d>=0?"var(--up)":"var(--down)"}">${pTxt(d)}</span>`}</td></tr>`}).join("")}
+      <tr><td>Otras operaciones</td><td class="cs">Varias</td>${CHT.otros.map(v=>`<td class="r">${t1(v)}</td>`).join("")}<td class="r">${t1(CHT.otrosY24)}</td><td class="r">${t1(CHT.otrosY25)}</td><td class="r">${pTxt((CHT.otrosY25-CHT.otrosY24)/CHT.otrosY24*100)}</td></tr>
+      <tr><td><b>Total Chile</b></td><td></td>${CHT.tot.map(v=>`<td class="r"><b>${t1(v)}</b></td>`).join("")}<td class="r"><b>${t1(CHT.ytd24)}</b></td><td class="r"><b>${t1(CHT.ytd25)}</b></td><td class="r"><b>${pTxt((CHT.ytd25-CHT.ytd24)/CHT.ytd24*100)}</b></td></tr></tbody></table></div>
+      <p class="cs">Fuente: <a href="https://boletin.cochilco.cl/productos/boletin.asp?anio=2025&mes=12&tabla=tabla22" target="_blank" rel="noopener">Cochilco, Boletín mensual (diciembre 2025), tabla «Producción chilena de cobre de mina por empresa»</a>; 2025 completo de Chile, Escondida y Codelco: <a href="https://www.df.cl/empresas/produccion-de-cobre-de-chile-cae-casi-2-en-2025-y-escondida-por-si-sola" target="_blank" rel="noopener">Cochilco vía Diario Financiero</a>. Participaciones según información pública de las compañías; Codelco incluye solo sus divisiones en la base «al 100 %». Teck también opera Carmen de Andacollo (90 %), incluida por Cochilco en «otras operaciones».</p></div></div>`}
+  function chLines(base){const cos=["BHP","Codelco","Anglo American","Glencore","Antofagasta Minerals","Teck","Freeport-McMoRan","Lundin Mining"];const S2=cos.map(c=>({c,v:CHY.map(y=>{let t=0;CHO.forEach(o=>{const v=o[2][CHY.indexOf(y)]||0;if(base==="op"){if(o[5][0][0]===c)t+=v}else o[5].forEach(([cc,sh])=>{if(cc===c)t+=v*sh})});return t})})).filter(s=>s.v.some(x=>x>0));
+    const W=860,H=280,l=50,r=W-170,T=12,B=H-28,mx=niceMax(Math.max(1,...S2.flatMap(s=>s.v))),sx=i=>l+i*(r-l)/(CHY.length-1),sy=v=>B-v/mx*(B-T);
+    let g=`<svg class="ig-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Evolución anual por compañía">`;[0,.5,1].forEach(k=>{g+=`<line x1="${l}" x2="${r}" y1="${sy(mx*k)}" y2="${sy(mx*k)}" class="gl"/><text x="${l-6}" y="${sy(mx*k)+4}" text-anchor="end">${t0(mx*k)}</text>`});CHY.forEach((y,i)=>{g+=`<text x="${sx(i)}" y="${B+16}" text-anchor="middle">${y}</text>`});
+    const ends=S2.map(s=>({s,y:sy(s.v[s.v.length-1])})).sort((a,b)=>a.y-b.y);let last=-99;ends.forEach(e=>{e.ly=Math.max(e.y,last+13);last=e.ly});const ov=last-(B-4);if(ov>0){let nx=B-4;for(let i=ends.length-1;i>=0;i--){ends[i].ly=Math.min(ends[i].ly,nx);nx=ends[i].ly-13}}
+    S2.forEach(s=>{const col=CHC[s.c]||"#94a3b8",hl=s.c==="Antofagasta Minerals";g+=`<polyline fill="none" stroke="${col}" stroke-width="${hl?3.5:2}" points="${s.v.map((v,i)=>`${sx(i)},${sy(v)}`).join(" ")}"/>`+s.v.map((v,i)=>`<circle cx="${sx(i)}" cy="${sy(v)}" r="3" fill="${col}"><title>${esc(s.c)} ${CHY[i]}: ${t1(v)} kt</title></circle>`).join("")});
+    ends.forEach(e=>{g+=`<text x="${r+8}" y="${e.ly+4}" style="font-size:11px;font-weight:${e.s.c==="Antofagasta Minerals"?800:600};fill:${CHC[e.s.c]||"#555"}">${esc(e.s.c)} ${t0(e.s.v[e.s.v.length-1])}</text>`});
+    return g+`</svg>`}
+  document.addEventListener("change",ev=>{const t=ev.target;if(t.id==="chPer"){CHI.per=t.value==="ytd"?"ytd":+t.value;miRender()}else if(t.id==="chBase"){CHI.base=t.value;miRender()}});
   const INFT={puerto:"Puerto o terminal",muelle:"Muelle",rompeolas:"Rompeolas",desaladora:"Desaladora",energia:"Central eléctrica",ducto:"Ducto, aducción o emisario",faro:"Faro",otro:"Otra"};
   const INFC={puerto:"#0b4f8a",muelle:"#2a78d6",rompeolas:"#64748b",desaladora:"#0ea5a5",energia:"#b45309",ducto:"#7c3aed",faro:"#ca8a04",otro:"#94a3b8"};
   function miNear(lat,lon){const c=caletasGeo();let b=null;c.forEach(k=>{const d=hkm(lat,lon,k.lat,k.lon);if(!b||d<b.d)b={n:k.n,d}});return b}
