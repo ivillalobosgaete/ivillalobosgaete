@@ -25,7 +25,21 @@ export default handler(async (req, res) => {
   }
   if (cache.data && cache.dia === hoy) return send(res, 200, cache.data);
   const items = [];
-  await Promise.all(DEF.map(async ([k, nombre]) => {
+  // Primero una sola consulta con todos los indicadores (evita límites por consultas simultáneas); si falla, uno por uno.
+  try {
+    const r = await fetch((process.env.MINDICADOR_BASE || "https://mindicador.cl/api/"), { signal: AbortSignal.timeout(8000), headers: { "User-Agent": "Mozilla/5.0 (plataforma AAPP Norte)" } });
+    const j = await r.json();
+    for (const [k, nombre] of DEF) { const o = j && j[k]; if (o && o.valor != null) items.push({ k, nombre, valor: o.valor, fecha: o.fecha, prev: null }); }
+  } catch {}
+  if (items.length < DEF.length) for (const [k, nombre] of DEF) { if (items.some((x) => x.k === k)) continue; try {
+    const r = await fetch((process.env.MINDICADOR_BASE || "https://mindicador.cl/api/") + k, { signal: AbortSignal.timeout(6000), headers: { "User-Agent": "Mozilla/5.0 (plataforma AAPP Norte)" } });
+    const j = await r.json(); const s = j.serie || [];
+    if (s.length) items.push({ k, nombre, valor: s[0].valor, fecha: s[0].fecha, prev: s[1] ? s[1].valor : null });
+  } catch {} }
+  // Variación respecto del valor anterior (solo con la serie de cada indicador, consultada de a una).
+  for (const it of items) { if (it.prev != null) continue; try { const r = await fetch((process.env.MINDICADOR_BASE || "https://mindicador.cl/api/") + it.k, { signal: AbortSignal.timeout(5000) }); const s = (await r.json()).serie || []; if (s[1]) it.prev = s[1].valor; } catch {} }
+  items.sort((a, b) => DEF.findIndex((d) => d[0] === a.k) - DEF.findIndex((d) => d[0] === b.k));
+  if (false) await Promise.all(DEF.map(async ([k, nombre]) => {
     try {
       const r = await fetch((process.env.MINDICADOR_BASE || "https://mindicador.cl/api/") + k, { signal: AbortSignal.timeout(6000) });
       const j = await r.json(); const s = j.serie || [];
@@ -33,6 +47,6 @@ export default handler(async (req, res) => {
     } catch {}
   }));
   const data = { items, fuente: "mindicador.cl", obtenido: new Date().toISOString() };
-  if (items.length) cache = { t: Date.now(), data, dia: hoy };
+  if (items.length >= Math.min(5, DEF.length)) cache = { t: Date.now(), data, dia: hoy };
   send(res, 200, data);
 });
