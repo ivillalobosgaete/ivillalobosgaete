@@ -1558,6 +1558,15 @@ body.nav2 #tabs{display:none!important}[data-vh]{display:none!important}
 #kpis .kpi[data-kx]{display:none!important}
 @media(min-width:1201px){#kpis{grid-template-columns:repeat(var(--kn,6),minmax(0,1fr))!important}}
 .ig-main .tbar h3{font-size:1.02rem}.ig-main .ig-svg text{font-size:11px}
+
+/* encabezado de cada vista y orden interno */
+.vw-head{display:grid!important;grid-template-columns:minmax(220px,1fr) minmax(0,2.4fr);gap:12px 18px;align-items:center;border-left:5px solid var(--brand)}
+.vw-t h2{margin:0;font-size:1.15rem}.vw-t p{margin:2px 0 0;color:var(--ink-2);font-size:.88rem}
+.vw-k{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.vw-k>div{background:var(--brand-08);border-radius:12px;padding:8px 12px;display:grid;gap:1px;min-width:0}
+.vw-k span{font-size:.68rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.vw-k b{font-size:1.15rem;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.vw-k small{font-size:.74rem;color:var(--ink-2)}
+@media(max-width:900px){.vw-head{grid-template-columns:minmax(0,1fr)}}
+.viz>.card.vw-main{grid-column:1/-1!important}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
@@ -6575,17 +6584,17 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
   const cardT=(el,txt)=>{const h=el.querySelector&&el.querySelector("h3,h2");return!!h&&nrm(h.textContent).startsWith(nrm(txt))};
   const NAV=[
     {g:"inicio",l:"Inicio",v:[{id:"inicio",l:"Estado y alertas",pane:"resumen",top:el=>["vdBan","igEstado","kpis","igMain","alerts","today","ficha"].includes(el.id)||secT(el,"Claves del período")}]},
-    {g:"caletas",l:"Caletas",v:[{id:"ficha",l:"Ficha por caleta",pane:"ficha"},{id:"cmp",l:"Comparar caletas y especies",pane:"cmp"},{id:"zonas",l:"Comparar zonas",pane:"resumen",top:el=>secT(el,"Comparación de zonas"),open:true}]},
+    {g:"caletas",l:"Caletas",v:[{id:"ficha",l:"Ficha por caleta",pane:"ficha"},{id:"cmp",l:"Comparar caletas y especies",pane:"cmp"},{id:"zonas",q:"¿Cómo se comparan las zonas entre sí?",main:"",kp:"",l:"Comparar zonas",pane:"resumen",top:el=>secT(el,"Comparación de zonas"),open:true}]},
     {g:"actividad",l:"Actividad pesquera",v:[
-      {id:"desemb",l:"Desembarque y estacionalidad",pane:"resumen",top:el=>secT(el,"Actividad y estacionalidad"),open:true},
-      {id:"especies",l:"Recursos y especies",pane:"especies",card:el=>!cardT(el,"Calendario de vedas")},
-      {id:"espcal",l:"Especies por caleta y comuna",pane:"resumen",top:el=>secT(el,"Especies, caletas y comunas"),open:true},
-      {id:"pesc",l:"Pescadores",pane:"pescadores",top:el=>el.id!=="embSec"},
-      {id:"flota",l:"Flota y registro Sernapesca",pane:"pescadores",top:el=>el.id==="embSec"},
-      {id:"genero",l:"Sexo y compañías",pane:"resumen",top:el=>secT(el,"Pescadores y compañías"),open:true}]},
+      {id:"desemb",q:"¿Cuánto se desembarca, cuándo y cómo cambia en el año?",main:"Evolución mensual del desembarque",kp:"kDes",l:"Desembarque y estacionalidad",pane:"resumen",top:el=>secT(el,"Actividad y estacionalidad"),open:true},
+      {id:"especies",q:"¿Qué recursos se extraen y cómo varían?",main:"Calendario de capturas por especie",kp:"kEsp",l:"Recursos y especies",pane:"especies",card:el=>!cardT(el,"Calendario de vedas")},
+      {id:"espcal",q:"¿Qué se extrae en cada caleta y comuna?",main:"Principales especies",kp:"kEsp",l:"Especies por caleta y comuna",pane:"resumen",top:el=>secT(el,"Especies, caletas y comunas"),open:true},
+      {id:"pesc",q:"¿Cuántos pescadores participan y cómo se reparte el desembarque?",main:"Concentración del desembarque",kp:"kPes",l:"Pescadores",pane:"pescadores",top:el=>el.id!=="embSec"},
+      {id:"flota",q:"¿Con qué embarcaciones se pesca y dónde desembarcan respecto de su caleta base?",main:"Elegibilidad según registro",kp:"",l:"Flota y registro Sernapesca",pane:"pescadores",top:el=>el.id==="embSec"},
+      {id:"genero",q:"¿Cómo participan mujeres y hombres, y en qué compañías?",main:"Pescadores por sexo",kp:"kPes",l:"Sexo y compañías",pane:"resumen",top:el=>secT(el,"Pescadores y compañías"),open:true}]},
     {g:"manejo",l:"Manejo y regulación",v:[
-      {id:"vedas",l:"Vedas",pane:"especies",card:el=>cardT(el,"Calendario de vedas")},
-      {id:"amerb",l:"AMERB, planes de manejo y ECMPO",pane:"resumen",top:el=>secT(el,"Caletas, AMERB"),open:true}]},
+      {id:"vedas",q:"¿Qué especies están en veda y cuándo comienzan las próximas?",main:"Calendario de vedas",kp:"kVed",l:"Vedas",pane:"especies",card:el=>cardT(el,"Calendario de vedas")},
+      {id:"amerb",q:"¿Qué áreas de manejo, planes y espacios costeros hay junto a cada caleta?",main:"Caletas por nivel de actividad",kp:"",l:"AMERB, planes de manejo y ECMPO",pane:"resumen",top:el=>secT(el,"Caletas, AMERB"),open:true}]},
     {g:"borde",l:"Borde costero",v:[{id:"borde",l:"Borde costero",pane:"borde"}]},
     {g:"rel",l:"Relacionamiento",v:[{id:"minutas",l:"Minutas y compromisos",pane:"minutas"},{id:"poder",l:"Poder e interés",pane:"poder"},{id:"rca",l:"Exigencias ambientales",pane:"rca"},{id:"negociacion",l:"Negociación",pane:"negociacion"}]},
     {g:"datos",l:"Datos",v:[{id:"detalle",l:"Detalle de registros",pane:"detalle"},{id:"admin",l:"Administración",pane:"admin"}]}];
@@ -6601,9 +6610,27 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
     s2.innerHTML=vs.map(v=>`<button type="button" role="tab" data-vn="${v.id}" aria-selected="${v.id===cur.id}">${esc(v.l)}</button>`).join("")}
   function navApply(){const v=VW.get(NV.cur);if(!v)return;const pane=document.querySelector(`[data-pane="${v.pane}"]`);if(!pane)return;
     document.querySelectorAll("[data-vh]").forEach(e=>{if(!pane.contains(e))e.removeAttribute("data-vh")});
-    [...pane.children].forEach(el=>{const show=!v.top||v.top(el);if(show)el.removeAttribute("data-vh");else el.setAttribute("data-vh","1");if(show&&v.open&&el.matches("details.sec")&&!el.open)el.open=true});
+    vwHead(v,pane);[...pane.children].forEach(el=>{const show=el.id==="vwHead-"+v.pane?!!v.q:(!v.top||v.top(el));if(show)el.removeAttribute("data-vh");else el.setAttribute("data-vh","1");if(show&&v.open&&el.matches("details.sec")&&!el.open)el.open=true});
     pane.querySelectorAll(":scope .viz > .card").forEach(el=>{if(!v.card){el.removeAttribute("data-vh");return}if(v.card(el))el.removeAttribute("data-vh");else el.setAttribute("data-vh","1")});
-    navBuild()}
+    vwOrder(v,pane);navBuild()}
+  /* Encabezado de cada vista: pregunta que responde + indicadores clave (con los filtros aplicados) */
+  const pctS=(a,b)=>b>0?t0(a/b*100)+" %":"—";
+  const KP={
+    kDes:A=>{const R=S.R;let mi=-1,mv=0;A.ym.forEach((v,i)=>{if(v>mv){mv=v;mi=i}});const d=A.hasPrev&&A.P.q>0?(A.q-A.P.q)/A.P.q*100:null;
+      return[["Desembarque del período",`${t0(A.q)} t`,`${t0(A.rows)} registros`],["Promedio mensual",`${t0(A.nMonths?A.q/A.nMonths:0)} t`,`${t0(A.nMonths)} meses`],["Mes de mayor desembarque",mi>=0?MES[mi%12]+" "+(R.y0+Math.floor(mi/12)):"—",mi>=0?`${t0(mv)} t`:""],["Frente al mismo período anterior",d==null?"—":`${d>=0?"+":"−"}${t0(Math.abs(d))} %`,d==null?"sin período anterior comparable":`${t0(A.P.q)} t antes`]]},
+    kEsp:A=>{const m=S.R.m;const es=[...A.esp].map((v,i)=>[i,v]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);const gs=[...A.grp].map((v,i)=>[i,v]).sort((a,b)=>b[1]-a[1]);const g=bcGeo(),H=g&&g.vedasHoy?g.vedasHoy():{now:[]};const codes=new Set(es.map(x=>String(m.E[x[0]][0])));
+      return[["Especies con desembarque",t0(es.length),""],["Recurso principal",es[0]?m.E[es[0][0]][1]:"—",es[0]?`${pctS(es[0][1],A.q)} del volumen`:""],["Grupo principal",gs[0]&&gs[0][1]>0?S.R.grps[gs[0][0]]:"—",gs[0]?`${pctS(gs[0][1],A.q)} del volumen`:""],["En veda hoy",t0(new Set(H.now.filter(x=>codes.has(String(x.c))).map(x=>x.c)).size),"especies de este período"]]},
+    kPes:A=>{const muj=S.R.m.sexes.indexOf("Mujer"),nM=muj>=0?A.sexF[muj].size:0,n=A.fis.size;const q=[...A.pq.values()].sort((a,b)=>b-a);const k=Math.max(1,Math.round(q.length*.1)),top=q.slice(0,k).reduce((a,b)=>a+b,0);
+      return[["Pescadores activos",t0(n),""],["Mujeres",t0(nM),pctS(nM,n)+" de los pescadores"],["Concentración",pctS(top,A.q),`del desembarque lo explica el 10 % con más volumen (${t0(k)})`],["Promedio por pescador",`${t1(n?A.q/n:0)} t`,"en el período"]]},
+    kVed:()=>{const g=bcGeo(),H=g&&g.vedasHoy?g.vedasHoy():{now:[],next:[]};const reg=new Set((CFG.vedas||[]).flatMap(v=>v.esp||[]).map(String));const base=new Set(S.R.m.E.map(e=>String(e[0])).filter(c=>reg.has(c)));
+      return[["Vedas vigentes hoy",t0(new Set(H.now.map(x=>x.n)).size),[...new Set(H.now.map(x=>x.n))].slice(0,3).join(", ")],["Comienzan en 30 días",t0(new Set(H.next.map(x=>x.n)).size),[...new Set(H.next.map(x=>x.n))].slice(0,3).join(", ")],["Especies de la base con veda",t0(base.size),"registradas en el calendario"]]}};
+  function vwHead(v,pane){let h=document.getElementById("vwHead-"+v.pane);if(!v.q){return}if(!h){h=document.createElement("section");h.id="vwHead-"+v.pane;h.className="card vw-head";pane.prepend(h)}else if(h!==pane.firstElementChild)pane.prepend(h);
+    let ks=[];try{ks=v.kp&&KP[v.kp]&&LAST?KP[v.kp](LAST.A):[]}catch(e){ks=[]}
+    h.innerHTML=`<div class="vw-t"><h2>${esc(v.l)}</h2><p>${esc(v.q)}</p></div>${ks.length?`<div class="vw-k">${ks.map(([k,val,sub])=>`<div><span>${esc(k)}</span><b>${esc(val)}</b>${sub?`<small>${esc(sub)}</small>`:""}</div>`).join("")}</div>`:""}`}
+  function vwOrder(v,pane){pane.querySelectorAll(".viz").forEach(z=>{[...z.children].forEach(c=>{if(!c.classList||!c.classList.contains("card"))return;
+      const h=c.querySelector("h3");const isMain=v.main&&h&&nrm(h.textContent).startsWith(nrm(v.main));const tab=!!c.querySelector("table")&&!c.querySelector("svg");
+      c.style.order=isMain?"-1":tab?"50":"";c.classList.toggle("vw-main",!!isMain)})});
+    pane.querySelectorAll(".fnote").forEach(n=>{n.style.order="99"})}
   function goView(id,sel){const v=VW.get(id);if(!v)return;NV.cur=id;NV.last=NV.last||{};NV.last[v.g]=id;try{localStorage.setItem("nav.v",id)}catch(e){}NV.want=id;setTab(v.pane);NV.want=null;navApply();window.scrollTo({top:0,behavior:"smooth"});
     if(sel)setTimeout(()=>{const e=document.querySelector(sel);if(e)e.scrollIntoView({behavior:"smooth",block:"start"})},350)}
   window.goView=goView;
