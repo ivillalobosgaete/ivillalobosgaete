@@ -93,6 +93,9 @@
     },
     "api/territorio.js": {
       "maxDuration": 60
+    },
+    "api/camaras.js": {
+      "maxDuration": 60
     }
   }
 }
