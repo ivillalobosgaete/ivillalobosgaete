@@ -13,37 +13,36 @@ Cámaras (10.1.1.65 / .66) ──RTSP──▶ equipo local (go2rtc) ──túne
 2. Confirmar que RTSP está activo (Configuración → Red → Puertos; normalmente puerto 554).
 3. Si `admin` tiene la contraseña de fábrica, cambiarla.
 
-## 2. Equipo local
-Un mini PC o Raspberry Pi 4/5 con Linux y Docker, conectado por cable a la misma red de las cámaras y
-encendido siempre. Debe autorizarlo quien administre esa red.
+## 2. Equipo local (instalación automática)
+Un mini PC o Raspberry Pi 4/5 con Linux (Raspberry Pi OS, Debian o Ubuntu), conectado por cable a la misma
+red de las cámaras y encendido siempre. Debe autorizarlo quien administre esa red.
 
-1. Copiar esta carpeta al equipo.
-2. Copiar `.env.ejemplo` como `.env` y completar los valores.
-3. Ajustar en `go2rtc.yaml` las direcciones y el canal si corresponde.
-4. Ejecutar `docker compose up -d`.
-5. Probar en el mismo equipo: abrir `http://127.0.0.1:1984` y verificar que `cam1` y `cam2` muestran imagen.
+1. Copiar `instalar-camaras.sh` al equipo.
+2. Ejecutar `sudo bash instalar-camaras.sh` y responder las preguntas (IP, puerto, canales, usuario y clave
+   de visualización de cada equipo Dahua, y el token del túnel).
+3. El instalador instala Docker, configura todo, prueba cada cámara y al final muestra
+   **Dirección, Usuario y Clave** para la plataforma, y la lista de transmisiones (`cam1`, `cam2`, …).
+
+Los archivos `go2rtc.yaml`, `docker-compose.yml` y `.env.ejemplo` de esta carpeta son la configuración
+equivalente para quien prefiera hacerlo a mano.
 
 ## 3. Túnel (Cloudflare, plan gratuito)
 Requiere un dominio administrado en Cloudflare.
-1. Cloudflare Zero Trust → Networks → Tunnels → Create tunnel (tipo Cloudflared). Copiar el token en `TUNNEL_TOKEN`.
-2. En «Public hostname» crear, por ejemplo, `camaras.su-dominio.cl` apuntando a `http://go2rtc:1984`.
-3. Recomendado: proteger ese nombre con Cloudflare Access usando un **Service Token**, para que solo la
-   plataforma pueda llegar al equipo.
+1. Cloudflare Zero Trust → Networks → Tunnels → Create tunnel (tipo Cloudflared). Copiar el token (el texto
+   después de `--token`) y pegarlo cuando el instalador lo pida.
+2. En «Public hostname» crear, por ejemplo, `camaras.su-dominio.cl` → Service HTTP → URL `go2rtc:1984`.
+3. Recomendado: proteger ese nombre con Cloudflare Access usando un **Service Token** (política «Service Auth»).
 
-## 4. Vercel (Settings → Environment Variables)
-| Variable | Valor |
-|---|---|
-| `CAM_RELAY_URL` | `https://camaras.su-dominio.cl` |
-| `CAM_RELAY_USER` / `CAM_RELAY_PASS` | los mismos `RELAY_USER` / `RELAY_PASS` del `.env` |
-| `CAM_CF_ID` / `CAM_CF_SECRET` | (opcional) Client ID y Client Secret del Service Token de Access |
-
-Volver a publicar el proyecto.
-
-## 5. En la plataforma
-1. Administrador: pestaña **Cámaras → Configurar cámaras**. Agregar cada cámara con su nombre, caleta y
-   nombre de transmisión (`cam1`, `cam2`).
-2. En **Administración → Usuarios**, marcar «Ver cámaras» a quienes corresponda. Cada usuario ve solo las
+## 4. En la plataforma
+1. Administrador: pestaña **Cámaras**. En «Conexión con el equipo local» escribir la Dirección, el Usuario y la
+   Clave que mostró el instalador (y, si usas Access, el Client ID y Client Secret). Pulsar **Guardar conexión**:
+   la plataforma prueba la conexión y lista las transmisiones.
+2. **Configurar cámaras → + Agregar cámara**: nombre, caleta y transmisión (`cam1`, `cam2`, …). Guardar.
+3. En **Administración → Usuarios**, marcar «Ver cámaras» a quienes corresponda. Cada usuario ve solo las
    cámaras de sus caletas, zonas o comunas (misma regla que los datos).
+
+Alternativa: definir la conexión con las variables de Vercel `CAM_RELAY_URL`, `CAM_RELAY_USER`,
+`CAM_RELAY_PASS` (y `CAM_CF_ID`, `CAM_CF_SECRET`); si existen, tienen prioridad.
 
 ## Resguardos
 - Las imágenes no se almacenan en la plataforma; cada vista en vivo queda en la bitácora.
