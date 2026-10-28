@@ -3,7 +3,7 @@ import { handler, send, readBody, current, sb, uname, publicUser, getUser, hashP
 
 const txt = (v, n = 80) => String(v ?? "").trim().slice(0, n);
 const rolOf = (r) => (r === "administrador" ? "administrador" : "visualizador");
-const permsOf = (p = {}) => ({ exportar: !!p.exportar, camaras: !!p.camaras, nombres: p.nombres !== false, caletas: Array.isArray(p.caletas) ? p.caletas.map((x) => txt(x, 80)).filter(Boolean).slice(0, 200) : [], zonas: Array.isArray(p.zonas) ? p.zonas.filter((x) => ["norte", "pelambres", "aim"].includes(x)) : [] });
+const permsOf = (p = {}) => ({ exportar: !!p.exportar, nombres: p.nombres !== false, caletas: Array.isArray(p.caletas) ? p.caletas.map((x) => txt(x, 80)).filter(Boolean).slice(0, 200) : [], zonas: Array.isArray(p.zonas) ? p.zonas.filter((x) => ["norte", "pelambres", "aim"].includes(x)) : [] });
 const comunasOf = (rol, c) => (rol === "administrador" || !Array.isArray(c) ? [] : c.map((x) => txt(x, 60)).filter(Boolean).slice(0, 50));
 const where = (id) => `usuarios?usuario=eq.${encodeURIComponent(id)}`;
 const patchUser = (id, body) => sb(where(id), { method: "PATCH", body, prefer: "return=minimal" });
