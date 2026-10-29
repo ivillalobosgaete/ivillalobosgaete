@@ -3067,7 +3067,7 @@ function renderVedas(){const el=$("#vedaCal"),R=S.R,m=R.m;if(!CFG.vedas.length){
 let ACT=[],PRD=null;
 function cfgRender(){if(!S.perm.admin||!S.R)return;const R=S.R,m=R.m;$("#cfgWarn").hidden=!CFG.warn;$("#cfgWarn").textContent=CFG.warn;
   if(!PRD)PRD={...CFG.precios};const tot=new Float64Array(m.E.length);for(let i=0;i<R.n;i++)tot[R.e[i]]+=R.q[i]/1000;const q=norm($("#prS").value||"");
-  const idx=m.E.map((e,i)=>i).filter(i=>tot[i]>0&&(!q||norm(m.E[i][1]+" "+m.E[i][2]).includes(q))).sort((a,b)=>tot[b]-tot[a]);
+  const idx=m.E.map((e,i)=>i).filter(i=>tot[i]>0&&(!q||norm(m.E[i][1]+" "+m.E[i][2]).includes(q))).sort((a,b)=>String(m.E[a][1]).localeCompare(String(m.E[b][1]),"es",{sensitivity:"base"}));
   $("#prTbl").innerHTML=`<thead><tr><th>Especie</th><th>Grupo</th><th class="r">Toneladas en la base</th><th class="r">$ por kg</th></tr></thead><tbody>${idx.map(i=>`<tr><td><b>${esc(m.E[i][1])}</b></td><td>${esc(m.E[i][2])}</td><td class="r">${t0(tot[i])}</td><td class="r"><input type="number" min="0" step="10" class="prIn" data-code="${esc(m.E[i][0])}" value="${PRD[m.E[i][0]]||""}" aria-label="Precio por kg de ${esc(m.E[i][1])}"></td></tr>`).join("")}</tbody>`;
   const eOpts=m.E.map((e,i)=>i).filter(i=>tot[i]>0).sort((a,b)=>m.E[a][1].localeCompare(m.E[b][1],"es"));
   if(!$("#vdE").options.length){$("#vdE").innerHTML=eOpts.map(i=>`<option value="${esc(m.E[i][0])}">${esc(m.E[i][1])}</option>`).join("");$("#vdZ").innerHTML=`<option value="">Todas las zonas</option>`+R.regRaw.map((r,i)=>`<option value="${esc(r)}">${esc(R.regs[i])}</option>`).join("");$("#vdD").innerHTML=$("#vdH").innerHTML=MESL.map((x,i)=>`<option value="${i}">${cap(x)}</option>`).join("")}
