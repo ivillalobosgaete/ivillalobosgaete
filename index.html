@@ -1582,6 +1582,17 @@ body.nav2 #tabs{display:none!important}[data-vh]{display:none!important}
 .ig-tcat{font-size:.7rem;font-weight:800;color:#fff;background:var(--c);border-radius:999px;padding:1px 8px;white-space:nowrap}
 @media(max-width:620px){.ig-tl2 li{grid-template-columns:minmax(0,1fr)}}
 .ck-t td{vertical-align:middle}.ck-t td:first-child{font-weight:700;color:var(--ink-2);white-space:normal;min-width:180px}.ck-c{display:grid;grid-template-columns:minmax(60px,1fr) auto;gap:8px;align-items:center}.ck-bar{height:10px;background:var(--brand-08);border-radius:5px;overflow:hidden;display:block}.ck-bar i{display:block;height:100%;border-radius:5px}.ck-max{font-weight:800}
+
+.gs-t{border-collapse:collapse;width:100%;font-size:.86rem}.gs-t th,.gs-t td{padding:5px 7px;border-bottom:1px solid var(--line,#e5e7eb);white-space:nowrap;text-align:left}.gs-t .n{text-align:right;font-variant-numeric:tabular-nums}
+.gs-t .gs-pr{background:color-mix(in srgb,currentColor 5%,transparent)}.gs-t tr.gs-tot td{font-weight:700;border-top:2px solid var(--line,#ccc)}
+.gs-sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.gs-b{display:inline-block;width:110px;height:8px;border-radius:4px;background:color-mix(in srgb,currentColor 8%,transparent);margin-left:8px;vertical-align:middle;overflow:hidden}.gs-b i{display:block;height:100%;border-radius:4px}
+.gs-v{display:inline-block;min-width:6.5em;text-align:right;font-variant-numeric:tabular-nums}
+.gs-det{margin-top:10px}.gs-det>summary{cursor:pointer;font-weight:600;padding:4px 0}
+.gs-et input{width:5.2em;padding:3px 4px}.gs-et td:first-child input{width:15em}.gs-et select{max-width:12em}.gs-cn{font-weight:700;width:min(22em,60vw)}
+.gs-ed .tbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}.gs-priv{margin:2px}
+[data-sub="gasto"] .tbar .l{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.gs-ch{overflow-x:auto}.gs-ch>svg{min-width:620px}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
@@ -6645,20 +6656,20 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
       {id:"vedas",q:"¿Qué especies están en veda y cuándo comienzan las próximas?",main:"Calendario de vedas",kp:"kVed",l:"Vedas",pane:"especies",card:el=>cardT(el,"Calendario de vedas")},
       {id:"amerb",q:"¿Qué áreas de manejo, planes y espacios costeros hay junto a cada caleta?",main:"Caletas por nivel de actividad",kp:"",l:"AMERB, planes de manejo y ECMPO",pane:"resumen",top:el=>secT(el,"Caletas, AMERB"),open:true}]},
     {g:"borde",l:"Borde costero",v:[{id:"borde",l:"Borde costero",pane:"borde"}]},
-    {g:"mineria",l:"Contexto minero",v:[{id:"mineria",l:"Compañías mineras en Chile",pane:"mineria",top:el=>el.dataset.sub==="cias"},{id:"amsa",l:"Grupo Antofagasta Minerals",pane:"mineria",top:el=>el.dataset.sub==="amsa"},{id:"opcal",l:"Operación y caletas",pane:"mineria",top:el=>el.dataset.sub==="opcal"}]},
+    {g:"mineria",l:"Contexto minero",v:[{id:"mineria",l:"Compañías mineras en Chile",pane:"mineria",top:el=>el.dataset.sub==="cias"},{id:"amsa",l:"Grupo Antofagasta Minerals",pane:"mineria",top:el=>el.dataset.sub==="amsa"},{id:"opcal",l:"Operación y caletas",pane:"mineria",top:el=>el.dataset.sub==="opcal"},{id:"gasto",l:"Gasto social",pane:"mineria",top:el=>el.dataset.sub==="gasto",ok:()=>!!(S.perm&&(S.perm.admin||((S.perm.zonas||[]).includes("norte")&&!(S.perm.caletas||[]).length)))}]},
     {g:"rel",l:"Relacionamiento",v:[{id:"minutas",l:"Minutas y compromisos",pane:"minutas"},{id:"poder",l:"Poder e interés",pane:"poder"},{id:"rca",l:"Exigencias ambientales",pane:"rca"},{id:"negociacion",l:"Negociación",pane:"negociacion"}]},
     {g:"datos",l:"Datos",v:[{id:"detalle",l:"Detalle de registros",pane:"detalle"},{id:"admin",l:"Administración",pane:"admin"}]}];
   const VW=new Map();NAV.forEach(G=>G.v.forEach(v=>VW.set(v.id,{...v,g:G.g})));
   const NV={cur:"inicio",want:null};try{const s=localStorage.getItem("nav.v");if(s&&VW.has(s))NV.cur=s}catch(e){}
   const tabBtn=p=>document.querySelector(`#tabs [data-tab="${p}"]`);
-  const vOK=v=>{const b=tabBtn(v.pane);return!!b&&!b.hidden&&getComputedStyle(b).display!=="none"};
+  const vOK=v=>{const b=tabBtn(v.pane);return!!b&&!b.hidden&&getComputedStyle(b).display!=="none"&&(!v.ok||v.ok())};
   function navBuild(){let n=document.getElementById("gnav");const tabs=document.getElementById("tabs");if(!tabs)return;
     if(!n){n=document.createElement("div");n.id="gnav";n.className="gnav gut";n.innerHTML=`<div class="gn-1" role="tablist" aria-label="Secciones"></div><div class="gn-2" role="tablist" aria-label="Subsecciones"></div>`;tabs.after(n);document.body.classList.add("nav2")}
     const cur=VW.get(NV.cur)||VW.get("inicio");
     n.querySelector(".gn-1").innerHTML=NAV.filter(G=>G.v.some(vOK)).map(G=>`<button type="button" role="tab" data-gn="${G.g}" aria-selected="${G.g===cur.g}">${esc(G.l)}</button>`).join("");
     const G=NAV.find(x=>x.g===cur.g),vs=G?G.v.filter(vOK):[];const s2=n.querySelector(".gn-2");s2.hidden=vs.length<2;
     s2.innerHTML=vs.map(v=>`<button type="button" role="tab" data-vn="${v.id}" aria-selected="${v.id===cur.id}">${esc(v.l)}</button>`).join("")}
-  function navApply(){const v=VW.get(NV.cur);if(!v)return;const pane=document.querySelector(`[data-pane="${v.pane}"]`);if(!pane)return;
+  function navApply(){let v=VW.get(NV.cur);if(v&&v.ok&&!v.ok()){NV.cur=v.g==="mineria"?"mineria":"inicio";v=VW.get(NV.cur)}if(!v)return;const pane=document.querySelector(`[data-pane="${v.pane}"]`);if(!pane)return;
     document.querySelectorAll("[data-vh]").forEach(e=>{if(!pane.contains(e))e.removeAttribute("data-vh")});
     vwHead(v,pane);[...pane.children].forEach(el=>{const show=el.id==="vwHead-"+v.pane?!!v.q:(!v.top||v.top(el));if(show)el.removeAttribute("data-vh");else el.setAttribute("data-vh","1");if(show&&v.open&&el.matches("details.sec")&&!el.open)el.open=true});
     pane.querySelectorAll(":scope .viz > .card").forEach(el=>{if(!v.card){el.removeAttribute("data-vh");return}if(v.card(el))el.removeAttribute("data-vh");else el.setAttribute("data-vh","1")});
@@ -6725,7 +6736,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
     const tot=y=>ops.filter(o=>o.k!=="ant").reduce((s,o)=>s+((D.anual[y]||{})[o.k]||0),0);const tL=tot(yL),tP=tot(yP);
     const Y=D.ytd||{},yA=ops.filter(o=>o.k!=="ant").reduce((s,o)=>s+((Y.act||{})[o.k]||0),0),yB=ops.filter(o=>o.k!=="ant").reduce((s,o)=>s+((Y.prev||{})[o.k]||0),0);
     const cu=MI.cu&&MI.cu.anos||[],cuL=cu.find(x=>x.anio===yL),cuN=cu[cu.length-1];
-    p.innerHTML=miCias()+miOpCal()+`<div data-sub="amsa" class="mi-sub"><section class="card vw-head"><div class="vw-t"><h2>Grupo Antofagasta Minerals</h2><p>¿Cuánto cobre producen las faenas vinculadas a las caletas y en qué contexto de precio?</p></div>
+    p.innerHTML=miCias()+miOpCal()+miGasto()+`<div data-sub="amsa" class="mi-sub"><section class="card vw-head"><div class="vw-t"><h2>Grupo Antofagasta Minerals</h2><p>¿Cuánto cobre producen las faenas vinculadas a las caletas y en qué contexto de precio?</p></div>
       <div class="vw-k"><div><span>Producción ${yL} (${ops.filter(o=>o.k!=="ant").map(o=>o.n).join(", ")})</span><b>${kt(tL)}</b><small>${pTxt(pc(tL,tP))} frente a ${yP}</small></div>
       ${Y.anio?`<div><span>Acumulado ${Y.anio} (hasta el ${Y.hasta}.er trimestre)</span><b>${kt(yA)}</b><small>${pTxt(pc(yA,yB))} frente al mismo período de ${Y.anio-1}</small></div>`:""}
       <div><span>Precio del cobre ${cuN?cuN.anio:""}</span><b>${cuN?`US$ ${t1(cuN.prom).replace(/(\d),(\d)$/,"$1,$2")}/lb`:"—"}</b><small>${cuN?`promedio${cuN.parcial?" del año en curso":""}${cuL&&cuL!==cuN?` · ${yL}: US$ ${t1(cuL.prom)}`:""}`:ART()?"disponible en la versión web":"cargando…"}</small></div>
@@ -6885,6 +6896,102 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
       try{await miGuardar(D);MI.edit=false;MI.msg="";toast("Cifras guardadas.");miRender()}catch(e){toast("No se pudo guardar: "+(e.message||""))}return}
     if(t.closest("#miPdf")){const i=document.createElement("input");i.type="file";i.accept=".pdf";i.onchange=()=>{if(i.files[0])miPdf(i.files[0])};i.click();return}});
   {const _st=setTab;setTab=function(t){_st(t);if(t==="mineria"){["#fab","#period","#aside","#chips"].forEach(s=>{const e=document.querySelector(s);if(e)e.hidden=true});const l=document.querySelector(".layout");if(l)l.style.gridTemplateColumns="minmax(0,1fr)";miRender()}}}
+
+  /* ================= Gasto social y obligaciones (Contexto minero · solo administradores y zona Norte) =================
+     Las cifras vienen de /api/gasto (base de datos); no están en el código. Miles de USD. */
+  const GS={d:null,load:false,tried:false,err:"",vista:"grupos",cia:"",edit:false,draft:null,admin:false,act:null};
+  const GSCAT=[["aapp","Inversión social AAPP","#1d3b4f"],["cias","Inversión social compañías","#0e7c86"],["mit","Mitigación y compensación","#d62828"],["obl","Obligaciones legales","#5bc0be"],["rca","Obligaciones RCA CMZ","#e9a50e"]];
+  const GSGRP=[["inv","Inversión social",["aapp","cias"],"#0e7c86"],["obl","Obligaciones legales",["mit","obl","rca"],"#d97706"]];
+  const GSCIA={cen:"#2563eb",ant:"#7c3aed",cmz:"#0f766e"};
+  const gsPuede=()=>!!(S.perm&&(S.perm.admin||((S.perm.zonas||[]).includes("norte")&&!(S.perm.caletas||[]).length)));
+  const gsM=v=>v==null?"—":`USD ${t1(v/1000)} M`;
+  const gsK=v=>v==null?"—":`USD ${t0(v)} mil`;
+  async function gsLoad(){if(GS.load||ART()||!gsPuede())return;GS.load=true;GS.tried=true;try{const r=await api("gasto");GS.d=r.data;GS.admin=!!r.admin;GS.act=r.actualizado?{por:r.por,t:r.actualizado}:null;GS.err=""}catch(e){GS.err=e.message||"error"}GS.load=false;if(S.tab==="mineria")miRender()}
+  function gsYears(D){return Array.from({length:D.anios},(_,i)=>D.desde+i)}
+  /* Series por año según la vista: grupos, categorías o compañías (filtradas por compañía si corresponde) */
+  function gsSeries(D,vista,cia){const Y=gsYears(D),cs=D.cias.filter(c=>!cia||c.k===cia);const sumCat=cats=>Y.map((_,i)=>cs.reduce((s,c)=>s+c.lineas.filter(l=>cats.includes(l.cat)).reduce((a,l)=>a+(l.v[i]||0),0),0));
+    if(vista==="cias")return cs.map(c=>({n:c.n,col:GSCIA[c.k]||"#64748b",v:Y.map((_,i)=>c.lineas.reduce((a,l)=>a+(l.v[i]||0),0))}));
+    if(vista==="cat")return GSCAT.map(([k,n,col])=>({n,col,v:sumCat([k])})).filter(s=>s.v.some(x=>x));
+    return GSGRP.map(([k,n,cats,col])=>({n,col,v:sumCat(cats)}))}
+  function gsNice(x){if(x<=0)return 1;const p=Math.pow(10,Math.floor(Math.log10(x))),f=x/p;return([1,1.5,2,2.5,3,4,5,6,8,10].find(x=>f<=x+1e-9)||10)*p}
+  function gsChart(D,ser){const Y=gsYears(D),W=900,H=300,L=58,R=10,T=26,B=34,n=Y.length,bw=(W-L-R)/n,tot=Y.map((_,i)=>ser.reduce((s,x)=>s+Math.max(0,x.v[i]),0)),mx=gsNice(Math.max(1,...tot)),y=v=>T+(H-T-B)*(1-v/mx);
+    const nk=[5,4,6,3].find(k=>Math.abs(Math.round(mx/k*10)-mx/k*10)<1e-6)||4;let g="";for(let k=0;k<=nk;k++){const v=mx*k/nk;g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="currentColor" stroke-opacity=".12"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="currentColor" opacity=".7">${t1(v/1000)}</text>`}
+    const iP=Y.findIndex(a=>a>D.real);
+    if(iP>=0){const x=L+bw*iP;g+=`<rect x="${x}" y="${T-18}" width="${W-R-x}" height="${H-B-T+18}" fill="currentColor" fill-opacity=".04"/><line x1="${x}" x2="${x}" y1="${T-18}" y2="${H-B}" stroke="currentColor" stroke-dasharray="4 3" stroke-opacity=".5"/><text x="${x+6}" y="${T-6}" font-size="11" fill="currentColor" opacity=".75">Proyección →</text><text x="${x-6}" y="${T-6}" font-size="11" text-anchor="end" fill="currentColor" opacity=".75">← Ejecutado</text>`}
+    Y.forEach((a,i)=>{let acc=0;const x=L+bw*i+bw*.16,w=bw*.68,pr=a>D.real;ser.forEach(s=>{const v=Math.max(0,s.v[i]);if(!v)return;const y1=y(acc+v),h=y(acc)-y1;acc+=v;g+=`<rect x="${x}" y="${y1}" width="${w}" height="${Math.max(.5,h)}" fill="${s.col}" fill-opacity="${pr?.5:1}"${pr?` stroke="${s.col}" stroke-width="1"`:""}><title>${esc(s.n)} ${a}${pr?" (proyección)":""}: ${gsK(v)}</title></rect>`});
+      g+=`<text x="${x+w/2}" y="${y(acc)-5}" text-anchor="middle" font-size="10.5" fill="currentColor" font-weight="600">${acc?t1(acc/1000):""}</text><text x="${x+w/2}" y="${H-B+16}" text-anchor="middle" font-size="11" fill="currentColor" opacity=".8">${a}</text>`});
+    return`<div class="gs-ch"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Gasto social por año, en millones de USD" style="width:100%;height:auto;color:var(--ink,#1f2937)"><text x="${L-6}" y="12" font-size="11" text-anchor="end" fill="currentColor" opacity=".7">USD M</text>${g}</svg></div>`}
+  /* Pescadores activos por año en las caletas de la zona Norte o del área de influencia de una compañía */
+  function gsPesc(D,cia){const R=S.R;if(!R)return null;const m=R.m,Y=gsYears(D),tag={cen:"centinela",ant:"antucoya",cmz:"zaldivar"}[cia];
+    const ok=m.C.map(c=>tag?nrm(c[4]||"").includes(tag):ZKEY(c)==="norte");if(!ok.some(Boolean))return null;const f=Y.map(()=>new Set()),q=Y.map(()=>0);
+    for(let i=0;i<R.n;i++){if(!ok[R.c[i]])continue;const k=R.yr[i]+R.y0-D.desde;if(k<0||k>=Y.length)continue;f[k].add(R.p[i]);q[k]+=R.q[i]/1000}
+    return{n:f.map(s=>s.size),q}}
+  /* Cobre producido (kt, 100 % de la operación): Cochilco 2021–2022 y reportes de Antofagasta Minerals 2023 en adelante (Zaldívar ×2 por ser 50 % atribuible) */
+  function gsCobre(D,cia){const Y=gsYears(D),A=(miData().anual)||{},ch=k=>(CHO.find(x=>x[0]===k)||[,,[]])[2];
+    const op={cen:y=>A[y]?A[y].cen:y<=2022?(ch("cno")[CHY.indexOf(y)]||0)+(ch("csu")[CHY.indexOf(y)]||0)||null:null,ant:y=>A[y]?A[y].ant:null,cmz:y=>A[y]?A[y].zal*2:y<=2022?ch("zal")[CHY.indexOf(y)]||null:null};
+    const ks=cia?[cia]:["cen","ant","cmz"];return Y.map(y=>{if(y>D.real)return null;const v=ks.map(k=>op[k]?op[k](y):null);return v.some(x=>x==null||!x)?null:v.reduce((a,b)=>a+b,0)})}
+  function gsHead(D,ser2,cs){const Y=gsYears(D),tot=Y.map((_,i)=>ser2.reduce((s,x)=>s+x.v[i],0)),T=tot.reduce((a,b)=>a+b,0),iR=Y.findIndex(a=>a>D.real),ej=tot.slice(0,iR<0?Y.length:iR).reduce((a,b)=>a+b,0),pr=T-ej,ob=ser2[1].v.reduce((a,b)=>a+b,0),iM=tot.indexOf(Math.max(...tot));
+    return`<section class="card vw-head"><div class="vw-t"><h2>Gasto social y obligaciones</h2><p>¿Cuánto invierten las compañías del norte en el territorio, qué parte es voluntaria y qué parte responde a obligaciones legales?</p></div>
+      <div class="vw-k"><div><span>Total ${Y[0]}–${Y[Y.length-1]}${cs?" · "+esc(cs):""}</span><b>${gsM(T)}</b><small>suma nominal de ${Y.length} años</small></div>
+      <div><span>Ejecutado ${Y[0]}–${D.real}</span><b>${gsM(ej)}</b><small>proyectado ${D.real+1}–${Y[Y.length-1]}: ${gsM(pr)}</small></div>
+      <div><span>Obligaciones legales</span><b>${T?t0(ob/T*100):"—"} %</b><small>del total (inversión social: ${T?t0((T-ob)/T*100):"—"} %)</small></div>
+      <div><span>Año de mayor gasto</span><b>${Y[iM]}</b><small>${gsM(tot[iM])}${Y[iM]>D.real?" (proyección)":""}</small></div></div></section>`}
+  function gsInterp(D,ser2){const Y=gsYears(D),inv=ser2[0].v,ob=ser2[1].v,tot=Y.map((_,i)=>inv[i]+ob[i]),iM=tot.indexOf(Math.max(...tot)),ir=Y.indexOf(D.real);
+    const avgInv=inv.reduce((a,b)=>a+b,0)/inv.length,maxOb=Math.max(...ob),iOb=ob.indexOf(maxOb),lst=Y.length-1;
+    const pts=[`El año de mayor gasto es <b>${Y[iM]}</b> (${gsM(tot[iM])}); ${ob[iM]>=inv[iM]?`lo explican principalmente las <b>obligaciones legales</b> (${t0(ob[iM]/tot[iM]*100)} % de ese año)`:`lo explica principalmente la <b>inversión social</b> (${t0(inv[iM]/tot[iM]*100)} % de ese año)`}.`,
+      `La inversión social promedia <b>${gsM(avgInv)}</b> al año y varía entre ${gsM(Math.min(...inv))} y ${gsM(Math.max(...inv))}: es la parte más estable del gasto.`,
+      maxOb>0?`Las obligaciones legales alcanzan su máximo en <b>${Y[iOb]}</b> (${gsM(maxOb)}) y en ${Y[lst]} se proyectan en ${gsM(ob[lst])}.`:"",
+      ir>=0&&ir<lst?`Frente a ${D.real} (último año ejecutado, ${gsM(tot[ir])}), la proyección para ${Y[lst]} es de ${gsM(tot[lst])} (${tot[ir]?`${tot[lst]>=tot[ir]?"+":"−"}${t0(Math.abs(tot[lst]-tot[ir])/tot[ir]*100)} %`:"—"}).`:""].filter(Boolean);
+    return`<details class="cg-d"><summary>Cómo interpretarlo</summary><ul>${pts.map(x=>`<li>${x}</li>`).join("")}</ul><p class="cs">Las barras con relleno claro son proyección. Los montos están en millones de USD nominales; la suma de varios años no ajusta por inflación.</p></details>`}
+  function gsCruce(D,cia){const Y=gsYears(D),iR=Y.findIndex(a=>a>D.real),Yr=Y.slice(0,iR<0?Y.length:iR),ser2=gsSeries(D,"grupos",cia),P=gsPesc(D,cia),Cu=gsCobre(D,cia);
+    const rows=Yr.map((a,i)=>{const inv=ser2[0].v[i],tot=inv+ser2[1].v[i],n=P?P.n[i]:0,cu=Cu[i];return{a,inv,tot,n,q:P?P.q[i]:0,porP:n?inv*1000/n:null,porCu:cu?tot*1000/(cu*1000):null,cu}});
+    const mxP=Math.max(1,...rows.map(r=>r.porP||0)),mxC=Math.max(1,...rows.map(r=>r.porCu||0));const bar=(v,mx,col)=>v==null?"":`<span class="gs-b"><i style="width:${Math.max(2,v/mx*100)}%;background:${col}"></i></span>`;
+    const ref=cia?`caletas del área de influencia de ${esc((D.cias.find(c=>c.k===cia)||{}).n||"")}`:"caletas de la zona Asuntos Públicos Norte";
+    return`<div class="card"><h3>Gasto social frente a la actividad pesquera y la producción de cobre</h3><p class="cs">Solo años ejecutados. <b>Inversión social por pescador activo</b>: inversión social del año dividida por los pescadores que desembarcaron en las ${ref}; mide escala, no indica que el gasto se destine a pescadores. <b>Gasto total por tonelada de cobre</b>: gasto social total (inversión + obligaciones) por tonelada producida (100 % de cada operación; Cochilco y reportes de Antofagasta Minerals).</p>
+      <div class="tbl"><table class="gs-t"><thead><tr><th>Año</th><th class="n">Inversión social</th><th class="n">Pescadores activos</th><th>Inversión social por pescador</th><th class="n">Cobre (kt)</th><th>Gasto total por t de cobre</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.a}</td><td class="n">${gsK(r.inv)}</td><td class="n">${P?t0(r.n):"—"}</td><td><span class="gs-v">${r.porP==null?"—":"USD "+t0(r.porP)}</span>${bar(r.porP,mxP,"#0e7c86")}</td><td class="n">${r.cu?t1(r.cu):"—"}</td><td><span class="gs-v">${r.porCu==null?"—":"USD "+t1(r.porCu)}</span>${bar(r.porCu,mxC,"#d97706")}</td></tr>`).join("")}</tbody></table></div>
+      ${P?"":`<p class="cs">No hay caletas con datos para este cruce.</p>`}</div>`}
+  function gsTabla(D,cia){const Y=gsYears(D),cs=D.cias.filter(c=>!cia||c.k===cia),ser=gsSeries(D,"cat",cia),th=Y.map(a=>`<th class="n${a>D.real?" gs-pr":""}">${a}</th>`).join("");
+    const fila=(n,v,b,col)=>`<tr${b?' class="gs-tot"':""}><td>${col?`<i class="gs-sw" style="background:${col}"></i>`:""}${esc(n)}</td>${v.map((x,i)=>`<td class="n${Y[i]>D.real?" gs-pr":""}">${x?t0(x):"—"}</td>`).join("")}<td class="n"><b>${t0(v.reduce((a,b)=>a+b,0))}</b></td></tr>`;
+    const tot=Y.map((_,i)=>ser.reduce((s,x)=>s+x.v[i],0));
+    return`<div class="card"><h3>Detalle por categoría y compañía</h3><p class="cs">Miles de USD. Columnas sombreadas: proyección.${GS.act?` Última actualización: ${esc(new Date(GS.act.t).toLocaleDateString("es-CL"))}${GS.act.por?" por "+esc(GS.act.por):""}.`:""}</p>
+      <div class="tbl"><table class="gs-t"><thead><tr><th>Categoría</th>${th}<th class="n">Total</th></tr></thead><tbody>${ser.map(s=>fila(s.n,s.v,false,s.col)).join("")}${fila("Total",tot,true)}</tbody></table></div>
+      ${cs.map(c=>`<details class="gs-det"><summary>${esc(c.n)} · ${t0(c.lineas.reduce((s,l)=>s+l.v.reduce((a,b)=>a+b,0),0))} mil USD en el período</summary><div class="tbl"><table class="gs-t"><thead><tr><th>Partida</th>${th}<th class="n">Total</th></tr></thead><tbody>${c.lineas.map(l=>fila(l.n+" · "+(GSCAT.find(x=>x[0]===l.cat)||[,""])[1],l.v,false,(GSCAT.find(x=>x[0]===l.cat)||[,,""])[2])).join("")}</tbody></table></div></details>`).join("")}</div>`}
+  function gsEditor(){const D=GS.draft,Y=gsYears(D);
+    return`<div class="card gs-ed"><div class="tbar"><h3>Editar cifras</h3><div class="l"><label class="btn ghost small">⇪ Importar archivo<input type="file" id="gsImp" accept=".json,application/json" hidden></label><button type="button" class="btn ghost small" id="gsExp">⇩ Descargar respaldo</button></div></div>
+      <p class="cs">Miles de USD. Cada partida se asigna a una categoría; los totales se calculan solos. Último año ejecutado: <select id="gsReal">${Y.map(a=>`<option ${a===D.real?"selected":""}>${a}</option>`).join("")}</select></p>
+      ${D.cias.map((c,ci)=>`<details class="gs-det" open><summary><input class="gs-cn" data-gsc="${ci}" value="${esc(c.n)}" aria-label="Nombre de la compañía"> <button type="button" class="lnk mn-del" data-gsdc="${ci}">Quitar compañía</button></summary><div class="tbl"><table class="gs-t gs-et"><thead><tr><th>Partida</th><th>Categoría</th>${Y.map(a=>`<th class="n${a>D.real?" gs-pr":""}">${a}</th>`).join("")}<th></th></tr></thead><tbody>${c.lineas.map((l,li)=>`<tr data-gsl="${ci}.${li}"><td><input data-f="n" value="${esc(l.n)}"></td><td><select data-f="cat">${GSCAT.map(([k,n])=>`<option value="${k}" ${k===l.cat?"selected":""}>${esc(n)}</option>`).join("")}</select></td>${l.v.map((v,i)=>`<td><input data-f="v${i}" inputmode="decimal" value="${v||0}" class="n"></td>`).join("")}<td><button type="button" class="lnk mn-del" data-gsdl="${ci}.${li}" aria-label="Quitar partida">✕</button></td></tr>`).join("")}</tbody></table></div><button type="button" class="btn ghost small" data-gsal="${ci}">+ Partida</button></details>`).join("")}
+      <div class="tbar"><button type="button" class="btn ghost small" id="gsAc">+ Compañía</button><span style="flex:1"></span><button type="button" class="btn" id="gsX">Cancelar</button><button type="button" class="btn pri" id="gsS">Guardar</button></div></div>`}
+  function gsRead(){const D=GS.draft;if(!D)return;document.querySelectorAll("[data-gsc]").forEach(i=>D.cias[+i.dataset.gsc].n=i.value.trim());const r=document.getElementById("gsReal");if(r)D.real=+r.value;
+    document.querySelectorAll("[data-gsl]").forEach(tr=>{const[ci,li]=tr.dataset.gsl.split(".").map(Number),l=D.cias[ci].lineas[li];tr.querySelectorAll("[data-f]").forEach(i=>{const f=i.dataset.f;if(f==="n")l.n=i.value.trim();else if(f==="cat")l.cat=i.value;else l.v[+f.slice(1)]=Number(String(i.value).replace(/\./g,"").replace(",","."))||0})})}
+  function miGasto(){if(!gsPuede())return`<div data-sub="gasto" class="mi-sub"></div>`;
+    if(ART())return`<div data-sub="gasto" class="mi-sub"><div class="card"><h2>Gasto social y obligaciones</h2><p class="cs">Estas cifras son internas y se muestran solo en la versión web (Vercel), a administradores y a usuarios de la zona Asuntos Públicos Norte.</p></div></div>`;
+    if(!GS.tried){gsLoad();return`<div data-sub="gasto" class="mi-sub"><div class="card"><p class="cs">Cargando…</p></div></div>`}
+    if(GS.err)return`<div data-sub="gasto" class="mi-sub"><div class="card"><p class="cs">No se pudieron cargar las cifras: ${esc(GS.err)}</p></div></div>`;
+    const D=GS.d;
+    if(GS.edit&&GS.draft)return`<div data-sub="gasto" class="mi-sub">${gsEditor()}</div>`;
+    if(!D||!D.cias||!D.cias.length)return`<div data-sub="gasto" class="mi-sub"><div class="card"><h2>Gasto social y obligaciones</h2><p class="cs">Aún no hay cifras cargadas.${GS.admin?" Pulsa «Editar cifras» e importa el archivo con el gasto social, o ingrésalas en la tabla.":" Un administrador debe cargarlas."}</p>${GS.admin?`<button type="button" class="btn" id="gsEd">✎ Editar cifras</button>`:""}</div></div>`;
+    if(GS.cia&&!D.cias.some(c=>c.k===GS.cia))GS.cia="";const cs=GS.cia?(D.cias.find(c=>c.k===GS.cia)||{}).n:"";
+    const ser=gsSeries(D,GS.vista,GS.cia),ser2=gsSeries(D,"grupos",GS.cia);
+    return`<div data-sub="gasto" class="mi-sub">${gsHead(D,ser2,cs)}
+      <div class="card"><div class="tbar"><h3>Gasto social por año${cs?" · "+esc(cs):" · compañías del norte"}</h3><div class="l"><label class="cs">Compañía <select id="gsCia"><option value="">Todas</option>${D.cias.map(c=>`<option value="${esc(c.k)}" ${c.k===GS.cia?"selected":""}>${esc(c.n)}</option>`).join("")}</select></label>
+        <div class="seg" role="group" aria-label="Agrupar por">${[["grupos","Obligación / inversión"],["cat","Categorías"],["cias","Compañías"]].map(([k,l])=>`<button type="button" data-gsv="${k}" aria-pressed="${GS.vista===k}">${l}</button>`).join("")}</div>${GS.admin?`<button type="button" class="btn ghost small" id="gsEd">✎ Editar cifras</button>`:""}</div></div>
+        <p class="cs">Millones de USD por año. Las barras claras a la derecha de la línea punteada son proyección.</p>
+        <div class="hlegend">${ser.map(s=>`<span><i style="background:${s.col}"></i>${esc(s.n)}</span>`).join("")}</div>${gsChart(D,ser)}${gsInterp(D,ser2)}</div>
+      ${gsCruce(D,GS.cia)}${gsTabla(D,GS.cia)}
+      <p class="cs gs-priv">Información interna: visible solo para administradores y usuarios de la zona Asuntos Públicos Norte.</p></div>`}
+  document.addEventListener("click",async ev=>{const t=ev.target;if(!t.closest||!t.closest('[data-sub="gasto"]'))return;
+    const v=t.closest("[data-gsv]");if(v){GS.vista=v.dataset.gsv;miRender();return}
+    if(t.closest("#gsEd")){GS.draft=JSON.parse(JSON.stringify(GS.d&&GS.d.cias?GS.d:{desde:2020,anios:11,real:2025,cias:[]}));GS.edit=true;miRender();return}
+    if(t.closest("#gsX")){GS.edit=false;GS.draft=null;miRender();return}
+    if(t.closest("#gsExp")){gsRead();try{await saveFile("gasto_social_respaldo.json",JSON.stringify(GS.draft,null,1),"application/json")}catch(e){}return}
+    if(t.closest("#gsAc")){gsRead();GS.draft.cias.push({k:"c"+(GS.draft.cias.length+1),n:"Nueva compañía",lineas:[{n:"Partida",cat:"aapp",v:Array(GS.draft.anios).fill(0)}]});miRender();return}
+    const al=t.closest("[data-gsal]");if(al){gsRead();GS.draft.cias[+al.dataset.gsal].lineas.push({n:"Nueva partida",cat:"aapp",v:Array(GS.draft.anios).fill(0)});miRender();return}
+    const dl=t.closest("[data-gsdl]");if(dl){gsRead();const[ci,li]=dl.dataset.gsdl.split(".").map(Number);GS.draft.cias[ci].lineas.splice(li,1);miRender();return}
+    const dc=t.closest("[data-gsdc]");if(dc){ev.preventDefault();gsRead();const ci=+dc.dataset.gsdc;if(!await askYN(`¿Quitar «${esc(GS.draft.cias[ci].n)}» y todas sus partidas?`,{title:"Quitar compañía",danger:true,si:"Sí, quitar",no:"No"}))return;GS.draft.cias.splice(ci,1);miRender();return}
+    if(t.closest("#gsS")){gsRead();try{await api("gasto",{method:"PUT",body:{data:GS.draft}});GS.edit=false;GS.draft=null;GS.tried=false;toast("Cifras guardadas.");await gsLoad()}catch(e){toast("No se pudo guardar: "+(e.message||"error"))}return}});
+  document.addEventListener("change",async ev=>{const t=ev.target;if(t.id==="gsCia"){GS.cia=t.value;miRender();return}
+    if(t.id==="gsReal"){gsRead();miRender();return}
+    if(t.id==="gsImp"){const f=t.files&&t.files[0];if(!f)return;try{const j=JSON.parse(await f.text());if(!j||!Array.isArray(j.cias)||!j.desde)throw new Error("formato no reconocido");j.anios=j.anios||11;j.cias.forEach(c=>c.lineas.forEach(l=>{l.v=Array.from({length:j.anios},(_,i)=>Number((l.v||[])[i])||0)}));GS.draft=j;toast("Archivo importado: revisa las cifras y pulsa «Guardar».");miRender()}catch(e){toast("No se pudo leer el archivo: "+(e.message||"error"))}}});
 
 }
 
