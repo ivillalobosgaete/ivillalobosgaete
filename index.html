@@ -1644,6 +1644,9 @@ body.nav2 #tabs{display:none!important}[data-vh]{display:none!important}
 [data-pane="presup"] [data-tip]{cursor:help}
 .pr-yq{display:inline-flex;gap:6px;align-items:center;font-weight:600}.pr-yq select{min-width:8em}
 .pr-hm td{min-width:4.2em}.pr-hmv{font-size:.72rem;opacity:.75}
+/* Menú: en pantallas medianas y grandes todas las pestañas visibles (se acomodan en más de una fila si no caben) */
+@media (min-width:700px){.gn-1,.gn-2{flex-wrap:wrap;overflow-x:visible;row-gap:6px}}
+@media (min-width:700px) and (max-width:1500px){.gn-1 button{padding:6px 10px;font-size:.82rem}.gn-2 button{padding:4px 10px;font-size:.78rem}}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
