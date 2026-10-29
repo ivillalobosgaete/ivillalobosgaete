@@ -1688,6 +1688,39 @@ body.nav2 #tabs{display:none!important}[data-vh]{display:none!important}
 .cx-box h3{margin:0}.cx-f{display:grid;gap:4px;font-size:.88rem}.cx-f input,.cx-f textarea{border:1px solid var(--line,#cbd5e1);border-radius:8px;padding:7px 10px;font:inherit;background:var(--bg,#fff);color:inherit}
 .cx-act{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.cx-msg:empty{display:none}
 @media (prefers-color-scheme:dark){.cx-b{background:#3b2a06;color:#fcd34d}}
+.cc-hero{background:linear-gradient(120deg,rgba(180,83,9,.10),rgba(14,124,134,.10));display:grid;gap:14px}
+.cc-ht{display:flex;gap:14px;align-items:center}.cc-ht h2{margin:0}.cc-ht p{margin:.2rem 0 0}
+.cc-hi{display:flex;align-items:center;gap:6px;background:var(--card,#fff);border-radius:14px;padding:8px 10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}.cc-hi b{font-size:1.3rem;color:#64748b}
+.cc-ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.cc-in{display:grid;gap:6px;background:var(--card,#fff);border-radius:12px;padding:10px 12px;border:1px solid var(--line,#e2e8f0)}
+.cc-in label{font-weight:700;font-size:.9rem}.cc-in label small{display:block;font-weight:400;color:var(--mut,#64748b)}
+.cc-in input[type=number]{font:700 1.15rem/1.2 inherit;font-family:inherit;border:1px solid var(--line,#cbd5e1);border-radius:8px;padding:6px 10px;width:100%;box-sizing:border-box;background:var(--bg,#fff);color:inherit}
+.cc-in input[type=range]{width:100%;accent-color:#b45309}.cc-cu{border-left:4px solid #b45309}
+.cc-chips{display:flex;flex-wrap:wrap;gap:6px}.cc-chip{border:1px solid #d6a26a;background:transparent;color:inherit;border-radius:999px;padding:3px 10px;font-size:.8rem;cursor:pointer}.cc-chip.on{background:#b45309;color:#fff;border-color:#b45309}
+.cc-tot{display:flex;justify-content:center}.cc-tot>div{text-align:center;display:grid}.cc-tot span{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mut,#64748b);font-weight:700}.cc-tot b{font-size:clamp(1.6rem,4vw,2.4rem);color:#b45309}.cc-tot small{color:var(--mut,#64748b)}
+.cc-sps{display:flex;flex-wrap:wrap;gap:8px}.cc-sp{display:flex;align-items:center;gap:8px;border:1px solid #9cc9cc;background:var(--card,#fff);color:inherit;border-radius:12px;padding:6px 12px;cursor:pointer;text-align:left}
+.cc-sp span{display:grid}.cc-sp small{color:var(--mut,#64748b);font-size:.75rem}.cc-sp.on{background:#0e7c86;border-color:#0e7c86;color:#fff}.cc-sp.on small{color:#d7f0f2}.cc-add{border-style:dashed;font-weight:700;color:#0e7c86}
+.cc-adj{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:10px}.cc-adj label{display:grid;gap:4px;min-width:min(320px,100%)}.cc-adj input{accent-color:#0e7c86}
+.cc-eq{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:stretch}
+.cc-side{display:grid;gap:6px;align-content:start;text-align:center}.cc-sc{border-top:5px solid #b45309}.cc-sf{border-top:5px solid #0e7c86}
+.cc-sh{display:flex;justify-content:center;align-items:center;gap:8px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;font-size:.85rem}
+.cc-big{font-size:clamp(1.5rem,3.6vw,2.2rem)}.cc-sc .cc-big{color:#b45309}.cc-sf .cc-big{color:#0e7c86}.cc-side small{color:var(--mut,#64748b)}
+.cc-mid{display:grid;justify-items:center;align-content:center;color:#64748b;gap:4px;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em}
+.cc-picto{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;margin-top:8px}
+.cc-pi{display:inline-flex;animation:ccIn .35s ease both;animation-delay:var(--d)}.cc-part{overflow:hidden;width:var(--fr)}
+@keyframes ccIn{from{opacity:0;transform:translateY(6px) scale(.6)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.cc-pi{animation:none}}
+.cc-key{display:flex;gap:6px;align-items:center;justify-content:center;font-size:.8rem;color:var(--mut,#64748b);margin:.4rem 0 0}
+.cc-k{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:14px 0}
+.cc-k>div{display:grid;gap:2px;background:linear-gradient(180deg,rgba(14,124,134,.08),transparent);border:1px solid var(--line,#e2e8f0);border-radius:12px;padding:10px 12px}
+.cc-k span{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;font-weight:700;color:var(--mut,#64748b)}.cc-k b{font-size:1.25rem;color:#0e7c86}.cc-k small{color:var(--mut,#64748b)}
+.cc-bars{display:grid;gap:8px;margin:10px 0 14px}.cc-row{display:grid;grid-template-columns:minmax(110px,170px) 1fr minmax(110px,auto);gap:10px;align-items:center}
+.cc-rl{display:flex;gap:6px;align-items:center;font-weight:600}.cc-bar{height:16px;background:rgba(100,116,139,.12);border-radius:8px;overflow:hidden}.cc-bar i{display:block;height:100%;background:#0e7c86;border-radius:8px;transition:width .5s ease}
+.cc-row.on .cc-rl{color:#0e7c86}.cc-rv{text-align:right;font-weight:700;display:grid}.cc-rv small{font-weight:400;color:var(--mut,#64748b)}
+.cc-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.cx-f select{border:1px solid var(--line,#cbd5e1);border-radius:8px;padding:7px 10px;font:inherit;background:var(--bg,#fff);color:inherit}
+@media (max-width:700px){.cc-eq{grid-template-columns:1fr}.cc-mid{grid-auto-flow:column}.cc-mid svg{width:36px}.cc-row{grid-template-columns:1fr auto}.cc-bar{grid-column:1/-1;grid-row:2}.cc-ht{flex-direction:column;align-items:flex-start}}
+
+.cc-ic{flex:none;max-width:none!important;display:inline-block}
 /*CMPCSSE*//*C2E*/</style>
 </head>
 <body>
@@ -1749,7 +1782,7 @@ body.nav2 #tabs{display:none!important}[data-vh]{display:none!important}
     <button role="tab" data-tab="negociacion" aria-selected="false">Negociación</button>
     <button role="tab" data-tab="poder" aria-selected="false">Poder e interés</button>
     <button role="tab" data-tab="rca" aria-selected="false">Exigencias ambientales</button>
-    <button role="tab" data-tab="minutas" aria-selected="false">Minutas</button><button role="tab" data-tab="borde" aria-selected="false">Borde costero</button><button role="tab" data-tab="mineria" aria-selected="false">Contexto minero</button><button role="tab" data-tab="presup" aria-selected="false" id="tabPres" hidden>Presupuesto AAPP Norte</button><button role="tab" data-tab="cruce" aria-selected="false" id="tabCruce" hidden>Inversión costera y pesca</button>
+    <button role="tab" data-tab="minutas" aria-selected="false">Minutas</button><button role="tab" data-tab="borde" aria-selected="false">Borde costero</button><button role="tab" data-tab="mineria" aria-selected="false">Contexto minero</button><button role="tab" data-tab="presup" aria-selected="false" id="tabPres" hidden>Presupuesto AAPP Norte</button><button role="tab" data-tab="cruce" aria-selected="false" id="tabCruce" hidden>Inversión costera y pesca</button><button role="tab" data-tab="calc" aria-selected="false" id="tabCalc">Calculadora cobre y pesca</button>
     <button role="tab" data-tab="detalle" aria-selected="false">Detalle</button>
     <button role="tab" data-tab="admin" aria-selected="false" id="tabAdmin" hidden>Administración</button>
   </nav>
@@ -1921,7 +1954,8 @@ body.nav2 #tabs{display:none!important}[data-vh]{display:none!important}
 
       <section data-pane="cmp" style="display:grid;gap:14px" hidden></section>
       <section data-pane="minutas" style="display:grid;gap:14px" hidden></section><section data-pane="borde" style="display:grid;gap:14px" hidden></section><section data-pane="mineria" style="display:grid;gap:14px" hidden></section><section data-pane="presup" style="display:grid;gap:14px" hidden></section>
-<section data-pane="cruce" style="display:grid;gap:14px" hidden></section><section data-pane="ficha" style="display:grid;gap:14px" hidden></section>
+<section data-pane="cruce" style="display:grid;gap:14px" hidden></section>
+<section data-pane="calc" style="display:grid;gap:14px" hidden></section><section data-pane="ficha" style="display:grid;gap:14px" hidden></section>
       <section data-pane="detalle" style="display:grid;gap:14px" hidden>
         <div class="card">
           <div class="tbar">
@@ -6762,7 +6796,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
       {id:"vedas",q:"¿Qué especies están en veda y cuándo comienzan las próximas?",main:"Calendario de vedas",kp:"kVed",l:"Vedas",pane:"especies",card:el=>cardT(el,"Calendario de vedas")},
       {id:"amerb",q:"¿Qué áreas de manejo, planes y espacios costeros hay junto a cada caleta?",main:"Caletas por nivel de actividad",kp:"",l:"AMERB, planes de manejo y ECMPO",pane:"resumen",top:el=>secT(el,"Caletas, AMERB"),open:true}]},
     {g:"borde",l:"Borde costero",v:[{id:"borde",l:"Borde costero",pane:"borde"}]},
-    {g:"mineria",l:"Contexto minero",v:[{id:"mineria",l:"Compañías mineras en Chile",pane:"mineria",top:el=>el.dataset.sub==="cias"},{id:"amsa",l:"Grupo Antofagasta Minerals",pane:"mineria",top:el=>el.dataset.sub==="amsa"},{id:"opcal",l:"Operación y caletas",pane:"mineria",top:el=>el.dataset.sub==="opcal"}]},
+    {g:"mineria",l:"Contexto minero",v:[{id:"mineria",l:"Compañías mineras en Chile",pane:"mineria",top:el=>el.dataset.sub==="cias"},{id:"amsa",l:"Grupo Antofagasta Minerals",pane:"mineria",top:el=>el.dataset.sub==="amsa"},{id:"opcal",l:"Operación y caletas",pane:"mineria",top:el=>el.dataset.sub==="opcal"},{id:"calc",l:"Calculadora cobre y pesca",pane:"calc"}]},
     {g:"presup",l:"Presupuesto AAPP Norte",v:[{id:"pr_res",l:"Visión general",pane:"presup",top:el=>el.id==="prFil"||el.dataset.sub==="res"},{id:"pr_ope",l:"Presupuesto de la gerencia",pane:"presup",top:el=>el.id==="prFil"||el.dataset.sub==="ope"},{id:"pr_eje",l:"Ejecución y control",pane:"presup",top:el=>el.id==="prFil"||el.dataset.sub==="eje"},{id:"pr_com",l:"Compromisos y escenarios",pane:"presup",top:el=>el.id==="prFil"||el.dataset.sub==="com"},{id:"pr_cmp",l:"Compañías y territorios",pane:"presup",top:el=>el.id==="prFil"||el.dataset.sub==="cmp"},{id:"pr_edi",l:"Actualizar cifras",pane:"presup",top:el=>el.dataset.sub==="edi"}]},
     {g:"cruce",l:"Inversión costera y pesca",v:[{id:"cruce",l:"Inversión costera y pesca",pane:"cruce"}]},
     {g:"rel",l:"Relacionamiento",v:[{id:"minutas",l:"Minutas y compromisos",pane:"minutas"},{id:"poder",l:"Poder e interés",pane:"poder"},{id:"rca",l:"Exigencias ambientales",pane:"rca"},{id:"negociacion",l:"Negociación",pane:"negociacion"}]},
@@ -7620,6 +7654,97 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
   {const _ap=applyPerms;applyPerms=function(){_ap.apply(this,arguments);try{ndReset()}catch(e){}CX.ok=false;cxLoad()}}
   Object.assign(window,{CXV,ndA,cxBtn,cxMiss});
 
+  /* ================= Calculadora: cobre frente a pesca (precio × cantidad) ================= */
+  const CC0={prod:60000,lb:null,usd:null,sel:"reineta",ind:false,anim:true};
+  const CCK="calc.especies";
+  const CCDEF=[{id:"reineta",n:"Reineta",kg:10000,pmin:1,pmax:1.5,base:true}];
+  const ccLoadSp=()=>{try{const a=JSON.parse(localStorage.getItem(CCK)||"[]");return Array.isArray(a)?a.filter(x=>x&&x.id&&x.n&&x.kg>0&&x.pmin>0):[]}catch(e){return[]}};
+  const ccSaveSp=a=>{try{localStorage.setItem(CCK,JSON.stringify(a))}catch(e){}};
+  const CC={...CC0,sp:[...CCDEF,...ccLoadSp()],msg:""};
+  const LB=2204.62262;
+  const ccBig=v=>{const a=Math.abs(v);return a>=1e12?t1(v/1e12)+" billones":a>=1e9?t1(v/1e9).replace(/,0$/,"")+" mil millones":a>=1e6?t1(v/1e6).replace(/,0$/,"")+" millones":t0(v)};
+  const ccX=v=>v>=100?t0(v):t1(v),ccClp=v=>"$"+ccBig(v),ccUsd=v=>"US$ "+ccBig(v);
+  const ccNice=x=>{if(x<=1)return 1;const p=Math.pow(10,Math.floor(Math.log10(x))),f=x/p;return(f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*p};
+  const ccId=s=>norm(s).replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"esp";
+  async function ccInd(){if(CC.ind)return;CC.ind=true;try{const r=typeof api==="function"&&!ART()?await api("indicadores"):null;const it=(r&&r.items)||[],g=k=>{const x=it.find(i=>i.k===k);return x?+x.valor:null};
+      const lb=g("libra_cobre")||g("cobre_spot"),us=g("dolar");if(lb&&CC.lb==null){CC.lb=lb;CC.lbF="indicadores del día"}if(us&&CC.usd==null){CC.usd=us;CC.usdF="indicadores del día"}}catch(e){}
+    if(CC.lb==null){CC.lb=4.5;CC.lbF="valor de referencia editable"}if(CC.usd==null){CC.usd=950;CC.usdF="valor de referencia editable"}ccRender()}
+  /* Pesca registrada en la base para una especie (últimos 12 meses con datos) */
+  function ccBase(n){const R=S.R;if(!R)return null;const m=R.m,q=norm(n),ks=m.E.map((e,i)=>i).filter(i=>{const x=norm(m.E[i][1]);return x===q||x.split(/[^a-z]+/).includes(q)||x.startsWith(q+" ")});if(!ks.length)return null;
+    const K=new Set(ks);let mx=0;for(let i=0;i<R.n;i++)if(R.ym[i]>mx)mx=R.ym[i];let t=0;const P=new Set();for(let i=0;i<R.n;i++){if(!K.has(R.e[i])||mx-R.ym[i]>11)continue;t+=R.q[i]/1000;P.add(R.p[i])}
+    return t>0?{t,p:P.size,tp:P.size?t/P.size:null,nom:ks.map(i=>m.E[i][1]).join(", "),hasta:ymLabel?ymLabel(mx):""}:null}
+  /* Cálculo de equivalencia */
+  function ccCalc(s){const cu=CC.prod*LB*CC.lb*CC.usd,cuKg=CC.lb*LB/1000*CC.usd,kg=cu/s.kg,pAvg=(s.pmin+(s.pmax||s.pmin))/2;
+    return{cu,cuUsd:CC.prod*LB*CC.lb,cuKg,kg,t:kg/1000,u:kg/pAvg,uMin:kg/(s.pmax||s.pmin),uMax:kg/s.pmin,pAvg,pu:s.kg*pAvg,ratioT:kg/1000/CC.prod,uPerT:kg/pAvg/CC.prod}}
+  /* ---- Íconos ---- */
+  const ccFish=(c,w=26)=>`<svg viewBox="0 0 32 18" class="cc-ic" style="width:${w}px;height:${(w*18/32).toFixed(1)}px" aria-hidden="true"><path d="M2 9c4-6 11-8 18-6 3 1 5 3 6 6-1 3-3 5-6 6-7 2-14 0-18-6z" fill="${c}"/><path d="M26 9l5-5v10z" fill="${c}"/><circle cx="8" cy="8" r="1.4" fill="#fff"/><path d="M14 4c1 3 1 7 0 10" stroke="#fff" stroke-opacity=".45" fill="none"/></svg>`;
+  const ccTruck=(c,w=30)=>`<svg viewBox="0 0 40 24" class="cc-ic" style="width:${w}px;height:${(w*24/40).toFixed(1)}px" aria-hidden="true"><path d="M2 6h22l4 8H2z" fill="${c}"/><path d="M28 9h6l4 5v4H28z" fill="${c}" opacity=".8"/><rect x="2" y="14" width="36" height="4" rx="1" fill="${c}" opacity=".9"/><circle cx="9" cy="20" r="3" fill="#334155"/><circle cx="31" cy="20" r="3" fill="#334155"/></svg>`;
+  const ccCath=(w=34)=>`<svg viewBox="0 0 40 30" class="cc-ic" style="width:${w}px;height:${(w*30/40).toFixed(1)}px" aria-hidden="true"><path d="M4 20l16-8 16 8-16 8z" fill="#b45309"/><path d="M4 15l16-8 16 8-16 8z" fill="#c2702e"/><path d="M4 10l16-8 16 8-16 8z" fill="#d98b4a"/></svg>`;
+  /* Pictograma: cada ícono representa una cantidad redonda; el último se muestra parcial */
+  function ccPicto(total,icon,unit,label,max=100){const v=ccNice(total/max),n=total/v,full=Math.floor(n),fr=n-full,show=Math.min(full,max);let h="";
+    for(let i=0;i<show;i++)h+=`<span class="cc-pi" style="--d:${Math.min(i,60)*12}ms">${icon}</span>`;if(fr>.02&&show<max+1)h+=`<span class="cc-pi cc-part" style="--d:${Math.min(show,60)*12}ms;--fr:${(fr*100).toFixed(0)}%">${icon}</span>`;
+    return`<div class="cc-picto" role="img" aria-label="${esc(label)}: ${t1(n)} íconos de ${t0(v)} ${unit} cada uno">${h}</div><p class="cc-key">${icon} = ${ccBig(v)} ${unit}</p>`}
+  /* ---- Vista ---- */
+  function ccRender(){const p=document.querySelector('[data-pane="calc"]');if(!p||S.tab!=="calc")return;if(!CC.ind){ccInd();p.innerHTML=`<div class="card"><p class="cs">Cargando precios…</p></div>`;return}
+    const s=CC.sp.find(x=>x.id===CC.sel)||CC.sp[0];CC.sel=s.id;const r=ccCalc(s),b=ccBase(s.n),trucks=30;
+    const all=CC.sp.map(x=>({x,r:ccCalc(x)})),mxU=Math.max(...all.map(o=>o.r.u)),mxT=Math.max(CC.prod,...all.map(o=>o.r.t));
+    const lect=[`Con ${t0(CC.prod)} t de cobre al año a US$ ${t2(CC.lb)} la libra y un dólar de $${t0(CC.usd)}, el ingreso anual estimado del cobre es ${ccClp(r.cu)} (${ccUsd(r.cuUsd)}).`,
+      `Para obtener el mismo monto vendiendo ${esc(s.n.toLowerCase())} a $${t0(s.kg)} el kilo se requieren ${t0(r.t)} t, es decir, ${ccBig(r.u)} de ejemplares (entre ${ccBig(r.uMin)} y ${ccBig(r.uMax)} según su peso).`,
+      `Un kilo de cobre equivale a $${t0(r.cuKg)}; un kilo de ${esc(s.n.toLowerCase())}, a $${t0(s.kg)}. Por eso ${r.ratioT>=1?`se necesitan ${t1(r.ratioT)} kg de ${esc(s.n.toLowerCase())} por cada kilo de cobre`:`basta con ${t1(r.ratioT*1000)} g de ${esc(s.n.toLowerCase())} por cada kilo de cobre`}.`,
+      b?`En los últimos 12 meses la base registra ${t0(b.t)} t de ${esc(b.nom.toLowerCase())}, desembarcadas por ${t0(b.p)} pescadores. La cantidad equivalente al cobre es ${ccX(r.t/b.t)} veces ese desembarque${b.tp?`; con el desembarque promedio por pescador (${t1(b.tp)} t al año) equivale a la actividad anual de ${t0(r.t/b.tp)} pescadores`:""}.`:`La base de desembarque no registra ${esc(s.n.toLowerCase())} en los últimos 12 meses para las caletas disponibles en tu perfil.`];
+    p.innerHTML=`<section class="card cc-hero"><div class="cc-ht"><span class="cc-hi">${ccCath(40)}<b>=</b>${ccFish("#0e7c86",40)}</span><div><h2>Calculadora: cobre y pesca</h2><p>¿Cuánta pesca se necesita para obtener el mismo ingreso que una mina de cobre? Ingreso = <b>precio × cantidad</b>.</p></div></div>
+        <div class="cc-ctl"><div class="cc-in cc-cu"><label for="ccProd">Producción de cobre <small>toneladas al año</small></label><input id="ccProd" type="number" min="1" step="1000" value="${CC.prod}"><input type="range" id="ccProdR" min="1000" max="1500000" step="1000" value="${Math.min(1500000,CC.prod)}" aria-label="Producción de cobre (deslizador)"><div class="cc-chips">${[60000,100000,250000,500000].map(v=>`<button type="button" class="cc-chip${CC.prod===v?" on":""}" data-ccp="${v}">${t0(v/1000)} mil t</button>`).join("")}</div></div>
+          <div class="cc-in cc-cu"><label for="ccLb">Precio del cobre <small>US$ por libra · ${esc(CC.lbF||"")}</small></label><input id="ccLb" type="number" min="0.1" step="0.05" value="${+CC.lb.toFixed(3)}"><input type="range" id="ccLbR" min="2" max="7" step="0.05" value="${Math.min(7,Math.max(2,CC.lb))}" aria-label="Precio del cobre (deslizador)"></div>
+          <div class="cc-in"><label for="ccUsd">Dólar <small>pesos por US$ · ${esc(CC.usdF||"")}</small></label><input id="ccUsd" type="number" min="1" step="1" value="${Math.round(CC.usd)}"><p class="cs">1 t = ${t0(LB)} libras.</p></div></div>
+        <div class="cc-tot"><div><span>Ingreso anual del cobre</span><b>${ccClp(r.cu)}</b><small>${ccUsd(r.cuUsd)} · $${t0(r.cuKg)} por kilo</small></div></div></section>
+      <section class="card"><h3>Especie a comparar</h3><div class="cc-sps" role="radiogroup" aria-label="Especie">${CC.sp.map(x=>`<button type="button" role="radio" aria-checked="${x.id===s.id}" class="cc-sp${x.id===s.id?" on":""}" data-ccs="${esc(x.id)}">${ccFish(x.id===s.id?"#fff":"#0e7c86",22)}<span><b>${esc(x.n)}</b><small>$${t0(x.kg)}/kg · ${t1(x.pmin)}${x.pmax&&x.pmax!==x.pmin?"–"+t1(x.pmax):""} kg</small></span></button>`).join("")}<button type="button" class="cc-sp cc-add" data-ccadd>+ Agregar especie</button></div>
+        <div class="cc-adj"><label><span>Precio de ${esc(s.n.toLowerCase())}: <b>$${t0(s.kg)}</b> por kilo</span><input type="range" data-cckg min="500" max="${Math.max(50000,s.kg*2)}" step="100" value="${s.kg}"></label><span class="cs">Precio por ejemplar: <b>$${t0(r.pu)}</b> (peso promedio ${t2(r.pAvg)} kg)</span></div></section>
+      <section class="cc-eq"><div class="card cc-side cc-sc"><div class="cc-sh">${ccCath(30)}<span>Cobre</span></div><b class="cc-big">${t0(CC.prod)} t</b><small>al año · ${ccClp(r.cu)}</small>${ccPicto(CC.prod/trucks,ccTruck("#b45309",24),"camiones de 30 t","Camiones de cobre",60)}</div>
+        <div class="cc-mid" aria-hidden="true"><svg viewBox="0 0 64 64" class="cc-ic" style="width:64px;height:64px"><path d="M32 6v50M14 16h36M20 56h24" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M14 16l-9 18a9 6 0 0 0 18 0zM50 16l-9 18a9 6 0 0 0 18 0z" fill="currentColor" opacity=".35"/></svg><b>mismo ingreso</b></div>
+        <div class="card cc-side cc-sf"><div class="cc-sh">${ccFish("#0e7c86",30)}<span>${esc(s.n)}</span></div><b class="cc-big">${t0(r.t)} t</b><small>${ccBig(r.u)} de ejemplares</small>${ccPicto(r.t/trucks,ccTruck("#0e7c86",24),"camiones de 30 t","Camiones de pesca",60)}</div></section>
+      <section class="card"><h3>${ccBig(r.u)} de ${esc(s.n.toLowerCase())}s</h3><p class="cs">Cada pez representa la misma cantidad de ejemplares. Rango según el peso de cada ejemplar: ${ccBig(r.uMin)} (si pesan ${t1(s.pmax||s.pmin)} kg) a ${ccBig(r.uMax)} (si pesan ${t1(s.pmin)} kg).</p>${ccPicto(r.u,ccFish("#0e7c86",22),"ejemplares","Ejemplares necesarios",120)}
+        <div class="cc-k">${[["Por cada tonelada de cobre",`${t0(r.uPerT)} ejemplares`,`${t0(r.ratioT*1000)} kg de ${esc(s.n.toLowerCase())}`],["Cada día del año",`${ccBig(r.u/365)} ejemplares`,`${t0(r.t/365)} t por día`],["Cada hora del año",`${t0(r.u/8760)} ejemplares`,`${t1(r.t/8760)} t por hora`],b?["Frente al desembarque registrado",`${ccX(r.t/b.t)} veces`,`${t0(b.t)} t en 12 meses en la base`]:null,b&&b.tp?["Pescadores-año equivalentes",t0(r.t/b.tp),`con ${t1(b.tp)} t por pescador al año`]:null].filter(Boolean).map(([k,v,d])=>`<div><span>${k}</span><b>${v}</b><small>${d}</small></div>`).join("")}</div>
+        <div class="pr-int"><b>Lectura del gráfico</b><ul>${lect.map(x=>`<li>${x}</li>`).join("")}</ul></div></section>
+      <section class="card"><h3>Comparación entre especies</h3><p class="cs">Cantidad necesaria de cada especie para igualar el ingreso anual del cobre. La barra de cobre muestra su propia producción, como referencia.</p>
+        <div class="cc-bars"><div class="cc-row"><span class="cc-rl">${ccCath(18)} Cobre</span><span class="cc-bar"><i style="width:${(CC.prod/mxT*100).toFixed(1)}%;background:#b45309"></i></span><span class="cc-rv">${t0(CC.prod)} t</span></div>
+          ${all.map(o=>`<div class="cc-row${o.x.id===s.id?" on":""}"><span class="cc-rl">${ccFish("#0e7c86",18)} ${esc(o.x.n)}</span><span class="cc-bar"><i style="width:${(o.r.t/mxT*100).toFixed(1)}%" title="${esc(o.x.n)}: ${t0(o.r.t)} t · ${ccBig(o.r.u)} ejemplares"></i></span><span class="cc-rv">${t0(o.r.t)} t<small>${ccBig(o.r.u)} ejemplares</small></span></div>`).join("")}</div>
+        <div class="tbl"><table class="pr-t"><thead><tr><th>Especie</th><th class="n">$ por kilo</th><th class="n">Peso por ejemplar</th><th class="n">$ por ejemplar</th><th class="n">Toneladas necesarias</th><th class="n">Ejemplares necesarios</th><th class="n">kg por kg de cobre</th><th></th></tr></thead><tbody>${all.map(o=>`<tr><td><b>${esc(o.x.n)}</b></td><td class="n">$${t0(o.x.kg)}</td><td class="n">${t1(o.x.pmin)}${o.x.pmax&&o.x.pmax!==o.x.pmin?"–"+t1(o.x.pmax):""} kg</td><td class="n">$${t0(o.r.pu)}</td><td class="n">${t0(o.r.t)}</td><td class="n">${ccBig(o.r.u)}</td><td class="n">${t2(o.r.ratioT)}</td><td>${o.x.base?"":`<button type="button" class="lnk" data-cced="${esc(o.x.id)}">Editar</button> <button type="button" class="lnk mn-del" data-ccdel="${esc(o.x.id)}">Quitar</button>`}</td></tr>`).join("")}</tbody></table></div>
+        <p class="cs">Las especies que agregas se guardan en este navegador. El cálculo considera solo el ingreso por venta (precio × cantidad); no incluye costos de producción.</p></section>
+      ${CC.form?ccForm():""}`;
+    try{prTips(p)}catch(e){}}
+  function ccForm(){const f=CC.form,pl=(S.R&&CFG&&CFG.precios)?S.R.m.E.filter(e=>CFG.precios[e[0]]>0).sort((a,b)=>a[1].localeCompare(b[1],"es")):[];
+    return`<div class="cx-dlg" id="ccDlg" role="dialog" aria-modal="true" aria-labelledby="ccDT"><form class="cx-box" id="ccF"><h3 id="ccDT">${f.id?"Editar especie":"Agregar especie"}</h3>
+      ${pl.length?`<label class="cx-f"><span>Tomar de los precios de playa (opcional)</span><select id="ccPl"><option value="">—</option>${pl.map(e=>`<option value="${esc(e[0])}">${esc(e[1])} · $${t0(CFG.precios[e[0]])}/kg</option>`).join("")}</select></label>`:""}
+      <label class="cx-f"><span>Nombre de la especie</span><input name="n" required maxlength="60" value="${esc(f.n||"")}"></label>
+      <label class="cx-f"><span>Precio de venta por kilo ($)</span><input name="kg" type="number" min="1" step="any" required value="${f.kg||""}"></label>
+      <div class="cc-2"><label class="cx-f"><span>Peso mínimo por ejemplar (kg)</span><input name="pmin" type="number" min="0.001" step="any" value="${f.pmin||""}"></label><label class="cx-f"><span>Peso máximo por ejemplar (kg)</span><input name="pmax" type="number" min="0.001" step="any" value="${f.pmax||""}"></label></div>
+      <label class="cx-f"><span>Precio promedio por ejemplar ($) <small class="cs">si no conoces el peso, se calcula: precio por ejemplar ÷ precio por kilo</small></span><input name="pu" type="number" min="1" step="any" value=""></label>
+      <p class="cs cx-msg" role="alert">${esc(CC.msg||"")}</p><div class="cx-act"><span style="flex:1"></span><button type="button" class="btn" data-ccx>Cancelar</button><button type="submit" class="btn pri">Guardar</button></div></form></div>`}
+  const ccNum=v=>{v=String(v||"").trim().replace(/\./g,"").replace(",",".");return v===""?null:+v};
+  document.addEventListener("input",ev=>{const t=ev.target;if(!t.closest||!t.closest('[data-pane="calc"]')||t.closest("#ccDlg"))return;
+    const lazy=()=>{clearTimeout(CC.t);CC.t=setTimeout(()=>{const a=document.activeElement&&document.activeElement.id;ccRender();if(a){const e=document.getElementById(a);if(e){e.focus();try{if(e.type!=="range"&&e.type!=="number")e.setSelectionRange(e.value.length,e.value.length)}catch(x){}}}},t.type==="range"?30:450)};
+    if(t.type==="range"){const v=+t.value;if(!(v>0))return;if(t.id==="ccProdR"){CC.prod=Math.round(v);const e=document.getElementById("ccProd");if(e)e.value=CC.prod}else if(t.id==="ccLbR"){CC.lb=v;CC.lbF="ajustado por ti";const e=document.getElementById("ccLb");if(e)e.value=v}else if(t.matches("[data-cckg]")){const s=CC.sp.find(x=>x.id===CC.sel);if(s){s.kg=v;const e=t.parentNode.querySelector("b");if(e)e.textContent="$"+t0(v)}}return}
+    if(t.id==="ccProd"||t.id==="ccProdR"){const v=+t.value;if(v>0){CC.prod=Math.round(v);lazy()}}
+    else if(t.id==="ccLb"||t.id==="ccLbR"){const v=+t.value;if(v>0){CC.lb=v;CC.lbF="ajustado por ti";lazy()}}
+    else if(t.id==="ccUsd"){const v=+t.value;if(v>0){CC.usd=v;CC.usdF="ajustado por ti";lazy()}}
+    else if(t.matches("[data-cckg]")){const s=CC.sp.find(x=>x.id===CC.sel);if(s){s.kg=+t.value;if(!s.base)ccSaveSp(CC.sp.filter(x=>!x.base));lazy()}}});
+  document.addEventListener("click",ev=>{const t=ev.target.closest&&ev.target.closest("[data-ccp],[data-ccs],[data-ccadd],[data-cced],[data-ccdel],[data-ccx],#ccDlg");if(!t||!t.closest('[data-pane="calc"]'))return;
+    if(t.id==="ccDlg"){if(ev.target===t){CC.form=null;CC.msg="";ccRender()}return}
+    if(t.dataset.ccp){CC.prod=+t.dataset.ccp;ccRender()}else if(t.dataset.ccs){CC.sel=t.dataset.ccs;ccRender()}
+    else if(t.hasAttribute("data-ccadd")){CC.form={};CC.msg="";ccRender();setTimeout(()=>{const i=document.querySelector("#ccF input[name=n]");if(i)i.focus()},30)}
+    else if(t.dataset.cced){CC.form={...CC.sp.find(x=>x.id===t.dataset.cced)};CC.msg="";ccRender()}
+    else if(t.dataset.ccdel){CC.sp=CC.sp.filter(x=>x.id!==t.dataset.ccdel);ccSaveSp(CC.sp.filter(x=>!x.base));if(CC.sel===t.dataset.ccdel)CC.sel=CC.sp[0].id;ccRender()}
+    else if(t.hasAttribute("data-ccx")){CC.form=null;CC.msg="";ccRender()}});
+  document.addEventListener("change",ev=>{const t=ev.target;if(t.type==="range"&&t.closest&&t.closest('[data-pane="calc"]')){const s=CC.sp.find(x=>x.id===CC.sel);if(t.matches("[data-cckg]")&&s&&!s.base)ccSaveSp(CC.sp.filter(x=>!x.base));ccRender();return}if(ev.target.id!=="ccPl")return;const c=ev.target.value,e=S.R&&S.R.m.E.find(x=>String(x[0])===c),f=document.getElementById("ccF");if(!e||!f)return;f.elements.n.value=cap(String(e[1]).toLowerCase());f.elements.kg.value=CFG.precios[c]});
+  document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&document.getElementById("ccDlg")){CC.form=null;ccRender()}});
+  document.addEventListener("submit",ev=>{if(ev.target.id!=="ccF")return;ev.preventDefault();const f=ev.target,n=f.elements.n.value.trim(),kg=ccNum(f.elements.kg.value);let pmin=ccNum(f.elements.pmin.value),pmax=ccNum(f.elements.pmax.value);const pu=ccNum(f.elements.pu.value);
+    const bad=m=>{CC.msg=m;const el=f.querySelector(".cx-msg");if(el)el.textContent=m};
+    if(!n)return bad("Ingresa el nombre.");if(!(kg>0))return bad("Ingresa un precio por kilo mayor que cero.");
+    if(!(pmin>0)&&pmax>0)pmin=pmax;if(!(pmin>0)&&pu>0)pmin=pu/kg;if(!(pmin>0))return bad("Ingresa el peso por ejemplar o el precio promedio por ejemplar.");if(!(pmax>0))pmax=pmin;if(pmax<pmin){const x=pmin;pmin=pmax;pmax=x}
+    const id=CC.form.id||ccId(n)+"-"+Date.now().toString(36);const o={id,n,kg,pmin,pmax};const i=CC.sp.findIndex(x=>x.id===id);if(i>=0)CC.sp[i]={...CC.sp[i],...o};else CC.sp.push(o);
+    ccSaveSp(CC.sp.filter(x=>!x.base));CC.sel=id;CC.form=null;CC.msg="";ccRender()});
+  {const _st=setTab;setTab=function(t){_st(t);if(t==="calc"){["#fab","#period","#aside","#chips","#ctx","#btnFilters"].forEach(s=>{const e=document.querySelector(s);if(e)e.hidden=true});const l=document.querySelector(".layout");if(l)l.style.gridTemplateColumns="minmax(0,1fr)";ccRender()}}}
+
   /* ================= Íconos e infografía (decoración no intrusiva: se agrega sobre lo ya dibujado) ================= */
   const UIC={
     home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
@@ -7661,7 +7786,7 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
   /* Ícono según el texto: el primer patrón que coincide */
   const UIRX=[[/alerta|sobregiro|riesgo|vencid/,"alert"],[/mensaje/,"msg"],[/hito|agenda/,"cal"],[/veda/,"ban"],[/mujer|genero/,"woman"],[/embarcac|flota/,"ship"],[/pescador|personas|usuarios|participan/,"users"],[/caleta/,"anchor"],[/desembar|tonelad|captura|kg\b|\bt\b/,"weight"],[/especie|recurso|calendario de captura/,"fish"],[/cobre|mina|minera|produccion|operacion/,"mountain"],[/mapa|ubicac/,"map"],[/territor|comuna|localidad|zona/,"pin"],[/iniciativa|eje\b|cartera/,"sprout"],[/escenario|tope|ajusta/,"sliders"],[/linea de tiempo|horizonte|plazo/,"clock"],[/seguimiento|ejecuc|avance|plan\b|acumulado/,"target"],[/compromis|obligac|rca|exigencia|minuta|document|instrument/,"doc"],[/proyecto|pep|capex/,"building"],[/compar|lado a lado|frente a/,"compare"],[/particip|concentr|comprometido|%|porcentaje|proporc/,"pct"],[/variac|tendencia|crec|evoluc|historic|mensual/,"trend"],[/presupuest|gasto|usd|monto|valor|inversion|precio|indicadores econ|costo/,"coins"],[/ano|mes\b|fecha|periodo|estacional/,"cal"],[/borde|mar\b|oleaje|costa/,"waves"],[/manejo|amerb|ecmpo|regulac/,"scale"],[/actualizar|cargar|subir/,"upload"],[/administrac|ajuste|clave/,"gear"],[/relacionamiento|poder|interes|negociac/,"users"]];
   const uiPick=(t,def="chart")=>{const n=uiN(t);for(const[r,k]of UIRX)if(r.test(n))return k;return def};
-  const UIVN={pr_res:"star",cruce:"compare",pr_ope:"coins",pr_eje:"target",pr_com:"doc",pr_cmp:"compare",pr_edi:"upload",ficha:"anchor",cmp:"compare",zonas:"pin",desemb:"trend",especies:"fish",espcal:"pin",pesc:"users",flota:"ship",genero:"woman",vedas:"ban",amerb:"scale",mineria:"mountain",amsa:"mountain",opcal:"compare",minutas:"doc",poder:"users",rca:"doc",negociacion:"users",detalle:"db",admin:"gear",inicio:"home",borde:"waves"};
+  const UIVN={pr_res:"star",calc:"scale",cruce:"compare",pr_ope:"coins",pr_eje:"target",pr_com:"doc",pr_cmp:"compare",pr_edi:"upload",ficha:"anchor",cmp:"compare",zonas:"pin",desemb:"trend",especies:"fish",espcal:"pin",pesc:"users",flota:"ship",genero:"woman",vedas:"ban",amerb:"scale",mineria:"mountain",amsa:"mountain",opcal:"compare",minutas:"doc",poder:"users",rca:"doc",negociacion:"users",detalle:"db",admin:"gear",inicio:"home",borde:"waves"};
   function uiDecor(){
     document.querySelectorAll("#gnav .gn-1 button:not([data-ic])").forEach(b=>{b.dataset.ic=1;b.insertAdjacentHTML("afterbegin",uiSvg(UIGN[b.dataset.gn]||"chart","uic-n"))});
     document.querySelectorAll("#gnav .gn-2 button:not([data-ic])").forEach(b=>{b.dataset.ic=1;b.insertAdjacentHTML("afterbegin",uiSvg(UIVN[b.dataset.vn]||uiPick(b.textContent),"uic-s"))});
