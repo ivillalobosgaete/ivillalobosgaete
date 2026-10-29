@@ -1,7 +1,7 @@
 // Presupuesto AAPP Norte (cifras internas). Las cifras NO están en el código (el repositorio es público):
-// se guardan en la base de datos (tabla ajustes, fila 5) y solo se entregan a administradores y a usuarios con el
+// se guardan en la base de datos (tabla vistas, clave reservada «#presupuesto») y solo se entregan a administradores y a usuarios con el
 // permiso «presupuesto». Para modificarlas se exige además la clave de edición que define un administrador
-// (guardada cifrada en ajustes, fila 6). Cada cambio queda en la bitácora.
+// (guardada cifrada, clave reservada «#presupuesto-clave»). Cada cambio queda en la bitácora.
 //   GET                                   → cifras + estado
 //   POST {accion:"verificar", clave}      → comprueba la clave de edición
 //   POST {accion:"clave", nueva}          → (administrador) define o cambia la clave de edición
@@ -24,12 +24,15 @@ function limpiar(v, d = 0) {
   if (typeof v === "object") { const o = {}; for (const k of Object.keys(v).slice(0, 300)) o[String(k).slice(0, 200)] = limpiar(v[k], d + 1); return o; }
   return null;
 }
+// Se guardan en la tabla «vistas» con claves reservadas que empiezan con «#»: ningún nombre de usuario puede
+// contener ese carácter, así que la ruta /api/vistas nunca las entrega. (La tabla «ajustes» admite una sola fila.)
+const KEY = { 5: "#presupuesto", 6: "#presupuesto-clave" };
 async function fila(id) {
-  try { const r = await sb(`ajustes?id=eq.${id}&select=data,por,actualizado`); return (r && r[0]) || null; }
+  try { const r = await sb(`vistas?usuario=eq.${encodeURIComponent(KEY[id])}&select=data,actualizado`); const x = r && r[0]; return x ? { data: x.data && !Array.isArray(x.data) ? x.data.v : null, por: x.data && x.data.por, actualizado: x.actualizado } : null; }
   catch (e) { if (tableMissing(e)) return null; throw e; }
 }
 async function guardar(id, data, por) {
-  await sb("ajustes?on_conflict=id", { method: "POST", prefer: "resolution=merge-duplicates,return=minimal", body: { id, data, por, actualizado: new Date().toISOString() } });
+  await sb("vistas?on_conflict=usuario", { method: "POST", prefer: "resolution=merge-duplicates,return=minimal", body: { usuario: KEY[id], data: { v: data, por }, actualizado: new Date().toISOString() } });
 }
 async function claveOK(me, clave) {
   if (bloqueado(me.usuario)) return { ok: false, error: "Demasiados intentos fallidos. Espera 15 minutos." };
@@ -51,7 +54,7 @@ export default handler(async (req, res) => {
       const n = String(b.nueva || "");
       if (n.length < 8) return send(res, 400, { error: "La clave debe tener al menos 8 caracteres." });
       try { await guardar(6, { hash: hashPw(n) }, me.usuario); }
-      catch (e) { if (tableMissing(e)) return send(res, 400, { error: "Falta crear la tabla de ajustes: ejecuta supabase/schema.sql en Supabase." }); throw e; }
+      catch (e) { if (tableMissing(e)) return send(res, 400, { error: "Falta crear la tabla de vistas: ejecuta supabase/schema.sql en Supabase." }); throw e; }
       await logAct(me.usuario, "Presupuesto", "Definió o cambió la clave de edición");
       return send(res, 200, { ok: true });
     }
@@ -72,7 +75,7 @@ export default handler(async (req, res) => {
   if (!data || typeof data !== "object" || !data.lom) return send(res, 400, { error: "Los datos no tienen el formato esperado." });
   if (JSON.stringify(data).length > 3e6) return send(res, 400, { error: "Los datos son demasiado grandes." });
   try { await guardar(5, data, me.usuario); }
-  catch (e) { if (tableMissing(e)) return send(res, 400, { error: "Falta crear la tabla de ajustes: ejecuta supabase/schema.sql en Supabase." }); throw e; }
+  catch (e) { if (tableMissing(e)) return send(res, 400, { error: "Falta crear la tabla de vistas: ejecuta supabase/schema.sql en Supabase." }); throw e; }
   await logAct(me.usuario, "Presupuesto", String(b.motivo || "Actualizó las cifras").slice(0, 200));
   send(res, 200, { ok: true });
 });
