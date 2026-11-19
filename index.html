@@ -2200,6 +2200,7 @@ kbd{font:600 .72rem/1 ui-monospace,monospace;border:1px solid currentColor;borde
       <div class="mlist" id="prevMsgs"></div>
       <div class="modes">
         <label><input type="radio" name="mode" value="add" checked> <span><b>Agregar solo filas nuevas.</b> Las filas que ya existen (misma fecha, pescador, caleta, especie y cantidad) no se duplican.</span></label>
+        <label id="modeCatsL"><input type="radio" name="mode" value="cats"> <span><b>Reemplazar solo la categoría del archivo</b> (<span id="modeCatsN"></span>) y mantener el resto de los datos. Úsalo cuando el archivo trae una base completa de una sola categoría, por ejemplo recolectores de orilla.</span></label>
         <label><input type="radio" name="mode" value="replace"> <span><b>Reemplazar todos los datos</b> por el contenido de este archivo.</span></label>
       </div>
     </div>
@@ -2406,7 +2407,7 @@ async function saveData(m,archivo,nuevas,modo){
 function prepare(m){
   const c=m.cols,n=c.d.length;
   const uniq=arr=>{const u=[],ix=new Map();const map=arr.map(v=>{if(!ix.has(v)){ix.set(v,u.length);u.push(v)}return ix.get(v)});return{u,map}};
-  const comp=uniq(m.C.map(x=>x[4])),reg=uniq(m.C.map(x=>isAIM(x)?"AIM|"+x[3]:x[3])),com=uniq(m.C.map(x=>x[1]));
+  const comp=uniq(m.C.map(x=>x[4])),zk=m.C.map(zoneKey),zu=ZORD.filter(k=>zk.includes(k)),reg={u:zu,map:zk.map(k=>zu.indexOf(k))},com=uniq(m.C.map(x=>x[1]));
   const order=["Algas","Moluscos","Peces","Crustáceos","Otros"];const g0=uniq(m.E.map(x=>x[2]));
   const grps=[...g0.u].sort((a,b)=>(order.indexOf(a)+1||9)-(order.indexOf(b)+1||9));const gmap=m.E.map(x=>grps.indexOf(x[2]));
   let minD=Infinity,maxD=-Infinity;for(let i=0;i<n;i++){const d=c.d[i];if(d<minD)minD=d;if(d>maxD)maxD=d}
@@ -2414,7 +2415,7 @@ function prepare(m){
   const y0=new Date(BASE+minD*DAY).getUTCFullYear(),y1=new Date(BASE+maxD*DAY).getUTCFullYear();
   const R={n,m,d:c.d,p:c.p,c:c.c,e:c.e,k:c.k,q:c.q,x:c.x,yr:new Int16Array(n),mo:new Int8Array(n),ym:new Int32Array(n),
     comp:new Int16Array(n),reg:new Int16Array(n),com:new Int16Array(n),grp:new Int16Array(n),sex:new Int8Array(n),
-    comps:comp.u,regs:reg.u.map(k=>k.startsWith("AIM|")?ZAIM:regLabel(k)),regRaw:reg.u.map(k=>k.replace(/^AIM\|/,"")),coms:com.u,grps,y0,y1,minD,maxD};
+    comps:comp.u,regs:zu.map(k=>ZLAB[k]),regRaw:zu.map(k=>String((m.C[zk.indexOf(k)]||[])[3]||"")),regKey:zu,coms:com.u,grps,y0,y1,minD,maxD};
   R.grpColor=grps.map((g,i)=>({"Algas":"var(--g-algas)","Moluscos":"var(--g-moluscos)","Peces":"var(--g-peces)","Crustáceos":"var(--g-crust)","Otros":"var(--g-otros)"})[g]||COLS[i%6]);
   for(let i=0;i<n;i++){const dt=new Date(BASE+c.d[i]*DAY);R.yr[i]=dt.getUTCFullYear()-y0;R.mo[i]=dt.getUTCMonth();R.ym[i]=R.yr[i]*12+R.mo[i];
     const ci=c.c[i];R.comp[i]=comp.map[ci];R.reg[i]=reg.map[ci];R.com[i]=com.map[ci];R.grp[i]=gmap[c.e[i]];R.sex[i]=m.P[c.p[i]][2]}
@@ -2424,7 +2425,7 @@ function prepare(m){
   R.F=[
     {id:"p",label:"Pescador",arr:R.p,opts:m.P.map(x=>x[1]),sub:m.P.map(x=>"RPA "+x[0]),search:true},
     {id:"comp",label:"Compañía área de influencia",arr:R.comp,opts:R.comps},
-    {id:"reg",label:"Zona Asuntos Públicos",arr:R.reg,opts:R.regs},
+    {id:"reg",label:"Zona de análisis",arr:R.reg,opts:R.regs},
     {id:"com",label:"Comuna",arr:R.com,opts:R.coms},
     {id:"cal",label:"Caleta",arr:R.c,opts:m.C.map(x=>x[0]),sub:m.C.map(x=>x[1])},
     {id:"cat",label:"Categoría",arr:R.k,opts:m.cats},
@@ -2542,7 +2543,7 @@ function sparkSeries(A,fn){let lo=Infinity,hi=-Infinity;A.ym.forEach((v,i)=>{if(
 function renderInfo(A){
   const R=S.R,el=$("#info");if(!el)return;if(!A.rows){el.innerHTML="";return}
   const pass=LAST.pass,zq=new Float64Array(R.regs.length);for(let i=0;i<R.n;i++)if(pass[i])zq[R.reg[i]]+=R.q[i]/1000;
-  const zo=R.regs.map((r,i)=>i).filter(i=>zq[i]>0).sort((a,b)=>R.regRaw[a].localeCompare(R.regRaw[b]));const zc=["var(--s1)","var(--s2)","var(--s3)"];
+  const zo=R.regs.map((r,i)=>i).filter(i=>zq[i]>0).sort((a,b)=>a-b);const zc=["var(--s1)","var(--s2)","var(--s3)"];
   const z=`<div class="ig"><span class="k">Distribución por zona</span><div class="stack">${zo.map((i,j)=>`<i style="width:${(zq[i]/A.q*100).toFixed(2)}%;background:${zc[j%3]}"></i>`).join("")}</div><div class="iglist">${zo.map((i,j)=>`<div><span class="dot" style="background:${zc[j%3]}"></span><span>${esc(R.regs[i])}</span><b>${t1(zq[i]/A.q*100)} %</b><span class="cs">${t0(zq[i])} t</span></div>`).join("")}</div></div>`;
   const go=R.grps.map((n,i)=>i).filter(i=>A.grp[i]>0).sort((a,b)=>A.grp[b]-A.grp[a]);
   const c=`<div class="ig"><span class="k">Composición por grupo de especie</span><div class="stack">${go.map(i=>`<i style="width:${(A.grp[i]/A.q*100).toFixed(2)}%;background:${R.grpColor[i]}" title="${esc(R.grps[i])}"></i>`).join("")}</div><div class="iglist">${go.slice(0,4).map(i=>`<div><span class="dot" style="background:${R.grpColor[i]}"></span><span>${esc(R.grps[i])}</span><b>${t1(A.grp[i]/A.q*100)} %</b></div>`).join("")}</div></div>`;
@@ -2602,7 +2603,7 @@ function calHeat(A){
   const val=(c,j)=>{const t=T[c*12+j];if(ms==="mes")return my[j]?t/my[j]:0;if(ms==="pesc"){const f=F[c*12+j];return f&&f.size?t/f.size:0}return t};
   const tot=c=>V(A.cal[c],A.calFis[c],A.nMonths);
   const zones=new Map();m.C.forEach((c,i)=>{if(A.cal[i]<=0)return;const z=calZone(c);if(!zones.has(z))zones.set(z,{raw:c[3],rows:[]});zones.get(z).rows.push(i)});
-  const zl=[...zones.entries()].sort((a,b)=>String(a[1].raw).localeCompare(String(b[1].raw)));zl.forEach(([,z])=>z.rows.sort((a,b)=>tot(b)-tot(a)));
+  const zl=[...zones.entries()].sort((a,b)=>ZORD.findIndex(k=>ZLAB[k]===a[0])-ZORD.findIndex(k=>ZLAB[k]===b[0]));zl.forEach(([,z])=>z.rows.sort((a,b)=>tot(b)-tot(a)));
   const W=vw("gCalHeat",1000);if(!zl.length){emptyMsg(svg,W,120);return}
   const narrow=W<640,L=narrow?104:170,BW=narrow?62:150,cw=(W-L-BW-12)/12,ch=narrow?24:26,zh=26;
   let rowsN=0;zl.forEach(([,z])=>rowsN+=z.rows.length);const H=24+zl.length*zh+rowsN*ch+6;clear(svg,W,H);
@@ -2696,7 +2697,18 @@ function renderKpis(A){
 }
 const ZAIM="Asociación de Industriales de Mejillones";
 /* Caletas Mejillones y Hornitos: se analizan en la zona de la Asociación de Industriales de Mejillones (no en Asuntos Públicos Norte) */
-function isAIM(c){const n=norm(String(c&&c[0]||""));return!!c&&!/michilla/.test(n)&&/(^|\s)(mejillones|hornitos)(\s|$)/.test(n.replace(/\(.*?\)/g," "))}
+function isAIM(c){return!!c&&zoneKey(c)==="aim"}
+/* Zonas de análisis (definidas por la gerencia):
+   Antofagasta: Michilla y El Cobre → Asuntos Públicos Norte; El Fierro y Hornitos → caletas aledañas; Mejillones → Asociación de Industriales de Mejillones; el resto → otras caletas Antofagasta.
+   Coquimbo: Cascabeles, Chigualoco, Huentelauquén, Las Conchas, Maitencillo, Pichidangui, Puerto Manso, Puerto Oscuro, San Pedro Los Vilos y Totoralillo Sur → Minera Los Pelambres; el resto → otras caletas Coquimbo. */
+const ZORD=["norte","aledanas","aim","otras_antof","pelambres","otras_coq","otra"];
+const ZLAB={norte:"Asuntos Públicos Norte",aledanas:"Caletas aledañas a Asuntos Públicos",aim:"Asociación de Industriales de Mejillones",otras_antof:"Otras caletas Antofagasta",pelambres:"Minera Los Pelambres",otras_coq:"Otras caletas Coquimbo",otra:"Otras caletas"};
+const ZCOL={norte:"var(--s1)",aledanas:"var(--s2)",aim:"var(--s3)",otras_antof:"#8a97a0",pelambres:"var(--s4)",otras_coq:"#c9a86a",otra:"#b9b6ae"};
+const ZPEL=["cascabeles","chigualoco","huentelauquen","las conchas","maitencillo","pichidangui","puerto manso","puerto oscuro","san pedro los vilos","totoralillo sur"];
+function zoneKey(c){const n=norm(String(c&&c[0]||"")).replace(/[()]/g," ").replace(/\s+/g," ").trim(),r=String(c&&c[3]||"").trim();
+  if(/^II\s+REGI/i.test(r)){if(/(^|\s)michilla(\s|$)/.test(n)||/(^|\s)el cobre(\s|$)/.test(n))return"norte";if(/(^|\s)el fierro(\s|$)/.test(n)||/(^|\s)hornitos(\s|$)/.test(n))return"aledanas";if(/(^|\s)mejillones(\s|$)/.test(n))return"aim";return"otras_antof"}
+  if(/^IV\s+REGI/i.test(r))return ZPEL.some(k=>n===k||n.startsWith(k+" "))?"pelambres":"otras_coq";
+  return"otra"}
 
 /* Usuarios con caletas específicas: detecta textos (AMERB, planes, ECMPO, RCA, minutas, capas) que nombran otra caleta y ninguna de las suyas */
 const KCAL0=["michilla","el cobre","el fierro","mejillones","hornitos","el blanco","cobija","coloso","taltal","paposo","tocopilla","juan lopez","la chimba","caleta buena","maitencillo","puerto oscuro","puerto manso","huentelauquen","chigualoco","san pedro","los vilos","las conchas","cascabeles","totoralillo","pichidangui"];
@@ -2704,10 +2716,10 @@ const ckey=s=>norm(String(s||"")).replace(/\(.*?\)/g," ").replace(/\b(caleta|iv 
 function otherCal(txt){if(!S.restr||!S.R)return false;const t=" "+ckey(txt).replace(/\b(comuna|region|provincia) de [a-z]+( [a-z]+)?/g," ")+" ";const al=S.R.m.C.map(c=>ckey(c[0])).filter(Boolean);
   if(al.some(a=>t.includes(" "+a+" ")))return false;const g=window.__bc&&window.__bc.GEOD&&window.__bc.GEOD.d&&window.__bc.GEOD.d.caletas||[];
   const known=[...KCAL0,...g.map(x=>ckey(x.n))].filter(k=>k&&k.length>2&&!al.some(a=>a===k||a.includes(k)||k.includes(a)));return known.some(k=>t.includes(" "+k+" "))}
-function calZone(c){return isAIM(c)?ZAIM:regLabel(c[3])}
-const ZKEY=c=>isAIM(c)?"aim":/^II\s+REGI/i.test(String(c[3]||"").trim())?"norte":/^IV\s+REGI/i.test(String(c[3]||"").trim())?"pelambres":"otra";
-const ZOPTS=[["norte","Asuntos Públicos Norte"],["pelambres","Asuntos Públicos Los Pelambres"],["aim",ZAIM]];
-function regLabel(r){const s=String(r).trim();if(/^II\s+REGI/i.test(s))return"Asuntos Públicos Norte";if(/^IV\s+REGI/i.test(s))return"Asuntos Públicos Los Pelambres";return regName(s)}
+function calZone(c){return ZLAB[zoneKey(c)]}
+const ZKEY=c=>zoneKey(c);
+const ZOPTS=ZORD.filter(k=>k!=="otra").map(k=>[k,ZLAB[k]]);
+function regLabel(r){const s=String(r).trim();if(/^II\s+REGI/i.test(s))return"Región de Antofagasta";if(/^IV\s+REGI/i.test(s))return"Región de Coquimbo";return regName(s)}
 function regName(r){const s=String(r).trim();const m=s.match(/^(\S+)\s+REGI[OÓ]N\s+(.*)$/i);if(!m)return s;const nm=m[2].toLowerCase().replace(/(^|\s)\S/g,c=>c.toUpperCase());return`${m[1].toUpperCase()} Región de ${nm}`}
 function renderClaves(A){
   const R=S.R,m=R.m,per=periodText(),pass=LAST.pass,prev=LAST.prev;
@@ -2720,7 +2732,7 @@ function renderClaves(A){
     if(!pass[i])continue;g.q+=q;g.rows++;if(R.x[i]>=0)g.x+=R.x[i]/1000;const p=R.p[i];g.fis.add(p);if(R.sex[i]===muj){g.muj.add(p);add(g.mq,p,q)}
     add(g.cal,R.c[i],q);add(g.com,R.com[i],q);add(g.esp,R.e[i],q);add(g.grp,R.grp[i],q);add(g.fq,p,q);add(g.ym,R.ym[i],q);add(g.yr,R.yr[i],q);add(g.mo,R.mo[i],q);add(g.day,R.d[i],q);
     if(R.d[i]<g.dmin)g.dmin=R.d[i];if(R.d[i]>g.dmax)g.dmax=R.d[i]}
-  const order=R.regs.map((r,i)=>i).filter(i=>G[i].q>0).sort((a,b)=>R.regRaw[a].localeCompare(R.regRaw[b]));
+  const order=R.regs.map((r,i)=>i).filter(i=>G[i].q>0).sort((a,b)=>a-b);
   const top=mp=>[...mp].sort((a,b)=>b[1]-a[1]);
   const pn=p=>m.P[p][1];
   const fact=(ic,k,v,s)=>`<div class="fact"><span class="fk">${k}</span><b>${v}</b>${s?`<span class="fs">${s}</span>`:""}</div>`;
@@ -3075,7 +3087,7 @@ function computeAlerts(){
     if(ym>L-3)g.q3+=q;else if(ym>L-15&&ym<=L-12)g.p3+=q;
     if(ym>L-12){let f=g.f12.get(R.p[i]);if(!f){f={q:0,ym:new Set(),last:-1};g.f12.set(R.p[i],f)}f.q+=q;f.ym.add(ym);if(ym>f.last)f.last=ym}}
   const items=[],ml=ALR.ml,mp=ALR.mp;
-  for(const [z,g] of [...Z].sort((a,b)=>R.regRaw[a[0]].localeCompare(R.regRaw[b[0]]))){const zl=R.regs[z],zr=R.regRaw[z];
+  for(const [z,g] of [...Z].sort((a,b)=>a[0]-b[0])){const zl=R.regs[z],zr=R.regRaw[z];
     if(g.p3>=minT){const d=pct(g.q3,g.p3);if(d<=-U)items.push({s:3,z:zl,t:`El desembarque de los últimos 3 meses cayó ${t0(Math.abs(d))} % frente a un año antes`,d:`${t0(g.q3)} t frente a ${t0(g.p3)} t`})}
     for(const [c,p] of g.prv){if(p<minT)continue;const cu=g.cur.get(c)||0,d=pct(cu,p);if(d<=-U)items.push({s:2,z:zl,t:`Caleta ${m.C[c][0]}: ${t0(Math.abs(d))} % menos en ${ml}`,d:`${tt(cu)} t frente a ${tt(p)} t en ${mp}`})}
     for(const [e,p] of g.eprv){if(p<minT)continue;const cu=g.ecur.get(e)||0,d=pct(cu,p);if(d>-U)continue;const v=vedaOf(m.E[e][0],L%12,zr);
@@ -3099,7 +3111,7 @@ function zoneAgg(pass,prev){const R=S.R,m=R.m,muj=m.sexes.indexOf("Mujer"),G=new
   for(let i=0;i<R.n;i++){const q=R.q[i]/1000;if(prev&&prev[i]){const g=get(R.reg[i]);g.pq+=q;g.pv+=q*1000*priceOf(R.e[i])}
     if(!pass[i])continue;const g=get(R.reg[i]);g.q+=q;g.fis.add(R.p[i]);if(R.sex[i]===muj)g.muj.add(R.p[i]);g.cal.add(R.c[i]);g.esp.set(R.e[i],(g.esp.get(R.e[i])||0)+q);g.fq.set(R.p[i],(g.fq.get(R.p[i])||0)+q);g.ym.add(R.ym[i])}
   for(const g of G.values())g.val=[...g.esp].reduce((a,[e,t])=>a+t*1000*priceOf(e),0);
-  return[...G].filter(([z,g])=>g.q>0).sort((a,b)=>R.regRaw[a[0]].localeCompare(R.regRaw[b[0]]))}
+  return[...G].filter(([z,g])=>g.q>0).sort((a,b)=>a[0]-b[0])}
 function compData(pass,prev,hasPrev){const R=S.R,m=R.m,Z=zoneAgg(pass,prev),tot=Z.reduce((a,[,g])=>a+g.q,0),PZ=piCompute(pass,"p","t");
   const top=g=>[...g.esp].sort((a,b)=>b[1]-a[1])[0];
   const rows=[["Desembarque",g=>`<b>${t0(g.q)}</b> t`],["Participación del total",g=>t1(tot?g.q/tot*100:0)+" %"]];
@@ -3121,7 +3133,7 @@ function projData(){const R=S.R,dp=dimPass(),L=lastFullYM(),Z=new Map();
     const raw=s0>0?s1/s0:1,tr=Math.min(1.3,Math.max(.7,raw));const P=[];
     for(let k=1;k<=3;k++){const T=L+k;const vs=[1,2,3].map(y=>T-12*y).filter(x=>x>=R.firstYM&&x<=L).map(x=>a[x]);if(!vs.length)continue;const b=vs.reduce((x,y)=>x+y,0)/vs.length;P.push({ym:T,f:b*tr,lo:Math.min(...vs)*tr,hi:Math.max(...vs)*tr,n:vs.length})}
     const hist=[];for(let k=Math.max(0,L-11);k<=L;k++)hist.push({ym:k,v:a[k]});out.push({z,label:R.regs[z],raw:R.regRaw[z],tr:raw,P,hist})}
-  return out.sort((a,b)=>a.raw.localeCompare(b.raw))}
+  return out.sort((a,b)=>a.z-b.z)}
 function renderProj(){const D=projData(),box=$("#proj");if(!D.length){box.innerHTML=`<p class="cs">Sin datos con estos filtros.</p>`;return}
   box.innerHTML=D.map((d,j)=>`<div class="pz"><div class="pz-h"><b>${esc(d.label)}</b><span class="cs">Tendencia 12 meses: ${d.tr>=1?"+":""}${t1((d.tr-1)*100)} %</span></div><svg id="gProj${j}" role="img" aria-label="Proyección ${esc(d.label)}"></svg>
     <div class="pz-l">${d.P.map(p=>`<div><span>${cap(ymLabel(p.ym))}</span><b>${t0(p.f)} t</b><span class="cs">entre ${t0(p.lo)} y ${t0(p.hi)} t</span></div>`).join("")}</div></div>`).join("");
@@ -3253,7 +3265,7 @@ function cfgRender(){if(!S.perm.admin||!S.R)return;const R=S.R,m=R.m;$("#cfgWarn
   const idx=m.E.map((e,i)=>i).filter(i=>tot[i]>0&&(!q||norm(m.E[i][1]+" "+m.E[i][2]).includes(q))).sort((a,b)=>String(m.E[a][1]).localeCompare(String(m.E[b][1]),"es",{sensitivity:"base"}));
   $("#prTbl").innerHTML=`<thead><tr><th>Especie</th><th>Grupo</th><th class="r">Toneladas en la base</th><th class="r">$ por kg</th></tr></thead><tbody>${idx.map(i=>`<tr><td><b>${esc(m.E[i][1])}</b></td><td>${esc(m.E[i][2])}</td><td class="r">${t0(tot[i])}</td><td class="r"><input type="number" min="0" step="10" class="prIn" data-code="${esc(m.E[i][0])}" value="${PRD[m.E[i][0]]||""}" aria-label="Precio por kg de ${esc(m.E[i][1])}"></td></tr>`).join("")}</tbody>`;
   const eOpts=m.E.map((e,i)=>i).filter(i=>tot[i]>0).sort((a,b)=>m.E[a][1].localeCompare(m.E[b][1],"es"));
-  if(!$("#vdE").options.length){$("#vdE").innerHTML=eOpts.map(i=>`<option value="${esc(m.E[i][0])}">${esc(m.E[i][1])}</option>`).join("");$("#vdZ").innerHTML=`<option value="">Todas las zonas</option>`+R.regRaw.map((r,i)=>`<option value="${esc(r)}">${esc(R.regs[i])}</option>`).join("");$("#vdD").innerHTML=$("#vdH").innerHTML=MESL.map((x,i)=>`<option value="${i}">${cap(x)}</option>`).join("")}
+  if(!$("#vdE").options.length){$("#vdE").innerHTML=eOpts.map(i=>`<option value="${esc(m.E[i][0])}">${esc(m.E[i][1])}</option>`).join("");$("#vdZ").innerHTML=`<option value="">Todas las regiones</option>`+[...new Set(R.regRaw)].map(r=>`<option value="${esc(r)}">${esc(regLabel(r))}</option>`).join("");$("#vdD").innerHTML=$("#vdH").innerHTML=MESL.map((x,i)=>`<option value="${i}">${cap(x)}</option>`).join("")}
   const eName=c=>{const e=m.E.find(x=>String(x[0])===String(c));return e?e[1]:"Código "+c};
   $("#vdList").innerHTML=CFG.vedas.length?`<thead><tr><th>Especie</th><th>Zona</th><th>Meses</th><th>Nota</th><th></th></tr></thead><tbody>${CFG.vedas.map((v,k)=>`<tr><td><b>${esc((v.esp||[]).map(eName).join(", "))}</b></td><td>${v.zona?esc(regLabel(v.zona)):"Todas"}</td><td>${cap(MESL[v.desde])} a ${MESL[v.hasta]}</td><td style="white-space:normal">${esc(v.nota||"")}</td><td><button class="btn ghost small" type="button" data-vdel="${k}">Quitar</button></td></tr>`).join("")}</tbody>`:`<tbody><tr><td class="empty">Sin vedas registradas</td></tr></tbody>`;
   $("#alU").value=CFG.alertas.umbral;$("#alT").value=CFG.alertas.minT}
@@ -3291,7 +3303,7 @@ function piCompute(pass,mode=PI.mode,base=PI.base){
       L.forEach(f=>{f.ai=5-Math.floor(first.get(f.ym.size)*5/n);f.id=oc?"org:"+f.org:String(m.P[f.p][0]);f.name=oc?f.org:m.P[f.p][1];const o=PI.ov.get(f.id);
         f.adj=!!(o&&(o.p||o.i));f.pw=o&&o.p?+o.p:f.ap;f.in=o&&o.i?+o.i:f.ai;f.nota=o&&o.nota||"";f.mainCal=[...f.cal].sort((a,b)=>b[1]-a[1])[0][0];f.share=f.q/g.q;f.orgName=oc?"":orgOf(f.p)})}
     out.push({z,label:R.regs[z],raw:R.regRaw[z],q:g.q,v:g.v,L,sin:g.sin.size})}
-  return out.sort((a,b)=>a.raw.localeCompare(b.raw));
+  return out.sort((a,b)=>a.z-b.z);
 }
 async function renderPoder(pass){
   const box=$("#piZones");if(!PI.loaded||(S.perm.admin&&!BIT.loaded)){box.innerHTML=`<div class="card"><div class="spinner"></div></div>`;await Promise.all([piLoad(),bitLoad()]);if(S.tab!=="poder")return}
@@ -3939,7 +3951,7 @@ function colIdx(ref){let n=0;for(const ch of ref){const c=ch.charCodeAt(0);if(c<
 async function readSheet(buf,status){
   const get=await unzip(buf);const wb=await get("xl/workbook.xml");if(!wb)throw new Error("El archivo no es un Excel válido.");
   const sheets=[...wb.matchAll(/<sheet\b[^>]*>/g)].map(m=>({name:unx((m[0].match(/name="([^"]*)"/)||[])[1]||""),rid:(m[0].match(/r:id="([^"]*)"/)||[])[1]}));
-  let sh=sheets.find(s=>norm(s.name).trim()==="datospesca"),warn=null;if(!sh){sh=sheets[0];warn=`No se encontró la hoja "DatosPesca"; se leyó la hoja "${sh.name}".`}
+  let sh=sheets.find(s=>norm(s.name).trim()==="datospesca")||sheets.find(s=>norm(s.name).trim()==="datos"),warn=null;if(!sh){sh=sheets[0];warn=`No se encontró la hoja "DatosPesca"; se leyó la hoja "${sh.name}".`}
   const rels=await get("xl/_rels/workbook.xml.rels");const rel=[...rels.matchAll(/<Relationship\b[^>]*>/g)].map(m=>m[0]).find(r=>r.includes(`Id="${sh.rid}"`));
   let target=(rel.match(/Target="([^"]*)"/)||[])[1];target=target.startsWith("/")?target.slice(1):"xl/"+target.replace(/^\.\//,"");
   status("Leyendo textos…");const sstX=await get("xl/sharedStrings.xml")||"";const sst=[];
@@ -3955,7 +3967,26 @@ async function readSheet(buf,status){
 }
 const REQ={cat:"categoria",y:"ano",m:"mes",d:"dia",reg:"region de desembarque",prov:"provincia",com:"comuna",cal:"caleta",grp:"grupo especie",code:"codigo especie",esp:"nombre especie",q:"desembarque",x:"captura calculada",rpa:"rpa armador",name:"nm_armador",sex:"sexo",comp:"compania area de influ"};
 const OPT={org:"organizacion",lat:"latitud",lon:"longitud"};
+/* Formato «Estadísticas» (base mensual de recolectores de orilla: hoja Datos con Toneladas, Rpa Recolector, Tipo Especie…):
+   se convierte a las columnas de DatosPesca. Las caletas quedan con el mismo estilo de nombre de la base anterior y la
+   compañía o zona según las zonas de análisis. Sin día en la base: se usa el día 1 de cada mes. */
+const REGN={"arica y parinacota":"XV REGION ARICA Y PARINACOTA","tarapaca":"I REGION TARAPACA","antofagasta":"II REGION ANTOFAGASTA","atacama":"III REGION ATACAMA","coquimbo":"IV REGION COQUIMBO","valparaiso":"V REGION VALPARAISO"};
+const titleCase=s=>String(s??"").trim().toLowerCase().replace(/(^|[\s(\-\/])(\p{L})/gu,(m,a,b)=>a+b.toUpperCase());
+function compOf(cal,reg){const c=[cal,"","",reg],z=zoneKey(c),n=norm(cal);if(z==="norte")return/michilla/.test(n)?"Minera Centinela":/el cobre/.test(n)?"Minera Zaldívar":ZLAB.norte;return ZLAB[z]}
+function isEstFormat(rows){const h=(rows[0]||[]).map(x=>norm(String(x??"")).trim());return h.includes("toneladas")&&h.some(x=>x.startsWith("rpa recolector"))&&!h.some(x=>x.startsWith("desembarque"))}
+function estToRows(rows){const h=(rows[0]||[]).map(x=>norm(String(x??"")).trim().replace(/\s+/g," "));const f=k=>h.findIndex(x=>x===k||x.startsWith(k));
+  const I={reg:f("region"),prov:f("provincia"),com:f("comuna"),cal:f("caleta"),y:f("ano"),m:f("mes"),d:f("dia"),rpa:f("rpa recolector"),nom:f("nombre recolector"),rec:f("recolector"),tipo:f("tipo especie"),code:f("codigo especie"),esp:h.findIndex(x=>x==="especie"),q:f("toneladas"),x:f("captura"),org:f("organizacion"),sex:f("sexo"),lat:f("latitud"),lon:f("longitud")};
+  if(I.cal===h.findIndex(x=>x.startsWith("codigo caleta")))I.cal=h.findIndex(x=>x==="caleta");
+  const out=[["Categoría","Año","Mes","Día","Región de Desembarque","Provincia","Comuna","Caleta","Grupo Especie","Código Especie","Nombre Especie","Desembarque","Captura Calculada","RPA Armador","Nm_Armador","Sexo","Compañía área de Influencia","Organización","Latitud","Longitud"]];
+  const g=(r,i)=>i>=0?r[i]:null;
+  for(let k=1;k<rows.length;k++){const r=rows[k];if(!r||r.every(v=>v==null||v===""))continue;
+    const rg=String(g(r,I.reg)??"").trim(),reg=/REGI[OÓ]N/i.test(rg)?rg:(REGN[norm(rg)]||rg);
+    let cal=titleCase(String(g(r,I.cal)??"").replace(/^\s*caleta\s+(?=el cobre\s*$)/i,""));
+    let nm=String(g(r,I.nom)??"").trim();if(!nm)nm="-";
+    out.push(["Captura Recolector de Orilla",g(r,I.y),g(r,I.m),g(r,I.d)||1,reg,titleCase(g(r,I.prov)),titleCase(g(r,I.com)),cal,g(r,I.tipo),g(r,I.code),titleCase(g(r,I.esp)),g(r,I.q),g(r,I.x),g(r,I.rpa),nm,g(r,I.sex)||"",compOf(cal,reg),g(r,I.org)||"",g(r,I.lat),g(r,I.lon)])}
+  return out}
 function toModelRows(rows){
+  if(isEstFormat(rows))rows=estToRows(rows);
   const hdr=(rows[0]||[]).map(h=>norm(String(h??"")).trim().replace(/\s+/g," "));const find=k=>hdr.findIndex(h=>h===k||h.startsWith(k));
   const ix={},missing=[];for(const k in REQ){const i=find(REQ[k]);if(i<0)missing.push(REQ[k]);ix[k]=i}for(const k in OPT)ix[k]=find(OPT[k]);if(missing.length)return{missing};
   const out=[],errs=[];const s=v=>v==null?"":String(v).trim();const num=v=>{if(v==null||v==="")return null;const f=typeof v==="number"?v:+String(v).replace(",",".");return isFinite(f)?f:null};
@@ -3967,6 +3998,9 @@ function toModelRows(rows){
     out.push({d:Math.round((Date.UTC(y,m-1,d)-BASE)/DAY),cat:s(row[ix.cat]),reg:s(row[ix.reg]),prov:s(row[ix.prov]),com:s(row[ix.com]),cal:s(row[ix.cal]),grp:g,code,esp:s(row[ix.esp]),q:Math.round(q*1000),x:(v=>v==null?-1:Math.round(v*1000))(num(row[ix.x])),rpa,name:nm,sex:s(row[ix.sex]),comp:s(row[ix.comp]),org:ix.org>=0?s(row[ix.org]):"",lat:ix.lat>=0?num(row[ix.lat]):null,lon:ix.lon>=0?num(row[ix.lon]):null})}
   return{out,errs};
 }
+/* Filas del modelo en el formato de carga (para rearmar la base manteniendo parte de los datos) */
+function modelRows(m,keep){const c=m.cols,out=[];for(let i=0;i<c.d.length;i++){const P=m.P[c.p[i]],C=m.C[c.c[i]],E=m.E[c.e[i]];
+    const r={d:c.d[i],cat:m.cats[c.k[i]],reg:C[3],prov:C[2],com:C[1],cal:C[0],grp:E[2],code:E[0],esp:E[1],q:c.q[i],x:c.x[i],rpa:P[0],name:P[1],sex:m.sexes[P[2]]??"",comp:C[4]??"",org:m.orgs[P[3]]??"",lat:C[5]??null,lon:C[6]??null};if(!keep||keep(r))out.push(r)}return out}
 function emptyModel(){return{meta:{},P:[],C:[],E:[],cats:[],sexes:[],orgs:[""],cols:{d:[],p:[],c:[],e:[],k:[],q:[],x:[]}}}
 const rowKey=(d,rpa,cal,com,code,q,cat)=>d+"|"+rpa+"|"+cal+"|"+com+"|"+code+"|"+q+"|"+cat;
 function mergeRows(m,rows,all){
@@ -3993,15 +4027,20 @@ async function handleFile(file){
     if(res.missing){say("Faltan columnas obligatorias: "+res.missing.join(", ")+". Revisa que la primera fila tenga los mismos encabezados que el archivo original.","e");return}
     const {out,errs}=res;if(!out.length){say("No se encontraron filas válidas en el archivo.","e");return}
     const probe=JSON.parse(JSON.stringify(S.full));const {added,dup}=mergeRows(probe,out,false);let mn=Infinity,mx=-Infinity;out.forEach(r=>{if(r.d<mn)mn=r.d;if(r.d>mx)mx=r.d});
-    PENDING={file:file.name,rows:out,added};st.innerHTML="";
+    const cats=[...new Set(out.map(r=>r.cat))],keep=S.full?S.full.cols.k.filter(k=>!cats.includes(S.full.cats[k])).length:0;
+    PENDING={file:file.name,rows:out,added,cats,keep};st.innerHTML="";$("#modeCatsN").textContent=`${cats.join(", ")}; se mantienen ${t0(keep)} filas de otras categorías`;$("#modeCatsL").hidden=!S.full||!keep;
+    if(keep&&isEstFormat(rows)){const r=document.querySelector("input[name=mode][value=cats]");if(r)r.checked=true}
     $("#prevStats").innerHTML=[[t0(out.length),"filas válidas"],[dstr(mn)+" – "+dstr(mx),"rango de fechas"],[t0(added),"filas nuevas"],[t0(dup),"ya existían"],[t0(errs.length),"filas con error"],[t0(RV0(out)),"avisos de calidad"]].map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join("");
     const RV=reviewRows(out);$("#prevMsgs").innerHTML=(RV.length?`<div class="rvh">Revisión de calidad: ${RV.length} aviso${RV.length>1?"s":""} (no impiden la carga)</div>`+RV.map(([c,t])=>`<div class="${c}">${esc(t)}</div>`).join(""):`<div class="ok">Revisión de calidad: sin observaciones.</div>`)+(warn?`<div class="w">${esc(warn)}</div>`:"")+errs.slice(0,50).map(e=>`<div class="e">${esc(e)}</div>`).join("")+(errs.length>50?`<div class="e">… y ${errs.length-50} errores más</div>`:"")+(!errs.length&&!warn?`<div class="ok">El archivo se leyó sin errores.</div>`:"");
     $("#upPrev").hidden=false;$("#upOk").disabled=false}catch(e){say(e.message||"No se pudo leer el archivo.","e")}
 }
 $("#upOk").onclick=async()=>{if(!PENDING)return;const mode=document.querySelector("input[name=mode]:checked").value;const b=$("#upOk");b.disabled=true;b.textContent="Guardando…";
-  try{const m=mode==="replace"?emptyModel():JSON.parse(JSON.stringify(S.full));const {added}=mergeRows(m,PENDING.rows,mode==="replace");m.meta={archivo:PENDING.file,filas:m.cols.d.length};
-    await saveData(m,PENDING.file,added,mode==="replace"?"reemplazo":"agregar");up.hidden=true;await loadData();
-    ST.log("Carga de datos",PENDING.file+" · "+(mode==="replace"?"reemplazo":"agregar")+" · "+t0(added)+" filas nuevas");toast(mode==="replace"?`Datos reemplazados: ${t0(m.cols.d.length)} registros.`:`Se agregaron ${t0(added)} filas nuevas.`)}
+  try{let m,added;const ML={replace:"reemplazo",add:"agregar",cats:"reemplazo de categoría"}[mode];
+    if(mode==="cats"){m=emptyModel();mergeRows(m,modelRows(S.full,r=>!PENDING.cats.includes(r.cat)),true);added=mergeRows(m,PENDING.rows,true).added}
+    else{m=mode==="replace"?emptyModel():JSON.parse(JSON.stringify(S.full));added=mergeRows(m,PENDING.rows,mode==="replace").added}
+    m.meta={archivo:PENDING.file,filas:m.cols.d.length};
+    await saveData(m,PENDING.file,added,ML);up.hidden=true;await loadData();
+    ST.log("Carga de datos",PENDING.file+" · "+ML+" · "+t0(added)+" filas nuevas");toast(mode==="replace"?`Datos reemplazados: ${t0(m.cols.d.length)} registros.`:mode==="cats"?`Categoría reemplazada: ${t0(added)} filas del archivo y ${t0(m.cols.d.length-added)} filas de otras categorías.`:`Se agregaron ${t0(added)} filas nuevas.`)}
   catch(e){st.innerHTML=`<div class="e">${esc(e&&e.message?e.message:"No se pudo guardar. Revisa tu conexión.")}</div>`}
   b.disabled=false;b.textContent="Confirmar carga"};
 
@@ -4120,7 +4159,7 @@ document.addEventListener("click",ev=>{const b=ev.target.closest(".rm-b");if(!b)
 /*C2S*/
 /* ================= Gráficos 2.0: mejores diseños, cruces de variables y gráficos de exigencias por compañía ================= */
 (function(){
-const ZC=z=>/norte/i.test(z)?"var(--s1)":/mejillones/i.test(z)?"var(--s3)":"var(--s4)";
+const ZC=z=>{const k=Object.keys(ZLAB).find(k=>ZLAB[k]===z);return k?ZCOL[k]:/norte/i.test(z)?"var(--s1)":/mejillones/i.test(z)?"var(--s3)":"var(--s4)"};
 const CC=e=>{const n=norm(e);return n.includes("zaldivar")?"var(--s1)":n.includes("antucoya")?"var(--s2)":n.includes("centinela")?"var(--s3)":n.includes("pelambres")?"var(--s4)":"var(--s6)"};
 const RED="#d0453b",GREEN="#16794a",GRAY="#b9b6ae";
 const pc=v=>t0(v)+" %",pc1=v=>t1(v)+" %";
@@ -6757,7 +6796,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
     if(IG.cal==null||!R.m.C[IG.cal]){let b=0;st.C.forEach((o,i)=>{if(o.q12>st.C[b].q12)b=i});IG.cal=b}
     const g=bcGeo();if(g&&!IG.geoAsk&&!WEBna()){IG.geoAsk=true;Promise.resolve(g.geoLoad()).then(()=>{if(S.tab==="ficha"){igMap(true);igFicha()}}).catch(()=>{})}
     if(!IG.rcAsk&&typeof rcLoad==="function"){IG.rcAsk=true;Promise.resolve(rcLoad()).then(()=>{if(S.tab==="ficha")igFicha()}).catch(()=>{})}
-    const zones=[...new Set(R.m.C.map(c=>calZone(c)))];
+    const zones=[...new Set(R.m.C.map(c=>calZone(c)))].sort((a,b)=>ZORD.findIndex(k=>ZLAB[k]===a)-ZORD.findIndex(k=>ZLAB[k]===b));
     if(!document.getElementById("igHead")){p.innerHTML=`<div class="card ig-head" id="igHead"></div><div class="card ig-mapc" id="igMapC"></div><div id="igFicha"></div>`}
     document.getElementById("igHead").innerHTML=`<div class="tbar"><div><h2>Ficha por caleta</h2><p class="cs">Toda la información de gestión de una caleta en un solo lugar: actividad pesquera, recursos, manejo, vedas, avisos, exigencias ambientales y línea de tiempo.</p></div>
       <div class="l"><label class="ig-sel">Caleta<select id="igCal">${zones.map(z=>`<optgroup label="${esc(z)}">${R.m.C.map((c,i)=>[c,i]).filter(([c])=>calZone(c)===z).sort((a,b)=>st.C[b[1]].q12-st.C[a[1]].q12).map(([c,i])=>`<option value="${i}" ${i===IG.cal?"selected":""}>${esc(calLab(c[0]))} · ${esc(c[1])}</option>`).join("")}</optgroup>`).join("")}</select></label>
