@@ -2192,6 +2192,7 @@ kbd{font:600 .72rem/1 ui-monospace,monospace;border:1px solid currentColor;borde
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="upTitle">
     <h2 id="upTitle">Actualizar datos desde Excel</h2>
     <p class="cs" style="margin:0;color:var(--ink-2)">Sube un archivo .xlsx o .xlsm con la hoja <b>DatosPesca</b> y las mismas columnas del archivo original. Los datos nuevos quedan disponibles para todos los usuarios aprobados.</p>
+    <div id="bkBox" hidden></div>
     <label class="drop" id="drop"><span>Arrastra el archivo aquí o elige uno</span><input type="file" id="fileIn" accept=".xlsx,.xlsm"></label>
     <div id="upStatus" class="mlist"></div>
     <div id="upPrev" hidden style="display:grid;gap:12px">
@@ -8256,5 +8257,92 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
 
 /*CMPJSE*//*C2E*/</script>
 
+<style id="bkCss">#upModal .modal{grid-template-columns:minmax(0,1fr)}#upModal .modal>*{min-width:0}.bk{border:1px solid var(--line,#e2e8f0);border-radius:12px;padding:8px 12px;background:rgba(14,124,134,.04)}.bk>summary{cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:baseline}.bk-b{display:grid;gap:10px;margin-top:8px}
+.bk-t{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:var(--ink-2,#64748b)}.bk-cur,.bk-it{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border:1px solid var(--line,#e2e8f0);border-radius:10px;padding:8px 10px;background:var(--card,#fff)}
+.bk-cur>div,.bk-it>div:first-child{display:grid;gap:2px;min-width:0;flex:1 1 240px}.bk-list{display:grid;gap:6px;max-height:300px;overflow:auto}.bk-a{display:flex;flex-wrap:wrap;gap:6px}.bk-del{color:#b91c1c}.bk-warn{background:#b91c1c!important;color:#fff!important;border-color:#b91c1c!important}</style>
+<script>
+/* ================= Respaldos de la base: descargar en Excel (formato de carga) y restaurar versiones ================= */
+(()=>{
+  const BKH=["Categoria","Año","Mes","Día","Región de desembarque","Provincia","Comuna","Caleta","Grupo especie","Código especie","Nombre especie","Desembarque","Captura calculada","RPA armador","NM_ARMADOR","Sexo","Compañía área de influencia","Organización","Latitud","Longitud"];
+  const xe=v=>String(v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F￾￿]/g,"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const colL=i=>{let s="";i++;while(i>0){const r=(i-1)%26;s=String.fromCharCode(65+r)+s;i=Math.floor((i-1)/26)}return s};
+  const CL=BKH.map((_,i)=>colL(i));
+  function cell(ref,v){if(v==null||v==="")return"";if(typeof v==="number")return isFinite(v)?`<c r="${ref}"><v>${v}</v></c>`:"";return`<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${xe(v)}</t></is></c>`}
+  const row=(r,vals)=>`<row r="${r}">${vals.map((v,i)=>cell(CL[i]+r,v)).join("")}</row>`;
+  /* Filas de la hoja DatosPesca a partir del modelo (mismas columnas que lee la carga) */
+  function* bkRows(m){const c=m.cols,n=c.d.length;for(let i=0;i<n;i++){const dt=new Date(BASE+c.d[i]*DAY),P=m.P[c.p[i]]||[],C=m.C[c.c[i]]||[],E=m.E[c.e[i]]||[];let nm=P[1]||"";if(/^Sin nombre \(RPA/.test(nm))nm="-";
+      yield[m.cats[c.k[i]]??"",dt.getUTCFullYear(),dt.getUTCMonth()+1,dt.getUTCDate(),C[3]??"",C[2]??"",C[1]??"",C[0]??"",E[2]??"",E[0]??"",E[1]??"",c.q[i]/1000,c.x[i]<0?"":c.x[i]/1000,P[0]??"",nm,m.sexes[P[2]]??"",C[4]??"",m.orgs[P[3]]??"",C[5]??"",C[6]??""]}}
+  /* ---- ZIP (deflate) para el .xlsx ---- */
+  const CRCT=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+  function crc(c,u){c=c^0xFFFFFFFF;for(let i=0;i<u.length;i++)c=CRCT[(c^u[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
+  async function deflate(parts){const s=new Blob(parts).stream().pipeThrough(new CompressionStream("deflate-raw"));return new Uint8Array(await new Response(s).arrayBuffer())}
+  async function zip(files){const enc=new TextEncoder(),out=[],cen=[];let off=0;const now=new Date(),dt=((now.getFullYear()-1980)<<9)|((now.getMonth()+1)<<5)|now.getDate(),tm=(now.getHours()<<11)|(now.getMinutes()<<5)|(now.getSeconds()>>1);
+    for(const f of files){const parts=(Array.isArray(f.data)?f.data:[f.data]).map(x=>typeof x==="string"?enc.encode(x):x);let c=0,us=0;for(const p of parts){c=crc(c,p);us+=p.length}const cd=await deflate(parts),nm=enc.encode(f.name);
+      const h=new DataView(new ArrayBuffer(30));h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint16(8,8,true);h.setUint16(10,tm,true);h.setUint16(12,dt,true);h.setUint32(14,c,true);h.setUint32(18,cd.length,true);h.setUint32(22,us,true);h.setUint16(26,nm.length,true);h.setUint16(28,0,true);
+      out.push(new Uint8Array(h.buffer),nm,cd);const e=new DataView(new ArrayBuffer(46));e.setUint32(0,0x02014b50,true);e.setUint16(4,20,true);e.setUint16(6,20,true);e.setUint16(8,0x0800,true);e.setUint16(10,8,true);e.setUint16(12,tm,true);e.setUint16(14,dt,true);e.setUint32(16,c,true);e.setUint32(20,cd.length,true);e.setUint32(24,us,true);e.setUint16(28,nm.length,true);e.setUint32(42,off,true);
+      cen.push(new Uint8Array(e.buffer),nm);off+=30+nm.length+cd.length}
+    const cs=cen.reduce((a,b)=>a+b.length,0),end=new DataView(new ArrayBuffer(22));end.setUint32(0,0x06054b50,true);end.setUint16(8,files.length,true);end.setUint16(10,files.length,true);end.setUint32(12,cs,true);end.setUint32(16,off,true);
+    return new Blob([...out,...cen,new Uint8Array(end.buffer)],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"})}
+  /* Excel con la hoja DatosPesca (lista para volver a cargar) y una hoja con los datos del respaldo */
+  async function bkXlsx(m,info){const parts=[`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><sheetData>`,row(1,BKH)];let r=2,buf=[];
+    for(const v of bkRows(m)){buf.push(row(r++,v));if(buf.length>=2000){parts.push(buf.join(""));buf=[]}}if(buf.length)parts.push(buf.join(""));parts.push(`</sheetData><autoFilter ref="A1:${CL[CL.length-1]}${Math.max(1,r-1)}"/></worksheet>`);
+    const inf=[["Plataforma de Gestión Borde Costero · AAPP Norte"],["Respaldo de la base de desembarque"],[""],["Archivo cargado",info.archivo||""],["Filas",info.filas??m.cols.d.length],["Datos desde",info.desde||""],["Datos hasta",info.hasta||""],["Cargado por",info.por||info.cargadoPor||""],["Fecha de carga",info.actualizado||info.cargado?new Date(info.actualizado||info.cargado).toLocaleString("es-CL"):""],["Descargado",new Date().toLocaleString("es-CL")],[""],["Para restaurar estos datos: Actualizar datos → elegir este archivo → «Reemplazar todos los datos»."]];
+    const s2=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${inf.map((x,i)=>`<row r="${i+1}">${x.map((v,j)=>cell(colL(j)+(i+1),v)).join("")}</row>`).join("")}</sheetData></worksheet>`;
+    return zip([{name:"[Content_Types].xml",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`},
+      {name:"_rels/.rels",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`},
+      {name:"xl/workbook.xml",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="DatosPesca" sheetId="1" r:id="rId1"/><sheet name="Respaldo" sheetId="2" r:id="rId2"/></sheets>${r>2?`<definedNames><definedName name="_xlnm._FilterDatabase" localSheetId="0" hidden="1">DatosPesca!$A$1:$${CL[CL.length-1]}$${r-1}</definedName></definedNames>`:""}</workbook>`},
+      {name:"xl/_rels/workbook.xml.rels",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`},
+      {name:"xl/styles.xml",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="1"><font><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`},
+      {name:"xl/worksheets/sheet1.xml",data:parts},{name:"xl/worksheets/sheet2.xml",data:s2}])}
+
+  /* ---- Almacenamiento de respaldos: servidor (Vercel) o base de la página (artefacto) ---- */
+  const AR=()=>!!(typeof S!=="undefined"&&S.db),BKMAX=6;
+  async function arHist(){const d=await S.db.doc("datos/historial").get();return d.exists&&Array.isArray(d.data().items)?d.data().items:[]}
+  async function arModel(ver,partes){const ps=[];for(let i=0;i<(partes||0);i++){const p=await S.db.doc(`versiones/${ver}/partes/p${i}`).get();if(!p.exists)throw new Error("Esa versión está incompleta.");ps.push(p.data().d)}return decryptModel(S.key,ps.join(""))}
+  async function arDelParts(ver,partes){for(let i=0;i<(partes||4);i++){try{await S.db.doc(`versiones/${ver}/partes/p${i}`).delete()}catch(e){}}}
+  async function arSave(items,actualVer){const keep=items.slice(0,BKMAX),drop=items.slice(BKMAX);await S.db.doc("datos/historial").set({items:keep});for(const x of drop)if(x.version!==actualVer)await arDelParts(x.version,x.partes)}
+  const arLegacy=v=>v&&v.anterior?[{version:v.anterior,partes:v.anteriorPartes||4,archivo:"Versión anterior a la vigente",filas:null,desde:"",hasta:"",cargadoPor:"",cargado:null,respaldado:v.fecha||null,motivo:""}]:[];
+  const arEntry=(v,motivo)=>({version:v.version,partes:v.partes,archivo:v.archivo||"",filas:v.filas??null,desde:v.desde||"",hasta:v.hasta||"",cargadoPor:v.por||"",cargado:v.fecha||null,respaldado:new Date().toISOString(),respaldadoPor:S.acct?S.acct.usuario:"",motivo});
+  /* La llama la carga de datos del artefacto: guarda la versión que deja de estar vigente */
+  window.__bkArPush=async(pd,archivo,vid)=>{try{if(!pd||!pd.version)return;let items=await arHist();if(!items.length)items=arLegacy(pd);items.unshift(arEntry(pd,"Antes de cargar "+String(archivo||"").slice(0,80)));await arSave(items,vid)}catch(e){console.warn("respaldo",e)}};
+  const BKS={
+    async list(){if(!AR())return api("respaldos");const a=await S.db.doc("datos/actual").get(),v=a.exists?a.data():null;let items=await arHist();if(!items.length)items=arLegacy(v);
+      return{max:BKMAX,vigente:v?{archivo:v.archivo,filas:v.filas,desde:v.desde,hasta:v.hasta,por:v.por,actualizado:v.fecha}:null,items:items.map(x=>({...x,id:x.version}))}},
+    async model(id){if(!AR()){const r=await api("respaldos?id="+encodeURIComponent(id));return{m:JSON.parse(new TextDecoder().decode(await gunzip(b64d(r.gz)))),meta:r.meta||{}}}
+      if(id==="actual"){const v=(await S.db.doc("datos/actual").get()).data();return{m:await arModel(v.version,v.partes),meta:{...v,actualizado:v.fecha}}}
+      const it=(await BKS.list()).items.find(x=>x.id===id);if(!it)throw new Error("El respaldo ya no existe.");return{m:await arModel(it.version,it.partes),meta:it}},
+    async restore(id){if(!AR())return api("respaldos",{method:"POST",body:{accion:"restaurar",id}});
+      const L=await BKS.list(),it=L.items.find(x=>x.id===id);if(!it)throw new Error("El respaldo ya no existe.");const a=(await S.db.doc("datos/actual").get()).data();
+      let filas=it.filas,desde=it.desde,hasta=it.hasta;if(filas==null){const m=await arModel(it.version,it.partes);let mn=Infinity,mx=-Infinity;for(const d of m.cols.d){if(d<mn)mn=d;if(d>mx)mx=d}filas=m.cols.d.length;desde=filas?dstr(mn):"";hasta=filas?dstr(mx):""}
+      let items=L.items.filter(x=>x.version!==it.version).map(({id,...x})=>x);items.unshift(arEntry(a,"Antes de restaurar un respaldo"));const now=new Date().toISOString();
+      await S.db.doc("datos/actual").set({desde:desde||"",hasta:hasta||"",version:it.version,partes:it.partes,archivo:it.archivo||"",fecha:now,filas:filas||0,por:S.acct.usuario,anterior:null,anteriorPartes:0});
+      await arSave(items,it.version);try{await S.db.collection("cargas").doc("r"+Date.now()).set({fecha:now,por:S.acct.usuario,archivo:it.archivo||"",filas:filas||0,nuevas:0,modo:"restauración"})}catch(e){}},
+    async del(id){if(!AR())return api("respaldos",{method:"POST",body:{accion:"eliminar",id}});const L=await BKS.list(),it=L.items.find(x=>x.id===id);if(!it)return;await arDelParts(it.version,it.partes);await S.db.doc("datos/historial").set({items:L.items.filter(x=>x.id!==id).map(({id,...x})=>x)})}};
+  const bkSave=async(blob,name)=>{if(typeof saveFile==="function")return saveFile(name,blob,blob.type);dl(blob,name)};
+  const dl=(blob,name)=>{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000)};
+  const fch=v=>v?new Date(v).toLocaleString("es-CL",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}):"";
+  const fnm=v=>{const d=v?new Date(v):new Date(),p=n=>String(n).padStart(2,"0");return`${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}`};
+  async function bkDownload(id,btn){const old=btn.textContent;btn.disabled=true;btn.textContent="Preparando…";
+    try{const {m,meta}=await BKS.model(id);
+      btn.textContent="Generando Excel…";const blob=await bkXlsx(m,meta);await bkSave(blob,`Respaldo_DatosPesca_${id==="actual"?"vigente":"version"}_${fnm(id==="actual"?meta.actualizado:meta.cargado||meta.respaldado)}.xlsx`);toast("Excel listo.")}
+    catch(e){if(!(e&&(e.code==="declined"||e.code==="cancelled")))toast("No se pudo descargar: "+(e.message||"error"))}btn.disabled=false;btn.textContent=old}
+  const BK={open:true};
+  async function bkRender(){const box=$("#bkBox");if(!box)return;if(!(S.perm&&S.perm.admin)){box.hidden=true;return}box.hidden=false;
+    box.innerHTML=`<details class="bk" ${BK.open?"open":""}><summary><b>Respaldos de la base</b> <span class="cs">descarga los datos o vuelve a una versión anterior</span></summary><div class="bk-b"><p class="cs">Cargando…</p></div></details>`;
+    let r;try{r=await BKS.list()}catch(e){box.querySelector(".bk-b").innerHTML=`<p class="err">No se pudieron leer los respaldos: ${esc(e.message||"")}</p>`;return}
+    const v=r.vigente,it=r.items||[];
+    box.querySelector(".bk-b").innerHTML=`<p class="cs">Antes de cada carga, la plataforma guarda automáticamente la versión vigente (se conservan las ${r.max||6} más recientes). Puedes descargar cualquier versión en Excel —con la hoja <b>DatosPesca</b>, lista para volver a cargarla— o restaurarla directamente.</p>
+      ${v?`<div class="bk-cur"><div><span class="bk-t">Versión vigente</span><b>${esc(v.archivo||"sin nombre")}</b><span class="cs">${t0(v.filas||0)} filas · ${esc(v.desde||"")}${v.hasta?" a "+esc(v.hasta):""} · cargada${v.por?" por "+esc(v.por):""} el ${esc(fch(v.actualizado))}</span></div><button type="button" class="btn small" data-bkdl="actual">Descargar Excel</button></div>`:`<p class="cs">Aún no hay datos cargados.</p>`}
+      ${it.length?`<div class="bk-list"><span class="bk-t">Versiones anteriores</span>${it.map(x=>`<div class="bk-it"><div><b>${esc(x.archivo||"sin nombre")}</b><span class="cs">${x.filas==null?"filas por confirmar":t0(x.filas)+" filas"} · ${esc(x.desde||"")}${x.hasta?" a "+esc(x.hasta):""} · ${x.cargado?`cargada${x.cargadoPor?" por "+esc(x.cargadoPor):""} el ${esc(fch(x.cargado))}`:""}</span><span class="cs">Respaldada el ${esc(fch(x.respaldado))}${x.motivo?" · "+esc(x.motivo):""}</span></div><div class="bk-a"><button type="button" class="btn small ghost" data-bkdl="${esc(x.id)}">Descargar Excel</button><button type="button" class="btn small" data-bkres="${esc(x.id)}">Restaurar</button><button type="button" class="btn small ghost bk-del" data-bkdel="${esc(x.id)}" aria-label="Eliminar este respaldo">Eliminar</button></div></div>`).join("")}</div>`:`<p class="cs">Todavía no hay versiones anteriores: el primer respaldo se creará automáticamente en la próxima carga.</p>`}`}
+  const ask=(b,msg)=>{if(b.dataset.ok==="1")return true;const o=b.textContent;b.dataset.ok="1";b.textContent=msg;b.classList.add("bk-warn");setTimeout(()=>{if(b.isConnected){b.dataset.ok="";b.textContent=o;b.classList.remove("bk-warn")}},5000);return false};
+  document.addEventListener("click",async ev=>{const b=ev.target.closest&&ev.target.closest("[data-bkdl],[data-bkres],[data-bkdel]");if(!b)return;
+    if(b.dataset.bkdl){bkDownload(b.dataset.bkdl,b);return}
+    if(b.dataset.bkres){if(!ask(b,"¿Reemplazar la base vigente? Confirmar"))return;b.disabled=true;b.textContent="Restaurando…";try{await BKS.restore(b.dataset.bkres);toast("Versión restaurada. Recargando los datos…");if(AR()&&typeof loadData==="function"){const u=$("#upModal");if(u)u.hidden=true;await loadData()}else setTimeout(()=>location.reload(),900)}catch(e){toast("No se pudo restaurar: "+(e.message||"error"));b.disabled=false;b.textContent="Restaurar"}return}
+    if(b.dataset.bkdel){if(!ask(b,"¿Eliminar? Confirmar"))return;b.disabled=true;try{await BKS.del(b.dataset.bkdel);BK.open=true;bkRender()}catch(e){toast("No se pudo eliminar: "+(e.message||"error"));b.disabled=false}}});
+  document.addEventListener("toggle",ev=>{if(ev.target.classList&&ev.target.classList.contains("bk"))BK.open=ev.target.open},true);
+  const ub=$("#btnUpload");if(ub){const o=ub.onclick;ub.onclick=function(){if(o)o.apply(this,arguments);bkRender()}}
+  window.__bkXlsx=bkXlsx;window.__bkRender=bkRender;
+})();
+</script>
 </body>
 </html>

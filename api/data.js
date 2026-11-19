@@ -1,5 +1,6 @@
 // GET: datos para el usuario con sesión (con sus restricciones). PUT: reemplaza la base (solo administradores).
 import { handler, send, readBody, current, sb, scopeGz, zlib, logAct } from "../lib/core.js";
+import { respaldarVigente } from "./respaldos.js";
 export default handler(async (req, res) => {
   const me = await current(req);
   if (!me) return send(res, 401, { error: "Sin sesión" });
@@ -16,6 +17,7 @@ export default handler(async (req, res) => {
   try { m = JSON.parse(zlib.gunzipSync(Buffer.from(String(b.gz || ""), "base64")).toString("utf8")); } catch { return send(res, 400, { error: "El archivo enviado no es válido." }); }
   if (!m || !m.cols || !Array.isArray(m.cols.d) || !Array.isArray(m.P)) return send(res, 400, { error: "El archivo enviado no tiene el formato esperado." });
   const filas = m.cols.d.length;
+  try { await respaldarVigente(me.usuario, `Antes de cargar ${String(b.archivo || "").slice(0, 80)}`); } catch (e) { console.error("Respaldo", e); return send(res, 500, { error: "No se pudo respaldar la base vigente; la carga se canceló para no perder datos." }); }
   await sb("datos?on_conflict=id", { method: "POST", prefer: "resolution=merge-duplicates,return=minimal", body: { id: 1, gz: b.gz, archivo: String(b.archivo || "").slice(0, 200), filas, desde: String(b.desde || ""), hasta: String(b.hasta || ""), por: me.usuario, actualizado: new Date().toISOString() } });
   await sb("cargas", { method: "POST", prefer: "return=minimal", body: { por: me.usuario, archivo: String(b.archivo || "").slice(0, 200), modo: String(b.modo || ""), nuevas: Number(b.nuevas) || 0, filas } });
   await logAct(me.usuario, "Carga de datos", `${String(b.archivo || "").slice(0, 120)} · ${b.modo || ""} · ${Number(b.nuevas) || 0} filas nuevas`);
