@@ -1912,7 +1912,7 @@ kbd{font:600 .72rem/1 ui-monospace,monospace;border:1px solid currentColor;borde
     </div>
   </header>
   <nav class="tabs gut" role="tablist" id="tabs">
-    <button role="tab" data-tab="pano" aria-selected="false">Panorama</button><button role="tab" data-tab="terr" aria-selected="false">Territorios</button><button role="tab" data-tab="prio" aria-selected="false">Prioridad de inversión</button><button role="tab" data-tab="resumen" aria-selected="true">Resumen ejecutivo</button>
+    <button role="tab" data-tab="pano" aria-selected="false">Panorama</button><button role="tab" data-tab="terr" aria-selected="false">Territorios</button><button role="tab" data-tab="prio" aria-selected="false">Prioridad de inversión</button><button role="tab" data-tab="mov" aria-selected="false">Movimiento de especies</button><button role="tab" data-tab="resumen" aria-selected="true">Resumen ejecutivo</button>
     <button role="tab" data-tab="ficha" aria-selected="false">Ficha por caleta</button><button role="tab" data-tab="cmp" aria-selected="false">Comparación</button>
     <button role="tab" data-tab="pescadores" aria-selected="false">Pescadores</button>
     <button role="tab" data-tab="especies" aria-selected="false">Especies y caletas</button>
@@ -2092,7 +2092,7 @@ kbd{font:600 .72rem/1 ui-monospace,monospace;border:1px solid currentColor;borde
       <section data-pane="cmp" style="display:grid;gap:14px" hidden></section>
       <section data-pane="minutas" style="display:grid;gap:14px" hidden></section><section data-pane="borde" style="display:grid;gap:14px" hidden></section><section data-pane="mineria" style="display:grid;gap:14px" hidden></section><section data-pane="presup" style="display:grid;gap:14px" hidden></section>
 <section data-pane="cruce" style="display:grid;gap:14px" hidden></section>
-<section data-pane="calc" style="display:grid;gap:14px" hidden></section><section data-pane="pano" style="display:grid;gap:14px" hidden></section><section data-pane="terr" style="display:grid;gap:14px" hidden></section><section data-pane="prio" style="display:grid;gap:14px" hidden></section>
+<section data-pane="calc" style="display:grid;gap:14px" hidden></section><section data-pane="pano" style="display:grid;gap:14px" hidden></section><section data-pane="terr" style="display:grid;gap:14px" hidden></section><section data-pane="prio" style="display:grid;gap:14px" hidden></section><section data-pane="mov" style="display:grid;gap:14px" hidden></section>
 <section data-pane="wa" style="display:grid;gap:14px" hidden></section><section data-pane="ficha" style="display:grid;gap:14px" hidden></section>
       <section data-pane="detalle" style="display:grid;gap:14px" hidden>
         <div class="card">
@@ -6968,6 +6968,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
     {g:"act",l:"Actividad pesquera",v:[
       {id:"desemb",q:"¿Cuánto se desembarca, cuándo y cómo cambia en el año?",main:"Evolución mensual del desembarque",kp:"kDes",l:"Evolución y estacionalidad",pane:"resumen",top:el=>secT(el,"Actividad y estacionalidad"),open:true},
       {id:"especies",q:"¿Qué recursos se extraen y cómo varían?",main:"Calendario de capturas por especie",kp:"kEsp",l:"Recursos",pane:"especies",card:el=>!cardT(el,"Calendario de vedas")},
+      {id:"movesp",l:"Movimiento de especies",pane:"mov"},
       {id:"vedas",q:"¿Qué especies están en veda y cuándo comienzan las próximas?",main:"Calendario de vedas",kp:"kVed",l:"Vedas",pane:"especies",card:el=>cardT(el,"Calendario de vedas")},
       {id:"espcal",q:"¿Qué se extrae en cada caleta y comuna?",main:"Captura por caleta",kp:"kCal",l:"Especies por caleta",pane:"resumen",top:el=>secT(el,"Especies, caletas y comunas"),open:true},
       {id:"pesc",q:"¿Cuántos pescadores participan y cómo se reparte el desembarque?",main:"Concentración del desembarque",kp:"kPes",l:"Pescadores",pane:"pescadores",top:el=>el.id!=="embSec"},
@@ -8554,6 +8555,114 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
   {const _r=render;render=function(){const out=_r.apply(this,arguments);draw();return out}}
   {const _st=setTab;setTab=function(t){_st(t);if(["pano","terr","prio"].includes(t)){["#fab","#period","#aside","#chips","#ctx","#btnFilters"].forEach(s=>{const e=document.querySelector(s);if(e)e.hidden=true});const l=document.querySelector(".layout");if(l)l.style.gridTemplateColumns="minmax(0,1fr)"}draw()}}
   window.__tzStats=stats;
+})();
+
+</script>
+<style id="mvCss">
+.mv-ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-top:10px}
+.mv-ctl label{display:flex;flex-direction:column;gap:4px;font-size:12px;opacity:.9}
+.mv-ctl select{min-width:220px;max-width:100%;padding:7px 9px;border-radius:8px;border:1px solid var(--line,#d6dbe1);background:var(--surface,#fff);color:inherit;font:inherit}
+.mv-seg{display:inline-flex;border:1px solid var(--line,#d6dbe1);border-radius:8px;overflow:hidden}
+.mv-seg button{border:0;background:transparent;color:inherit;font:inherit;font-size:12.5px;padding:7px 12px;cursor:pointer}
+.mv-seg button[aria-pressed="true"]{background:#0e7490;color:#fff}
+.mv-sc{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.mv-cl{font-size:11.5px;fill:currentColor;cursor:pointer}.mv-cl:hover{text-decoration:underline}
+.mv-v{font-size:10px;font-weight:600}
+.mv-sl{font-size:12px;fill:currentColor}.mv-sl.on{font-weight:700}
+.mv-sk{cursor:pointer}.mv-sk:hover .mv-sl{text-decoration:underline}
+@media (max-width:640px){.mv-ctl select{min-width:0;width:100%}.mv-ctl label{width:100%}}
+</style>
+
+<script>
+/* ================= Movimiento de especies entre caletas ================= */
+(()=>{
+  const MV={e:null,cat:null,mode:"sh"};
+  const MESC=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  const tn=v=>v>=100?t0(v):v>=10?t1(v):t2(v);
+  const zSel=()=>{const s=S.f&&S.f.reg;if(!s||s.size!==1)return null;return(S.R.regKey||[])[[...s][0]]||null};
+  const zCol=k=>ZCOL[k]||"#94a3b8";
+  const ymL=ym=>MESC[ym%12]+"-"+(S.R.y0+Math.floor(ym/12));
+  function base(){const R=S.R,m=R.m,st=window.__tzStats&&window.__tzStats();if(!st)return null;
+    const nK=m.cats.length,rows=new Float64Array(nK),catLast=new Int32Array(nK).fill(-1);for(let i=0;i<R.n;i++){rows[R.k[i]]++;if(R.ym[i]>catLast[R.k[i]])catLast[R.k[i]]=R.ym[i]}
+    if(MV.cat==null||MV.cat>=nK){let b=0;for(let k=1;k<nK;k++)if(rows[k]>rows[b])b=k;MV.cat=b}
+    const sel=zSel(),cat=MV.cat,Y0=R.y0,L=st.L,fullY=st.fullY,nY=fullY-Y0+1,nE=m.E.length,catL=cat<0?L:Math.min(L,catLast[cat]);
+    const inC=st.C.map(o=>!sel||o.z===sel);
+    const espTot=new Float64Array(nE),cell=new Map(),last12=new Map();
+    for(let i=0;i<R.n;i++){const k=R.k[i];if(cat>=0&&k!==cat)continue;const c=R.c[i];if(!inC[c])continue;const q=R.q[i]/1000,y=R.yr[i],e=R.e[i],ym=R.ym[i];
+      if(y<nY){espTot[e]+=q;let a=cell.get(e);if(!a){a=new Map();cell.set(e,a)}let r=a.get(c);if(!r){r=new Float64Array(nY);a.set(c,r)}r[y]+=q}
+      if(ym<=catL&&catL-ym<12){const z=st.C[c].z;let a=last12.get(e);if(!a){a=new Map();last12.set(e,a)}a.set(z,(a.get(z)||0)+q)}}
+    const esp=[...espTot.keys()].filter(e=>espTot[e]>0).sort((a,b)=>espTot[b]-espTot[a]);
+    if(MV.e==null||!esp.includes(MV.e))MV.e=esp[0];
+    return{R,m,st,sel,cat,Y0,nY,fullY,catL,esp,espTot,cell,last12}}
+  /* Mapa de calor caleta × año, caletas ordenadas de norte a sur */
+  function heat(B){const{st,Y0,nY,m}=B,e=MV.e,mp=B.cell.get(e)||new Map(),Y=[...Array(nY)].map((_,j)=>Y0+j);
+    const yT=Y.map((_,j)=>{let s=0;mp.forEach(r=>s+=r[j]);return s});
+    let rows=[...mp].map(([c,r])=>({o:st.C[c],r,tot:r.reduce((a,b)=>a+b,0)})).filter(x=>x.tot>0);
+    const hidden=rows.length>40?rows.sort((a,b)=>b.tot-a.tot).splice(40).length:0;
+    rows.sort((a,b)=>{const la=isFinite(a.o.lat)&&a.o.lat?a.o.lat:-99,lb=isFinite(b.o.lat)&&b.o.lat?b.o.lat:-99;return lb-la||b.tot-a.tot});
+    const val=(x,j)=>MV.mode==="sh"?(yT[j]?x.r[j]/yT[j]*100:0):x.r[j];const mx=Math.max(1e-9,...rows.flatMap(x=>Array.from(x.r,(_,j)=>val(x,j))));
+    const Lw=190,cw=Math.max(34,Math.min(56,640/nY)),rh=20,T=24,W=Lw+cw*nY+90,H=T+rows.length*rh+30;let g="";
+    Y.forEach((y,j)=>g+=`<text x="${Lw+cw*j+cw/2}" y="${T-8}" text-anchor="middle" class="tz-ax">${y}</text>`);
+    let prevReg="";rows.forEach((x,i)=>{const yy=T+i*rh,reg=/^IV/i.test(x.o.reg)?"Coquimbo":"Antofagasta";
+      if(reg!==prevReg&&i>0)g+=`<line x1="0" x2="${W}" y1="${yy}" y2="${yy}" stroke="currentColor" stroke-opacity=".45" stroke-width="1.5"/>`;prevReg=reg;
+      g+=`<rect x="0" y="${yy+3}" width="5" height="${rh-6}" style="fill:${zCol(x.o.z)}"/><text x="10" y="${yy+rh/2+4}" class="mv-cl" data-mvcal="${x.o.i}">${esc(x.o.n)}</text>`;
+      x.r.forEach((_,j)=>{const v=val(x,j),a=v>0?.08+.92*Math.sqrt(v/mx):0;g+=`<rect x="${Lw+cw*j+1}" y="${yy+1}" width="${cw-2}" height="${rh-2}" rx="3" style="fill:${v>0?`rgba(14,116,144,${a.toFixed(3)})`:"rgba(127,127,127,.07)"}"><title>${esc(x.o.n)} · ${Y[j]}: ${tn(x.r[j])} t (${yT[j]?t1(x.r[j]/yT[j]*100):0} % del año)</title></rect>`;
+        if(v>0&&cw>=40&&(MV.mode==="sh"?v>=10:v/mx>=.25))g+=`<text x="${Lw+cw*j+cw/2}" y="${yy+rh/2+4}" text-anchor="middle" class="mv-v" style="fill:${a>.55?"#fff":"currentColor"}">${MV.mode==="sh"?t0(v):tn(v)}</text>`});
+      g+=`<text x="${Lw+cw*nY+8}" y="${yy+rh/2+4}" class="tz-ax">${tn(x.tot)} t</text>`});
+    g+=`<text x="${Lw}" y="${H-8}" class="tz-ax">Total del año: </text>`;
+    return{svg:`<div class="mv-sc"><svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:${Math.min(W,680)}px;height:auto" role="img" aria-label="Desembarque de ${esc(m.E[e][1])} por caleta y año">${g}</svg></div>`,rows,yT,Y,hidden}}
+  /* Centro del desembarque (latitud ponderada) por año */
+  function centro(B,H){const{rows,yT,Y}=H;const pts=Y.map((y,j)=>{let s=0,w=0;rows.forEach(x=>{if(isFinite(x.o.lat)&&x.o.lat&&x.r[j]>0){s+=x.o.lat*x.r[j];w+=x.r[j]}});return w>0?{y,lat:s/w,cov:yT[j]?w/yT[j]:0}:null});
+    const P=pts.filter(Boolean);if(P.length<2)return{html:"",P};
+    const pl=P.map(p=>p.lat),la1=Math.max(...pl)+.35,la0=Math.min(...pl)-.35,W=900,Hh=230,Lf=60,Rt=200,T=16,Bm=28,
+      x=j=>Lf+(W-Lf-Rt)*j/(Y.length-1),yv=la=>T+(Hh-T-Bm)*(la1-la)/Math.max(.05,la1-la0);let g="";
+    const ref=rows.filter(r=>isFinite(r.o.lat)&&r.o.lat&&r.o.lat<=la1&&r.o.lat>=la0).sort((a,b)=>b.tot-a.tot).slice(0,6).sort((a,b)=>b.o.lat-a.o.lat);let prev=-99;
+    ref.forEach(r=>{const yy=yv(r.o.lat);g+=`<line x1="${Lf}" x2="${W-Rt}" y1="${yy}" y2="${yy}" stroke="currentColor" stroke-opacity=".1"/>`;if(yy-prev>=12){g+=`<text x="${W-Rt+8}" y="${yy+4}" class="tz-ax">${esc(r.o.n)}</text>`;prev=yy}});
+    Y.forEach((yy,j)=>{if(Y.length<=16||j%2===0)g+=`<text x="${x(j)}" y="${Hh-8}" text-anchor="middle" class="tz-ax">${yy}</text>`});
+    g+=`<text x="${Lf-8}" y="${T+8}" text-anchor="end" class="tz-ax">Norte ↑</text><text x="${Lf-8}" y="${Hh-Bm}" text-anchor="end" class="tz-ax">Sur ↓</text>`;
+    g+=`<polyline points="${pts.map((p,j)=>p?`${x(j).toFixed(1)},${yv(p.lat).toFixed(1)}`:"").filter(Boolean).join(" ")}" fill="none" stroke="#c2410c" stroke-width="2.6"/>`;
+    pts.forEach((p,j)=>{if(p)g+=`<circle cx="${x(j).toFixed(1)}" cy="${yv(p.lat).toFixed(1)}" r="4" style="fill:#c2410c"><title>${p.y}: latitud media ${p.lat.toFixed(2)}°</title></circle>`});
+    return{html:`<div class="pr-ch"><svg viewBox="0 0 ${W} ${Hh}" style="width:100%;height:auto" role="img" aria-label="Centro del desembarque por año">${g}</svg></div>`,P}}
+  /* Flujo especie → zona (últimos 12 meses de la categoría) */
+  function sankey(B){const{m,last12,catL}=B;const tot=e=>{let s=0;(last12.get(e)||new Map()).forEach(v=>s+=v);return s};
+    const es=[...last12.keys()].filter(e=>tot(e)>0).sort((a,b)=>tot(b)-tot(a));if(!es.length)return"";
+    const top=es.slice(0,8),otros=es.slice(8),L=top.map(e=>({e,n:m.E[e][1],v:tot(e),z:last12.get(e)}));
+    if(otros.length){const z=new Map();otros.forEach(e=>last12.get(e).forEach((v,k)=>z.set(k,(z.get(k)||0)+v)));L.push({e:-1,n:`Otras ${otros.length} especies`,v:otros.reduce((a,e)=>a+tot(e),0),z})}
+    const ZK=ZORD.filter(k=>L.some(l=>l.z.get(k)>0)),Zv=ZK.map(k=>L.reduce((a,l)=>a+(l.z.get(k)||0),0)),G=L.reduce((a,l)=>a+l.v,0);
+    const W=900,lx=230,rx=W-330,nw=14,sc=300/G,slot=h=>Math.max(h,22)+8;
+    let yl=4;L.forEach(l=>{l.h=Math.max(2,l.v*sc);const s=slot(l.h);l.y=yl+(s-8-l.h)/2;yl+=s});let yr=4;const R=ZK.map((k,i)=>{const h=Math.max(2,Zv[i]*sc),s=slot(h),o={k,v:Zv[i],y:yr+(s-8-h)/2,h,off:0};yr+=s;return o});const H=Math.max(yl,yr)+4;
+    let g="";L.forEach(l=>{let off=0;ZK.forEach((k,i)=>{const v=l.z.get(k)||0;if(!v)return;const h=v*sc,r=R[i],y0=l.y+off,y1=r.y+r.off;off+=h;r.off+=h;const mx=(lx+nw+rx)/2;
+      g+=`<path d="M${lx+nw},${y0} C${mx},${y0} ${mx},${y1} ${rx},${y1} L${rx},${y1+h} C${mx},${y1+h} ${mx},${y0+h} ${lx+nw},${y0+h}Z" style="fill:${zCol(k)}" fill-opacity="${l.e===MV.e?.75:.35}"><title>${esc(l.n)} → ${esc(ZLAB[k])}: ${tn(v)} t (${t0(v/l.v*100)} % de la especie)</title></path>`})});
+    L.forEach(l=>g+=`<g ${l.e>=0?`data-mve="${l.e}" class="mv-sk"`:""}><rect x="${lx}" y="${l.y}" width="${nw}" height="${l.h}" style="fill:${l.e===MV.e?"#c2410c":"#475569"}"/><text x="${lx-8}" y="${l.y+l.h/2+4}" text-anchor="end" class="mv-sl${l.e===MV.e?" on":""}">${esc(l.n)} · ${tn(l.v)} t</text></g>`);
+    R.forEach(r=>g+=`<rect x="${rx}" y="${r.y}" width="${nw}" height="${r.h}" style="fill:${zCol(r.k)}"/><text x="${rx+nw+8}" y="${r.y+r.h/2+4}" class="mv-sl">${esc(ZLAB[r.k])} · ${tn(r.v)} t</text>`);
+    return`<div class="mv-sc"><svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:640px;height:auto" role="img" aria-label="Flujo de especies a zonas">${g}</svg></div><p class="cs">Período: ${ymL(catL-11)} a ${ymL(catL)}. Toca una especie para verla en el mapa de calor.</p>`}
+  function draw(){const p=document.querySelector('[data-pane="mov"]');if(!p||S.tab!=="mov"||!S.R)return;const B=base();if(!B||!B.esp.length){p.innerHTML=`<section class="card"><h2>Movimiento de especies entre caletas</h2><p class="cs">Sin datos para esta selección.</p></section>`;return}
+    const{m,esp,espTot,sel,fullY,Y0}=B,e=MV.e,en=esc(m.E[e][1]),Hm=heat(B),Ce=centro(B,Hm);
+    const lect=[];const{rows,yT,Y}=Hm;const nY=Y.length,k=Math.min(3,Math.floor(nY/2));
+    if(rows.length&&nY>=2){const top=j=>rows.reduce((a,x)=>x.r[j]>(a?a.r[j]:0)?x:a,null);const ja=yT.findIndex(v=>v>0),jb=nY-1;
+      const ta=ja>=0?top(ja):null,tb=yT[jb]>0?top(jb):null;
+      if(ta)lect.push(`En ${Y[ja]}, ${t0(ta.r[ja]/yT[ja]*100)} % de ${en} se desembarcó en ${esc(ta.o.n)}; en ${Y[jb]}${tb?`, ${t0(tb.r[jb]/yT[jb]*100)} % se desembarcó en ${esc(tb.o.n)}`:" no hubo desembarque"}.`);
+      if(k>=1){const sh=(x,a,b)=>{let s=0,t=0;for(let j=a;j<b;j++){s+=x.r[j];t+=yT[j]}return t?s/t*100:0};const d=rows.map(x=>({x,d:sh(x,nY-k,nY)-sh(x,0,k)})).sort((a,b)=>b.d-a.d);
+        const up=d.filter(o=>o.d>=2).slice(0,3),dn=d.filter(o=>o.d<=-2).reverse().slice(0,3);
+        if(up.length)lect.push(`Ganan participación (${Y[nY-k]}–${Y[nY-1]} frente a ${Y[0]}–${Y[k-1]}): ${up.map(o=>`${esc(o.x.o.n)} (+${t0(o.d)} puntos)`).join(", ")}.`);
+        if(dn.length)lect.push(`Pierden participación: ${dn.map(o=>`${esc(o.x.o.n)} (−${t0(-o.d)} puntos)`).join(", ")}.`)}
+      lect.push(`${t0(rows.length)} caletas registran desembarque de ${en} entre ${Y0} y ${fullY}${Hm.hidden?` (se muestran las 40 con más volumen)`:""}.`)}
+    const P=Ce.P;if(P&&P.length>=2){const a=P[0],b=P[P.length-1],km=(b.lat-a.lat)*111;lect.push(Math.abs(km)<10?`El centro del desembarque se mantuvo en la misma zona entre ${a.y} y ${b.y} (variación menor a 10 km).`:`El centro del desembarque se desplazó unos ${t0(Math.abs(km))} km hacia el ${km>0?"norte":"sur"} entre ${a.y} y ${b.y}.`)}
+    p.innerHTML=`<section class="card"><div class="tz-hh"><div><h2>Movimiento de especies entre caletas</h2><p class="cs">Dónde se desembarca cada especie, año a año, de norte a sur${sel?` en ${esc(ZLAB[sel])}`:""}. Sirve para ver si un recurso se concentra, se dispersa o se traslada de una caleta a otra.</p></div></div>
+      <div class="mv-ctl"><label>Especie <select id="mvEsp">${esp.slice(0,60).map(x=>`<option value="${x}" ${x===e?"selected":""}>${esc(m.E[x][1])} · ${tn(espTot[x])} t</option>`).join("")}</select></label>
+        <label>Categoría <select id="mvCat">${m.cats.map((c,i)=>`<option value="${i}" ${i===B.cat?"selected":""}>${esc(c)}</option>`).join("")}<option value="-1" ${B.cat<0?"selected":""}>Todas</option></select></label>
+        <span class="mv-seg" role="group" aria-label="Medida"><button type="button" data-mvm="sh" aria-pressed="${MV.mode==="sh"}">% del año</button><button type="button" data-mvm="t" aria-pressed="${MV.mode==="t"}">Toneladas</button></span></div></section>
+      <section class="card"><div class="tbar"><h3>${en}: desembarque por caleta y año</h3><span class="tz-leg">${MV.mode==="sh"?"Color más intenso: mayor parte del desembarque anual de la especie":"Color más intenso: más toneladas"} · caletas de norte a sur · borde: zona</span></div>${Hm.svg}
+        <div class="pr-int"><b>Lectura del gráfico</b><ul>${lect.map(x=>`<li>${x}</li>`).join("")}</ul></div></section>
+      ${Ce.html?`<section class="card"><h3>¿Hacia dónde se mueve ${en}?</h3><p class="cs">Latitud media del desembarque de cada año, ponderada por toneladas. Si la línea baja, el desembarque se concentra más al sur; si sube, más al norte. Ubicación de caletas aproximada.</p>${Ce.html}</section>`:""}
+      <section class="card"><h3>De qué zonas sale cada especie (últimos 12 meses)</h3>${sankey(B)}</section>`}
+  document.addEventListener("change",ev=>{if(ev.target.id==="mvEsp"){MV.e=+ev.target.value;draw()}else if(ev.target.id==="mvCat"){MV.cat=+ev.target.value;MV.e=null;draw()}});
+  document.addEventListener("click",ev=>{const t=ev.target.closest&&ev.target.closest("[data-mvm],[data-mve],[data-mvcal]");if(!t||!S.R)return;
+    if(t.dataset.mvm){MV.mode=t.dataset.mvm;draw();return}
+    if(t.dataset.mve!=null){MV.e=+t.dataset.mve;draw();document.querySelector('[data-pane="mov"]').scrollIntoView({behavior:"smooth"});return}
+    if(t.dataset.mvcal!=null){const i=+t.dataset.mvcal;goView("ficha");let n=0;const tr=()=>{const s=document.getElementById("igCal");if(s){s.value=String(i);s.dispatchEvent(new Event("change",{bubbles:true}));return}if(++n<30)setTimeout(tr,150)};setTimeout(tr,100)}});
+  {const _r=render;render=function(){const out=_r.apply(this,arguments);try{if(S.tab==="mov")draw()}catch(e){console.error(e)}return out}}
+  {const _st=setTab;setTab=function(t){_st(t);if(t==="mov"){["#fab","#period","#aside","#chips","#ctx","#btnFilters"].forEach(s=>{const e=document.querySelector(s);if(e)e.hidden=true});const l=document.querySelector(".layout");if(l)l.style.gridTemplateColumns="minmax(0,1fr)";try{draw()}catch(e){console.error(e)}}}}
 })();
 
 </script>
