@@ -8615,8 +8615,8 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
     let prevReg="";rows.forEach((x,i)=>{const yy=T+i*rh,reg=/^IV/i.test(x.o.reg)?"Coquimbo":"Antofagasta";
       if(reg!==prevReg&&i>0)g+=`<line x1="0" x2="${W}" y1="${yy}" y2="${yy}" stroke="currentColor" stroke-opacity=".45" stroke-width="1.5"/>`;prevReg=reg;
       g+=`<rect x="0" y="${yy+3}" width="5" height="${rh-6}" style="fill:${zCol(x.o.z)}"/><text x="10" y="${yy+rh/2+4}" class="mv-cl" data-mvcal="${x.o.i}">${esc(x.o.n)}</text>`;
-      x.r.forEach((_,j)=>{const v=val(x,j),a=v>0?.08+.92*Math.sqrt(v/mx):0;g+=`<rect x="${Lw+cw*j+1}" y="${yy+1}" width="${cw-2}" height="${rh-2}" rx="3" style="fill:${v>0?`rgba(14,116,144,${a.toFixed(3)})`:"rgba(127,127,127,.07)"}"><title>${esc(x.o.n)} · ${Y[j]}: ${tn(x.r[j])} t (${yT[j]?t1(x.r[j]/yT[j]*100):0} % del año)</title></rect>`;
-        if(v>0&&cw>=40&&(MV.mode==="sh"?v>=10:v/mx>=.25))g+=`<text x="${Lw+cw*j+cw/2}" y="${yy+rh/2+4}" text-anchor="middle" class="mv-v" style="fill:${a>.55?"#fff":"currentColor"}">${MV.mode==="sh"?t0(v):tn(v)}</text>`});
+      x.r.forEach((_,j)=>{const v=val(x,j),a=v>0?.16+.84*Math.sqrt(v/mx):0;g+=`<rect x="${Lw+cw*j+1}" y="${yy+1}" width="${cw-2}" height="${rh-2}" rx="3" style="fill:${v>0?`rgba(14,116,144,${a.toFixed(3)})`:"rgba(127,127,127,.07)"}"><title>${esc(x.o.n)} · ${Y[j]}: ${tn(x.r[j])} t (${yT[j]?t1(x.r[j]/yT[j]*100):0} % del año)</title></rect>`;
+        if(v>0&&cw>=30)g+=`<text x="${Lw+cw*j+cw/2}" y="${yy+rh/2+4}" text-anchor="middle" class="mv-v" style="fill:${a>.55?"#fff":"currentColor"}">${MV.mode==="sh"?(v<1?t1(v):t0(v))+"%":tn(v)}</text>`});
       g+=`<text x="${Lw+cw*nY+8}" y="${yy+rh/2+4}" class="tz-ax">${tn(x.tot)} t</text>`});
     {const ok=yT.map((v,j)=>[v,j]).filter(a=>a[0]>0),jM=ok.length?ok.reduce((a,b)=>b[0]>a[0]?b:a)[1]:-1,jN=ok.length>1?ok.reduce((a,b)=>b[0]<a[0]?b:a)[1]:-1,yb=T+rows.length*rh+18;
       g+=`<text x="${Lw-8}" y="${yb}" text-anchor="end" class="tz-ax" style="font-weight:600">Total del año (t)</text>`;
