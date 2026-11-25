@@ -2915,9 +2915,9 @@ function heat(A){
     for(let m=0;m<12;m++){const i=y*12+m,v=val(i),k=mx?v/mx:0,out=i<R.firstYM||i>R.lastYM;const g=E("g",{},svg);const nf=A.ymFis[i]?A.ymFis[i].size:0;
       E("rect",{x:L+m*cw+1.5,y:T+y*ch+1.5,width:cw-3,height:ch-3,rx:4,fill:v>0?"var(--s1)":"var(--track)","fill-opacity":v>0?(.1+.9*k).toFixed(2):1},g);
       E("text",{x:L+m*cw+cw/2,y:T+y*ch+ch/2+4,"text-anchor":"middle",style:`font-size:11px;font-weight:600;fill:${k>.5?"#fff":"var(--ink-2)"}`},g).textContent=out||cw<38?"":v>0?(pm?tt(v):t0(v)):"–";
-      if(!out&&v>0){if(!heat.mx||v>heat.mx.v)heat.mx={v,x:L+m*cw,y:T+y*ch,l:MESL[m]+" "+(R.y0+y)};if(!heat.mn||v<heat.mn.v)heat.mn={v,x:L+m*cw,y:T+y*ch,l:MESL[m]+" "+(R.y0+y)}}
+      {const rv=pkNum((pm?tt:t0)(v));if(!out&&rv>0){if(!heat.mx||rv>heat.mx.v)heat.mx={v:rv,x:L+m*cw,y:T+y*ch};if(!heat.mn||rv<heat.mn.v)heat.mn={v:rv,x:L+m*cw,y:T+y*ch}}}
       if(!out)hover(g,()=>`<b>${MESL[m]} ${R.y0+y}</b><br>${t1(A.ym[i])} t en total<br>${nf} pescadores · ${tt(nf?A.ym[i]/nf:0)} t por pescador`,v>0?add=>{const fy=S.f.yr,fm=S.f.mo,same=fy.size===1&&fy.has(y)&&fm.size===1&&fm.has(m);if(!add){fy.clear();fm.clear()}if(!same||add){fy.add(y);fm.add(m)}S.page=0;render()}:null)}}
-  [[heat.mx,"#16794a","▲"],[heat.mn,"#c2410c","▼"]].forEach(([c,col,ic],j)=>{if(!c||(j===1&&heat.mx&&c.v===heat.mx.v))return;E("rect",{x:c.x+1,y:c.y+1,width:cw-2,height:ch-2,rx:5,fill:"none",stroke:col,"stroke-width":3,"pointer-events":"none"},svg);const t=E("text",{x:c.x+cw-4,y:c.y+10,"text-anchor":"end",class:"pk-t",style:`fill:${col};font-size:10px`,"pointer-events":"none"},svg);t.textContent=ic});
+  if(heat.mx&&heat.mn&&heat.mx.v>heat.mn.v)[[heat.mx,"#15803d","▲"],[heat.mn,"#d97706","▼"]].forEach(([c,col,ic],j)=>{E("rect",{x:c.x+1,y:c.y+1,width:cw-2,height:ch-2,rx:5,fill:"none",stroke:col,"stroke-width":3,"stroke-dasharray":j?"5 3":"none","pointer-events":"none"},svg);const t=E("text",{x:c.x+cw-4,y:c.y+10,"text-anchor":"end",class:"pk-t",style:`fill:${col};font-size:10px`,"pointer-events":"none"},svg);t.textContent=ic});
 }
 /* ---------- Pescadores ---------- */
 function pareto(A){
@@ -4358,9 +4358,9 @@ renderProj=function(){const D=projData(),box=$("#proj");if(!D.length){box.innerH
 function calEsp(A){const R=S.R,m=R.m,X=CUR.X,mc=moCount(),el=$("#calEsp");const top=m.E.map((e,i)=>({i,v:A.esp[i]})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v).slice(0,15);
   if(!top.length){el.innerHTML=`<div class="empty">Sin datos con estos filtros</div>`;setC("cCalEspC","");return}const common=ST2.get("ceV","fila")==="comun";
   const rows=top.map(t=>({...t,a:Array.from(X.espMo[t.i],(v,mo)=>mc[mo]?v/mc[mo]:0)}));const gmx=Math.max(...rows.flatMap(r=>r.a))||1;const zone=S.f.reg.size===1?R.regRaw[[...S.f.reg][0]]:undefined;
-  el.innerHTML=`<table class="cesp"><thead><tr><th>Especie</th>${MES.map((x,mo)=>`<th class="${mc[mo]?"":"na"}">${x}</th>`).join("")}<th class="r">Prom. mensual</th></tr></thead><tbody>${rows.map(r=>{const mx=common?gmx:Math.max(...r.a)||1,pk=r.a.indexOf(Math.max(...r.a)),mn=(()=>{let b=-1,c=0;r.a.forEach((v,mo)=>{if(v>0){c++;if(b<0||v<r.a[b])b=mo}});return c>=2&&b!==pk?b:-1})(),code=m.E[r.i][0],col=R.grpColor[R.grps.indexOf(m.E[r.i][2])];const nM=mc.filter(Boolean).length;
+  el.innerHTML=`<table class="cesp"><thead><tr><th>Especie</th>${MES.map((x,mo)=>`<th class="${mc[mo]?"":"na"}">${x}</th>`).join("")}<th class="r">Prom. mensual</th></tr></thead><tbody>${rows.map(r=>{const mx=common?gmx:Math.max(...r.a)||1,[pk,mn]=pkIdx(r.a,tt),code=m.E[r.i][0],col=R.grpColor[R.grps.indexOf(m.E[r.i][2])];const nM=mc.filter(Boolean).length;
     return`<tr><td><button type="button" class="lnk ce-e" data-e="${r.i}" title="Filtrar ${esc(m.E[r.i][1])}"><i style="background:${col}"></i>${esc(m.E[r.i][1])}</button></td>${r.a.map((v,mo)=>{const vd=CFG.vedas.length?vedaOf(code,mo,zone):null,k=v/mx;
-      return`<td class="${vd?"vd":""}${mo===pk&&v>0?" pk":""}${mo===mn?" mn":""}" title="${esc(MESL[mo])}: ${tt(v)} t promedio${vd?" · veda":""}${mo===pk&&v>0?" · mes más alto":""}${mo===mn?" · mes más bajo con captura":""}" style="${v>0?`background:rgba(42,120,214,${(.07+.88*Math.sqrt(k)).toFixed(2)});color:${Math.sqrt(k)>.6?"#fff":"inherit"}`:""}">${v>0?tt(v):"·"}</td>`}).join("")}<td class="r"><b>${tt(nM?r.a.reduce((s,v)=>s+v,0)/nM:0)}</b></td></tr>`}).join("")}</tbody></table><p class="cs pk-leg"><span class="pk-b mx">▲</span> mes más alto · <span class="pk-b mn">▼</span> mes más bajo con captura, en cada especie</p>`;
+      return`<td class="${vd?"vd":""}${mo===pk?" pk":""}${mo===mn?" mn":""}" title="${esc(MESL[mo])}: ${tt(v)} t promedio${vd?" · veda":""}${mo===pk?" · mes más alto":""}${mo===mn?" · mes más bajo con captura":""}" style="${v>0?`background:rgba(42,120,214,${(.07+.88*Math.sqrt(k)).toFixed(2)});color:${Math.sqrt(k)>.6?"#fff":"inherit"}`:""}">${v>0?tt(v):"·"}</td>`}).join("")}<td class="r"><b>${tt(nM?r.a.reduce((s,v)=>s+v,0)/nM:0)}</b></td></tr>`}).join("")}</tbody></table><p class="cs pk-leg"><span class="pk-b mx">▲</span> mes más alto · <span class="pk-b mn">▼</span> mes más bajo con captura, en cada especie</p>`;
   el.querySelectorAll(".ce-e").forEach(b=>b.onclick=ev=>toggle("esp",+b.dataset.e,ev.ctrlKey||ev.metaKey));
   const r0=rows[0],pk=r0.a.indexOf(Math.max(...r0.a));let lowV=0;rows.forEach(r=>{const code=m.E[r.i][0];r.a.forEach((v,mo)=>{if(v>0&&CFG.vedas.length&&vedaOf(code,mo,zone))lowV++})});
   setC("cCalEspC",`<b>${esc(m.E[r0.i][1])}</b>, la especie principal, alcanza su máximo en <b>${MESL[pk]}</b>`+(CFG.vedas.length?(lowV?` · ${lowV} celdas con desembarque en meses de veda (revisar)`:" · sin desembarques en meses de veda"):""))}
@@ -8515,9 +8515,9 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
     ser.forEach(s=>{if(sel&&s.k!==sel)return;g+=pkStr(s.v.map((v,i)=>({x:x(i),y:y(v),v,lab:String(Y[i])})),{L,R:W-Rr,T,B:H-B,nolab:!sel,r:6,unit:" t",fmt:tn})});
     lastY.forEach(o=>g+=`<text x="${W-Rr+8}" y="${o.ly+4}" class="tz-ll" style="fill:${zCol(o.s.k)}">${esc(ZLAB[o.s.k])}</text>`);
     const lect=ser.map(s=>{const a=s.v[0],b=s.v[s.v.length-1];return{s,a,b,ch:a>0?(b/a-1)*100:null}}).filter(o=>o.b>0).sort((a,b)=>b.b-a.b);
-    return`<p class="cs pk-leg"><span style="color:#16794a">◯ año más alto</span> · <span style="color:#c2410c">◯ año más bajo</span> de cada zona${sel?"":" (elige una zona arriba para ver las cifras)"}</p><div class="pr-ch"><svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img" aria-label="Desembarque anual por zona">${g}</svg></div><div class="pr-int"><b>Lectura del gráfico</b><ul>${lect.slice(0,4).map(o=>`<li>${esc(ZLAB[o.s.k])}: ${tn(o.b)} t en ${st.fullY}${o.ch!=null?`, ${vp(o.ch)} frente a ${Y[0]}`:""}.</li>`).join("")}</ul></div>`}
+    return`<p class="cs pk-leg"><span style="color:#16794a">◯ año más alto</span> · <span style="color:#d97706">◯ año más bajo</span> de cada zona${sel?"":" (elige una zona arriba para ver las cifras)"}</p><div class="pr-ch"><svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img" aria-label="Desembarque anual por zona">${g}</svg></div><div class="pr-int"><b>Lectura del gráfico</b><ul>${lect.slice(0,4).map(o=>`<li>${esc(ZLAB[o.s.k])}: ${tn(o.b)} t en ${st.fullY}${o.ch!=null?`, ${vp(o.ch)} frente a ${Y[0]}`:""}.</li>`).join("")}</ul></div>`}
   /* Mini gráfico de 5 años */
-  const spark=(v,col)=>{const mx=Math.max(...v,1),W=90,H=26,px=i=>(i*(W-4)/(v.length-1)+2).toFixed(1),py=x=>(H-3-(H-6)*x/mx).toFixed(1),iM=v.indexOf(Math.max(...v)),iN=v.indexOf(Math.min(...v));return`<svg viewBox="0 0 ${W} ${H}" class="tz-sp" aria-hidden="true"><polyline points="${v.map((x,i)=>`${px(i)},${py(x)}`).join(" ")}" fill="none" style="stroke:${col}" stroke-width="2"/>${iM!==iN&&Math.max(...v)>0?`<circle cx="${px(iM)}" cy="${py(v[iM])}" r="3" style="fill:#16794a"/><circle cx="${px(iN)}" cy="${py(v[iN])}" r="3" style="fill:#c2410c"/>`:""}</svg>`};
+  const spark=(v,col)=>{const mx=Math.max(...v,1),W=90,H=26,px=i=>(i*(W-4)/(v.length-1)+2).toFixed(1),py=x=>(H-3-(H-6)*x/mx).toFixed(1),iM=v.indexOf(Math.max(...v)),iN=v.indexOf(Math.min(...v));return`<svg viewBox="0 0 ${W} ${H}" class="tz-sp" aria-hidden="true"><polyline points="${v.map((x,i)=>`${px(i)},${py(x)}`).join(" ")}" fill="none" style="stroke:${col}" stroke-width="2"/>${iM!==iN&&Math.max(...v)>0&&pkNum(t0(Math.max(...v)))!==pkNum(t0(Math.min(...v)))?`<circle cx="${px(iM)}" cy="${py(v[iM])}" r="3" style="fill:#16794a"/><circle cx="${px(iN)}" cy="${py(v[iN])}" r="3" style="fill:#d97706"/>`:""}</svg>`};
   /* ---- TERRITORIOS ---- */
   function terr(){const p=document.querySelector('[data-pane="terr"]');if(!p||S.tab!=="terr"||!S.R)return;const st=stats(),sel=zSel(),ks=zKeys();
     if(!sel){p.innerHTML=`<section class="card"><h2>Zonas y caletas</h2><p class="cs">Elige una zona arriba (o aquí) para ver el ranking de sus caletas.</p>${caveat(st)}<div class="tz-zc">${ks.map((k,j)=>{const z=st.Z.get(k);return`<button type="button" class="tz-zcard" data-zgo="${j}" style="--zc:${zCol(k)}"><span class="tz-zn">${esc(ZLAB[k])}</span><b>${tn(z.t12)} t</b><span class="tz-v ${vcls(z.var)}">${vp(z.var)}</span><span class="tz-row">${t0(z.calAct)} caletas activas · ${t0(z.np)} pescadores</span></button>`}).join("")}</div></section>`;return}
@@ -8620,7 +8620,7 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
       g+=`<text x="${Lw+cw*nY+8}" y="${yy+rh/2+4}" class="tz-ax">${tn(x.tot)} t</text>`});
     {const ok=yT.map((v,j)=>[v,j]).filter(a=>a[0]>0),jM=ok.length?ok.reduce((a,b)=>b[0]>a[0]?b:a)[1]:-1,jN=ok.length>1?ok.reduce((a,b)=>b[0]<a[0]?b:a)[1]:-1,yb=T+rows.length*rh+18;
       g+=`<text x="${Lw-8}" y="${yb}" text-anchor="end" class="tz-ax" style="font-weight:600">Total del año (t)</text>`;
-      yT.forEach((v,j)=>{const c=j===jM?"#16794a":j===jN?"#c2410c":"";g+=`<text x="${Lw+cw*j+cw/2}" y="${yb}" text-anchor="middle" class="tz-ax" style="${c?`fill:${c};font-weight:700;opacity:1`:""}">${j===jM?"▲":j===jN?"▼":""}${v>=1000?t1(v/1000)+"k":t0(v)}</text>`})}
+      yT.forEach((v,j)=>{const fm=x=>x>=1000?t1(x/1000)+"k":t0(x),c=jM>=0&&jN>=0&&jM!==jN&&fm(yT[jM])!==fm(yT[jN])?(j===jM?"#15803d":j===jN?"#d97706":""):"";g+=`<text x="${Lw+cw*j+cw/2}" y="${yb}" text-anchor="middle" class="tz-ax" style="${c?`fill:${c};font-weight:700;opacity:1`:""}">${c?(j===jM?"▲":"▼"):""}${v>=1000?t1(v/1000)+"k":t0(v)}</text>`})}
     return{svg:`<div class="mv-sc"><svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:${Math.min(W,680)}px;height:auto" role="img" aria-label="Desembarque de ${esc(m.E[e][1])} por caleta y año">${g}</svg></div>`,rows,yT,Y,hidden}}
   /* Centro del desembarque (latitud ponderada) por año */
   function centro(B,H){const{rows,yT,Y}=H;const pts=Y.map((y,j)=>{let s=0,w=0;rows.forEach(x=>{if(isFinite(x.o.lat)&&x.o.lat&&x.r[j]>0){s+=x.o.lat*x.r[j];w+=x.r[j]}});return w>0?{y,lat:s/w,cov:yT[j]?w/yT[j]:0}:null});
@@ -8682,26 +8682,31 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
 .pk-t{font-size:11px!important;font-weight:700;paint-order:stroke;stroke:var(--surface,#fff);stroke-width:3px;stroke-linejoin:round}
 .pk-r{opacity:.95}
 .cesp td{position:relative}
-.cesp td.pk{box-shadow:inset 0 0 0 3px #16794a!important;font-weight:800}
-.cesp td.mn{box-shadow:inset 0 0 0 3px #c2410c!important;font-weight:800}
+.cesp td.pk{box-shadow:inset 0 0 0 3px #15803d!important;font-weight:800}
+.cesp td.mn{box-shadow:none!important;outline:3px dashed #d97706!important;outline-offset:-3px;font-weight:800}
 .cesp td.pk::after,.cesp td.mn::after{position:absolute;top:-6px;right:-3px;font-size:9px;line-height:1;padding:2px 3px;border-radius:4px;color:#fff;z-index:1}
-.cesp td.pk::after{content:"▲";background:#16794a}
-.cesp td.mn::after{content:"▼";background:#c2410c}
-.pk-b{display:inline-block;font-size:9px;line-height:1;padding:2px 3px;border-radius:4px;color:#fff}.pk-b.mx{background:#16794a}.pk-b.mn{background:#c2410c}
+.cesp td.pk::after{content:"▲";background:#15803d}
+.cesp td.mn::after{content:"▼";background:#d97706}
+.pk-b{display:inline-block;font-size:9px;line-height:1;padding:2px 3px;border-radius:4px;color:#fff}.pk-b.mx{background:#15803d}.pk-b.mn{background:#d97706}
 .pk-leg{margin-top:6px}
 </style>
 
 <script>
 /* ===== Destacar máximo y mínimo en los gráficos ===== */
+/* Valor tal como se muestra (redondeado): «1.234,5» → 1234.5 */
+function pkNum(t){const n=+String(t).replace(/[^\d,.-]/g,"").replace(/\./g,"").replace(",",".");return isFinite(n)?n:0}
+/* Índices del máximo y mínimo según el valor mostrado; sin marca si es 0 o si todos los meses se ven iguales */
+function pkIdx(a,fmt){const rv=Array.from(a,v=>v>0?pkNum(fmt(v)):0),ok=rv.map((v,i)=>[v,i]).filter(x=>x[0]>0);if(!ok.length)return[-1,-1];
+  const mx=ok.reduce((a,b)=>b[0]>a[0]?b:a),mn=ok.reduce((a,b)=>b[0]<a[0]?b:a);if(ok.length>1&&mx[0]===mn[0])return[-1,-1];return[mx[1],ok.length>1?mn[1]:-1]}
 function pkStr(pts,o){o=o||{};const fmt=o.fmt||(v=>t0(v)),u=o.unit==null?" t":o.unit,L=o.L||0,R=o.R||9999,T=o.T||0,B=o.B||9999,skip=o.skip||new Set();
-  const ok=pts.map((p,k)=>({...p,k})).filter(p=>p&&p.v!=null&&isFinite(p.v)&&p.v>0);if(ok.length<2)return"";
+  const ok=pts.map((p,k)=>({...p,k})).filter(p=>p&&p.v!=null&&isFinite(p.v)&&p.v>0&&(o.names||pkNum(fmt(p.v))>0));if(ok.length<2)return"";
   const mx=ok.reduce((a,p)=>p.v>a.v?p:a),mc=ok.filter(p=>!skip.has(p.k)),mn=mc.length?mc.reduce((a,p)=>p.v<a.v?p:a):null;
   const anc=x=>x<L+80?["start",x-6]:x>R-80?["end",x+6]:["middle",x];let s="";
-  const one=(p,isMax)=>{const col=isMax?"#16794a":"#c2410c",lab=o.names?`${isMax?"▲ "+o.names[0]:"▼ "+o.names[1]}${p.lab?" · "+p.lab:""}`:`${isMax?"▲ Máx":"▼ Mín"}${o.short?"":": "+fmt(p.v)+u}${p.lab&&!o.short?" · "+p.lab:""}`,[ta,tx]=anc(p.x);
+  const one=(p,isMax)=>{const col=isMax?"#16794a":"#d97706",lab=o.names?`${isMax?"▲ "+o.names[0]:"▼ "+o.names[1]}${p.lab?" · "+p.lab:""}`:`${isMax?"▲ Máx":"▼ Mín"}${o.short?"":": "+fmt(p.v)+u}${p.lab&&!o.short?" · "+p.lab:""}`,[ta,tx]=anc(p.x);
     if(o.mode==="bar"){const ty=Math.max(10,p.y-(o.vlab?19:6));s+=`<text x="${o.short?p.x:tx}" y="${ty}" text-anchor="${o.short?"middle":ta}" class="pk-t" style="fill:${col}">${esc(lab)}</text>`}
     else{s+=`<circle cx="${p.x}" cy="${p.y}" r="${o.r||7}" fill="none" style="stroke:${col}" stroke-width="2.5" class="pk-r"/>`;if(o.nolab)return;
       let ty=isMax?p.y-12:p.y+20;if(isMax&&ty<Math.max(10,T-4))ty=p.y+22;if(!isMax&&ty>B-2)ty=p.y-12;s+=`<text x="${tx}" y="${ty}" text-anchor="${ta}" class="pk-t" style="fill:${col}">${esc(lab)}</text>`}};
-  one(mx,true);if(mn&&mn.k!==mx.k&&!o.onlyMax)one(mn,false);return`<g class="pk" pointer-events="none">${s}</g>`}
+  if(!o.names&&mn&&pkNum(fmt(mx.v))===pkNum(fmt(mn.v)))return"";one(mx,true);if(mn&&mn.k!==mx.k&&!o.onlyMax)one(mn,false);return`<g class="pk" pointer-events="none">${s}</g>`}
 function pkDom(svg,pts,o){try{if(!svg)return;const s=pkStr(pts,o);if(s)svg.insertAdjacentHTML("beforeend",s)}catch(e){console.error(e)}}
 
 </script>
