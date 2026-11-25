@@ -2832,14 +2832,14 @@ function chartMes(A){
     const hit=E("rect",{x,y:T,width:bw,height:B-T,fill:"transparent"},svg);
     hover(hit,()=>`<b>${MESL[mo]} ${R.y0+y}</b><br>${t1(t)} t en total<br>${nf} pescadores · ${tt(nf?t/nf:0)} t por pescador`,add=>{const same=fy.size===1&&fy.has(y)&&fm.size===1&&fm.has(mo);if(!add){fy.clear();fm.clear()}if(!same||add){fy.add(y);fm.add(mo)}S.page=0;render()})});
   const gid="gm"+Math.random().toString(36).slice(2,7),df=E("defs",{},svg),lg=E("linearGradient",{id:gid,x1:0,y1:0,x2:0,y2:1},df);E("stop",{offset:"0%","stop-color":"#2a78d6","stop-opacity":.30},lg);E("stop",{offset:"100%","stop-color":"#2a78d6","stop-opacity":.03},lg);
-  if(AP.length>1){const dd="M"+AP.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join("L");E("path",{d:dd+`L${AP[AP.length-1][0].toFixed(1)},${B}L${AP[0][0].toFixed(1)},${B}Z`,fill:`url(#${gid})`,"pointer-events":"none"},svg);E("path",{d:dd,fill:"none",stroke:"var(--s1)","stroke-width":2.2,"stroke-linejoin":"round","pointer-events":"none"},svg);
-    const mi=AP.reduce((b,p,i)=>p[1]<AP[b][1]?i:b,0);E("circle",{cx:AP[mi][0],cy:AP[mi][1],r:4.5,fill:"var(--s4)",stroke:"#fff","stroke-width":2,"pointer-events":"none"},svg)}
+  if(AP.length>1){const dd="M"+AP.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join("L");E("path",{d:dd+`L${AP[AP.length-1][0].toFixed(1)},${B}L${AP[0][0].toFixed(1)},${B}Z`,fill:`url(#${gid})`,"pointer-events":"none"},svg);E("path",{d:dd,fill:"none",stroke:"var(--s1)","stroke-width":2.2,"stroke-linejoin":"round","pointer-events":"none"},svg)}
   const pts=[];if(!S.f.mo.size)vals.forEach(([i],k)=>{if(k<11)return;let s=0;for(let j=k-11;j<=k;j++)s+=vals[j][1];pts.push([L+k*bw+bw/2,sc(s/12)])});
   if(pts.length>1)E("path",{d:"M"+pts.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join("L"),fill:"none",stroke:"var(--ink)","stroke-width":1.6,"stroke-dasharray":"5 4","stroke-linejoin":"round","pointer-events":"none"},svg);
   E("line",{x1:L,x2:Rr,y1:B,y2:B,stroke:"var(--line)"},svg);
+  pkDom(svg,vals.map(([i,v],k)=>({x:L+k*bw+bw/2,y:sc(v),v,lab:MESL[i%12]+" "+(R.y0+Math.floor(i/12))})),{L,R:Rr,T,B,fmt:pm?tt:t1,unit:pm?" t por pescador":" t"});
 }
 function chartAnio(A){
-  const R=S.R,svg=$("#gAnio"),W=vw("gAnio",380),H=240,L=46,Rr=W-6,T=20,B=H-24;clear(svg,W,H);const m=S.measure;
+  const R=S.R,svg=$("#gAnio"),W=vw("gAnio",380),H=250,L=46,Rr=W-6,T=34,B=H-24;clear(svg,W,H);const m=S.measure;
   $("#lAnio").innerHTML=R.grps.map((g,i)=>`<span><i style="background:${R.grpColor[i]}"></i>${esc(g)}</span>`).join("");
   const div=A.yg.map((_,y)=>m==="mes"?monthsIn(y):m==="pesc"?A.yFis[y].size:1);
   const YG=A.yg.map((arr,y)=>Array.from(arr,v=>div[y]?v/div[y]:0));
@@ -2853,6 +2853,7 @@ function chartAnio(A){
     const raw=A.yg[y].reduce((s,v)=>s+v,0);
     hover(hit,()=>`<b>${R.y0+y}${isP?" (año en curso, "+monthsIn(y)+" meses)":""}</b><br>`+R.grps.map((g,i)=>arr[i]>0?`${esc(g)}: ${tt(arr[i])} ${MEAS[m].short}`:"").filter(Boolean).join("<br>")+`<br><b>${MEAS[m].lbl}: ${tt(tots[y])} ${MEAS[m].short}</b><br>${tipAll(raw,A.yFis[y],monthsIn(y))}`,add=>toggle("yr",y,add))});
   E("line",{x1:L,x2:Rr,y1:B,y2:B,stroke:"var(--ink-2)"},svg);
+  pkDom(svg,tots.map((v,y)=>({x:L+y*bw+bw/2,y:sc(v),v})),{mode:"bar",vlab:true,short:true,skip:new Set(partial?[tots.length-1]:[])});
 }
 function hbar(svgId,items,fid,W,labW,opt={}){
   W=vw(svgId,W);labW=Math.min(labW,Math.round(W*.36));opt={...opt,maxc:Math.min(opt.maxc||40,Math.max(10,Math.floor(labW/6.2)))};
@@ -2940,12 +2941,13 @@ function hist(A){
   E("line",{x1:L,x2:Rr,y1:B,y2:B,stroke:"var(--ink-2)"},svg);
 }
 function yearBars(id,vals,unit,fmt){
-  const R=S.R,svg=$("#"+id),W=vw(id,520),H=230,L=44,Rr=W-8,T=18,B=H-26;clear(svg,W,H);const mx=niceMax(Math.max(1,...vals)),sc=v=>B-(v/mx)*(B-T);yAxis(svg,L,Rr,sc,mx,unit==="t"?t1:t0);
+  const R=S.R,svg=$("#"+id),W=vw(id,520),H=240,L=44,Rr=W-8,T=32,B=H-26;clear(svg,W,H);const mx=niceMax(Math.max(1,...vals)),sc=v=>B-(v/mx)*(B-T);yAxis(svg,L,Rr,sc,mx,unit==="t"?t1:t0);
   const bw=(Rr-L)/vals.length,partial=R.lastYM%12!==11;
   vals.forEach((v,y)=>{const x=L+y*bw+bw*.2,w=bw*.6,isP=partial&&y===vals.length-1;if(v>0)E("path",{d:rr(x,sc(v),w,B-sc(v),4),fill:"var(--s1)","fill-opacity":isP?.5:1},svg);
     if(v>0)E("text",{x:x+w/2,y:sc(v)-5,"text-anchor":"middle",class:"val"},svg).textContent=fmt(v);E("text",{x:x+w/2,y:B+16,"text-anchor":"middle"},svg).textContent=(R.y0+y)+(isP?"*":"");
     hover(E("rect",{x:L+y*bw,y:T,width:bw,height:B-T,fill:"transparent"},svg),()=>`<b>${R.y0+y}${isP?" (año en curso)":""}</b><br>${fmt(v)} ${unit}`,add=>toggle("yr",y,add))});
   E("line",{x1:L,x2:Rr,y1:B,y2:B,stroke:"var(--ink-2)"},svg);
+  pkDom(svg,vals.map((v,y)=>({x:L+y*bw+bw/2,y:sc(v),v})),{mode:"bar",vlab:true,short:true,skip:new Set(partial?[vals.length-1]:[])});
 }
 function topFis(A){const R=S.R;const it=[...A.pq].sort((a,b)=>b[1]-a[1]).slice(0,20).map(([p,v])=>({id:p,label:R.m.P[p][1],v,sub:"RPA "+R.m.P[p][0],tip:`${t1(v)} t · ${t1(A.q?v/A.q*100:0)} % del total`}));hbar("gTop",it,"p",1000,240,{maxc:34,rh:22})}
 /* ---------- Especies y caletas ---------- */
@@ -4254,6 +4256,7 @@ chartMes=function(A){const mode=ST2.get("mesV","zona"),X=CUR.X,R=S.R,[a,b]=mesWi
     let li=cur.length-1;while(li>0&&cur[li]<=0)li--;const lp=P[li];E("circle",{cx:lp[0],cy:lp[1],r:3.5,fill:col,stroke:"#fff","stroke-width":1.5,"pointer-events":"none"},svg);
     E("text",{x:Math.min(lp[0]+6,Rr+4),y:lp[1]+4,class:"val",style:"font-size:11px"},svg).textContent=t0(cur[li])+" t";
     E("line",{x1:L,x2:Rr,y1:B,y2:B,stroke:"var(--line)"},svg);
+    pkDom(svg,cur.map((v,k)=>({x:P[k][0],y:P[k][1],v,lab:MESL[(a+k)%12]+" "+(R.y0+Math.floor((a+k)/12))})),{L,R:Rr,T,B,fmt:t1});
     cur.forEach((v,k)=>{const i=a+k,y=Math.floor(i/12),mo=i%12,pv=prv[k],d=pv==null?null:dPct(v,pv);const hit=E("rect",{x:L+k*bw,y:T,width:bw,height:B-T,fill:"transparent"},svg);
       hover(hit,()=>`<b>${MESL[mo]} ${R.y0+y} · ${esc(R.regs[z])}</b><br>${t1(v)} t${pv!=null?`<br>Año anterior: ${t1(pv)} t <span class="dl ${dCls(d)}">${dTxt(d)}</span>`:""}`,add=>{const same=fy.size===1&&fy.has(y)&&fm.size===1&&fm.has(mo);if(!add){fy.clear();fm.clear()}if(!same||add){fy.add(y);fm.add(mo)}S.page=0;render()})})})};
 
@@ -5852,7 +5855,8 @@ function cgScan(){document.querySelectorAll(".card h3, .card h4, .np-viz h4").fo
     const n=years.length,x=k=>n<2?(L+Rr)/2:L+(Rr-L)*k/(n-1);years.forEach((y,k)=>{if(n>8&&k%2&&k!==n-1)return;E("text",{x:x(k),y:H-10,"text-anchor":"middle"},svg).textContent=y});
     if(base100)E("line",{x1:L,x2:Rr,y1:sc(100),y2:sc(100),stroke:"#8a8a8a","stroke-dasharray":"4 4"},svg);
     series.forEach(s=>{let d="";s.v.forEach((v,k)=>{if(v==null)return;d+=(d?"L":"M")+x(k).toFixed(1)+","+sc(v).toFixed(1)});if(d)E("path",{d,fill:"none",stroke:s.c,"stroke-width":2.6,"stroke-linejoin":"round","stroke-linecap":"round"},svg);
-      s.v.forEach((v,k)=>{if(v==null)return;const c=E("circle",{cx:x(k),cy:sc(v),r:4,fill:"#fff",stroke:s.c,"stroke-width":2},svg);hover(c,()=>`<b>${esc(s.n)} · ${years[k]}</b><br>${fmt(v)}${base100?" (índice; primer año = 100)":""}`)})})}
+      s.v.forEach((v,k)=>{if(v==null)return;const c=E("circle",{cx:x(k),cy:sc(v),r:4,fill:"#fff",stroke:s.c,"stroke-width":2},svg);hover(c,()=>`<b>${esc(s.n)} · ${years[k]}</b><br>${fmt(v)}${base100?" (índice; primer año = 100)":""}`)})});
+    series.forEach(s=>pkDom(svg,s.v.map((v,k)=>v==null?null:{x:x(k),y:sc(v),v,lab:String(years[k])}),{L,R:Rr,T,B,fmt,unit:"",nolab:series.length>2,r:8}))}
   function hbars(id,rows,fmt){const svg=document.getElementById(id);if(!svg)return;const W=vw(id,900),rh=30,L=Math.min(220,Math.max(110,W*.3)),Rr=W-70,H=rows.length*rh+14;clear(svg,W,H);
     const mx=niceMax(Math.max(...rows.map(r=>r.v),0)||1);rows.forEach((r,k)=>{const y=6+k*rh,w=Math.max(1,(r.v/mx)*(Rr-L));
       E("text",{x:L-8,y:y+rh/2+1,"text-anchor":"end"},svg).textContent=r.n.length>30?r.n.slice(0,29)+"…":r.n;
@@ -6879,10 +6883,11 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
     yms.forEach((ym,k)=>{const x=l+k*bw,h=B-sy(v[k]);s+=`<rect x="${x+1.5}" y="${sy(v[k])}" width="${Math.max(1,bw-3)}" height="${Math.max(0,h)}" rx="2" fill="var(--brand)"><title>${esc(ymTxt(ym))}: ${t1(v[k])} t${pv[k]!=null?` (un año antes: ${t1(pv[k])} t)`:""}</title></rect>`;if(ym%12===0||k===0)s+=`<text x="${x+bw/2}" y="${B+14}" text-anchor="middle">${ym%12===0?S.R.y0+Math.floor(ym/12):MES[ym%12]}</text>`});
     s+=`<polyline fill="none" stroke="var(--ink-2)" stroke-width="1.5" stroke-dasharray="4 3" points="${yms.map((_,k)=>pv[k]==null?"":`${l+k*bw+bw/2},${sy(pv[k])}`).filter(Boolean).join(" ")}"/>`;
     (marks||[]).forEach(mk=>{const k=yms.indexOf(mk.ym);if(k<0)return;const x=l+k*bw+bw/2;s+=`<g><path d="M${x-6} ${T-10} L${x+6} ${T-10} L${x} ${T-2} Z" fill="${mk.col}"/><title>${esc(mk.t)}</title></g>`});
+    s+=pkStr(yms.map((ym,k)=>({x:l+k*bw+bw/2,y:sy(v[k]),v:v[k],lab:ymTxt(ym)})),{mode:"bar",L:l,R:r,T,B,fmt:t1});
     return s+`<line x1="${l}" x2="${r}" y1="${B}" y2="${B}" stroke="var(--ink-2)"/></svg>`}
-  function anioSvg(i){const st=igStats(),o=st.C[i],R=S.R,ys=[];for(let y=0;y<=R.y1-R.y0;y++){let q=0;for(let mo=0;mo<12;mo++)q+=o.ser[y*12+mo]||0;ys.push(q)}const n=ys.length,W=Math.max(360,n*30),H=190,l=8,r=W-8,T=22,B=H-24,mx=Math.max(1,...ys),bw=(r-l)/n,kMax=ys.indexOf(Math.max(...ys)),showAll=bw>=44,stepY=bw>=24?1:2;
+  function anioSvg(i){const st=igStats(),o=st.C[i],R=S.R,ys=[];for(let y=0;y<=R.y1-R.y0;y++){let q=0;for(let mo=0;mo<12;mo++)q+=o.ser[y*12+mo]||0;ys.push(q)}const n=ys.length,W=Math.max(360,n*30),H=204,l=8,r=W-8,T=36,B=H-24,mx=Math.max(1,...ys),bw=(r-l)/n,kMax=ys.indexOf(Math.max(...ys)),partY=S.R.lastYM%12!==11,kMin=(()=>{let b=-1;ys.forEach((q,k)=>{if(q>0&&!(partY&&k===n-1)&&(b<0||q<ys[b]))b=k});return b})(),showAll=bw>=44,stepY=bw>=24?1:2;
     const fmt=q=>q>=1e4?t1(q/1e3)+" mil":t0(q);
-    return`<svg class="ig-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Desembarque por año">${ys.map((q,k)=>{const h=(B-T)*q/mx,x=l+k*bw,y=B-h,parc=R.y0+k===R.y1,lab=q>=1&&(showAll||k===kMax||k===n-2||(k===n-1&&kMax!==n-2));return`<rect x="${x+3}" y="${y}" width="${Math.max(2,bw-6)}" height="${h}" rx="3" fill="var(--brand)" ${parc?'fill-opacity=".45"':""}><title>${R.y0+k}: ${t0(q)} t${parc?" (año en curso)":""}</title></rect>${lab?`<text x="${x+bw/2}" y="${y-5}" text-anchor="middle" class="val" style="font-size:11px">${fmt(q)}</text>`:""}${(n-1-k)%stepY===0?`<text x="${x+bw/2}" y="${B+16}" text-anchor="middle" style="font-size:11px">${bw<38?"’"+String(R.y0+k).slice(2):R.y0+k}</text>`:""}`}).join("")}</svg>`}
+    return`<svg class="ig-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Desembarque por año">${ys.map((q,k)=>{const h=(B-T)*q/mx,x=l+k*bw,y=B-h,parc=R.y0+k===R.y1,lab=q>=1&&(showAll||k===kMax||k===kMin||k===n-2||(k===n-1&&kMax!==n-2));return`<rect x="${x+3}" y="${y}" width="${Math.max(2,bw-6)}" height="${h}" rx="3" fill="var(--brand)" ${parc?'fill-opacity=".45"':""}><title>${R.y0+k}: ${t0(q)} t${parc?" (año en curso)":""}</title></rect>${lab?`<text x="${x+bw/2}" y="${y-5}" text-anchor="middle" class="val" style="font-size:11px">${fmt(q)}</text>`:""}${(n-1-k)%stepY===0?`<text x="${x+bw/2}" y="${B+16}" text-anchor="middle" style="font-size:11px">${bw<38?"’"+String(R.y0+k).slice(2):R.y0+k}</text>`:""}`}).join("")}${pkStr(ys.map((q,k)=>({x:l+k*bw+bw/2,y:B-(B-T)*q/mx,v:q})),{mode:"bar",vlab:true,short:true,skip:new Set(partY?[n-1]:[])})}</svg>`}
 
   function lineaTiempo(i,man,av){const c=S.R.m.C[i],st=igStats(),o=st.C[i],L=st.L,ev=[],h=todayISO();
     (MN.avisos||[]).filter(a=>avisoAfecta(a,c)).forEach(a=>{const d=a.datos;if(d.desde)ev.push({f:d.desde,t:`${AV(d.categoria)[2]} ${d.titulo||AV(d.categoria)[1]}${d.hasta?" (hasta el "+fmtF(d.hasta)+")":""}`,k:"mar"})});
@@ -8505,11 +8510,12 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
     const lastY=ser.map(s=>({s,yv:y(s.v[s.v.length-1])})).sort((a,b)=>b.yv-a.yv);let prevY=H-B+18;lastY.forEach(o=>{o.ly=Math.min(o.yv,prevY-14);prevY=o.ly});
     ser.forEach(s=>{const dim=sel&&s.k!==sel;g+=`<polyline points="${s.v.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ")}" fill="none" style="stroke:${zCol(s.k)}" stroke-width="${dim?1.5:2.6}" opacity="${dim?.25:1}"/>`;
       s.v.forEach((v,i)=>g+=`<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="3" style="fill:${zCol(s.k)}" opacity="${dim?.25:1}"><title>${esc(ZLAB[s.k])} · ${Y[i]}: ${tn(v)} t</title></circle>`)});
+    ser.forEach(s=>{if(sel&&s.k!==sel)return;g+=pkStr(s.v.map((v,i)=>({x:x(i),y:y(v),v,lab:String(Y[i])})),{L,R:W-Rr,T,B:H-B,nolab:!sel,r:6,unit:" t",fmt:tn})});
     lastY.forEach(o=>g+=`<text x="${W-Rr+8}" y="${o.ly+4}" class="tz-ll" style="fill:${zCol(o.s.k)}">${esc(ZLAB[o.s.k])}</text>`);
     const lect=ser.map(s=>{const a=s.v[0],b=s.v[s.v.length-1];return{s,a,b,ch:a>0?(b/a-1)*100:null}}).filter(o=>o.b>0).sort((a,b)=>b.b-a.b);
-    return`<div class="pr-ch"><svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img" aria-label="Desembarque anual por zona">${g}</svg></div><div class="pr-int"><b>Lectura del gráfico</b><ul>${lect.slice(0,4).map(o=>`<li>${esc(ZLAB[o.s.k])}: ${tn(o.b)} t en ${st.fullY}${o.ch!=null?`, ${vp(o.ch)} frente a ${Y[0]}`:""}.</li>`).join("")}</ul></div>`}
+    return`<p class="cs pk-leg"><span style="color:#16794a">◯ año más alto</span> · <span style="color:#c2410c">◯ año más bajo</span> de cada zona${sel?"":" (elige una zona arriba para ver las cifras)"}</p><div class="pr-ch"><svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img" aria-label="Desembarque anual por zona">${g}</svg></div><div class="pr-int"><b>Lectura del gráfico</b><ul>${lect.slice(0,4).map(o=>`<li>${esc(ZLAB[o.s.k])}: ${tn(o.b)} t en ${st.fullY}${o.ch!=null?`, ${vp(o.ch)} frente a ${Y[0]}`:""}.</li>`).join("")}</ul></div>`}
   /* Mini gráfico de 5 años */
-  const spark=(v,col)=>{const mx=Math.max(...v,1),W=90,H=26;return`<svg viewBox="0 0 ${W} ${H}" class="tz-sp" aria-hidden="true"><polyline points="${v.map((x,i)=>`${(i*(W-4)/(v.length-1)+2).toFixed(1)},${(H-3-(H-6)*x/mx).toFixed(1)}`).join(" ")}" fill="none" style="stroke:${col}" stroke-width="2"/></svg>`};
+  const spark=(v,col)=>{const mx=Math.max(...v,1),W=90,H=26,px=i=>(i*(W-4)/(v.length-1)+2).toFixed(1),py=x=>(H-3-(H-6)*x/mx).toFixed(1),iM=v.indexOf(Math.max(...v)),iN=v.indexOf(Math.min(...v));return`<svg viewBox="0 0 ${W} ${H}" class="tz-sp" aria-hidden="true"><polyline points="${v.map((x,i)=>`${px(i)},${py(x)}`).join(" ")}" fill="none" style="stroke:${col}" stroke-width="2"/>${iM!==iN&&Math.max(...v)>0?`<circle cx="${px(iM)}" cy="${py(v[iM])}" r="3" style="fill:#16794a"/><circle cx="${px(iN)}" cy="${py(v[iN])}" r="3" style="fill:#c2410c"/>`:""}</svg>`};
   /* ---- TERRITORIOS ---- */
   function terr(){const p=document.querySelector('[data-pane="terr"]');if(!p||S.tab!=="terr"||!S.R)return;const st=stats(),sel=zSel(),ks=zKeys();
     if(!sel){p.innerHTML=`<section class="card"><h2>Zonas y caletas</h2><p class="cs">Elige una zona arriba (o aquí) para ver el ranking de sus caletas.</p>${caveat(st)}<div class="tz-zc">${ks.map((k,j)=>{const z=st.Z.get(k);return`<button type="button" class="tz-zcard" data-zgo="${j}" style="--zc:${zCol(k)}"><span class="tz-zn">${esc(ZLAB[k])}</span><b>${tn(z.t12)} t</b><span class="tz-v ${vcls(z.var)}">${vp(z.var)}</span><span class="tz-row">${t0(z.calAct)} caletas activas · ${t0(z.np)} pescadores</span></button>`}).join("")}</div></section>`;return}
@@ -8610,7 +8616,9 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
       x.r.forEach((_,j)=>{const v=val(x,j),a=v>0?.08+.92*Math.sqrt(v/mx):0;g+=`<rect x="${Lw+cw*j+1}" y="${yy+1}" width="${cw-2}" height="${rh-2}" rx="3" style="fill:${v>0?`rgba(14,116,144,${a.toFixed(3)})`:"rgba(127,127,127,.07)"}"><title>${esc(x.o.n)} · ${Y[j]}: ${tn(x.r[j])} t (${yT[j]?t1(x.r[j]/yT[j]*100):0} % del año)</title></rect>`;
         if(v>0&&cw>=40&&(MV.mode==="sh"?v>=10:v/mx>=.25))g+=`<text x="${Lw+cw*j+cw/2}" y="${yy+rh/2+4}" text-anchor="middle" class="mv-v" style="fill:${a>.55?"#fff":"currentColor"}">${MV.mode==="sh"?t0(v):tn(v)}</text>`});
       g+=`<text x="${Lw+cw*nY+8}" y="${yy+rh/2+4}" class="tz-ax">${tn(x.tot)} t</text>`});
-    g+=`<text x="${Lw}" y="${H-8}" class="tz-ax">Total del año: </text>`;
+    {const ok=yT.map((v,j)=>[v,j]).filter(a=>a[0]>0),jM=ok.length?ok.reduce((a,b)=>b[0]>a[0]?b:a)[1]:-1,jN=ok.length>1?ok.reduce((a,b)=>b[0]<a[0]?b:a)[1]:-1,yb=T+rows.length*rh+18;
+      g+=`<text x="${Lw-8}" y="${yb}" text-anchor="end" class="tz-ax" style="font-weight:600">Total del año (t)</text>`;
+      yT.forEach((v,j)=>{const c=j===jM?"#16794a":j===jN?"#c2410c":"";g+=`<text x="${Lw+cw*j+cw/2}" y="${yb}" text-anchor="middle" class="tz-ax" style="${c?`fill:${c};font-weight:700;opacity:1`:""}">${j===jM?"▲":j===jN?"▼":""}${v>=1000?t1(v/1000)+"k":t0(v)}</text>`})}
     return{svg:`<div class="mv-sc"><svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:${Math.min(W,680)}px;height:auto" role="img" aria-label="Desembarque de ${esc(m.E[e][1])} por caleta y año">${g}</svg></div>`,rows,yT,Y,hidden}}
   /* Centro del desembarque (latitud ponderada) por año */
   function centro(B,H){const{rows,yT,Y}=H;const pts=Y.map((y,j)=>{let s=0,w=0;rows.forEach(x=>{if(isFinite(x.o.lat)&&x.o.lat&&x.r[j]>0){s+=x.o.lat*x.r[j];w+=x.r[j]}});return w>0?{y,lat:s/w,cov:yT[j]?w/yT[j]:0}:null});
@@ -8622,6 +8630,7 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
     Y.forEach((yy,j)=>{if(Y.length<=16||j%2===0)g+=`<text x="${x(j)}" y="${Hh-8}" text-anchor="middle" class="tz-ax">${yy}</text>`});
     g+=`<text x="${Lf-8}" y="${T+8}" text-anchor="end" class="tz-ax">Norte ↑</text><text x="${Lf-8}" y="${Hh-Bm}" text-anchor="end" class="tz-ax">Sur ↓</text>`;
     g+=`<polyline points="${pts.map((p,j)=>p?`${x(j).toFixed(1)},${yv(p.lat).toFixed(1)}`:"").filter(Boolean).join(" ")}" fill="none" stroke="#c2410c" stroke-width="2.6"/>`;
+    g+=pkStr(pts.map((p,j)=>p?{x:x(j),y:yv(p.lat),v:p.lat+90,lab:String(p.y)}:null),{L:Lf,R:W-Rt,T,B:Hh-Bm,names:["Más al norte","Más al sur"],r:8});
     pts.forEach((p,j)=>{if(p)g+=`<circle cx="${x(j).toFixed(1)}" cy="${yv(p.lat).toFixed(1)}" r="4" style="fill:#c2410c"><title>${p.y}: latitud media ${p.lat.toFixed(2)}°</title></circle>`});
     return{html:`<div class="pr-ch"><svg viewBox="0 0 ${W} ${Hh}" style="width:100%;height:auto" role="img" aria-label="Centro del desembarque por año">${g}</svg></div>`,P}}
   /* Flujo especie → zona (últimos 12 meses de la categoría) */
@@ -8665,6 +8674,25 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
   {const _r=render;render=function(){const out=_r.apply(this,arguments);try{if(S.tab==="mov")draw()}catch(e){console.error(e)}return out}}
   {const _st=setTab;setTab=function(t){_st(t);if(t==="mov"){["#fab","#period","#aside","#chips","#ctx","#btnFilters"].forEach(s=>{const e=document.querySelector(s);if(e)e.hidden=true});const l=document.querySelector(".layout");if(l)l.style.gridTemplateColumns="minmax(0,1fr)";try{draw()}catch(e){console.error(e)}}}}
 })();
+
+</script>
+<style id="pkCss">
+.pk-t{font-size:11px!important;font-weight:700;paint-order:stroke;stroke:var(--surface,#fff);stroke-width:3px;stroke-linejoin:round}
+.pk-r{opacity:.95}
+</style>
+
+<script>
+/* ===== Destacar máximo y mínimo en los gráficos ===== */
+function pkStr(pts,o){o=o||{};const fmt=o.fmt||(v=>t0(v)),u=o.unit==null?" t":o.unit,L=o.L||0,R=o.R||9999,T=o.T||0,B=o.B||9999,skip=o.skip||new Set();
+  const ok=pts.map((p,k)=>({...p,k})).filter(p=>p&&p.v!=null&&isFinite(p.v)&&p.v>0);if(ok.length<2)return"";
+  const mx=ok.reduce((a,p)=>p.v>a.v?p:a),mc=ok.filter(p=>!skip.has(p.k)),mn=mc.length?mc.reduce((a,p)=>p.v<a.v?p:a):null;
+  const anc=x=>x<L+80?["start",x-6]:x>R-80?["end",x+6]:["middle",x];let s="";
+  const one=(p,isMax)=>{const col=isMax?"#16794a":"#c2410c",lab=o.names?`${isMax?"▲ "+o.names[0]:"▼ "+o.names[1]}${p.lab?" · "+p.lab:""}`:`${isMax?"▲ Máx":"▼ Mín"}${o.short?"":": "+fmt(p.v)+u}${p.lab&&!o.short?" · "+p.lab:""}`,[ta,tx]=anc(p.x);
+    if(o.mode==="bar"){const ty=Math.max(10,p.y-(o.vlab?19:6));s+=`<text x="${o.short?p.x:tx}" y="${ty}" text-anchor="${o.short?"middle":ta}" class="pk-t" style="fill:${col}">${esc(lab)}</text>`}
+    else{s+=`<circle cx="${p.x}" cy="${p.y}" r="${o.r||7}" fill="none" style="stroke:${col}" stroke-width="2.5" class="pk-r"/>`;if(o.nolab)return;
+      let ty=isMax?p.y-12:p.y+20;if(isMax&&ty<Math.max(10,T-4))ty=p.y+22;if(!isMax&&ty>B-2)ty=p.y-12;s+=`<text x="${tx}" y="${ty}" text-anchor="${ta}" class="pk-t" style="fill:${col}">${esc(lab)}</text>`}};
+  one(mx,true);if(mn&&mn.k!==mx.k&&!o.onlyMax)one(mn,false);return`<g class="pk" pointer-events="none">${s}</g>`}
+function pkDom(svg,pts,o){try{if(!svg)return;const s=pkStr(pts,o);if(s)svg.insertAdjacentHTML("beforeend",s)}catch(e){console.error(e)}}
 
 </script>
 </body>
