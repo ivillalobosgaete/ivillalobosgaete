@@ -2908,14 +2908,16 @@ function treemap(A){
     hover(g,()=>`<b>${esc(r.label)}</b> (${esc(r.sub)})<br>${tipAll(r.t,A.calFis[r.i],nm,A.q)}`,add=>toggle("cal",r.i,add))});
 }
 function heat(A){
-  const R=S.R,svg=$("#gHeat"),nY=R.y1-R.y0+1,L=40,T=20,W=vw("gHeat",1000),cw=(W-L-6)/12,ch=26,H=T+nY*ch+4;clear(svg,W,H);const pm=S.measure==="pesc";
+  heat.mx=heat.mn=null;const R=S.R,svg=$("#gHeat"),nY=R.y1-R.y0+1,L=40,T=20,W=vw("gHeat",1000),cw=(W-L-6)/12,ch=26,H=T+nY*ch+4;clear(svg,W,H);const pm=S.measure==="pesc";
   const val=i=>pm?(A.ymFis[i]&&A.ymFis[i].size?A.ym[i]/A.ymFis[i].size:0):A.ym[i];
   let mx=0;for(let i=0;i<nY*12;i++)mx=Math.max(mx,val(i));MES.forEach((m,i)=>E("text",{x:L+i*cw+cw/2,y:13,"text-anchor":"middle"},svg).textContent=m);
   for(let y=0;y<nY;y++){E("text",{x:L-8,y:T+y*ch+ch/2+4,"text-anchor":"end"},svg).textContent=String(R.y0+y);
     for(let m=0;m<12;m++){const i=y*12+m,v=val(i),k=mx?v/mx:0,out=i<R.firstYM||i>R.lastYM;const g=E("g",{},svg);const nf=A.ymFis[i]?A.ymFis[i].size:0;
       E("rect",{x:L+m*cw+1.5,y:T+y*ch+1.5,width:cw-3,height:ch-3,rx:4,fill:v>0?"var(--s1)":"var(--track)","fill-opacity":v>0?(.1+.9*k).toFixed(2):1},g);
       E("text",{x:L+m*cw+cw/2,y:T+y*ch+ch/2+4,"text-anchor":"middle",style:`font-size:11px;font-weight:600;fill:${k>.5?"#fff":"var(--ink-2)"}`},g).textContent=out||cw<38?"":v>0?(pm?tt(v):t0(v)):"–";
+      if(!out&&v>0){if(!heat.mx||v>heat.mx.v)heat.mx={v,x:L+m*cw,y:T+y*ch,l:MESL[m]+" "+(R.y0+y)};if(!heat.mn||v<heat.mn.v)heat.mn={v,x:L+m*cw,y:T+y*ch,l:MESL[m]+" "+(R.y0+y)}}
       if(!out)hover(g,()=>`<b>${MESL[m]} ${R.y0+y}</b><br>${t1(A.ym[i])} t en total<br>${nf} pescadores · ${tt(nf?A.ym[i]/nf:0)} t por pescador`,v>0?add=>{const fy=S.f.yr,fm=S.f.mo,same=fy.size===1&&fy.has(y)&&fm.size===1&&fm.has(m);if(!add){fy.clear();fm.clear()}if(!same||add){fy.add(y);fm.add(m)}S.page=0;render()}:null)}}
+  [[heat.mx,"#16794a","▲"],[heat.mn,"#c2410c","▼"]].forEach(([c,col,ic],j)=>{if(!c||(j===1&&heat.mx&&c.v===heat.mx.v))return;E("rect",{x:c.x+1,y:c.y+1,width:cw-2,height:ch-2,rx:5,fill:"none",stroke:col,"stroke-width":3,"pointer-events":"none"},svg);const t=E("text",{x:c.x+cw-4,y:c.y+10,"text-anchor":"end",class:"pk-t",style:`fill:${col};font-size:10px`,"pointer-events":"none"},svg);t.textContent=ic});
 }
 /* ---------- Pescadores ---------- */
 function pareto(A){
@@ -4356,9 +4358,9 @@ renderProj=function(){const D=projData(),box=$("#proj");if(!D.length){box.innerH
 function calEsp(A){const R=S.R,m=R.m,X=CUR.X,mc=moCount(),el=$("#calEsp");const top=m.E.map((e,i)=>({i,v:A.esp[i]})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v).slice(0,15);
   if(!top.length){el.innerHTML=`<div class="empty">Sin datos con estos filtros</div>`;setC("cCalEspC","");return}const common=ST2.get("ceV","fila")==="comun";
   const rows=top.map(t=>({...t,a:Array.from(X.espMo[t.i],(v,mo)=>mc[mo]?v/mc[mo]:0)}));const gmx=Math.max(...rows.flatMap(r=>r.a))||1;const zone=S.f.reg.size===1?R.regRaw[[...S.f.reg][0]]:undefined;
-  el.innerHTML=`<table class="cesp"><thead><tr><th>Especie</th>${MES.map((x,mo)=>`<th class="${mc[mo]?"":"na"}">${x}</th>`).join("")}<th class="r">Prom. mensual</th></tr></thead><tbody>${rows.map(r=>{const mx=common?gmx:Math.max(...r.a)||1,pk=r.a.indexOf(Math.max(...r.a)),code=m.E[r.i][0],col=R.grpColor[R.grps.indexOf(m.E[r.i][2])];const nM=mc.filter(Boolean).length;
+  el.innerHTML=`<table class="cesp"><thead><tr><th>Especie</th>${MES.map((x,mo)=>`<th class="${mc[mo]?"":"na"}">${x}</th>`).join("")}<th class="r">Prom. mensual</th></tr></thead><tbody>${rows.map(r=>{const mx=common?gmx:Math.max(...r.a)||1,pk=r.a.indexOf(Math.max(...r.a)),mn=(()=>{let b=-1,c=0;r.a.forEach((v,mo)=>{if(v>0){c++;if(b<0||v<r.a[b])b=mo}});return c>=2&&b!==pk?b:-1})(),code=m.E[r.i][0],col=R.grpColor[R.grps.indexOf(m.E[r.i][2])];const nM=mc.filter(Boolean).length;
     return`<tr><td><button type="button" class="lnk ce-e" data-e="${r.i}" title="Filtrar ${esc(m.E[r.i][1])}"><i style="background:${col}"></i>${esc(m.E[r.i][1])}</button></td>${r.a.map((v,mo)=>{const vd=CFG.vedas.length?vedaOf(code,mo,zone):null,k=v/mx;
-      return`<td class="${vd?"vd":""}${mo===pk&&v>0?" pk":""}" title="${esc(MESL[mo])}: ${tt(v)} t promedio${vd?" · veda":""}" style="${v>0?`background:rgba(42,120,214,${(.07+.88*Math.sqrt(k)).toFixed(2)});color:${Math.sqrt(k)>.6?"#fff":"inherit"}`:""}">${v>0?tt(v):"·"}</td>`}).join("")}<td class="r"><b>${tt(nM?r.a.reduce((s,v)=>s+v,0)/nM:0)}</b></td></tr>`}).join("")}</tbody></table>`;
+      return`<td class="${vd?"vd":""}${mo===pk&&v>0?" pk":""}${mo===mn?" mn":""}" title="${esc(MESL[mo])}: ${tt(v)} t promedio${vd?" · veda":""}${mo===pk&&v>0?" · mes más alto":""}${mo===mn?" · mes más bajo con captura":""}" style="${v>0?`background:rgba(42,120,214,${(.07+.88*Math.sqrt(k)).toFixed(2)});color:${Math.sqrt(k)>.6?"#fff":"inherit"}`:""}">${v>0?tt(v):"·"}</td>`}).join("")}<td class="r"><b>${tt(nM?r.a.reduce((s,v)=>s+v,0)/nM:0)}</b></td></tr>`}).join("")}</tbody></table><p class="cs pk-leg"><span class="pk-b mx">▲</span> mes más alto · <span class="pk-b mn">▼</span> mes más bajo con captura, en cada especie</p>`;
   el.querySelectorAll(".ce-e").forEach(b=>b.onclick=ev=>toggle("esp",+b.dataset.e,ev.ctrlKey||ev.metaKey));
   const r0=rows[0],pk=r0.a.indexOf(Math.max(...r0.a));let lowV=0;rows.forEach(r=>{const code=m.E[r.i][0];r.a.forEach((v,mo)=>{if(v>0&&CFG.vedas.length&&vedaOf(code,mo,zone))lowV++})});
   setC("cCalEspC",`<b>${esc(m.E[r0.i][1])}</b>, la especie principal, alcanza su máximo en <b>${MESL[pk]}</b>`+(CFG.vedas.length?(lowV?` · ${lowV} celdas con desembarque en meses de veda (revisar)`:" · sin desembarques en meses de veda"):""))}
@@ -8679,6 +8681,14 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
 <style id="pkCss">
 .pk-t{font-size:11px!important;font-weight:700;paint-order:stroke;stroke:var(--surface,#fff);stroke-width:3px;stroke-linejoin:round}
 .pk-r{opacity:.95}
+.cesp td{position:relative}
+.cesp td.pk{box-shadow:inset 0 0 0 3px #16794a!important;font-weight:800}
+.cesp td.mn{box-shadow:inset 0 0 0 3px #c2410c!important;font-weight:800}
+.cesp td.pk::after,.cesp td.mn::after{position:absolute;top:-6px;right:-3px;font-size:9px;line-height:1;padding:2px 3px;border-radius:4px;color:#fff;z-index:1}
+.cesp td.pk::after{content:"▲";background:#16794a}
+.cesp td.mn::after{content:"▼";background:#c2410c}
+.pk-b{display:inline-block;font-size:9px;line-height:1;padding:2px 3px;border-radius:4px;color:#fff}.pk-b.mx{background:#16794a}.pk-b.mn{background:#c2410c}
+.pk-leg{margin-top:6px}
 </style>
 
 <script>
