@@ -8606,6 +8606,14 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
 .mv-sl{font-size:12px;fill:currentColor}.mv-sl.on{font-weight:700}
 .mv-sk{cursor:pointer}.mv-sk:hover .mv-sl{text-decoration:underline}
 @media (max-width:640px){.mv-ctl select{min-width:0;width:100%}.mv-ctl label{width:100%}}
+.mv-mapw{display:grid;grid-template-columns:minmax(0,560px) minmax(220px,1fr);gap:18px;align-items:start}
+.mv-map{width:100%;height:auto;max-height:860px}
+.mv-map .tz-ml{font-size:11px;fill:currentColor;paint-order:stroke;stroke:#e9f4f9;stroke-width:3px}
+.mv-mapc{display:flex;flex-direction:column;gap:8px;position:sticky;top:10px}
+.mv-mapc input[type=range]{width:100%}
+.mv-mapl{padding-left:0;list-style:none;display:grid;gap:6px;margin:4px 0}
+.mv-sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+@media (max-width:760px){.mv-mapw{grid-template-columns:1fr}.mv-mapc{position:static}}
 </style>
 
 <script>
@@ -8674,6 +8682,35 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
     L.forEach(l=>g+=`<g ${l.e>=0?`data-mve="${l.e}" class="mv-sk"`:""}><rect x="${lx}" y="${l.y}" width="${nw}" height="${l.h}" style="fill:${l.e===MV.e?"#c2410c":"#475569"}"/><text x="${lx-8}" y="${l.y+l.h/2+4}" text-anchor="end" class="mv-sl${l.e===MV.e?" on":""}">${esc(l.n)} · ${tn(l.v)} t</text></g>`);
     R.forEach(r=>g+=`<rect x="${rx}" y="${r.y}" width="${nw}" height="${r.h}" style="fill:${zCol(r.k)}"/><text x="${rx+nw+8}" y="${r.y+r.h/2+4}" class="mv-sl">${esc(ZLAB[r.k])} · ${tn(r.v)} t</text>`);
     return`<div class="mv-sc"><svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:640px;height:auto" role="img" aria-label="Flujo de especies a zonas">${g}</svg></div><p class="cs">Período: ${ymL(catL-11)} a ${ymL(catL)}. Toca una especie para verla en el mapa de calor.</p>`}
+  /* Mapa del movimiento: caletas por toneladas del año elegido y recorrido del centro del desembarque */
+  function mvMap(B,Hm){const{rows,yT,Y}=Hm,st=B.st,ok=o=>isFinite(o.lat)&&o.lat&&isFinite(o.lon)&&o.lon;const R=rows.filter(x=>ok(x.o));if(R.length<2)return"";
+    const n=Y.length;if(MV.yi==null||MV.yi>=n)MV.yi=n-1;const j0=MV.yi;
+    const pts=Y.map((y,j)=>{let la=0,lo=0,w=0;R.forEach(x=>{const v=x.r[j];if(v>0){la+=x.o.lat*v;lo+=x.o.lon*v;w+=v}});return w>0?{y,j,lat:la/w,lon:lo/w}:null});
+    const coastAll=st.C.filter(o=>ok(o)&&(!B.sel||o.z===B.sel));const la1=Math.max(...R.map(x=>x.o.lat))+.25,la0=Math.min(...R.map(x=>x.o.lat))-.25;const coast=coastAll.filter(o=>o.lat<=la1&&o.lat>=la0).sort((a,b)=>b.lat-a.lat);
+    const lo0=Math.min(...coast.map(o=>o.lon),...R.map(x=>x.o.lon))-.15,lo1=Math.max(...coast.map(o=>o.lon),...R.map(x=>x.o.lon))+.1;
+    const H=Math.max(520,Math.min(900,(la1-la0)*95)),W=560,pad=18,sy=(H-2*pad)/(la1-la0),sx=Math.min(sy*Math.cos(Math.abs(la0)*Math.PI/180),(W-250)/Math.max(.05,lo1-lo0)),X=lo=>150+(lo-lo0)*sx,Yy=la=>pad+(la1-la)*sy;
+    const cp=coast.map(o=>`${X(o.lon).toFixed(1)},${Yy(o.lat).toFixed(1)}`);let g=`<path d="M0,0 L${cp[0].split(",")[0]},0 L${cp.join(" L")} L${cp[cp.length-1].split(",")[0]},${H} L0,${H}Z" fill="url(#mvSea)"/>`;
+    /* tramo sin caletas de la plataforma (entre regiones) */
+    for(let k=1;k<coast.length;k++)if(coast[k-1].lat-coast[k].lat>1.2){const ya=Yy(coast[k-1].lat)+14,yb=Yy(coast[k].lat)-14;g+=`<text x="${W/2+40}" y="${(ya+yb)/2}" text-anchor="middle" class="tz-ax" style="font-style:italic">Sin caletas de la plataforma (${t0(coast[k-1].lat-coast[k].lat)}° de latitud)</text>`}
+    const mx=Math.max(...R.map(x=>x.r[j0]),1e-9);
+    R.slice().sort((a,b)=>b.r[j0]-a.r[j0]).forEach(x=>{const v=x.r[j0],r=v>0?4+Math.sqrt(v/mx)*22:2.5,cx=X(x.o.lon),cy=Yy(x.o.lat);g+=`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r.toFixed(1)}" style="fill:${v>0?"#0e7490":"#cbd5e1"};stroke:${ZCOL[x.o.z]||"#94a3b8"}" fill-opacity="${v>0?.55:.6}" stroke-width="2"><title>${esc(x.o.n)} · ${Y[j0]}: ${tn(v)} t (${yT[j0]?t1(v/yT[j0]*100):0} % del año)</title></circle>`});
+    const lab=new Set(R.slice().sort((a,b)=>b.r[j0]-a.r[j0]).slice(0,8).filter(x=>x.r[j0]>0).map(x=>x.o.i));R.forEach(x=>{if(lab.has(x.o.i))g+=`<text x="${(X(x.o.lon)+12).toFixed(1)}" y="${(Yy(x.o.lat)+4).toFixed(1)}" class="tz-ml">${esc(x.o.n)}</text>`});
+    /* recorrido del centro: color del más antiguo (claro) al más reciente (oscuro) */
+    const P=pts.filter(Boolean),cx0=W-110,LB=[];if(P.length>1){const col=(k)=>{const t=k/(P.length-1);return`rgb(${Math.round(253-(253-194)*t)},${Math.round(186-(186-65)*t)},${Math.round(116-(116-12)*t)})`};
+      g+=`<line x1="${cx0}" x2="${cx0}" y1="${pad}" y2="${H-pad}" stroke="#c2410c" stroke-opacity=".15" stroke-width="10" stroke-linecap="round"/>`;
+      for(let k=1;k<P.length;k++)g+=`<line x1="${X(P[k-1].lon).toFixed(1)}" y1="${Yy(P[k-1].lat).toFixed(1)}" x2="${X(P[k].lon).toFixed(1)}" y2="${Yy(P[k].lat).toFixed(1)}" style="stroke:${col(k)}" stroke-width="2.5" stroke-dasharray="4 3"/>`;
+      const nIdx=P.reduce((b,p,k)=>p.lat>P[b].lat?k:b,0),sIdx=P.reduce((b,p,k)=>p.lat<P[b].lat?k:b,0);
+      P.forEach((p,k)=>{const x=X(p.lon),y=Yy(p.lat),cur=p.j===j0;g+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${cur?8:4.5}" style="fill:${col(k)};stroke:${cur?"#111827":"#fff"}" stroke-width="${cur?2.5:1}"><title>Centro del desembarque ${p.y}: latitud ${p.lat.toFixed(2)}°</title></circle>`;
+        g+=`<circle cx="${cx0}" cy="${y.toFixed(1)}" r="${cur?6:3.5}" style="fill:${col(k)}"><title>${p.y}</title></circle>`;
+        if(k===0||k===P.length-1||k===nIdx||k===sIdx||cur)LB.push({y:y+4,cur,t:`${k===nIdx?"▲ ":k===sIdx?"▼ ":""}${p.y}${k===nIdx?" norte":k===sIdx?" sur":""}`,c:k===nIdx?"#15803d":k===sIdx?"#d97706":"currentColor"})});
+      LB.sort((a,b)=>a.y-b.y);for(let k=1;k<LB.length;k++)if(LB[k].y-LB[k-1].y<13)LB[k].y=LB[k-1].y+13;LB.forEach(l=>g+=`<text x="${cx0+10}" y="${l.y.toFixed(1)}" class="tz-ax" style="font-weight:${l.cur?700:500};fill:${l.c}">${l.t}</text>`);
+      g+=`<text x="${cx0}" y="${pad-4}" text-anchor="middle" class="tz-ax">Centro</text>`}
+    return`<div class="mv-mapw"><svg viewBox="0 0 ${W} ${H}" class="mv-map" role="img" aria-label="Mapa del desembarque de la especie por caleta y recorrido del centro del desembarque"><defs><linearGradient id="mvSea" x1="0" x2="1"><stop offset="0" stop-color="#cfe6f1"/><stop offset="1" stop-color="#e9f4f9"/></linearGradient></defs>${g}<text x="8" y="${H-8}" class="tz-sea">Océano Pacífico</text></svg>
+      <div class="mv-mapc"><label for="mvYr">Año <b>${Y[j0]}</b></label><input id="mvYr" type="range" min="0" max="${n-1}" value="${j0}" step="1"><div class="mv-play"><button type="button" class="btn small" id="mvPlay">${MV.timer?"⏸ Pausar":"▶ Reproducir"}</button></div>
+      <ul class="cs mv-mapl"><li><span class="mv-sw" style="background:#0e7490;opacity:.6"></span>Círculos: toneladas de la especie en cada caleta en ${Y[j0]} (borde: zona).</li><li><span class="mv-sw" style="background:#c2410c"></span>Puntos y línea punteada: centro del desembarque de cada año (latitud y longitud ponderadas por toneladas), de claro (más antiguo) a oscuro (más reciente). El punto con borde negro es el año elegido.</li><li>La columna «Centro» a la derecha repite solo la latitud, para ver si sube o baja.</li><li>Ubicación de caletas aproximada.</li></ul></div></div>`}
+  document.addEventListener("input",ev=>{if(ev.target.id==="mvYr"){MV.yi=+ev.target.value;mvRedraw()}});
+  document.addEventListener("click",ev=>{if(ev.target.id!=="mvPlay")return;if(MV.timer){clearInterval(MV.timer);MV.timer=null;mvRedraw();return}const n=+document.getElementById("mvYr").max+1;if(MV.yi>=n-1)MV.yi=-1;MV.timer=setInterval(()=>{if(S.tab!=="mov"){clearInterval(MV.timer);MV.timer=null;return}MV.yi++;if(MV.yi>=n-1){MV.yi=n-1;clearInterval(MV.timer);MV.timer=null}mvRedraw()},900);mvRedraw()});
+  function mvRedraw(){const box=document.getElementById("mvMapBox");if(!box){draw();return}const B=base();if(!B)return;box.innerHTML=mvMap(B,heat(B))}
   function draw(){const p=document.querySelector('[data-pane="mov"]');if(!p||S.tab!=="mov"||!S.R)return;const B=base();if(!B||!B.esp.length){p.innerHTML=`<section class="card"><h2>Movimiento de especies entre caletas</h2><p class="cs">Sin datos para esta selección.</p></section>`;return}
     const{m,esp,espTot,sel,fullY,Y0}=B,e=MV.e,en=esc(m.E[e][1]),Hm=heat(B),Ce=centro(B,Hm);
     const lect=[];const{rows,yT,Y}=Hm;const nY=Y.length,k=Math.min(3,Math.floor(nY/2));
@@ -8692,9 +8729,10 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
         <span class="mv-seg" role="group" aria-label="Medida"><button type="button" data-mvm="sh" aria-pressed="${MV.mode==="sh"}">% del año</button><button type="button" data-mvm="t" aria-pressed="${MV.mode==="t"}">Toneladas</button></span></div></section>
       <section class="card"><div class="tbar"><h3>${en}: desembarque por caleta y año</h3><span class="tz-leg">${MV.mode==="sh"?"Color más intenso: mayor parte del desembarque anual de la especie":"Color más intenso: más toneladas"} · caletas de norte a sur · borde: zona</span></div>${Hm.svg}
         <div class="pr-int"><b>Lectura del gráfico</b><ul>${lect.map(x=>`<li>${x}</li>`).join("")}</ul></div></section>
+      <section class="card"><h3>Mapa: ¿dónde se desembarca ${en} y hacia dónde se mueve?</h3><p class="cs">Mueve el año o presiona «Reproducir» para ver cómo cambia el desembarque entre caletas y cómo se desplaza su centro.</p><div id="mvMapBox">${mvMap(B,Hm)}</div></section>
       ${Ce.html?`<section class="card"><h3>¿Hacia dónde se mueve ${en}?</h3><p class="cs">Latitud media del desembarque de cada año, ponderada por toneladas. Si la línea baja, el desembarque se concentra más al sur; si sube, más al norte. Ubicación de caletas aproximada.</p>${Ce.html}</section>`:""}
       <section class="card"><h3>De qué zonas sale cada especie (últimos 12 meses)</h3>${sankey(B)}</section>`}
-  document.addEventListener("change",ev=>{if(ev.target.id==="mvEsp"){MV.e=+ev.target.value;draw()}else if(ev.target.id==="mvCat"){MV.cat=+ev.target.value;MV.e=null;draw()}});
+  document.addEventListener("change",ev=>{if(ev.target.id==="mvEsp"){MV.e=+ev.target.value;MV.yi=null;draw()}else if(ev.target.id==="mvCat"){MV.cat=+ev.target.value;MV.e=null;draw()}});
   document.addEventListener("click",ev=>{const t=ev.target.closest&&ev.target.closest("[data-mvm],[data-mve],[data-mvcal]");if(!t||!S.R)return;
     if(t.dataset.mvm){MV.mode=t.dataset.mvm;draw();return}
     if(t.dataset.mve!=null){MV.e=+t.dataset.mve;draw();document.querySelector('[data-pane="mov"]').scrollIntoView({behavior:"smooth"});return}
