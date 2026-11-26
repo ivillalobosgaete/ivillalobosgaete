@@ -1912,7 +1912,7 @@ kbd{font:600 .72rem/1 ui-monospace,monospace;border:1px solid currentColor;borde
     </div>
   </header>
   <nav class="tabs gut" role="tablist" id="tabs">
-    <button role="tab" data-tab="pano" aria-selected="false">Panorama</button><button role="tab" data-tab="terr" aria-selected="false">Territorios</button><button role="tab" data-tab="prio" aria-selected="false">Prioridad de inversión</button><button role="tab" data-tab="mov" aria-selected="false">Movimiento de especies</button><button role="tab" data-tab="pfi" aria-selected="false">Ficha del pescador</button><button role="tab" data-tab="efi" aria-selected="false">Ficha por especie</button><button role="tab" data-tab="crit" aria-selected="false">Meses críticos</button><button role="tab" data-tab="org" aria-selected="false">Organizaciones</button><button role="tab" data-tab="hito" aria-selected="false">Antes y después</button><button role="tab" data-tab="resumen" aria-selected="true">Resumen ejecutivo</button>
+    <button role="tab" data-tab="pano" aria-selected="false">Panorama</button><button role="tab" data-tab="terr" aria-selected="false">Territorios</button><button role="tab" data-tab="prio" aria-selected="false">Prioridad de inversión</button><button role="tab" data-tab="mov" aria-selected="false">Movimiento de especies</button><button role="tab" data-tab="pfi" aria-selected="false">Ficha del pescador</button><button role="tab" data-tab="efi" aria-selected="false">Ficha por especie</button><button role="tab" data-tab="crit" aria-selected="false">Meses críticos</button><button role="tab" data-tab="org" aria-selected="false">Organizaciones</button><button role="tab" data-tab="hito" aria-selected="false">Antes y después</button><button role="tab" data-tab="ecm" aria-selected="false">ECMPO</button><button role="tab" data-tab="resumen" aria-selected="true">Resumen ejecutivo</button>
     <button role="tab" data-tab="ficha" aria-selected="false">Ficha por caleta</button><button role="tab" data-tab="cmp" aria-selected="false">Comparación</button>
     <button role="tab" data-tab="pescadores" aria-selected="false">Pescadores</button>
     <button role="tab" data-tab="especies" aria-selected="false">Especies y caletas</button>
@@ -2092,7 +2092,7 @@ kbd{font:600 .72rem/1 ui-monospace,monospace;border:1px solid currentColor;borde
       <section data-pane="cmp" style="display:grid;gap:14px" hidden></section>
       <section data-pane="minutas" style="display:grid;gap:14px" hidden></section><section data-pane="borde" style="display:grid;gap:14px" hidden></section><section data-pane="mineria" style="display:grid;gap:14px" hidden></section><section data-pane="presup" style="display:grid;gap:14px" hidden></section>
 <section data-pane="cruce" style="display:grid;gap:14px" hidden></section>
-<section data-pane="calc" style="display:grid;gap:14px" hidden></section><section data-pane="pano" style="display:grid;gap:14px" hidden></section><section data-pane="terr" style="display:grid;gap:14px" hidden></section><section data-pane="prio" style="display:grid;gap:14px" hidden></section><section data-pane="mov" style="display:grid;gap:14px" hidden></section><section data-pane="pfi" style="display:grid;gap:14px" hidden></section><section data-pane="efi" style="display:grid;gap:14px" hidden></section><section data-pane="crit" style="display:grid;gap:14px" hidden></section><section data-pane="org" style="display:grid;gap:14px" hidden></section><section data-pane="hito" style="display:grid;gap:14px" hidden></section>
+<section data-pane="calc" style="display:grid;gap:14px" hidden></section><section data-pane="pano" style="display:grid;gap:14px" hidden></section><section data-pane="terr" style="display:grid;gap:14px" hidden></section><section data-pane="prio" style="display:grid;gap:14px" hidden></section><section data-pane="mov" style="display:grid;gap:14px" hidden></section><section data-pane="pfi" style="display:grid;gap:14px" hidden></section><section data-pane="efi" style="display:grid;gap:14px" hidden></section><section data-pane="crit" style="display:grid;gap:14px" hidden></section><section data-pane="org" style="display:grid;gap:14px" hidden></section><section data-pane="hito" style="display:grid;gap:14px" hidden></section><section data-pane="ecm" style="display:grid;gap:14px" hidden></section>
 <section data-pane="wa" style="display:grid;gap:14px" hidden></section><section data-pane="ficha" style="display:grid;gap:14px" hidden></section>
       <section data-pane="detalle" style="display:grid;gap:14px" hidden>
         <div class="card">
@@ -6982,6 +6982,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
       {id:"ficha",l:"Ficha por caleta",pane:"ficha"},
       {id:"espcal",q:"¿Qué se extrae en cada caleta y comuna?",main:"Captura por caleta",kp:"kCal",l:"Especies por caleta",pane:"resumen",top:el=>secT(el,"Especies, caletas y comunas"),open:true},
       {id:"amerb",q:"¿Qué áreas de manejo, planes y espacios costeros hay junto a cada caleta?",main:"Caletas por nivel de actividad",kp:"",l:"AMERB y planes de manejo",pane:"resumen",top:el=>secT(el,"Caletas, AMERB"),open:true},
+      {id:"ecmpo",l:"ECMPO",pane:"ecm"},
       {id:"cmp",l:"Comparar caletas",pane:"cmp"}]},
     {g:"esp",l:"Especies",v:[{id:"espficha",l:"Ficha por especie",pane:"efi"},
       {id:"especies",q:"¿Qué recursos se extraen y cómo varían?",main:"Calendario de capturas por especie",kp:"kEsp",l:"Calendario de capturas",pane:"especies",card:el=>!cardT(el,"Calendario de vedas")},
@@ -9129,5 +9130,81 @@ function pkDom(svg,pts,o){try{if(!svg)return;const s=pkStr(pts,o);if(s)svg.inser
 .tl-st.tl-dec{background:#15803d;color:#fff}.tl-st.tl-sol{background:#fde68a;color:#92400e;border:1px dashed #d97706}
 .tl-upd{background:rgba(42,120,182,.07);border-left:3px solid #2a78b6;padding:6px 10px;border-radius:6px}
 </style>
+<style id="emCss">
+.em-s{all:unset;cursor:pointer;font:inherit;text-transform:inherit;letter-spacing:inherit}.em-s:hover{text-decoration:underline}
+.em-t td{vertical-align:top}
+#emQ{padding:8px 10px;border-radius:8px;border:1px solid var(--line,#d6dbe1);background:var(--surface,#fff);color:inherit;font:inherit;min-width:260px}
+@media (max-width:640px){#emQ{min-width:0;width:100%}}
+</style>
+<script>
+/* ================= ECMPO: espacios costeros marinos de pueblos originarios (Ley 20.249) ================= */
+(()=>{
+  const EM={est:"",com:"",q:"",sort:"fing",dir:-1,loading:false};
+  const ST=[["ok","Decretada o con convenio de uso","#15803d"],["tr","En trámite","#d97706"],["re","Rechazada, desistida o caducada","#b4372f"]];
+  const stOf=e=>{const t=norm(e.est||"");if(/decret|destinad|otorgad|convenio|firmad|vigente/.test(t)&&!/no\s/.test(t))return ST[0];if(/rechaz|desist|caduc|termin|denegad|inadmis/.test(t))return ST[2];return ST[1]};
+  const fD=f=>f?f.split("-").reverse().join("-"):"";
+  const mBetween=(a,b)=>{if(!a||!b)return null;const x=new Date(a+"T12:00:00"),y=new Date(b+"T12:00:00");return(y-x)/(30.44*864e5)};
+  const today=()=>new Date().toLocaleDateString("en-CA",{timeZone:"America/Santiago"});
+  const dur=m=>m==null?"—":m>=24?t1(m/12)+" años":t0(m)+" meses";
+  const med=a=>{a=a.filter(v=>v!=null).sort((x,y)=>x-y);if(!a.length)return null;const k=Math.floor(a.length/2);return a.length%2?a[k]:(a[k-1]+a[k])/2};
+  const H3=t=>`<div class="pf-h3" role="heading" aria-level="3">${t}</div>`;
+  const zSel=()=>{const s=S.f&&S.f.reg;if(!s||s.size!==1)return null;return(S.R.regKey||[])[[...s][0]]||null};
+  function cals(){const bc=window.__bc;if(!bc)return[];return S.R.m.C.map((c,i)=>{const g=bc.geoOf(c);return g?{i,n:(bc.calLab||(x=>x))(c[0]),lat:g[0],lon:g[1],z:zoneKey(c)}:null}).filter(Boolean)}
+  /* actividad pesquera de 12 meses por caleta */
+  function act12(){const R=S.R,L=lastFullYM(),t=new Float64Array(R.m.C.length),f=R.m.C.map(()=>new Set());for(let i=0;i<R.n;i++){const d=L-R.ym[i];if(d>=0&&d<12){t[R.c[i]]+=R.q[i]/1000;f[R.c[i]].add(R.p[i])}}return{t,f}}
+  function rows(){const bc=window.__bc,d=bc&&bc.GEOD&&bc.GEOD.d;if(!d||!d.ecmpo)return null;const C=cals(),hav=bc.hav,sel=zSel(),hoy=today();
+    const am=(d.amerb||[]).map(a=>{const c=a.g&&bc.cent?bc.cent(a.g):null;return c?{a,lat:c[0],lon:c[1]}:null}).filter(Boolean);
+    let R=d.ecmpo.map((e,k)=>{const near=e.lat==null?[]:C.map(c=>({c,k:hav(c.lat,c.lon,e.lat,e.lon)})).filter(x=>x.k<=30).sort((a,b)=>a.k-b.k);const best=e.lat==null?null:C.reduce((b,c)=>{const k=hav(c.lat,c.lon,e.lat,e.lon);return!b||k<b.k?{c,k}:b},null);
+      const st=stOf(e),tram=e.fdec?mBetween(e.fing,e.fdec):null,edad=st[0]==="tr"&&e.fing?mBetween(e.fing,hoy):null;const amN=e.lat==null?[]:am.filter(x=>hav(x.lat,x.lon,e.lat,e.lon)<=10);
+      return{...e,k,st,near,best,tram,edad,amN}});
+    if(S.restr)R=R.filter(r=>r.near.length);
+    if(sel)R=R.filter(r=>r.best&&r.best.c.z===sel);return{R,d}}
+  function draw(){const p=document.querySelector('[data-pane="ecm"]');if(!p||S.tab!=="ecm"||!S.R)return;const bc=window.__bc;
+    if(typeof api!=="function"||!bc){p.innerHTML=`<section class="card"><h2>ECMPO</h2><p class="cs">Los espacios costeros marinos de pueblos originarios se consultan en Subpesca desde la versión web de la plataforma (Vercel).</p></section>`;return}
+    const got=rows();if(!got){p.innerHTML=`<section class="card"><h2>ECMPO</h2><p class="cs">Cargando la capa de ECMPO desde Subpesca…</p></section>`;if(!EM.loading){EM.loading=true;Promise.resolve(bc.geoLoad()).then(()=>{EM.loading=false;draw()})}return}
+    const{R:all,d}=got;const err=(d.errores||[]).find(x=>/ECMPO/.test(x));
+    if(!all.length){p.innerHTML=`<section class="card"><h2>ECMPO</h2><p class="cs">${err?`No se pudo leer la capa de ECMPO (${esc(err)}). Se reintentará al recargar la página.`:"No hay ECMPO solicitados ni decretados en esta zona."}</p></section>`;return}
+    const coms=[...new Set(all.map(r=>r.com).filter(Boolean))].sort(),w=norm(EM.q).split(/\s+/).filter(Boolean);
+    const R=all.filter(r=>(!EM.est||r.st[0]===EM.est)&&(!EM.com||r.com===EM.com)&&(!w.length||w.every(x=>norm([r.n,r.sol,r.nat,r.com,r.est,r.dec,r.ning,...r.near.map(n=>n.c.n)].join(" ")).includes(x))));
+    const cnt=k=>all.filter(r=>r.st[0]===k).length,haOf=k=>all.filter(r=>!k||r.st[0]===k).reduce((s,r)=>s+(+r.ha||0),0);
+    const sols=new Set(all.map(r=>norm(r.sol)).filter(Boolean)),tramMed=med(all.map(r=>r.tram)),edadMed=med(all.map(r=>r.edad));
+    /* por año: ingresos y decretos */
+    const yI=new Map(),yD=new Map();all.forEach(r=>{if(r.fing){const y=+r.fing.slice(0,4);yI.set(y,(yI.get(y)||0)+1)}if(r.fdec){const y=+r.fdec.slice(0,4);yD.set(y,(yD.get(y)||0)+1)}});
+    const ys=[...new Set([...yI.keys(),...yD.keys()])].sort((a,b)=>a-b),Y=[];if(ys.length)for(let y=ys[0];y<=ys[ys.length-1];y++)Y.push(y);
+    let chart="";if(Y.length){const W=Math.max(700,Y.length*44),Hh=200,Lf=36,Rr=W-10,T=20,B=Hh-26,mx=Math.max(1,...Y.map(y=>Math.max(yI.get(y)||0,yD.get(y)||0))),bw=(Rr-Lf)/Y.length,sc=v=>(B-T)*v/mx;let g="";
+      [...new Set([0,Math.round(mx/2),mx])].forEach(v=>{const yy=B-sc(v);g+=`<line x1="${Lf}" x2="${Rr}" y1="${yy}" y2="${yy}" stroke="currentColor" stroke-opacity=".1"/><text x="${Lf-6}" y="${yy+4}" text-anchor="end" class="tz-ax">${t0(v)}</text>`});
+      Y.forEach((y,k)=>{const a=yI.get(y)||0,b=yD.get(y)||0,hw=Math.min(28,(bw-10)/2),x=Lf+k*bw+(bw-10-2*hw)/2;g+=`<rect x="${x+4}" y="${B-sc(a)}" width="${hw}" height="${sc(a)}" rx="2" style="fill:#fbbf24;stroke:#d97706"><title>${y}: ${a} solicitudes ingresadas</title></rect><rect x="${x+6+hw}" y="${B-sc(b)}" width="${hw}" height="${sc(b)}" rx="2" style="fill:#15803d"><title>${y}: ${b} decretos</title></rect>${a?`<text x="${x+4+hw/2}" y="${B-sc(a)-4}" text-anchor="middle" class="tz-ax">${a}</text>`:""}${b?`<text x="${x+6+hw*1.5}" y="${B-sc(b)-4}" text-anchor="middle" class="tz-ax">${b}</text>`:""}<text x="${Lf+k*bw+bw/2}" y="${B+16}" text-anchor="middle" class="tz-ax">${Y.length>14?"’"+String(y).slice(2):y}</text>`});
+      chart=`<div class="pf-sv"><svg viewBox="0 0 ${W} ${Hh}" style="width:100%;height:auto" role="img" aria-label="Solicitudes y decretos de ECMPO por año">${g}</svg></div>`}
+    /* caletas con ECMPO cerca */
+    const A=act12(),byC=new Map();all.forEach(r=>r.near.forEach(n=>{let o=byC.get(n.c.i);if(!o){o={c:n.c,l:[]};byC.set(n.c.i,o)}o.l.push({r,k:n.k})}));
+    const cL=[...byC.values()].sort((a,b)=>b.l.length-a.l.length||A.t[b.c.i]-A.t[a.c.i]);
+    const sortF={fing:r=>r.fing||"",fdec:r=>r.fdec||"",ha:r=>+r.ha||0,n:r=>norm(r.n),est:r=>r.st[0],km:r=>r.best?r.best.k:1e9}[EM.sort]||(r=>r.fing||"");
+    const RS=[...R].sort((a,b)=>{const x=sortF(a),y=sortF(b);return(x<y?-1:x>y?1:0)*EM.dir});
+    const upd=d.obtenido?new Date(d.obtenido).toLocaleString("es-CL",{timeZone:"America/Santiago",day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}):"";
+    const th=(k,l,c)=>`<th class="${c||""}"><button type="button" class="em-s" data-ems="${k}">${l}${EM.sort===k?(EM.dir>0?" ▲":" ▼"):""}</button></th>`;
+    p.innerHTML=`<section class="card"><div class="tz-hh"><div><span class="tz-zn">Caletas</span><h2>ECMPO · Espacios costeros marinos de pueblos originarios</h2><p class="cs">Solicitudes y decretos de ECMPO (Ley 20.249) en las zonas de la plataforma${zSel()?` · ${esc(ZLAB[zSel()])}`:""}. Fuente: ${esc("Subpesca, capa publicada en la IDE de la Superintendencia del Medio Ambiente")}${upd?` · revisado el <b>${esc(upd)}</b> (se vuelve a consultar todos los días)`:""}.</p></div></div>
+      <div class="tz-k"><div><span>ECMPO</span><b>${t0(all.length)}</b><small>${t0(haOf())} ha en total</small></div>${ST.map(s=>`<div style="border-top:4px solid ${s[2]}"><span>${esc(s[1])}</span><b>${t0(cnt(s[0]))}</b><small>${t0(haOf(s[0]))} ha</small></div>`).join("")}<div><span>Comunidades o asociaciones</span><b>${t0(sols.size)}</b><small>solicitantes distintas</small></div><div><span>Tramitación hasta el decreto</span><b>${dur(tramMed)}</b><small>mediana, ingreso a decreto</small></div><div><span>Antigüedad de las en trámite</span><b>${dur(edadMed)}</b><small>mediana desde el ingreso</small></div></div>
+      <div class="pr-int"><b>Lectura</b><ul><li>${t0(cnt("tr"))} ECMPO siguen en trámite${edadMed!=null?`, con una antigüedad mediana de ${dur(edadMed)} desde su ingreso`:""}. Mientras se tramitan, la Ley 20.249 suspende, con excepciones, las solicitudes de concesiones marítimas y de acuicultura sobre ese espacio.</li><li>${t0(cnt("ok"))} están decretadas o con convenio de uso: su administración queda a cargo de la comunidad o asociación indígena destinataria, que debe considerarse en cualquier obra o compromiso costero.</li>${cL.length?`<li>${t0(cL.length)} caletas tienen al menos un ECMPO a 30 km o menos; la que tiene más es ${esc(cL[0].c.n)} (${t0(cL[0].l.length)}).</li>`:""}</ul></div></section>
+     ${chart?`<section class="card">${H3("Solicitudes y decretos por año")}<div class="pf-leg"><span><i style="background:#fbbf24;border:1px solid #d97706"></i>Solicitudes ingresadas</span><span><i style="background:#15803d"></i>Decretos</span></div>${chart}<p class="cs">Según la fecha de ingreso de la solicitud y la fecha del decreto de cada ECMPO.</p></section>`:""}
+     <section class="card">${H3("Caletas con ECMPO cerca")}<p class="cs">ECMPO cuyo centro está a 30 km o menos de cada caleta, con su actividad pesquera de los últimos 12 meses.</p><div class="tbl"><table class="pr-t"><thead><tr><th>Caleta</th><th class="n">ECMPO cerca</th><th>Estado</th><th class="n">Superficie</th><th class="n">Pescadores (12 meses)</th><th class="n">Desembarque (12 meses)</th><th>ECMPO</th></tr></thead><tbody>
+      ${cL.map(o=>{const c={};o.l.forEach(x=>c[x.r.st[0]]=(c[x.r.st[0]]||0)+1);return`<tr><td><button type="button" class="lnk" data-exc="${o.c.i}">${esc(o.c.n)}</button><div class="cs">${esc(ZLAB[o.c.z]||"")}</div></td><td class="n"><b>${t0(o.l.length)}</b></td><td>${ST.filter(s=>c[s[0]]).map(s=>`<span class="amst" style="--c:${s[2]}">${c[s[0]]} ${({ok:"decretada",tr:"en trámite",re:"rechazada o desistida"})[s[0]]}</span>`).join(" ")}</td><td class="n">${t0(o.l.reduce((s,x)=>s+(+x.r.ha||0),0))} ha</td><td class="n">${t0(A.f[o.c.i].size)}</td><td class="n">${t0(A.t[o.c.i])} t</td><td class="cs" style="white-space:normal">${o.l.sort((a,b)=>a.k-b.k).slice(0,4).map(x=>`${esc(x.r.n||"Sin nombre")} (${t0(x.k)} km)`).join(" · ")}${o.l.length>4?" …":""}</td></tr>`}).join("")||`<tr><td colspan="7" class="cs">Ninguna caleta tiene ECMPO a 30 km o menos.</td></tr>`}</tbody></table></div></section>
+     <section class="card"><div class="tbar">${H3("Detalle de cada ECMPO")}<button type="button" class="btn small" id="emCsv">Descargar CSV</button></div>
+      <div class="mv-ctl"><label>Estado<select id="emEst"><option value="">Todos (${t0(all.length)})</option>${ST.map(s=>`<option value="${s[0]}" ${EM.est===s[0]?"selected":""}>${esc(s[1])} (${t0(cnt(s[0]))})</option>`).join("")}</select></label><label>Comuna<select id="emCom"><option value="">Todas</option>${coms.map(c=>`<option ${EM.com===c?"selected":""}>${esc(c)}</option>`).join("")}</select></label><label>Buscar<input id="emQ" type="search" value="${esc(EM.q)}" placeholder="Nombre, comunidad, caleta, N° de decreto"></label></div>
+      <p class="cs">${t0(R.length)} de ${t0(all.length)} ECMPO. Toca el encabezado de una columna para ordenar.</p>
+      <div class="tbl"><table class="pr-t em-t"><thead><tr>${th("n","ECMPO")}<th>Comunidad o asociación ${EM.est==="ok"?"destinataria":"solicitante"}</th>${th("est","Estado")}${th("ha","Superficie","n")}<th>Comuna</th>${th("fing","Ingreso")}${th("fdec","Decreto")}<th>Plan de administración</th><th class="n">Tramitación</th>${th("km","Caletas cercanas")}<th class="n">AMERB a ≤10 km</th></tr></thead><tbody>
+      ${RS.map(r=>`<tr><td><b>${esc(r.n||"Sin nombre")}</b>${r.nat?`<div class="cs">${esc(r.nat)}</div>`:""}</td><td style="white-space:normal">${esc(r.sol||"—")}<div class="cs">${r.st[0]==="ok"?"destinataria":"solicitante"}</div></td><td><span class="amst" style="--c:${r.st[2]}">${esc(r.est||r.st[1])}</span></td><td class="n">${r.ha?t0(+r.ha)+" ha":"—"}</td><td>${esc(r.com||"—")}<div class="cs">${esc(r.reg||"")}</div></td><td>${r.fing?`<span class="tl-st tl-sol">Solicitud</span> ${fD(r.fing)}`:"—"}${r.ning?`<div class="cs">N° ${esc(r.ning)}</div>`:""}</td><td>${r.fdec?`<span class="tl-st tl-dec">Decreto</span> ${fD(r.fdec)}`:"—"}${r.dec?`<div class="cs">N° ${esc(r.dec)}</div>`:""}</td><td>${r.fpm?`Aprobado ${fD(r.fpm)}`:'<span class="cs">—</span>'}</td><td class="n">${r.tram!=null?dur(r.tram):r.edad!=null?`<span class="cs">${dur(r.edad)} en trámite</span>`:"—"}</td><td style="white-space:normal">${r.near.length?r.near.slice(0,3).map(n=>`<button type="button" class="lnk" data-exc="${n.c.i}">${esc(n.c.n)}</button> <span class="cs">${t0(n.k)} km</span>`).join("<br>"):r.best?`<span class="cs">más cercana: ${esc(r.best.c.n)} a ${t0(r.best.k)} km</span>`:"—"}</td><td class="n">${r.amN.length?`${t0(r.amN.length)}<div class="cs">${esc(r.amN.slice(0,2).map(x=>x.a.n).join(", "))}</div>`:"0"}</td></tr>`).join("")}</tbody></table></div>
+      <p class="cs fnote">«Comunidad o asociación»: en las ECMPO decretadas corresponde a la organización destinataria; en las demás, a la solicitante. Distancias calculadas desde el centro del polígono del ECMPO. «Tramitación»: tiempo entre el ingreso de la solicitud y el decreto; en las que siguen en trámite, tiempo transcurrido desde el ingreso.</p></section>`}
+  document.addEventListener("change",ev=>{const id=ev.target.id;if(id==="emEst"){EM.est=ev.target.value;draw()}else if(id==="emCom"){EM.com=ev.target.value;draw()}});
+  let qT=null;document.addEventListener("input",ev=>{if(ev.target.id==="emQ"){EM.q=ev.target.value;clearTimeout(qT);qT=setTimeout(()=>{draw();const e=document.getElementById("emQ");if(e){e.focus();e.setSelectionRange(e.value.length,e.value.length)}},350)}});
+  document.addEventListener("click",ev=>{const s=ev.target.closest&&ev.target.closest("[data-ems]");if(s){const k=s.dataset.ems;if(EM.sort===k)EM.dir*=-1;else{EM.sort=k;EM.dir=k==="n"||k==="km"?1:-1}draw();return}
+    if(ev.target.id==="emCsv"){const got=rows();if(!got)return;const cols=["ECMPO","Naturaleza","Comunidad o asociación","Estado","Superficie (ha)","Comuna","Región","N° ingreso","Fecha ingreso","N° decreto","Fecha decreto","Plan aprobado","Caletas a 30 km o menos","Caleta más cercana","Distancia (km)"];
+      const q=v=>{v=v==null?"":String(v);return/[;"\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
+      const lines=[cols.join(";")].concat(got.R.map(r=>[r.n,r.nat,r.sol,r.est||r.st[1],r.ha,r.com,r.reg,r.ning,r.fing,r.dec,r.fdec,r.fpm,r.near.map(n=>n.c.n+" ("+Math.round(n.k)+" km)").join(", "),r.best?r.best.c.n:"",r.best?Math.round(r.best.k):""].map(q).join(";")));
+      const blob=new Blob(["﻿"+lines.join("\n")],{type:"text/csv;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="ecmpo.csv";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}});
+  {const _r=render;render=function(){const out=_r.apply(this,arguments);try{if(S.tab==="ecm")draw()}catch(e){console.error(e)}return out}}
+  {const _st=setTab;setTab=function(t){_st(t);if(t==="ecm"){["#fab","#period","#aside","#chips","#ctx","#btnFilters"].forEach(s=>{const e=document.querySelector(s);if(e)e.hidden=true});const l=document.querySelector(".layout");if(l)l.style.gridTemplateColumns="minmax(0,1fr)";try{draw()}catch(e){console.error(e)}}}}
+})();
+
+</script>
 </body>
 </html>
