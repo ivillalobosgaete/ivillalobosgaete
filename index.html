@@ -1912,7 +1912,7 @@ kbd{font:600 .72rem/1 ui-monospace,monospace;border:1px solid currentColor;borde
     </div>
   </header>
   <nav class="tabs gut" role="tablist" id="tabs">
-    <button role="tab" data-tab="pano" aria-selected="false">Panorama</button><button role="tab" data-tab="terr" aria-selected="false">Territorios</button><button role="tab" data-tab="prio" aria-selected="false">Prioridad de inversión</button><button role="tab" data-tab="mov" aria-selected="false">Movimiento de especies</button><button role="tab" data-tab="pfi" aria-selected="false">Ficha del pescador</button><button role="tab" data-tab="resumen" aria-selected="true">Resumen ejecutivo</button>
+    <button role="tab" data-tab="pano" aria-selected="false">Panorama</button><button role="tab" data-tab="terr" aria-selected="false">Territorios</button><button role="tab" data-tab="prio" aria-selected="false">Prioridad de inversión</button><button role="tab" data-tab="mov" aria-selected="false">Movimiento de especies</button><button role="tab" data-tab="pfi" aria-selected="false">Ficha del pescador</button><button role="tab" data-tab="efi" aria-selected="false">Ficha por especie</button><button role="tab" data-tab="crit" aria-selected="false">Meses críticos</button><button role="tab" data-tab="org" aria-selected="false">Organizaciones</button><button role="tab" data-tab="hito" aria-selected="false">Antes y después</button><button role="tab" data-tab="resumen" aria-selected="true">Resumen ejecutivo</button>
     <button role="tab" data-tab="ficha" aria-selected="false">Ficha por caleta</button><button role="tab" data-tab="cmp" aria-selected="false">Comparación</button>
     <button role="tab" data-tab="pescadores" aria-selected="false">Pescadores</button>
     <button role="tab" data-tab="especies" aria-selected="false">Especies y caletas</button>
@@ -2092,7 +2092,7 @@ kbd{font:600 .72rem/1 ui-monospace,monospace;border:1px solid currentColor;borde
       <section data-pane="cmp" style="display:grid;gap:14px" hidden></section>
       <section data-pane="minutas" style="display:grid;gap:14px" hidden></section><section data-pane="borde" style="display:grid;gap:14px" hidden></section><section data-pane="mineria" style="display:grid;gap:14px" hidden></section><section data-pane="presup" style="display:grid;gap:14px" hidden></section>
 <section data-pane="cruce" style="display:grid;gap:14px" hidden></section>
-<section data-pane="calc" style="display:grid;gap:14px" hidden></section><section data-pane="pano" style="display:grid;gap:14px" hidden></section><section data-pane="terr" style="display:grid;gap:14px" hidden></section><section data-pane="prio" style="display:grid;gap:14px" hidden></section><section data-pane="mov" style="display:grid;gap:14px" hidden></section><section data-pane="pfi" style="display:grid;gap:14px" hidden></section>
+<section data-pane="calc" style="display:grid;gap:14px" hidden></section><section data-pane="pano" style="display:grid;gap:14px" hidden></section><section data-pane="terr" style="display:grid;gap:14px" hidden></section><section data-pane="prio" style="display:grid;gap:14px" hidden></section><section data-pane="mov" style="display:grid;gap:14px" hidden></section><section data-pane="pfi" style="display:grid;gap:14px" hidden></section><section data-pane="efi" style="display:grid;gap:14px" hidden></section><section data-pane="crit" style="display:grid;gap:14px" hidden></section><section data-pane="org" style="display:grid;gap:14px" hidden></section><section data-pane="hito" style="display:grid;gap:14px" hidden></section>
 <section data-pane="wa" style="display:grid;gap:14px" hidden></section><section data-pane="ficha" style="display:grid;gap:14px" hidden></section>
       <section data-pane="detalle" style="display:grid;gap:14px" hidden>
         <div class="card">
@@ -5988,7 +5988,7 @@ function cgScan(){document.querySelectorAll(".card h3, .card h4, .np-viz h4").fo
 
 // ===== Minutas de reuniones con organizaciones (pestaña «Minutas») =====
 {
-  const MN={sort:"desc",tblOpen:true,tblx:null,tpage:0,list:[],loaded:false,loading:false,ia:null,warn:"",f:{cal:"",org:"",tema:"",d0:"",d1:"",q:"",soloPend:false,porComp:false},edit:null,busy:false,page:0,rel:[],relAbierto:null,relBusy:false,relEdit:false,relOpen:false,open:new Set(),inl:null,obs:null};
+  const MN=window.__MN={sort:"desc",tblOpen:true,tblx:null,tpage:0,list:[],loaded:false,loading:false,ia:null,warn:"",f:{cal:"",org:"",tema:"",d0:"",d1:"",q:"",soloPend:false,porComp:false},edit:null,busy:false,page:0,rel:[],relAbierto:null,relBusy:false,relEdit:false,relOpen:false,open:new Set(),inl:null,obs:null};
   const ORG0=[["El Cobre","Cooperativa de Pescadores Caleta El Cobre"],["Michilla","Asociación de Pescadores de Michilla"],["Michilla","Sindicato de Pescadores de Michilla"]];
   const TEMAS=["Compensación","AMERB y planes de manejo","Vedas y recursos","Compromisos RCA","Infraestructura y caleta","Empleo local y capacitación","Medio ambiente","Seguridad y navegación","Conflictos y reclamos","Coordinación y seguimiento","Otros"];
   const ART=()=>!!S.db;
@@ -6970,24 +6970,43 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
   const secT=(el,txt)=>{const s=el.matches&&el.matches("details.sec")?el.querySelector(":scope>summary"):null;return!!s&&nrm(s.textContent).startsWith(nrm(txt))};
   const cardT=(el,txt)=>{const h=el.querySelector&&el.querySelector("h3,h2");return!!h&&nrm(h.textContent).startsWith(nrm(txt))};
   const NAV=[
-    {g:"pano",l:"Panorama",v:[{id:"panorama",l:"Mapa y zonas",pane:"pano"},{id:"inicio",l:"Estado y alertas",pane:"resumen",top:el=>["vdBan","igEstado","kpis","igMain","alerts","today","ficha"].includes(el.id)||secT(el,"Claves del período")}]},
-    {g:"terr",l:"Territorios",v:[{id:"territorio",l:"Zonas y caletas",pane:"terr"},{id:"ficha",l:"Ficha por caleta",pane:"ficha"},{id:"cmp",l:"Comparar caletas y especies",pane:"cmp"},{id:"zonas",q:"¿Cómo se comparan las zonas entre sí?",main:"",kp:"",l:"Tabla de zonas",pane:"resumen",top:el=>secT(el,"Comparación de zonas"),open:true},
-      {id:"amerb",q:"¿Qué áreas de manejo, planes y espacios costeros hay junto a cada caleta?",main:"Caletas por nivel de actividad",kp:"",l:"AMERB y planes de manejo",pane:"resumen",top:el=>secT(el,"Caletas, AMERB"),open:true}]},
-    {g:"act",l:"Actividad pesquera",v:[
-      {id:"desemb",q:"¿Cuánto se desembarca, cuándo y cómo cambia en el año?",main:"Evolución mensual del desembarque",kp:"kDes",l:"Evolución y estacionalidad",pane:"resumen",top:el=>secT(el,"Actividad y estacionalidad"),open:true},
-      {id:"especies",q:"¿Qué recursos se extraen y cómo varían?",main:"Calendario de capturas por especie",kp:"kEsp",l:"Recursos",pane:"especies",card:el=>!cardT(el,"Calendario de vedas")},
-      {id:"movesp",l:"Movimiento de especies",pane:"mov"},
-      {id:"vedas",q:"¿Qué especies están en veda y cuándo comienzan las próximas?",main:"Calendario de vedas",kp:"kVed",l:"Vedas",pane:"especies",card:el=>cardT(el,"Calendario de vedas")},
+    {g:"pano",l:"Panorama",v:[{id:"panorama",l:"Mapa y zonas",pane:"pano"},
+      {id:"inicio",l:"Estado y alertas",pane:"resumen",top:el=>["vdBan","igEstado","kpis","igMain","alerts","today","ficha"].includes(el.id)||secT(el,"Claves del período")},
+      {id:"desemb",q:"¿Cuánto se desembarca, cuándo y cómo cambia en el año?",main:"Evolución mensual del desembarque",kp:"kDes",l:"Evolución y estacionalidad",pane:"resumen",top:el=>secT(el,"Actividad y estacionalidad"),open:true}]},
+    {g:"cal",l:"Caletas",v:[{id:"territorio",l:"Ranking por zona",pane:"terr"},
+      {id:"ficha",l:"Ficha por caleta",pane:"ficha"},
       {id:"espcal",q:"¿Qué se extrae en cada caleta y comuna?",main:"Captura por caleta",kp:"kCal",l:"Especies por caleta",pane:"resumen",top:el=>secT(el,"Especies, caletas y comunas"),open:true},
-      {id:"pesc",q:"¿Cuántos pescadores participan y cómo se reparte el desembarque?",main:"Concentración del desembarque",kp:"kPes",l:"Pescadores",pane:"pescadores",top:el=>el.id!=="embSec"},
-      {id:"pescficha",l:"Ficha del pescador",pane:"pfi"},
+      {id:"amerb",q:"¿Qué áreas de manejo, planes y espacios costeros hay junto a cada caleta?",main:"Caletas por nivel de actividad",kp:"",l:"AMERB y planes de manejo",pane:"resumen",top:el=>secT(el,"Caletas, AMERB"),open:true},
+      {id:"cmp",l:"Comparar caletas",pane:"cmp"}]},
+    {g:"esp",l:"Especies",v:[{id:"espficha",l:"Ficha por especie",pane:"efi"},
+      {id:"especies",q:"¿Qué recursos se extraen y cómo varían?",main:"Calendario de capturas por especie",kp:"kEsp",l:"Calendario de capturas",pane:"especies",card:el=>!cardT(el,"Calendario de vedas")},
+      {id:"movesp",l:"Movimiento entre caletas",pane:"mov"},
+      {id:"vedas",q:"¿Qué especies están en veda y cuándo comienzan las próximas?",main:"Calendario de vedas",kp:"kVed",l:"Vedas",pane:"especies",card:el=>cardT(el,"Calendario de vedas")}]},
+    {g:"pes",l:"Pescadores",v:[{id:"pescficha",l:"Ficha del pescador",pane:"pfi"},
+      {id:"pesc",q:"¿Cuántos pescadores participan y cómo se reparte el desembarque?",main:"Concentración del desembarque",kp:"kPes",l:"Participación y concentración",pane:"pescadores",top:el=>el.id!=="embSec"},
+      {id:"orgs",l:"Organizaciones y registro",pane:"org"},
       {id:"genero",q:"¿Cómo participan las mujeres en la pesca artesanal y cuánto desembarcan frente a los hombres?",main:"Pescadores por sexo",kp:"kGen",l:"Género",card:el=>!cardT(el,"Compañía área de influencia"),pane:"resumen",top:el=>secT(el,"Pescadores y compañías"),open:true},
       {id:"flota",q:"¿Con qué embarcaciones se pesca y dónde desembarcan respecto de su caleta base?",main:"Elegibilidad según registro",kp:"",l:"Flota y registro",pane:"pescadores",top:el=>el.id==="embSec"}]},
-    {g:"inv",l:"Inversión social",v:[{id:"prioridad",l:"Prioridad de inversión",pane:"prio"},{id:"cruce",l:"Inversión y actividad",pane:"cruce"},
-      {id:"pr_res",l:"Presupuesto",pane:"presup",top:el=>el.id==="prFil"||el.dataset.sub==="res"||el.dataset.sub==="ope"},{id:"pr_eje",l:"Ejecución y compromisos",pane:"presup",top:el=>el.id==="prFil"||el.dataset.sub==="eje"||el.dataset.sub==="com"},{id:"pr_cmp",l:"Compañías y territorios",pane:"presup",top:el=>el.id==="prFil"||el.dataset.sub==="cmp"},{id:"pr_edi",l:"Actualizar cifras",pane:"presup",top:el=>el.dataset.sub==="edi"}]},
-    {g:"rel",l:"Relacionamiento",v:[{id:"minutas",l:"Minutas y compromisos",pane:"minutas"},{id:"poder",l:"Poder e interés",pane:"poder"},{id:"negociacion",l:"Negociación",pane:"negociacion"},{id:"rca",l:"Exigencias ambientales",pane:"rca"},{id:"wa",l:"Mensajería WhatsApp",pane:"wa"}]},
-    {g:"ctx",l:"Contexto",v:[{id:"mineria",l:"Compañías mineras",pane:"mineria",top:el=>el.dataset.sub==="cias"},{id:"amsa",l:"Grupo Antofagasta Minerals",pane:"mineria",top:el=>el.dataset.sub==="amsa"},{id:"opcal",l:"Operación y caletas",pane:"mineria",top:el=>el.dataset.sub==="opcal"},{id:"calc",l:"Calculadora cobre y pesca",pane:"calc"},{id:"borde",l:"Borde costero",pane:"borde"}]},
-    {g:"datos",l:"Datos",v:[{id:"detalle",l:"Detalle de registros",pane:"detalle"},{id:"admin",l:"Administración",pane:"admin"}]}];
+    {g:"inv",l:"Inversión social",v:[{id:"prioridad",l:"Prioridad de inversión",pane:"prio"},
+      {id:"criticos",l:"Meses críticos",pane:"crit"},
+      {id:"cruce",l:"Inversión y actividad",pane:"cruce"},
+      {id:"pr_res",l:"Presupuesto",pane:"presup",top:el=>el.id==="prFil"||el.dataset.sub==="res"||el.dataset.sub==="ope"},
+      {id:"pr_eje",l:"Ejecución y compromisos",pane:"presup",top:el=>el.id==="prFil"||el.dataset.sub==="eje"||el.dataset.sub==="com"},
+      {id:"pr_cmp",l:"Compañías y territorios",pane:"presup",top:el=>el.id==="prFil"||el.dataset.sub==="cmp"},
+      {id:"pr_edi",l:"Actualizar cifras",pane:"presup",top:el=>el.dataset.sub==="edi"}]},
+    {g:"rel",l:"Relacionamiento",v:[{id:"minutas",l:"Minutas y compromisos",pane:"minutas"},
+      {id:"poder",l:"Poder e interés",pane:"poder"},
+      {id:"negociacion",l:"Negociación",pane:"negociacion"},
+      {id:"rca",l:"Exigencias ambientales",pane:"rca"},
+      {id:"wa",l:"Mensajería WhatsApp",pane:"wa"}]},
+    {g:"ctx",l:"Contexto y datos",v:[{id:"mineria",l:"Compañías mineras",pane:"mineria",top:el=>el.dataset.sub==="cias"},
+      {id:"amsa",l:"Grupo Antofagasta Minerals",pane:"mineria",top:el=>el.dataset.sub==="amsa"},
+      {id:"opcal",l:"Operación y caletas",pane:"mineria",top:el=>el.dataset.sub==="opcal"},
+      {id:"calc",l:"Calculadora cobre y pesca",pane:"calc"},
+      {id:"borde",l:"Borde costero",pane:"borde"},
+      {id:"hito",l:"Antes y después de un hito",pane:"hito"},
+      {id:"detalle",l:"Detalle de registros",pane:"detalle"},
+      {id:"admin",l:"Administración",pane:"admin"}]}];
   const VW=new Map();NAV.forEach(G=>G.v.forEach(v=>VW.set(v.id,{...v,g:G.g})));
   const NV={cur:"panorama",want:null};try{const s=localStorage.getItem("nav.v");if(s&&VW.has(s))NV.cur=s}catch(e){}
   const tabBtn=p=>document.querySelector(`#tabs [data-tab="${p}"]`);
@@ -8284,7 +8303,7 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
     upload:'<path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>',
     star:'<path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>'};
   const uiSvg=(k,cls="")=>`<svg class="uic ${cls}" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${UIC[k]||UIC.chart}</svg>`;
-  const UIGN={pano:"home",terr:"anchor",act:"fish",inv:"coins",ctx:"mountain",inicio:"home",caletas:"anchor",actividad:"fish",manejo:"scale",borde:"waves",mineria:"mountain",presup:"coins",cruce:"compare",rel:"users",datos:"db"};
+  const UIGN={pano:"home",cal:"anchor",esp:"fish",pes:"users",terr:"anchor",act:"fish",inv:"coins",ctx:"mountain",inicio:"home",caletas:"anchor",actividad:"fish",manejo:"scale",borde:"waves",mineria:"mountain",presup:"coins",cruce:"compare",rel:"users",datos:"db"};
   const uiN=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
   /* Ícono según el texto: el primer patrón que coincide */
   const UIRX=[[/alerta|sobregiro|riesgo|vencid/,"alert"],[/mensaje/,"msg"],[/hito|agenda/,"cal"],[/veda/,"ban"],[/mujer|genero/,"woman"],[/embarcac|flota/,"ship"],[/pescador|personas|usuarios|participan/,"users"],[/caleta/,"anchor"],[/desembar|tonelad|captura|kg\b|\bt\b/,"weight"],[/especie|recurso|calendario de captura/,"fish"],[/cobre|mina|minera|produccion|operacion/,"mountain"],[/mapa|ubicac/,"map"],[/territor|comuna|localidad|zona/,"pin"],[/iniciativa|eje\b|cartera/,"sprout"],[/escenario|tope|ajusta/,"sliders"],[/linea de tiempo|horizonte|plazo/,"clock"],[/seguimiento|ejecuc|avance|plan\b|acumulado/,"target"],[/compromis|obligac|rca|exigencia|minuta|document|instrument/,"doc"],[/proyecto|pep|capex/,"building"],[/compar|lado a lado|frente a/,"compare"],[/particip|concentr|comprometido|%|porcentaje|proporc/,"pct"],[/variac|tendencia|crec|evoluc|historic|mensual/,"trend"],[/presupuest|gasto|usd|monto|valor|inversion|precio|indicadores econ|costo/,"coins"],[/ano|mes\b|fecha|periodo|estacional/,"cal"],[/borde|mar\b|oleaje|costa/,"waves"],[/manejo|amerb|ecmpo|regulac/,"scale"],[/actualizar|cargar|subir/,"upload"],[/administrac|ajuste|clave/,"gear"],[/relacionamiento|poder|interes|negociac/,"users"]];
@@ -8732,6 +8751,10 @@ function pkDom(svg,pts,o){try{if(!svg)return;const s=pkStr(pts,o);if(s)svg.inser
 .pf-leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;margin:8px 0}.pf-leg i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}.pf-leg small{opacity:.7}
 .pf-er .pf-en i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
 .pf-sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.pf-al,.pf-rel{margin:6px 0;padding-left:0;list-style:none;display:grid;gap:6px;font-size:13px}
+.pf-al li{padding:7px 10px;border-radius:8px;border-left:4px solid #94a3b8;background:rgba(127,127,127,.06)}
+.pf-al .pf-a-bad{border-color:#dc2626;background:rgba(220,38,38,.07)}.pf-al .pf-a-warn{border-color:#d97706;background:rgba(217,119,6,.08)}.pf-al .pf-a-info{border-color:#2a78d6;background:rgba(42,120,214,.07)}
+.pf-rel li{padding:4px 0;border-bottom:1px solid rgba(127,127,127,.12)}
 </style>
 
 <script>
@@ -8778,10 +8801,66 @@ function pkDom(svg,pts,o){try{if(!svg)return;const s=pkStr(pts,o);if(s)svg.inser
     g+=typeof pkStr==="function"?pkStr(tot.map((v,k)=>({x:L+k*bw+bw/2,y:B-sc(v),v})),{mode:"bar",vlab:true,short:true,fmt:v=>kgN(v),skip:opt.skip||new Set()}):"";
     return`<div class="pf-sv"><svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img" aria-label="${esc(opt.aria||"Desembarque por especie")}">${g}</svg></div>`}
   const spLeg=D=>`<div class="pf-leg">${[...D.esp].sort((a,b)=>b.t-a.t).map(o=>`<span><i style="background:${spCol(D,o.e)}"></i>${esc(D.m.E[o.e][1])} <small>${kg(o.t)}</small></span>`).join("")}</div>`;
+  /* ---- Bloques adicionales: ingreso, dependencia, lugar en la caleta, alertas y relación ---- */
+  const money=v=>v>=1e9?"$"+t1(v/1e9)+" mil millones":v>=1e6?"$"+t1(v/1e6)+" millones":"$"+t0(v);
+  const fmtM=v=>v>=1e6?t1(v/1e6)+"M":v>=1e3?t0(v/1e3)+"k":t0(v);
+  PF.mapa=null;
+  function extra(D,reg,base){const R=D.R,m=D.m,pi=D.pi,L=lastFullYM(),hasP=typeof priceOf==="function"&&typeof CFG!=="undefined"&&CFG.precios&&Object.keys(CFG.precios).length>0;
+    let val=0,val12=0,t12=0,tP=0,lastYm=-1;const vMo=new Array(12).fill(0),e12=new Map(),c12=new Map(),y5=new Map();
+    for(let i=0;i<R.n;i++){if(R.p[i]!==pi)continue;const q=R.q[i],pr=hasP?priceOf(R.e[i]):0,d=L-R.ym[i];val+=q*pr;vMo[R.mo[i]]+=q*pr;if(R.ym[i]>lastYm)lastYm=R.ym[i];
+      if(d>=0&&d<12){t12+=q;val12+=q*pr;e12.set(R.e[i],(e12.get(R.e[i])||0)+q);c12.set(R.c[i],(c12.get(R.c[i])||0)+q)}else if(d>=12&&d<24)tP+=q;const y=R.y0+R.yr[i];y5.set(y,(y5.get(y)||0)+q)}
+    /* dependencia y vulnerabilidad (mismo índice que Prioridad de inversión) */
+    const eSrc=e12.size?e12:new Map(D.esp.map(x=>[x.e,x.t])),eT=[...eSrc.values()].reduce((a,b)=>a+b,0),eTop=[...eSrc].sort((a,b)=>b[1]-a[1])[0],dep=eT?eTop[1]/eT*100:0;
+    const v12=tP>0?(t12/tP-1)*100:null,fy=(L%12===11)?R.y0+Math.floor(L/12):R.y0+Math.floor(L/12)-1,ys=[fy-4,fy-3,fy-2,fy-1,fy].map(y=>y5.get(y)||0),mean=ys.reduce((a,b)=>a+b,0)/5;let tr=null;if(mean>0){let n=0,dd=0;ys.forEach((v,j)=>{n+=(j-2)*(v-mean);dd+=(j-2)**2});tr=n/dd/mean*100}
+    const vul=Math.round(.4*dep+.35*(v12==null?0:Math.max(0,Math.min(100,-v12*2)))+.25*(tr==null?0:Math.max(0,Math.min(100,-tr*4))));
+    /* lugar en su caleta principal */
+    const mc=(c12.size?[...c12]:D.cal.map(u=>[u.c,u.t])).sort((a,b)=>b[1]-a[1])[0],cI=mc?mc[0]:-1;let cT=0;const fC=new Map();const cMo=new Array(12).fill(0);
+    if(cI>=0)for(let i=0;i<R.n;i++){if(R.c[i]!==cI)continue;cMo[R.mo[i]]+=R.q[i];const d=L-R.ym[i];if(d>=0&&d<12){cT+=R.q[i];fC.set(R.p[i],(fC.get(R.p[i])||0)+R.q[i])}}
+    const mine=fC.get(pi)||0,rank=[...fC.values()].filter(v=>v>mine).length+1,nC=fC.size,pct=nC?rank/nC*100:null;
+    const sumM=D.mo.reduce((a,b)=>a+b,0)||1,sumC=cMo.reduce((a,b)=>a+b,0)||1,pM=D.mo.map(v=>v/sumM*100),pC=cMo.map(v=>v/sumC*100);
+    const top3=a=>a.map((v,k)=>[v,k]).sort((x,y)=>y[0]-x[0]).slice(0,3).map(x=>x[1]),tp=top3(pM),tc=top3(pC),inter=tp.filter(k=>tc.includes(k)).length;
+    /* alertas */
+    const A=[];const inact=lastYm>=0?R.lastYM-lastYm:null;if(inact!=null&&inact>=6)A.push(["warn",`Sin desembarque desde ${MES3[lastYm%12].toLowerCase()}-${R.y0+Math.floor(lastYm/12)} (${t0(inact)} meses).`]);
+    if(reg){if(reg.estado&&!rpaAct(reg.estado))A.push(["bad",`RPA en estado «${esc(reg.estado)}» en el registro de Sernapesca${t12>0?", con desembarque en los últimos 12 meses":""}.`]);
+      (reg.emb||[]).filter(e=>rpaAct(e.estado)&&rpaVenc(e.venc)).forEach(e=>A.push(["warn",`Matrícula vencida de la embarcación ${esc(e.nombre||e.matricula||"")} (${rpaFmt(e.venc)}).`]));
+      const cats=(reg.categorias||[]).join(" ").toLowerCase();if(cats){const rec=[...D.cats].some(k=>/recolector/i.test(m.cats[k])),art=[...D.cats].some(k=>/artesanal/i.test(m.cats[k]));
+        if(rec&&!/recolector|alguer/.test(cats))A.push(["warn","Registra capturas como recolector de orilla, pero esa categoría no aparece en su inscripción del RPA (revisar)."]);
+        if(art&&!/pescador|buzo|armador/.test(cats))A.push(["warn","Registra desembarque artesanal, pero no aparece inscrito como pescador, buzo ni armador (revisar)."])}}
+    let vedT=0,vedTot=0;const prox=new Set(),nowM=new Date().getMonth();
+    const allY=new Map(),isAll=(code,rr)=>{const k=code+"|"+rr;if(!allY.has(k)){let a=true;for(let mo=0;mo<12;mo++)if(!vedaOf(code,mo,rr)){a=false;break}allY.set(k,a)}return allY.get(k)};
+    if(typeof vedaOf==="function"&&CFG.vedas&&CFG.vedas.length){for(let i=0;i<R.n;i++){if(R.p[i]!==pi)continue;vedTot+=R.q[i];const code=m.E[R.e[i]][0],rr=m.C[R.c[i]][3];if(!isAll(code,rr)&&vedaOf(code,R.mo[i],rr))vedT+=R.q[i]}
+      D.esp.forEach(x=>{if(isAll(m.E[x.e][0],undefined))return;for(let k=0;k<=3;k++){const mo=(nowM+k)%12;if(vedaOf(m.E[x.e][0],mo,undefined)){prox.add(`${m.E[x.e][1]} (${k?MESL2[mo]:"este mes"})`);break}}})}
+    if(vedT>0)A.push(["info",`${t0(vedT/vedTot*100)} % de su desembarque histórico cae en meses con veda registrada para esa especie y zona (sin contar especies con veda todo el año; puede corresponder a cuotas, excepciones o diferencias de fechas).`]);
+    if(prox.size)A.push(["info",`Vedas vigentes o próximas para sus especies: ${[...prox].map(esc).join(", ")}.`]);
+    if(dep>=80)A.push(["warn",`Depende en ${t0(dep)} % de una sola especie (${esc(m.E[eTop[0]][1])}).`]);
+    /* relación */
+    const nm=norm(D.P[1]),tok=nm.split(" ").filter(w=>w.length>2),ap=tok.slice(-2);
+    let wa=false;try{const l=JSON.parse(localStorage.getItem("wa.lista")||"[]");wa=l.some(r=>{const t=norm(r.n||"").split(" ").filter(w=>w.length>2);return t.length>=2&&t.every(w=>nm.includes(w))})}catch(e){}
+    let minTxt="";const MN=window.__MN;if(MN&&MN.loaded){const hits=MN.list.filter(x=>{const h=norm(JSON.stringify(x.datos||{})+" "+(x.texto||""));return h.includes(String(D.P[0]))||(ap.length===2&&ap.every(w=>h.includes(w))&&h.includes(tok[0]))});minTxt=hits.length?`Aparece en ${t0(hits.length)} minuta${hits.length===1?"":"s"}: ${hits.slice(0,5).map(x=>esc((x.datos||{}).fecha||"")+" "+esc((x.datos||{}).tipo||"")).join(" · ")}.`:"No aparece mencionado en las minutas registradas."}else minTxt=`Para buscar menciones en minutas, abre una vez <button type="button" class="lnk" onclick="goView('minutas')">Relacionamiento → Minutas</button>.`;
+    let piTxt="";if(PF.mapa){const o=PF.mapa.get(String(D.P[0]));piTxt=o&&(o.p||o.i)?`Poder ${esc(String(o.p||"—"))} · interés ${esc(String(o.i||"—"))}${o.nota?` · ${esc(o.nota)}`:""}`:"Sin evaluación manual en el mapa de poder e interés."}else{piTxt="Cargando evaluación de poder e interés…";if(typeof MAPA!=="undefined"&&!PF.mapaL){PF.mapaL=1;MAPA.load().then(x=>{PF.mapa=x;draw()}).catch(()=>{PF.mapa=new Map();draw()})}}
+    let invTxt="";try{const it=window.__crInv&&window.__crInv();if(it&&cI>=0){const s=it.filter(x=>x.caleta&&norm(x.caleta)===norm(m.C[cI][0])).reduce((a,x)=>a+x.total,0);invTxt=s?`Inversión asociada a ${esc(m.C[cI][0])} en el presupuesto: US$ ${t0(s)}.`:`Sin inversión asociada a ${esc(m.C[cI][0])} en el presupuesto.`}else invTxt="La inversión por caleta se muestra al abrir Inversión social → Presupuesto (requiere permiso)."}catch(e){}
+    const org=m.orgs&&m.orgs[D.P[3]]?m.orgs[D.P[3]]:"";
+    const alertas=`<section class="card"><div class="pf-h3" role="heading" aria-level="3">Alertas</div>${A.length?`<ul class="pf-al">${A.map(([k,t])=>`<li class="pf-a-${k}">${t}</li>`).join("")}</ul>`:`<p class="cs">Sin alertas.</p>`}${!reg?`<p class="cs">Las alertas del registro (RPA, matrículas, categorías) requieren la consulta a Sernapesca desde la versión web.</p>`:""}</section>`;
+    return{alertas,resto:`<section class="card"><div class="pf-h3" role="heading" aria-level="3">Ingreso, dependencia y lugar en su caleta</div>
+      <div class="tz-k">${hasP?`<div><span>Ingreso estimado 12 meses</span><b>${money(val12)}</b><small>toneladas × precio de playa</small></div><div><span>Ingreso estimado total</span><b>${money(val)}</b><small>${dstr(D.a)} a ${dstr(D.b)}</small></div>`:""}<div><span>Dependencia de su especie principal</span><b>${t0(dep)} %</b><small>${esc(m.E[eTop[0]][1])}${e12.size?" · 12 meses":" · histórico"}</small></div><div><span>Índice de vulnerabilidad</span><b>${vul}</b><small>0 a 100 · igual que Prioridad de inversión</small></div><div><span>Variación 12 meses</span><b class="${v12==null?"":v12>10?"tz-up":v12<-10?"tz-dn":""}">${v12==null?"—":(v12>=0?"+":"−")+t0(Math.abs(v12))+" %"}</b><small>frente a los 12 anteriores</small></div>${cI>=0&&nC?`<div><span>Peso en ${esc(m.C[cI][0])}</span><b>${cT?t1(mine/cT*100):0} %</b><small>puesto ${t0(rank)} de ${t0(nC)} pescadores (12 meses)</small></div>`:""}</div>
+      ${hasP?`<div class="tbl" style="margin-top:10px"><table class="cesp pf-t"><thead><tr><th>Ingreso estimado</th>${MES3.map(x=>`<th>${x}</th>`).join("")}<th class="r">Total</th></tr></thead><tbody><tr><td><b>Por mes del año</b><div class="cs">$, suma de todos los años</div></td>${calRow(vMo,fmtM)}<td class="r"><b>${money(val)}</b></td></tr></tbody></table></div>`:`<p class="cs">El ingreso estimado aparece cuando hay precios de playa cargados en Administración.</p>`}
+      ${cI>=0?`<div class="tbl" style="margin-top:10px"><table class="cesp pf-t"><thead><tr><th>Temporada (% del año)</th>${MES3.map(x=>`<th>${x}</th>`).join("")}<th class="r"></th></tr></thead><tbody><tr><td><b>El pescador</b></td>${calRow(pM,v=>t0(v))}<td></td></tr><tr><td><b>${esc(m.C[cI][0])}</b><div class="cs">todos sus pescadores</div></td>${calRow(pC,v=>t0(v))}<td></td></tr></tbody></table></div>
+      <div class="pr-int"><b>Lectura</b><ul><li>${inter>=2?"Su temporada coincide en lo principal con la de su caleta":"Su temporada es distinta de la de su caleta"}: sus 3 meses más altos son ${tp.map(k=>MESL2[k]).join(", ")}; los de ${esc(m.C[cI][0])}, ${tc.map(k=>MESL2[k]).join(", ")}.</li>${pct!=null&&mine>0?`<li>Está entre el ${t0(Math.max(1,pct))} % de pescadores con más desembarque en ${esc(m.C[cI][0])} en los últimos 12 meses.</li>`:""}<li>El índice de vulnerabilidad combina dependencia de una especie (40 %), caída de 12 meses (35 %) y tendencia de 5 años (25 %).</li></ul></div>`:""}</section>
+     <section class="card"><div class="pf-h3" role="heading" aria-level="3">Relación con el pescador</div><ul class="pf-rel">
+      <li><b>Organización:</b> ${org?esc(org):"sin organización informada en la base"}</li>
+      <li><b>Poder e interés:</b> ${piTxt}</li>
+      <li><b>Minutas:</b> ${minTxt}</li>
+      <li><b>WhatsApp:</b> ${wa?"está en la lista de mensajería de este navegador.":"no está en la lista de mensajería de este navegador."}</li>
+      <li><b>Inversión social:</b> ${invTxt} La plataforma no registra apoyos entregados por persona.</li></ul></section>`}}
+  /* Ficha en una página para imprimir o guardar en PDF */
+  function printFicha(){const p=document.querySelector('[data-pane="pfi"]');if(!p)return;const w=window.open("","_blank");if(!w){alert("Permite las ventanas emergentes para imprimir la ficha.");return}
+    const css=[...document.querySelectorAll("style")].map(s=>s.outerHTML).join("");const body=p.cloneNode(true);body.querySelectorAll(".pf-pick,.mv-seg,.pf-noprint,button.pf-pdf").forEach(e=>e.remove());body.hidden=false;
+    w.document.write(`<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Ficha del pescador</title>${css}<style>body{background:#fff;padding:16px}section.card{break-inside:avoid;box-shadow:none;border:1px solid #ddd;margin-bottom:10px}@page{margin:12mm}</style></head><body>${body.outerHTML}<p style="font-size:11px;color:#666">Plataforma de Gestión Borde Costero · AAPP Norte · ${new Date().toLocaleDateString("es-CL")}</p></body></html>`);w.document.close();setTimeout(()=>{w.focus();w.print()},400)}
+  document.addEventListener("click",ev=>{if(ev.target.closest&&ev.target.closest(".pf-pdf"))printFicha()});
   function draw(){const p=document.querySelector('[data-pane="pfi"]');if(!p||S.tab!=="pfi"||!S.R)return;const pi=cur();
     const pick=`<div class="pf-pick"><label for="pfQ">Buscar pescador</label><input id="pfQ" type="search" placeholder="Nombre, apellido o RPA" autocomplete="off"><div id="pfL" class="pf-l" hidden></div></div>`;
     if(pi==null||!S.R.m.P[pi]){p.innerHTML=`<section class="card"><h2>Ficha del pescador</h2><p class="cs">Busca un pescador para ver qué especies captura y en qué meses y caletas desembarca.</p>${pick}</section>`;return}
-    const D=data(pi),{m,P,R}=D;if(!D.tot){p.innerHTML=`<section class="card"><h2>${esc(P[1])}</h2><p class="cs">Sin desembarques registrados para este pescador.</p>${pick}</section>`;return}
+    let X;const D=data(pi),{m,P,R}=D;if(!D.tot){p.innerHTML=`<section class="card"><h2>${esc(P[1])}</h2><p class="cs">Sin desembarques registrados para este pescador.</p>${pick}</section>`;return}
     const ord=PF.ord,E=[...D.esp].sort((a,b)=>ord==="asc"?a.t-b.t:b.t-a.t),mxE=Math.max(...D.esp.map(x=>x.t));
     /* registro Sernapesca (caleta base) */
     let reg=null,regTxt="";if(typeof RPAS!=="undefined"&&RPAS.ok){const d=rpaGet(P[0]);if(!d){rpaWant([P[0]]);regTxt="Consultando el registro de Sernapesca…"}else if(d.error)regTxt="No se pudo consultar el registro de Sernapesca.";else{reg=d;regTxt=d.caleta?"":"El registro de Sernapesca no informa caleta base."}}else regTxt="La caleta base se consulta en el registro de Sernapesca desde la versión web (Vercel).";
@@ -8804,7 +8883,7 @@ function pkDom(svg,pts,o){try{if(!svg)return;const s=pkStr(pts,o);if(s)svg.inser
     const ymRows=ys.map(y=>{const a=Array(12).fill(0);for(let k=0;k<12;k++)a[k]=D.ym.get((y-R.y0)*12+k)||0;return{y,a}});
     p.innerHTML=`<section class="card pf-h"><div class="tz-hh"><div><span class="tz-zn">Ficha del pescador</span><h2>${esc(P[1])}</h2><p class="cs"><a href="${RPA_URL+P[0]}" target="_blank" rel="noopener">RPA ${esc(String(P[0]))} · registro Sernapesca ↗</a> · ${esc(m.sexes[P[2]]||"")}${m.orgs&&m.orgs[P[3]]?` · ${esc(m.orgs[P[3]])}`:""}${reg&&reg.estado?` · <span class="rpa-b ${rpaAct(reg.estado)?"ok":"no"}">RPA ${esc(reg.estado)}</span>`:""}</p></div>${pick}</div>
       <div class="tz-k"><div><span>Desembarque total</span><b>${kg(D.tot)}</b><small>${dstr(D.a)} a ${dstr(D.b)}</small></div><div><span>Especies</span><b>${t0(D.esp.length)}</b><small>principal: ${esc(m.E[eTop.e][1])}</small></div><div><span>Caletas de desembarque</span><b>${t0(D.cal.length)}</b><small>${esc(m.C[D.cal[0].c][0])} (${t0(D.cal[0].t/D.tot*100)} %)</small></div><div><span>Caleta base</span><b style="font-size:15px">${base?esc(base):"—"}</b><small>${base?"registro Sernapesca":esc(regTxt)}</small></div><div><span>Mes más alto</span><b>${mxM?MES3[mxM[1]]:"—"}</b><small>${mxM?kg(mxM[0]):""}</small></div><div><span>Mes más bajo</span><b>${mnM?MES3[mnM[1]]:"—"}</b><small>${mnM?kg(mnM[0]):""}</small></div></div>
-      <div class="pr-int"><b>Resumen</b><ul>${L.map(x=>`<li>${x}</li>`).join("")}</ul></div><p class="cs">Incluye todas las categorías de captura del pescador (${[...D.cats].map(k=>esc(m.cats[k])).join(" y ")}). No depende de los filtros del panel lateral.</p></section>
+      <div class="pr-int"><b>Resumen</b><ul>${L.map(x=>`<li>${x}</li>`).join("")}</ul></div><p class="cs">Incluye todas las categorías de captura del pescador (${[...D.cats].map(k=>esc(m.cats[k])).join(" y ")}). No depende de los filtros del panel lateral.</p><p class="pf-noprint"><button type="button" class="btn small pf-pdf">Ficha en una página (imprimir o PDF)</button></p></section>${(X=extra(D,reg,base)).alertas}
      <section class="card"><div class="tbar"><div class="pf-h3" role="heading" aria-level="3">Especies capturadas</div><span class="mv-seg" role="group" aria-label="Orden"><button type="button" data-pford="asc" aria-pressed="${ord==="asc"}">De menor a mayor</button><button type="button" data-pford="desc" aria-pressed="${ord==="desc"}">De mayor a menor</button></span></div>
       <div class="pf-es">${E.map(x=>`<div class="pf-er"><span class="pf-en"><i style="background:${spCol(D,x.e)}"></i>${esc(m.E[x.e][1])}<small>${[...x.ys].sort().filter((y,i,a)=>i===0||i===a.length-1).join("–")} · ${t0(x.ys.size)} año${x.ys.size===1?"":"s"} · ${esc([...x.cal].sort((a,b)=>b[1]-a[1]).slice(0,2).map(([c])=>m.C[c][0]).join(", "))}</small></span><span class="pf-eb"><i style="width:${Math.max(1,x.t/mxE*100).toFixed(1)}%"></i></span><span class="pf-ev"><b>${kg(x.t)}</b> <small>${x.t/D.tot*100<1?t1(x.t/D.tot*100):t0(x.t/D.tot*100)} %</small></span></div>`).join("")}</div></section>
      <section class="card"><div class="pf-h3" role="heading" aria-level="3">Estacionalidad: ¿en qué meses desembarca?</div><p class="cs">Toneladas desembarcadas en cada mes del año, sumando todos los años, con todas las especies que captura (cada color es una especie).</p>${spLeg(D)}${stackBars(D,MES3,MESL2,(o,k)=>o.mo[k],{aria:"Desembarque por mes del año y especie"})}</section>
@@ -8815,7 +8894,7 @@ function pkDom(svg,pts,o){try{if(!svg)return;const s=pkStr(pts,o);if(s)svg.inser
       <div class="tbl"><table class="cesp pf-t">${head("Caleta","Total")}<tbody>${D.cal.map(u=>`<tr><td><b>${esc(m.C[u.c][0])}</b>${isB(u.c)?' <span class="pf-base">base</span>':""}<div class="cs">${esc(ZLAB[zoneKey(m.C[u.c])]||"")}</div></td>${calRow(u.mo,kgN)}<td class="r"><b>${kg(u.t)}</b><div class="cs">${t0(u.t/D.tot*100)} %</div></td></tr>`).join("")}</tbody></table></div></section>
      <section class="card"><div class="pf-h3" role="heading" aria-level="3">Mes a mes, año por año</div><p class="cs">Toneladas desembarcadas en cada mes de cada año con actividad. Muestra si su temporada se repite o cambia entre años.</p>
       <div class="tbl"><table class="cesp pf-t">${head("Año","Total")}<tbody>${ymRows.map(r=>`<tr><td><b>${r.y}</b><div class="cs">${t0(r.a.filter(v=>v>0).length)} meses</div></td>${calRow(r.a,kgN)}<td class="r"><b>${kg(r.a.reduce((s,v)=>s+v,0))}</b></td></tr>`).join("")}</tbody></table></div></section>
-     <section class="card"><div class="pf-h3" role="heading" aria-level="3">Desembarque por año (toneladas)</div>${(()=>{const ys=[...D.yr.keys()].sort((a,b)=>a-b);const Y=[];for(let y=ys[0];y<=ys[ys.length-1];y++)Y.push(y);const partY=S.R.lastYM%12!==11&&Y[Y.length-1]===S.R.y0+Math.floor(S.R.lastYM/12);return spLeg(D)+stackBars(D,Y.map(y=>Y.length>12?"’"+String(y).slice(2):String(y)),Y.map(String),(o,k)=>o.yv.get(Y[k])||0,{W:Math.max(900,Y.length*46),unit:"año",aria:"Desembarque por año y especie",skip:new Set(partY?[Y.length-1]:[]),dim:k=>partY&&k===Y.length-1})})()}</section>`}
+     <section class="card"><div class="pf-h3" role="heading" aria-level="3">Desembarque por año (toneladas)</div>${(()=>{const ys=[...D.yr.keys()].sort((a,b)=>a-b);const Y=[];for(let y=ys[0];y<=ys[ys.length-1];y++)Y.push(y);const partY=S.R.lastYM%12!==11&&Y[Y.length-1]===S.R.y0+Math.floor(S.R.lastYM/12);return spLeg(D)+stackBars(D,Y.map(y=>Y.length>12?"’"+String(y).slice(2):String(y)),Y.map(String),(o,k)=>o.yv.get(Y[k])||0,{W:Math.max(900,Y.length*46),unit:"año",aria:"Desembarque por año y especie",skip:new Set(partY?[Y.length-1]:[]),dim:k=>partY&&k===Y.length-1})})()}</section>${X.resto}`}
   /* búsqueda propia */
   let hits=[];
   document.addEventListener("input",ev=>{if(ev.target.id!=="pfQ")return;const l=document.getElementById("pfL"),w=norm(ev.target.value).split(/\s+/).filter(Boolean);if(!w.length||!S.R){l.hidden=true;return}
@@ -8836,6 +8915,165 @@ function pkDom(svg,pts,o){try{if(!svg)return;const s=pkStr(pts,o);if(s)svg.inser
   /* Botón en la ficha breve del Resumen */
   {const _rf=renderFicha;renderFicha=function(){_rf.apply(this,arguments);try{const el=document.getElementById("ficha");if(!el||el.hidden||S.f.p.size!==1||el.querySelector(".pf-go"))return;const d=document.createElement("div");d.className="fi-full";d.innerHTML=`<button type="button" class="btn small pf-go" data-pfgo="${[...S.f.p][0]}">Ver ficha completa: especies y estacionalidad →</button>`;el.appendChild(d)}catch(e){}}}
   const _rr=typeof rpaRefresh==="function"?rpaRefresh:null;if(_rr)rpaRefresh=function(){_rr.apply(this,arguments);setTimeout(()=>{try{if(S.tab==="pfi")draw()}catch(e){}},400)};
+})();
+
+</script>
+<style id="exCss">
+.ex-sel{padding:8px 10px;border-radius:8px;border:1px solid var(--line,#d6dbe1);background:var(--surface,#fff);color:inherit;font:inherit;font-size:14px}
+.ex-2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:18px;margin-top:8px}
+.ex-hb{display:grid;grid-template-columns:minmax(120px,1fr) 2fr 60px;gap:8px;align-items:center;font-size:12.5px;margin:6px 0}
+.ex-hb b{text-align:right}
+.ex-hb2{grid-template-columns:minmax(130px,1fr) 3fr 70px}
+.ex-st{display:flex;height:14px;border-radius:5px;overflow:hidden;background:rgba(127,127,127,.12)}.ex-st i{display:block;height:100%}
+.cesp td.ex-vd{outline:2px dashed #dc2626!important;outline-offset:-2px}
+.cesp td.ex-vd.mn{outline:3px dashed #d97706!important}
+.lnk{all:unset;cursor:pointer;color:var(--brand,#1f5fa8);text-decoration:underline;text-underline-offset:2px}
+@media (max-width:760px){.ex-2{grid-template-columns:1fr}.ex-hb,.ex-hb2{grid-template-columns:1fr 1.4fr 56px}}
+</style>
+
+<script>
+/* ================= Ficha por especie, Meses críticos, Organizaciones y Antes/después de un hito ================= */
+(()=>{
+  const MES3=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+  const MESL2=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  const tn=v=>v>=100?t0(v):v>=10?t1(v):t2(v);
+  const vp=v=>v==null?"—":(v>0?"+":v<0?"−":"")+t0(Math.abs(v))+" %";
+  const vcls=v=>v==null?"tz-na":v>10?"tz-up":v<-10?"tz-dn":"tz-eq";
+  const zSel=()=>{const s=S.f&&S.f.reg;if(!s||s.size!==1)return null;return(S.R.regKey||[])[[...s][0]]||null};
+  const zCol=k=>ZCOL[k]||"#94a3b8";
+  const money=v=>v>=1e9?"$"+t1(v/1e9)+" mil millones":v>=1e6?"$"+t1(v/1e6)+" millones":"$"+t0(v);
+  const hasP=()=>typeof priceOf==="function"&&typeof CFG!=="undefined"&&CFG.precios&&Object.keys(CFG.precios).length>0;
+  const H3=t=>`<div class="pf-h3" role="heading" aria-level="3">${t}</div>`;
+  const ymL=ym=>MES3[ym%12].toLowerCase()+"-"+(S.R.y0+Math.floor(ym/12));
+  const vedaMes=(code,mo,reg)=>{try{return typeof vedaOf==="function"&&CFG.vedas&&CFG.vedas.length?!!vedaOf(code,mo,reg):false}catch(e){return false}};
+  /* Categorías al día (las que llegan hasta 2 meses antes del último mes completo) */
+  function catOK(){const R=S.R,L=lastFullYM(),last=new Int32Array(R.m.cats.length).fill(-1);for(let i=0;i<R.n;i++)if(R.ym[i]>last[R.k[i]])last[R.k[i]]=R.ym[i];return{ok:[...last].map(v=>v>=L-2),L}}
+  /* Fila de 12 meses con máximo/mínimo */
+  const calRow=(arr,fmt,tip)=>{const mx=Math.max(...arr)||1,[pk,mn]=typeof pkIdx==="function"?pkIdx(arr,fmt):[-1,-1];
+    return arr.map((v,k)=>{const r=v/mx;return`<td class="${k===pk?"pk":""}${k===mn?" mn":""}" title="${MESL2[k]}: ${tip?tip(v):fmt(v)}" style="${v>0?`background:rgba(42,120,214,${(.1+.85*Math.sqrt(r)).toFixed(2)});color:${Math.sqrt(r)>.6?"#fff":"inherit"}`:""}">${v>0?fmt(v):"·"}</td>`}).join("")};
+  const head=(a,b)=>`<thead><tr><th>${a}</th>${MES3.map(x=>`<th>${x}</th>`).join("")}<th class="r">${b}</th></tr></thead>`;
+  function bars(vals,labels,o){o=o||{};const n=vals.length,W=o.W||Math.max(900,n*46),H=220,L=50,Rr=W-10,T=36,B=H-26,mx=Math.max(...vals)||1,bw=(Rr-L)/n,sc=v=>(B-T)*v/mx;let g="";
+    [0,.5,1].forEach(f=>{const y=B-(B-T)*f;g+=`<line x1="${L}" x2="${Rr}" y1="${y}" y2="${y}" stroke="currentColor" stroke-opacity=".1"/><text x="${L-6}" y="${y+4}" text-anchor="end" class="tz-ax">${f?(o.fmt||tn)(mx*f):"0"}</text>`});
+    vals.forEach((v,k)=>{const x=L+k*bw,h=sc(v),sh=o.shade&&o.shade[k];if(sh)g+=`<rect x="${x}" y="${T-6}" width="${bw}" height="${B-T+6}" fill="url(#exHatch)" opacity=".7"/>`;
+      g+=`<rect x="${x+4}" y="${B-h}" width="${Math.max(2,bw-8)}" height="${h}" rx="3" style="fill:${o.col||"#2a78d6"}" ${o.dim&&o.dim(k)?'fill-opacity=".45"':""}><title>${labels[k]}: ${(o.fmt||tn)(v)}${o.unit||""}${sh?" · veda":""}</title></rect>${v>0?`<text x="${x+bw/2}" y="${B-h-5}" text-anchor="middle" class="tz-ax" style="font-weight:600">${(o.fmt||tn)(v)}</text>`:""}<text x="${x+bw/2}" y="${B+16}" text-anchor="middle" class="tz-ax">${labels[k]}</text>`});
+    g+=typeof pkStr==="function"?pkStr(vals.map((v,k)=>({x:L+k*bw+bw/2,y:B-sc(v),v})),{mode:"bar",vlab:true,short:true,fmt:o.fmt||tn,skip:o.skip||new Set()}):"";
+    return`<div class="pf-sv"><svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img" aria-label="${esc(o.aria||"Gráfico de barras")}"><defs><pattern id="exHatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="transparent"/><line x1="0" y1="0" x2="0" y2="6" stroke="#c2410c" stroke-opacity=".35" stroke-width="2"/></pattern></defs>${g}</svg></div>`}
+  const goCal=i=>{goView("ficha");let n=0;const tr=()=>{const s=document.getElementById("igCal");if(s){s.value=String(i);s.dispatchEvent(new Event("change",{bubbles:true}));return}if(++n<30)setTimeout(tr,150)};setTimeout(tr,100)};
+  const goPes=i=>{if(window.pfOpen)window.pfOpen(i)};
+  document.addEventListener("click",ev=>{const t=ev.target.closest&&ev.target.closest("[data-exc],[data-exp],[data-exe]");if(!t||!S.R)return;if(t.dataset.exc!=null)goCal(+t.dataset.exc);else if(t.dataset.exp!=null)goPes(+t.dataset.exp);else if(t.dataset.exe!=null){EF.e=+t.dataset.exe;if(S.tab!=="efi")goView("espficha");else efi()}});
+
+  /* ================= FICHA POR ESPECIE ================= */
+  const EF={e:null};window.efOpen=e=>{EF.e=e;goView("espficha")};
+  function efi(){const p=document.querySelector('[data-pane="efi"]');if(!p||S.tab!=="efi"||!S.R)return;const R=S.R,m=R.m,{ok,L}=catOK(),sel=zSel(),st=window.__tzStats&&window.__tzStats();if(!st)return;
+    const inZ=c=>!sel||st.C[c].z===sel;
+    /* totales por especie (12 meses, categorías al día) */
+    const nE=m.E.length,t12=new Float64Array(nE),tP=new Float64Array(nE);for(let i=0;i<R.n;i++){if(!ok[R.k[i]]||!inZ(R.c[i]))continue;const d=L-R.ym[i];if(d<0)continue;if(d<12)t12[R.e[i]]+=R.q[i]/1000;else if(d<24)tP[R.e[i]]+=R.q[i]/1000}
+    const list=[...Array(nE).keys()].filter(e=>t12[e]>0||tP[e]>0).sort((a,b)=>t12[b]-t12[a]);if(!list.length){p.innerHTML=`<section class="card"><h2>Ficha por especie</h2><p class="cs">Sin datos.</p></section>`;return}
+    if(EF.e==null||!list.includes(EF.e))EF.e=list[0];const e=EF.e,code=m.E[e][0],en=esc(m.E[e][1]);
+    const yN=R.y1-R.y0+1,mo=new Array(12).fill(0),yr=new Float64Array(yN),zon=new Map(),cal=new Map(),fis=new Map(),fP=new Set(),fM=new Set(),muj=m.sexes.indexOf("Mujer"),fy=st.fullY,y3=[fy-2,fy-1,fy];let tot12=0;
+    for(let i=0;i<R.n;i++){if(R.e[i]!==e||!ok[R.k[i]]||!inZ(R.c[i]))continue;const q=R.q[i]/1000,y=R.y0+R.yr[i],c=R.c[i],d=L-R.ym[i];yr[R.yr[i]]+=q;if(y3.includes(y))mo[R.mo[i]]+=q/3;
+      if(d>=0&&d<12){tot12+=q;const z=st.C[c].z;zon.set(z,(zon.get(z)||0)+q);let o=cal.get(c);if(!o){o={c,t:0,tp:0,f:new Set()};cal.set(c,o)}o.t+=q;o.f.add(R.p[i]);fis.set(R.p[i],(fis.get(R.p[i])||0)+q);fP.add(R.p[i]);if(R.sex[i]===muj)fM.add(R.p[i])}
+      else if(d>=12&&d<24){let o=cal.get(c);if(!o){o={c,t:0,tp:0,f:new Set()};cal.set(c,o)}o.tp+=q}}
+    const v12=tP[e]>0?(t12[e]/tP[e]-1)*100:null,price=hasP()?priceOf(e):0,val=price*tot12*1000;
+    const zt=new Map();for(let i=0;i<R.n;i++){if(!ok[R.k[i]]||!inZ(R.c[i]))continue;const d=L-R.ym[i];if(d>=0&&d<12){const z=st.C[R.c[i]].z;zt.set(z,(zt.get(z)||0)+R.q[i]/1000)}}
+    const totAll=[...zt.values()].reduce((a,b)=>a+b,0),share=totAll?tot12/totAll*100:0;
+    const regRaw=sel?(R.regRaw[R.regKey.indexOf(sel)]):undefined,shade0=MES3.map((_,k)=>vedaMes(code,k,regRaw)),vedAll=shade0.every(Boolean),shade=vedAll?new Array(12).fill(false):shade0,nowM=(new Date()).getMonth(),vedHoy=shade0[nowM];
+    const fL=[...fis].sort((a,b)=>b[1]-a[1]),top10=fL.slice(0,10).reduce((a,b)=>a+b[1],0),cL=[...cal.values()].filter(o=>o.t>0||o.tp>0).sort((a,b)=>b.t-a.t);
+    const Y=[];for(let y=R.y0;y<=R.y1;y++)Y.push(y);const partY=R.lastYM%12!==11;
+    const mxM=mo.map((v,k)=>[v,k]).filter(x=>x[0]>0).sort((a,b)=>b[0]-a[0]);
+    const lect=[];if(mxM.length)lect.push(`Los meses de mayor desembarque (promedio ${y3[0]}–${y3[2]}) son ${mxM.slice(0,3).map(x=>MESL2[x[1]]).join(", ")}.`);
+    if(vedAll)lect.push(`Tiene veda registrada todo el año${sel?" en la zona":""}; la extracción que aparece corresponde a excepciones autorizadas (por ejemplo, planes de manejo o cuotas).`);else if(shade.some(Boolean))lect.push(`Meses con veda registrada${sel?" en la zona":""}: ${shade.map((v,k)=>v?MESL2[k]:null).filter(Boolean).join(", ")} (achurados en el gráfico).`);
+    if(cL[0]&&tot12)lect.push(`${esc(m.C[cL[0].c][0])} concentra ${t0(cL[0].t/tot12*100)} % del desembarque de los últimos 12 meses.`);
+    if(fL.length)lect.push(`Los 10 pescadores con más desembarque explican ${t0(top10/tot12*100)} % del total de 12 meses, de ${t0(fL.length)} que la capturaron.`);
+    p.innerHTML=`<section class="card"><div class="tz-hh"><div><span class="tz-zn">Ficha por especie</span><h2>${en}</h2><p class="cs">${esc(m.E[e][2]||"")}${sel?` · ${esc(ZLAB[sel])}`:" · todas las zonas"} · últimos 12 meses: ${ymL(L-11)} a ${ymL(L)}</p></div>
+      <div class="pf-pick"><label for="efSel">Elegir especie</label><select id="efSel" class="ex-sel">${list.map(x=>`<option value="${x}" ${x===e?"selected":""}>${esc(m.E[x][1])} · ${tn(t12[x])} t</option>`).join("")}</select></div></div>
+      <div class="tz-k"><div><span>Desembarque 12 meses</span><b>${tn(tot12)} t</b><small class="${vcls(v12)}">${vp(v12)} frente a 12 meses antes</small></div><div><span>Peso en ${sel?"la zona":"el total"}</span><b>${share<1?t1(share):t0(share)} %</b><small>del desembarque de 12 meses</small></div><div><span>Pescadores</span><b>${t0(fP.size)}</b><small>${fP.size?t0(fM.size/fP.size*100):0} % mujeres</small></div><div><span>Caletas</span><b>${t0(cL.filter(o=>o.t>0).length)}</b><small>con desembarque en 12 meses</small></div>${price?`<div><span>Precio de playa</span><b>$${t0(price)}/kg</b><small>valor estimado ${money(val)}</small></div>`:""}<div><span>Veda este mes</span><b>${vedHoy?"Sí":"No"}</b><small>${CFG.vedas&&CFG.vedas.length?"según calendario cargado":"sin calendario cargado"}</small></div></div>
+      <div class="pr-int"><b>Lectura</b><ul>${lect.map(x=>`<li>${x}</li>`).join("")}</ul></div></section>
+     <section class="card">${H3("Estacionalidad")}<p class="cs">Toneladas promedio por mes, ${y3[0]}–${y3[2]}. Achurado: meses con veda.</p>${bars(mo,MES3,{W:1000,shade,aria:"Estacionalidad de "+m.E[e][1]})}</section>
+     <section class="card">${H3("Evolución anual")}${bars(Array.from(yr),Y.map(y=>Y.length>12?"’"+String(y).slice(2):String(y)),{aria:"Desembarque anual",skip:new Set(partY?[Y.length-1]:[]),dim:k=>partY&&k===Y.length-1})}<p class="cs">${partY?`${R.y1} incompleto (barra clara). `:""}Incluye solo categorías con datos al día.</p></section>
+     <section class="card">${H3("¿Dónde se desembarca?")}<div class="ex-2"><div><p class="cs">Por zona, últimos 12 meses</p>${ZORD.filter(k=>zon.get(k)).map(k=>`<div class="ex-hb"><span>${esc(ZLAB[k])}</span><span class="pf-eb"><i style="width:${(zon.get(k)/tot12*100).toFixed(1)}%;background:${zCol(k)}"></i></span><b>${t0(zon.get(k)/tot12*100)} %</b></div>`).join("")||'<p class="cs">Sin desembarque en 12 meses.</p>'}<p class="cs"><button type="button" class="btn small ghost" onclick="goView('movesp')">Ver movimiento entre caletas →</button></p></div>
+      <div><div class="tbl"><table class="pr-t"><thead><tr><th>Caleta</th><th class="n">12 meses</th><th class="n">Variación</th><th class="n">Pescadores</th><th class="n">% de la especie</th></tr></thead><tbody>${cL.slice(0,15).map(o=>{const v=o.tp>0?(o.t/o.tp-1)*100:null;return`<tr><td><button type="button" class="lnk" data-exc="${o.c}">${esc(m.C[o.c][0])}</button></td><td class="n">${tn(o.t)} t</td><td class="n ${vcls(v)}">${vp(v)}</td><td class="n">${t0(o.f.size)}</td><td class="n">${tot12?t0(o.t/tot12*100):0} %</td></tr>`}).join("")}</tbody></table></div></div></div></section>
+     <section class="card">${H3("Pescadores que la capturan (12 meses)")}<div class="tbl"><table class="pr-t"><thead><tr><th>#</th><th>Pescador</th><th class="n">Toneladas</th><th class="n">% de la especie</th><th class="n">% de su propio desembarque</th></tr></thead><tbody>${(()=>{const own=new Map();fL.slice(0,20).forEach(([pi])=>own.set(pi,0));for(let i=0;i<R.n;i++){if(own.has(R.p[i])){const d=L-R.ym[i];if(d>=0&&d<12)own.set(R.p[i],own.get(R.p[i])+R.q[i]/1000)}}
+        return fL.slice(0,20).map(([pi,v],j)=>`<tr><td class="cs">${j+1}</td><td><button type="button" class="lnk" data-exp="${pi}">${esc(m.P[pi][1])}</button></td><td class="n">${tn(v)} t</td><td class="n">${t1(v/tot12*100)} %</td><td class="n">${own.get(pi)?t0(v/own.get(pi)*100):0} %</td></tr>`).join("")})()}</tbody></table></div><p class="cs">«% de su propio desembarque» indica cuánto depende cada pescador de esta especie.</p></section>`}
+  document.addEventListener("change",ev=>{if(ev.target.id==="efSel"){EF.e=+ev.target.value;efi()}});
+
+  /* ================= MESES CRÍTICOS ================= */
+  const CR={m:"val"};
+  function crit(){const p=document.querySelector('[data-pane="crit"]');if(!p||S.tab!=="crit"||!S.R)return;const R=S.R,m=R.m,sel=zSel(),st=window.__tzStats&&window.__tzStats();if(!st)return;const fy=st.fullY,y3=[fy-2,fy-1,fy],P=hasP(),useV=P&&CR.m==="val";
+    const C=new Map(),Z=new Array(12).fill(0),esp=new Map();
+    for(let i=0;i<R.n;i++){const y=R.y0+R.yr[i];if(!y3.includes(y))continue;const c=R.c[i];if(sel&&st.C[c].z!==sel)continue;const q=R.q[i],v=useV?q*priceOf(R.e[i]):q/1000,mm=R.mo[i];
+      let o=C.get(c);if(!o){o={c,mo:new Array(12).fill(0),t:0,e:new Map()};C.set(c,o)}o.mo[mm]+=v/3;o.t+=v/3;o.e.set(R.e[i],(o.e.get(R.e[i])||0)+q);Z[mm]+=v/3}
+    const L=[...C.values()].filter(o=>o.t>0).sort((a,b)=>b.t-a.t).slice(0,30);const fmt=useV?(v=>v>=1e6?t1(v/1e6)+"M":v>=1e3?t0(v/1e3)+"k":t0(v)):(v=>tn(v));
+    const low=Z.map((v,k)=>[v,k]).sort((a,b)=>a[0]-b[0]).slice(0,3);
+    const vedC=o=>{const top=[...o.e].sort((a,b)=>b[1]-a[1])[0];if(!top)return new Array(12).fill(false);const r=MES3.map((_,k)=>vedaMes(m.E[top[0]][0],k,m.C[o.c][3]));return r.every(Boolean)?new Array(12).fill(false):r};
+    p.innerHTML=`<section class="card"><div class="tz-hh"><div><span class="tz-zn">Inversión social</span><h2>Meses críticos de ingreso por caleta</h2><p class="cs">${useV?"Ingreso estimado (toneladas × precio de playa)":"Toneladas"} promedio por mes, ${y3[0]}–${y3[2]}${sel?`, ${esc(ZLAB[sel])}`:""}. Muestra en qué meses cae la actividad de cada caleta, para decidir <b>cuándo</b> conviene un apoyo, no solo dónde.</p></div>
+      ${P?`<span class="mv-seg" role="group" aria-label="Medida"><button type="button" data-crm="val" aria-pressed="${CR.m==="val"}">Ingreso estimado</button><button type="button" data-crm="t" aria-pressed="${CR.m==="t"}">Toneladas</button></span>`:`<p class="cs">Sin precios de playa cargados: se muestran toneladas. Los precios se cargan en Administración.</p>`}</div>
+      <div class="pr-int"><b>Lectura</b><ul><li>${sel?"En la zona":"En el total"}, los meses más bajos son ${low.map(x=>MESL2[x[1]]).join(", ")}${useV?` (promedio ${low.map(x=>"$"+fmt(x[0])).join(", ")} por mes)`:""}.</li><li>En cada caleta, <span class="pk-b mn">▼</span> marca su mes más bajo con actividad; el borde rojo punteado indica veda de su especie principal.</li></ul></div></section>
+     <section class="card">${H3(sel?esc(ZLAB[sel]):"Total de las zonas")}<div class="tbl"><table class="cesp pf-t">${head("Total",useV?"Promedio anual":"Toneladas/año")}<tbody><tr><td><b>Todas las caletas</b></td>${calRow(Z,fmt)}<td class="r"><b>${useV?money(Z.reduce((a,b)=>a+b,0)):tn(Z.reduce((a,b)=>a+b,0))+" t"}</b></td></tr></tbody></table></div></section>
+     <section class="card">${H3("Por caleta")}<p class="cs">${useV?"Valores en pesos: k = miles, M = millones.":"Toneladas."} Ordenadas por actividad. Toca una caleta para abrir su ficha.</p><div class="tbl"><table class="cesp pf-t">${head("Caleta",useV?"Promedio anual":"t/año")}<tbody>${L.map(o=>{const vd=vedC(o);return`<tr><td><button type="button" class="lnk" data-exc="${o.c}">${esc(m.C[o.c][0])}</button><div class="cs">${esc(ZLAB[st.C[o.c].z])}</div></td>${calRow(o.mo,fmt).replace(/<td class="([^"]*)"/g,(s,c,i)=>s)}<td class="r"><b>${useV?money(o.t):tn(o.t)+" t"}</b></td></tr>`.replace(/<td class="([^"]*)" title="(\w+):/g,(s,c,mn)=>{const k=MESL2.indexOf(mn);return`<td class="${c}${k>=0&&vd[k]?" ex-vd":""}" title="${mn}:`})}).join("")}</tbody></table></div></section>`}
+
+  /* ================= ORGANIZACIONES Y REGISTRO ================= */
+  function orgs(){const p=document.querySelector('[data-pane="org"]');if(!p||S.tab!=="org"||!S.R)return;const R=S.R,m=R.m,sel=zSel(),st=window.__tzStats&&window.__tzStats();if(!st)return;const{ok,L}=catOK();
+    const O=new Map(),Cal=new Map(),pAct=new Map();
+    for(let i=0;i<R.n;i++){const c=R.c[i];if(sel&&st.C[c].z!==sel)continue;if(!ok[R.k[i]])continue;const d=L-R.ym[i];if(d<0||d>=12)continue;const pi=R.p[i],q=R.q[i]/1000,org=m.P[pi][3]||0;
+      let o=O.get(org);if(!o){o={org,f:new Set(),t:0,mj:new Set(),c:new Map()};O.set(org,o)}o.f.add(pi);o.t+=q;if(m.sexes[m.P[pi][2]]==="Mujer")o.mj.add(pi);o.c.set(c,(o.c.get(c)||0)+q);
+      let k=Cal.get(c);if(!k){k={c,t:0,o:new Map()};Cal.set(c,k)}k.t+=q;k.o.set(org,(k.o.get(org)||0)+q);pAct.set(pi,(pAct.get(pi)||0)+q)}
+    const tot=[...O.values()].reduce((a,o)=>a+o.t,0),nP=pAct.size,oL=[...O.values()].sort((a,b)=>b.t-a.t),named=oL.filter(o=>o.org&&m.orgs[o.org]);
+    const sinOrg=O.get(0);
+    /* Inscripciones en el RPA (solo pescadores consultados en Sernapesca) */
+    let ins="";if(typeof RPAS!=="undefined"&&RPAS.ok){const act=[...pAct.keys()];let known=0;const byY=new Map(),recent=[];const L0=lastFullYM();
+      act.forEach(pi=>{const d=rpaGet(m.P[pi][0]);if(!d||d.error)return;known++;if(!d.inscripcion)return;const y=+String(d.inscripcion).slice(0,4);if(!y)return;byY.set(y,(byY.get(y)||0)+1);
+        let first=Infinity;for(let i=0;i<R.n;i++)if(R.p[i]===pi&&R.ym[i]<first)first=R.ym[i];const yIns=(y-R.y0)*12+(+String(d.inscripcion).slice(5,7)-1);if(yIns>=L0-24)recent.push({pi,f:d.inscripcion,first,t:pAct.get(pi)})});
+      const ys=[...byY.keys()].sort((a,b)=>a-b);
+      ins=`<section class="card">${H3("Inscripciones en el RPA")}<p class="cs">Año de inscripción en el Registro Pesquero Artesanal de los pescadores activos en 12 meses${sel?" de la zona":""}. ${t0(known)} de ${t0(nP)} tienen datos de Sernapesca.${known<nP?` <button type="button" class="btn small" id="exRpa">Consultar los ${t0(nP-known)} pendientes</button>`:""}</p>
+        ${ys.length?bars(ys.map(y=>byY.get(y)),ys.map(y=>ys.length>14?"’"+String(y).slice(2):String(y)),{fmt:t0,aria:"Inscripciones por año"}):""}
+        ${recent.length?`<div class="pr-int"><b>Inscritos en los últimos 24 meses (${t0(recent.length)})</b><ul>${recent.sort((a,b)=>b.t-a.t).slice(0,12).map(r=>`<li><button type="button" class="lnk" data-exp="${r.pi}">${esc(m.P[r.pi][1])}</button>: inscrito el ${rpaFmt(r.f)}, primer desembarque registrado en ${ymL(r.first)}, ${tn(r.t)} t en 12 meses.</li>`).join("")}</ul></div>`:`<p class="cs">Sin inscripciones recientes entre los pescadores consultados.</p>`}</section>`}
+    else ins=`<section class="card">${H3("Inscripciones en el RPA")}<p class="cs">La fecha de inscripción se consulta en el registro de Sernapesca desde la versión web de la plataforma (Vercel).</p></section>`;
+    const cL=(()=>{const a=[...Cal.values()].filter(k=>k.t>0),w=a.filter(k=>[...k.o.keys()].some(o=>o&&m.orgs[o])).sort((x,y)=>y.t-x.t);return(w.length?w:a.sort((x,y)=>y.t-x.t)).slice(0,20)})(),oCol=new Map(named.slice(0,8).map((o,j)=>[o.org,["#2a78d6","#16a34a","#f59e0b","#9333ea","#e11d48","#0891b2","#65a30d","#4f46e5"][j]]));
+    p.innerHTML=`<section class="card"><div class="tz-hh"><div><span class="tz-zn">Pescadores</span><h2>Organizaciones y registro</h2><p class="cs">Cuántos pescadores activos y qué parte del desembarque representa cada organización${sel?` en ${esc(ZLAB[sel])}`:""}, últimos 12 meses (${ymL(L-11)} a ${ymL(L)}). La organización es la informada en la base de datos.</p></div></div>
+      <div class="pr-int"><b>Lectura</b><ul><li>${t0(nP)} pescadores activos; ${t0(nP-(sinOrg?sinOrg.f.size:0))} (${nP?t0((nP-(sinOrg?sinOrg.f.size:0))/nP*100):0} %) tienen organización informada.</li>${named[0]?`<li>${esc(m.orgs[named[0].org])} reúne ${t0(named[0].f.size)} pescadores activos y ${t0(named[0].t/tot*100)} % del desembarque.</li>`:""}</ul></div></section>
+     <section class="card">${H3("Representatividad por organización")}<div class="tbl"><table class="pr-t"><thead><tr><th>Organización</th><th class="n">Pescadores activos</th><th class="n">% de los activos</th><th class="n">Desembarque 12 meses</th><th class="n">% del desembarque</th><th class="n">Mujeres</th><th>Caleta principal</th></tr></thead><tbody>${oL.map(o=>{const mc=[...o.c].sort((a,b)=>b[1]-a[1])[0];return`<tr><td>${oCol.has(o.org)?`<i class="pf-sw" style="background:${oCol.get(o.org)}"></i>`:""}<b>${o.org&&m.orgs[o.org]?esc(m.orgs[o.org]):"Sin organización informada"}</b></td><td class="n">${t0(o.f.size)}</td><td class="n">${nP?t0(o.f.size/nP*100):0} %</td><td class="n">${tn(o.t)} t</td><td class="n">${tot?t0(o.t/tot*100):0} %</td><td class="n">${o.f.size?t0(o.mj.size/o.f.size*100):0} %</td><td>${mc?esc(m.C[mc[0]][0]):"—"}</td></tr>`}).join("")}</tbody></table></div></section>
+     ${named.length?`<section class="card">${H3("Peso de cada organización en el desembarque de la caleta")}<p class="cs">Caletas donde hay pescadores con organización informada. Cada barra es el desembarque de 12 meses de la caleta, repartido según la organización de sus pescadores.</p><div class="ex-org">${cL.map(k=>`<div class="ex-hb ex-hb2"><button type="button" class="lnk" data-exc="${k.c}">${esc(m.C[k.c][0])}</button><span class="ex-st">${[...k.o].sort((a,b)=>(oCol.has(b[0])?1:0)-(oCol.has(a[0])?1:0)||b[1]-a[1]).map(([o,v])=>`<i style="width:${(v/k.t*100).toFixed(2)}%;background:${oCol.get(o)||(o?"#94a3b8":"#d6dbe1")}" title="${esc(o&&m.orgs[o]?m.orgs[o]:"Sin organización")}: ${t0(v/k.t*100)} %"></i>`).join("")}</span><b>${tn(k.t)} t</b></div>`).join("")}</div><div class="pf-leg">${named.slice(0,8).map(o=>`<span><i style="background:${oCol.get(o.org)}"></i>${esc(m.orgs[o.org])}</span>`).join("")}<span><i style="background:#94a3b8"></i>Otras</span><span><i style="background:#d6dbe1"></i>Sin organización</span></div></section>`:""}
+     ${ins}`}
+  document.addEventListener("click",ev=>{if(ev.target.id==="exRpa"&&S.R){const m=S.R.m,{ok,L}=catOK(),sel=zSel(),st=window.__tzStats(),s=new Set();for(let i=0;i<S.R.n;i++){if(!ok[S.R.k[i]])continue;if(sel&&st.C[S.R.c[i]].z!==sel)continue;const d=L-S.R.ym[i];if(d>=0&&d<12)s.add(m.P[S.R.p[i]][0])}const l=[...s];RPAS.prog={done:0,tot:l.length};rpaWant(l);ev.target.disabled=true;ev.target.textContent="Consultando…"}
+    const b=ev.target.closest&&ev.target.closest("[data-crm]");if(b){CR.m=b.dataset.crm;crit()}});
+
+  /* ================= ANTES Y DESPUÉS DE UN HITO ================= */
+  const HT={c:"",ym:null,w:12};
+  function hito(){const p=document.querySelector('[data-pane="hito"]');if(!p||S.tab!=="hito"||!S.R)return;const R=S.R,m=R.m,st=window.__tzStats&&window.__tzStats();if(!st)return;const sel=zSel(),Lm=R.lastYM;
+    const cals=st.C.filter(o=>(!sel||o.z===sel)&&(o.t12>0||o.tP>0)).sort((a,b)=>b.t12-a.t12);
+    if(HT.ym==null)HT.ym=Math.max(R.firstYM+12,Lm-24);const w=HT.w,h=HT.ym;
+    const scope=HT.c===""?(sel?"z:"+sel:"all"):HT.c,inS=c=>scope==="all"?true:scope.startsWith("z:")?st.C[c].z===scope.slice(2):String(c)===scope;
+    const mo=new Map(),fB=new Set(),fA=new Set(),eB=new Map(),eA=new Map();let tB=0,tA=0,tB1=0,tA1=0;
+    for(let i=0;i<R.n;i++){if(!inS(R.c[i]))continue;const k=R.ym[i],q=R.q[i]/1000;mo.set(k,(mo.get(k)||0)+q);
+      if(k>=h-w&&k<h){tB+=q;fB.add(R.p[i]);eB.set(R.e[i],(eB.get(R.e[i])||0)+q)}else if(k>=h&&k<h+w&&k<=Lm){tA+=q;fA.add(R.p[i]);eA.set(R.e[i],(eA.get(R.e[i])||0)+q)}
+      if(k>=h-w-12&&k<h-12)tB1+=q;if(k>=h-12&&k<h+w-12&&k<=Lm)tA1+=q}
+    const avail=Math.min(w,Lm-h+1),dA=tB>0?(tA/tB-1)*100:null,dPrev=tB1>0?(tA1/tB1-1)*100:null;
+    const k0=Math.max(R.firstYM,h-w-12),k1=Math.min(Lm,h+w+12),xs=[];for(let k=k0;k<=k1;k++)xs.push(k);
+    const W=1000,H=240,Lf=50,Rt=20,T=20,B=H-28,mx=Math.max(1,...xs.map(k=>mo.get(k)||0)),X=j=>Lf+(W-Lf-Rt)*j/Math.max(1,xs.length-1),Yy=v=>B-(B-T)*v/mx;let g="";
+    g+=`<rect x="${X(xs.indexOf(Math.max(k0,h-w)))}" y="${T}" width="${X(xs.indexOf(h))-X(xs.indexOf(Math.max(k0,h-w)))}" height="${B-T}" fill="#2a78d6" fill-opacity=".07"/><rect x="${X(xs.indexOf(h))}" y="${T}" width="${X(xs.indexOf(Math.min(k1,h+w-1)))-X(xs.indexOf(h))}" height="${B-T}" fill="#f59e0b" fill-opacity=".1"/>`;
+    [0,.5,1].forEach(f=>g+=`<line x1="${Lf}" x2="${W-Rt}" y1="${Yy(mx*f)}" y2="${Yy(mx*f)}" stroke="currentColor" stroke-opacity=".1"/><text x="${Lf-6}" y="${Yy(mx*f)+4}" text-anchor="end" class="tz-ax">${f?tn(mx*f):"0"}</text>`);
+    xs.forEach((k,j)=>{if(k%12===0)g+=`<text x="${X(j)}" y="${H-8}" text-anchor="middle" class="tz-ax">${R.y0+Math.floor(k/12)}</text>`});
+    g+=`<polyline points="${xs.map((k,j)=>`${X(j).toFixed(1)},${Yy(mo.get(k)||0).toFixed(1)}`).join(" ")}" fill="none" stroke="#2a78d6" stroke-width="2.2"/>`;
+    xs.forEach((k,j)=>g+=`<circle cx="${X(j).toFixed(1)}" cy="${Yy(mo.get(k)||0).toFixed(1)}" r="2.5" style="fill:#2a78d6"><title>${ymL(k)}: ${tn(mo.get(k)||0)} t</title></circle>`);
+    g+=`<line x1="${X(xs.indexOf(h))}" x2="${X(xs.indexOf(h))}" y1="${T-6}" y2="${B}" stroke="#c2410c" stroke-width="2" stroke-dasharray="5 4"/><text x="${X(xs.indexOf(h))+6}" y="${T+6}" class="tz-ax" style="fill:#c2410c;font-weight:700">Hito: ${ymL(h)}</text>`;
+    const espCh=[...new Set([...eB.keys(),...eA.keys()])].map(e=>({e,b:eB.get(e)||0,a:eA.get(e)||0})).sort((x,y)=>Math.abs(y.a-y.b)-Math.abs(x.a-x.b)).slice(0,8);
+    const opts=[];for(let k=R.firstYM+1;k<=Lm;k++)opts.push(k);
+    p.innerHTML=`<section class="card"><div class="tz-hh"><div><span class="tz-zn">Contexto</span><h2>Antes y después de un hito</h2><p class="cs">Compara el desembarque de los meses previos y posteriores a una fecha relevante (inicio de una obra, un evento operacional, una veda nueva). Es una comparación descriptiva: no permite atribuir la causa del cambio.</p></div></div>
+      <div class="mv-ctl"><label>Caleta o zona<select id="htC">${!sel?`<option value="" ${HT.c===""?"selected":""}>Todas las zonas</option>`:`<option value="" ${HT.c===""?"selected":""}>${esc(ZLAB[sel])} (zona)</option>`}${cals.map(o=>`<option value="${o.i}" ${HT.c===String(o.i)?"selected":""}>${esc(o.n)}</option>`).join("")}</select></label>
+        <label>Mes del hito<select id="htM">${opts.reverse().map(k=>`<option value="${k}" ${k===h?"selected":""}>${ymL(k)}</option>`).join("")}</select></label>
+        <label>Ventana<select id="htW">${[3,6,12,24].map(x=>`<option value="${x}" ${x===w?"selected":""}>${x} meses</option>`).join("")}</select></label></div></section>
+     <section class="card"><div class="tz-k"><div><span>${w} meses antes</span><b>${tn(tB)} t</b><small>${t0(fB.size)} pescadores · ${t0(eB.size)} especies</small></div><div><span>${avail<w?`${avail} meses después (hasta hoy)`:`${w} meses después`}</span><b>${tn(tA)} t</b><small>${t0(fA.size)} pescadores · ${t0(eA.size)} especies</small></div><div><span>Cambio</span><b class="${vcls(dA)}">${vp(dA)}</b><small>después frente a antes</small></div><div><span>Mismo cambio un año antes</span><b class="${vcls(dPrev)}">${vp(dPrev)}</b><small>referencia de estacionalidad</small></div></div>
+      ${bars?"":""}<div class="pf-sv"><svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img" aria-label="Desembarque mensual antes y después del hito">${g}</svg></div>
+      <div class="pr-int"><b>Lectura</b><ul><li>Entre los ${w} meses previos y los ${avail} posteriores a ${ymL(h)}, el desembarque pasó de ${tn(tB)} t a ${tn(tA)} t (${vp(dA)}).</li><li>Un año antes, el mismo par de períodos cambió ${vp(dPrev)}. Si ambos cambios son parecidos, la diferencia puede deberse a la estacionalidad.</li>${avail<w?`<li>El período posterior tiene solo ${avail} meses de datos, por lo que se compara con menos meses.</li>`:""}<li>Pescadores activos: ${t0(fB.size)} antes y ${t0(fA.size)} después.</li></ul></div></section>
+     <section class="card">${H3("Especies que más cambian")}<div class="tbl"><table class="pr-t"><thead><tr><th>Especie</th><th class="n">Antes</th><th class="n">Después</th><th class="n">Diferencia</th></tr></thead><tbody>${espCh.map(x=>`<tr><td><button type="button" class="lnk" data-exe="${x.e}">${esc(m.E[x.e][1])}</button></td><td class="n">${tn(x.b)} t</td><td class="n">${tn(x.a)} t</td><td class="n ${x.a>=x.b?"tz-up":"tz-dn"}">${x.a>=x.b?"+":"−"}${tn(Math.abs(x.a-x.b))} t</td></tr>`).join("")}</tbody></table></div></section>`}
+  document.addEventListener("change",ev=>{const id=ev.target.id;if(id==="htC"){HT.c=ev.target.value;hito()}else if(id==="htM"){HT.ym=+ev.target.value;hito()}else if(id==="htW"){HT.w=+ev.target.value;hito()}});
+
+  const PANES={efi,crit,org:orgs,hito};
+  const draw=()=>{const f=PANES[S.tab];if(f)try{f()}catch(e){console.error(e)}};
+  {const _r=render;render=function(){const out=_r.apply(this,arguments);draw();return out}}
+  {const _st=setTab;setTab=function(t){_st(t);if(PANES[t]){["#fab","#period","#aside","#chips","#ctx","#btnFilters"].forEach(s=>{const e=document.querySelector(s);if(e)e.hidden=true});const l=document.querySelector(".layout");if(l)l.style.gridTemplateColumns="minmax(0,1fr)";draw()}}}
+  if(typeof rpaRefresh==="function"){const _rr=rpaRefresh;rpaRefresh=function(){_rr.apply(this,arguments);setTimeout(()=>{if(S.tab==="org")draw()},400)}}
 })();
 
 </script>
