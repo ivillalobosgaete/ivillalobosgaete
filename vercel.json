@@ -96,6 +96,9 @@
     },
     "api/fuentes.js": {
       "maxDuration": 60
+    },
+    "api/usos.js": {
+      "maxDuration": 60
     }
   },
   "crons": [
