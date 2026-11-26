@@ -44,6 +44,15 @@ export default handler(async (req, res) => {
   if (req.method !== "PUT") return send(res, 405, { error: "Método no permitido" });
   if (me.rol !== "administrador") return send(res, 403, { error: "Solo un administrador puede completar información faltante." });
   const b = await readBody(req);
+  if (Array.isArray(b.items)) {
+    const all = await leer(); let n = 0;
+    for (const it of b.items.slice(0, 1000)) { const k = String((it && it.key) || "").slice(0, 200); if (!/^[a-z]+:.+/.test(k)) continue; const v = limpiarValor(it.valor); if (v == null) delete all[k]; else all[k] = { v, c: null, por: me.usuario, f: new Date().toISOString() }; n++; }
+    if (Object.keys(all).length > 3000) return send(res, 400, { error: "Se alcanzó el máximo de datos complementarios." });
+    try { await sb("vistas?on_conflict=usuario", { method: "POST", prefer: "resolution=merge-duplicates,return=minimal", body: { usuario: KEY, data: all, actualizado: new Date().toISOString() } }); }
+    catch (e) { if (tableMissing(e)) return send(res, 400, { error: "Falta crear la tabla de vistas: ejecuta supabase/schema.sql en Supabase." }); throw e; }
+    await logAct(me.usuario, "Información complementaria", `Guardó ${n} datos en lote`);
+    return send(res, 200, { ok: true, items: visibles(me, all) });
+  }
   const key = String(b.key || "").slice(0, 200);
   if (!/^[a-z]+:.+/.test(key)) return send(res, 400, { error: "Clave no válida." });
   const valor = limpiarValor(b.valor);

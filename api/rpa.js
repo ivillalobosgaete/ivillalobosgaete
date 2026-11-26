@@ -90,7 +90,7 @@ function parsePescador(html) {
   });
   const emb = tabla(rows, ["Código", "Nombre", "Estado", "Tipo"]).map(([cod, nombre, estado, tipo]) => ({ cod: cod.trim(), nombre, estado, tipo }));
   return {
-    estado: est.v, inscripcion: fecha(val(rows, ["Fecha Inscripción", "Fecha de Inscripción"])), oficina: val(rows, ["Oficina"]),
+    nombre: val(rows, ["Nombre Pescador", "Nombre del Pescador", "Nombre Completo", "Nombres y Apellidos", "Nombre"]), estado: est.v, inscripcion: fecha(val(rows, ["Fecha Inscripción", "Fecha de Inscripción"])), oficina: val(rows, ["Oficina"]),
     caleta: val(rows, ["Caleta Base", "Caleta"]), comuna: val(rows, ["Comuna CONARA", "Comuna"]), region: val(rows, ["Región", "Region"]),
     categorias: [...cats].slice(0, 8), dgtm: dgtm.slice(0, 6), emb: [...emb, ...reemplazos(rows).filter((x) => !emb.some((e) => nrm(e.nombre) === nrm(x.nombre)))].slice(0, 40),
   };

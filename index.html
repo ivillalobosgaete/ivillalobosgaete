@@ -1912,7 +1912,7 @@ kbd{font:600 .72rem/1 ui-monospace,monospace;border:1px solid currentColor;borde
     </div>
   </header>
   <nav class="tabs gut" role="tablist" id="tabs">
-    <button role="tab" data-tab="pano" aria-selected="false">Panorama</button><button role="tab" data-tab="terr" aria-selected="false">Territorios</button><button role="tab" data-tab="prio" aria-selected="false">Prioridad de inversión</button><button role="tab" data-tab="mov" aria-selected="false">Movimiento de especies</button><button role="tab" data-tab="pfi" aria-selected="false">Ficha del pescador</button><button role="tab" data-tab="efi" aria-selected="false">Ficha por especie</button><button role="tab" data-tab="crit" aria-selected="false">Meses críticos</button><button role="tab" data-tab="org" aria-selected="false">Organizaciones</button><button role="tab" data-tab="hito" aria-selected="false">Antes y después</button><button role="tab" data-tab="ecm" aria-selected="false">ECMPO</button><button role="tab" data-tab="ipu" aria-selected="false">Inversión pública</button><button role="tab" data-tab="ipc" aria-selected="false">Inversión por caleta</button><button role="tab" data-tab="ipd" aria-selected="false">Detalle de inversión</button><button role="tab" data-tab="resumen" aria-selected="true">Resumen ejecutivo</button>
+    <button role="tab" data-tab="ger" aria-selected="false">Resumen gerencial</button><button role="tab" data-tab="pano" aria-selected="false">Panorama</button><button role="tab" data-tab="terr" aria-selected="false">Territorios</button><button role="tab" data-tab="prio" aria-selected="false">Prioridad de inversión</button><button role="tab" data-tab="mov" aria-selected="false">Movimiento de especies</button><button role="tab" data-tab="pfi" aria-selected="false">Ficha del pescador</button><button role="tab" data-tab="efi" aria-selected="false">Ficha por especie</button><button role="tab" data-tab="crit" aria-selected="false">Meses críticos</button><button role="tab" data-tab="org" aria-selected="false">Organizaciones</button><button role="tab" data-tab="hito" aria-selected="false">Antes y después</button><button role="tab" data-tab="ecm" aria-selected="false">ECMPO</button><button role="tab" data-tab="ipu" aria-selected="false">Inversión pública</button><button role="tab" data-tab="ipc" aria-selected="false">Inversión por caleta</button><button role="tab" data-tab="ipd" aria-selected="false">Detalle de inversión</button><button role="tab" data-tab="resumen" aria-selected="true">Resumen ejecutivo</button>
     <button role="tab" data-tab="ficha" aria-selected="false">Ficha por caleta</button><button role="tab" data-tab="cmp" aria-selected="false">Comparación</button>
     <button role="tab" data-tab="pescadores" aria-selected="false">Pescadores</button>
     <button role="tab" data-tab="especies" aria-selected="false">Especies y caletas</button>
@@ -2092,7 +2092,7 @@ kbd{font:600 .72rem/1 ui-monospace,monospace;border:1px solid currentColor;borde
       <section data-pane="cmp" style="display:grid;gap:14px" hidden></section>
       <section data-pane="minutas" style="display:grid;gap:14px" hidden></section><section data-pane="borde" style="display:grid;gap:14px" hidden></section><section data-pane="mineria" style="display:grid;gap:14px" hidden></section><section data-pane="presup" style="display:grid;gap:14px" hidden></section>
 <section data-pane="cruce" style="display:grid;gap:14px" hidden></section>
-<section data-pane="calc" style="display:grid;gap:14px" hidden></section><section data-pane="pano" style="display:grid;gap:14px" hidden></section><section data-pane="terr" style="display:grid;gap:14px" hidden></section><section data-pane="prio" style="display:grid;gap:14px" hidden></section><section data-pane="mov" style="display:grid;gap:14px" hidden></section><section data-pane="pfi" style="display:grid;gap:14px" hidden></section><section data-pane="efi" style="display:grid;gap:14px" hidden></section><section data-pane="crit" style="display:grid;gap:14px" hidden></section><section data-pane="org" style="display:grid;gap:14px" hidden></section><section data-pane="hito" style="display:grid;gap:14px" hidden></section><section data-pane="ecm" style="display:grid;gap:14px" hidden></section><section data-pane="ipu" style="display:grid;gap:14px" hidden></section><section data-pane="ipc" style="display:grid;gap:14px" hidden></section><section data-pane="ipd" style="display:grid;gap:14px" hidden></section>
+<section data-pane="calc" style="display:grid;gap:14px" hidden></section><section data-pane="pano" style="display:grid;gap:14px" hidden></section><section data-pane="terr" style="display:grid;gap:14px" hidden></section><section data-pane="prio" style="display:grid;gap:14px" hidden></section><section data-pane="mov" style="display:grid;gap:14px" hidden></section><section data-pane="pfi" style="display:grid;gap:14px" hidden></section><section data-pane="ger" style="display:grid;gap:14px" hidden></section><section data-pane="efi" style="display:grid;gap:14px" hidden></section><section data-pane="crit" style="display:grid;gap:14px" hidden></section><section data-pane="org" style="display:grid;gap:14px" hidden></section><section data-pane="hito" style="display:grid;gap:14px" hidden></section><section data-pane="ecm" style="display:grid;gap:14px" hidden></section><section data-pane="ipu" style="display:grid;gap:14px" hidden></section><section data-pane="ipc" style="display:grid;gap:14px" hidden></section><section data-pane="ipd" style="display:grid;gap:14px" hidden></section>
 <section data-pane="wa" style="display:grid;gap:14px" hidden></section><section data-pane="ficha" style="display:grid;gap:14px" hidden></section>
       <section data-pane="detalle" style="display:grid;gap:14px" hidden>
         <div class="card">
@@ -6971,7 +6971,7 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
   const secT=(el,txt)=>{const s=el.matches&&el.matches("details.sec")?el.querySelector(":scope>summary"):null;return!!s&&nrm(s.textContent).startsWith(nrm(txt))};
   const cardT=(el,txt)=>{const h=el.querySelector&&el.querySelector("h3,h2");return!!h&&nrm(h.textContent).startsWith(nrm(txt))};
   const NAV=[
-    {g:"pano",l:"Panorama",v:[{id:"panorama",l:"Mapa y zonas",pane:"pano"},
+    {g:"pano",l:"Panorama",v:[{id:"gerencial",l:"Resumen gerencial",pane:"ger"},{id:"panorama",l:"Mapa y zonas",pane:"pano"},
       {id:"inicio",l:"Estado y alertas",pane:"resumen",top:el=>["vdBan","igEstado","kpis","igMain","alerts","today","ficha"].includes(el.id)||secT(el,"Claves del período")},
       {id:"desemb",q:"¿Cuánto se desembarca, cuándo y cómo cambia en el año?",main:"Evolución mensual del desembarque",kp:"kDes",l:"Evolución y estacionalidad",pane:"resumen",top:el=>secT(el,"Actividad y estacionalidad"),open:true}]},
     {g:"cal",l:"Caletas",v:[{id:"territorio",l:"Ranking por zona",pane:"terr"},
@@ -8467,12 +8467,13 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
     "el apolillado":[-29.21,-71.48],"punta choros":[-29.25,-71.47],"los choros choreadero":[-29.28,-71.4],chungungo:[-29.44,-71.31],"totoralillo norte":[-29.48,-71.31],hornos:[-29.62,-71.29],"san pedro la serena":[-29.9,-71.27],penuelas:[-29.93,-71.29],coquimbo:[-29.95,-71.34],guayacan:[-29.97,-71.36],"playa chica de la herradura":[-29.98,-71.36],"totoralillo centro":[-30.07,-71.37],guanaqueros:[-30.2,-71.43],tongoy:[-30.25,-71.5],"puerto aldea hornilla":[-30.29,-71.61],totoral:[-30.37,-71.67],talcaruca:[-30.48,-71.69],"san lorenzo":[-30.6,-71.68],limari:[-30.73,-71.7],"el maiten":[-30.85,-71.69],talca:[-30.92,-71.68],"la cebada":[-30.97,-71.65],sierra:[-31.0,-71.65],talquilla:[-31.1,-71.65],"maitencillo iv reg":[-31.27,-71.63],"puerto oscuro":[-31.42,-71.6],"el sauce":[-31.5,-71.58],huentelauquen:[-31.58,-71.55],chigualoco:[-31.74,-71.52],"puerto manso":[-31.86,-71.52],"las conchas":[-31.89,-71.52],"san pedro los vilos":[-31.91,-71.51],cascabeles:[-31.96,-71.51],"totoralillo sur totoralillo":[-32.03,-71.51],pichidangui:[-32.14,-71.53]};
   const geoK=n=>norm(String(n)).replace(/[()]/g," ").replace(/\s+/g," ").trim();
   /* ---- Estadísticas por caleta y zona (12 meses cerrados, años completos) ---- */
-  function stats(){const R=S.R;if(!R)return null;const key=R.n+"|"+R.lastYM+"|"+(typeof CFG!=="undefined"&&CFG.precios?Object.keys(CFG.precios).length:0);if(TT.stats&&TT.key===key)return TT.stats;
+  function stats(){const R=S.R;if(!R)return null;const GD=window.__bc&&window.__bc.GEOD&&window.__bc.GEOD.d;if(!GD&&window.__bc&&typeof api==="function"&&!TT.gl){TT.gl=1;Promise.resolve(window.__bc.geoLoad()).then(()=>{TT.key="";try{render()}catch(e){}})}const key=R.n+"|"+R.lastYM+"|"+(typeof CFG!=="undefined"&&CFG.precios?Object.keys(CFG.precios).length:0)+"|"+(GD?1:0)+"|"+Object.keys((window.__CX&&window.__CX.d)||{}).length;if(TT.stats&&TT.key===key)return TT.stats;
     const m=R.m,L=lastFullYM(),nK=m.cats.length,catLast=new Int32Array(nK).fill(-1);for(let i=0;i<R.n;i++){const k=R.k[i];if(R.ym[i]>catLast[k])catLast[k]=R.ym[i]}
     const catOK=[...catLast].map(v=>v>=L-2),catOff=m.cats.filter((c,k)=>!catOK[k]&&catLast[k]>=0).map((c,k)=>c);
     const offInfo=m.cats.map((c,k)=>({c,last:catLast[k],ok:catOK[k]})).filter(x=>!x.ok&&x.last>=0);
     const muj=m.sexes.indexOf("Mujer"),yL=R.y0+Math.floor(L/12),fullY=(L%12===11)?yL:yL-1,y5=[fullY-4,fullY-3,fullY-2,fullY-1,fullY];
-    const C=m.C.map((c,i)=>({i,n:c[0],com:c[1],z:zoneKey(c),reg:c[3],comp:c[4],lat:c[5]!=null&&c[5]!==""?+c[5]:(GEO[geoK(c[0])]||[NaN])[0],lon:c[6]!=null&&c[6]!==""?+c[6]:(GEO[geoK(c[0])]||[NaN,NaN])[1],t12:0,tP:0,p12:new Set(),m12:new Set(),esp:new Map(),yr:new Float64Array(R.y1-R.y0+1),act:new Set(),val:0}));
+    const geoOff=c=>{try{const g=window.__bc&&window.__bc.geoOf(c);if(g&&(g[3]||(c[5]!=null&&c[5]!=="")))return[+g[0],+g[1]]}catch(e){}return null};
+    const C=m.C.map((c,i)=>({i,n:c[0],com:c[1],z:zoneKey(c),reg:c[3],comp:c[4],lat:(geoOff(c)||GEO[geoK(c[0])]||[NaN])[0],lon:(geoOff(c)||GEO[geoK(c[0])]||[NaN,NaN])[1],geoOf:!!geoOff(c),t12:0,tP:0,p12:new Set(),m12:new Set(),esp:new Map(),yr:new Float64Array(R.y1-R.y0+1),act:new Set(),val:0}));
     const hasP=typeof priceOf==="function";
     for(let i=0;i<R.n;i++){if(!catOK[R.k[i]])continue;const o=C[R.c[i]],q=R.q[i]/1000,ym=R.ym[i];o.yr[R.yr[i]]+=q;
       if(ym>L)continue;const d=L-ym;if(d<12){o.t12+=q;o.p12.add(R.p[i]);if(R.sex[i]===muj)o.m12.add(R.p[i]);o.esp.set(R.e[i],(o.esp.get(R.e[i])||0)+q);o.act.add(ym);if(hasP)o.val+=q*1000*priceOf(R.e[i])}else if(d<24)o.tP+=q}
@@ -8512,7 +8513,7 @@ lp=Los Pelambres, cen=Centinela, ant=Antucoya, zal=Zaldívar (50 % atribuible). 
     p.innerHTML=`<section class="card tz-hero"><div class="tz-hh"><div><h2>Panorama de la pesca por zona</h2><p class="cs">Dónde se concentra la actividad, cómo cambia y cuántas personas dependen de ella. Toca una caleta en el mapa para abrir su ficha, o una zona para verla en detalle.</p></div></div>${caveat(st)}
       <div class="tz-zc">${zs.map((z,j)=>`<button type="button" class="tz-zcard${sel===z.k?" on":""}" data-zgo="${j}" style="--zc:${zCol(z.k)}"><span class="tz-zn">${esc(ZLAB[z.k])}</span><b>${tn(z.t12)} t</b><span class="tz-v ${vcls(z.var)}">${vp(z.var)} frente a 12 meses antes</span>
         <span class="tz-row"><span>${t0(z.np)}</span> pescadores · <span>${z.np?t0(z.nm/z.np*100):0} %</span> mujeres</span><span class="tz-row">${t0(z.calAct)} de ${t0(z.cal)} caletas con actividad</span>${z.top?`<span class="tz-row">Principal: ${esc(z.top.n)} <span class="tz-bar"><i style="width:${z.top.sh.toFixed(0)}%;background:${zCol(z.k)}"></i></span> ${t0(z.top.sh)} %</span>`:""}${st.hasP&&z.val>0?`<span class="tz-row">Valor estimado: $${ccBigLite(z.val)}</span>`:""}<span class="tz-share">${tot?t1(z.t12/tot*100):0} % del total</span></button>`).join("")}</div></section>
-      <section class="card"><div class="tbar"><h3>¿Dónde está la actividad y hacia dónde va?</h3><span class="tz-leg"><i style="background:#16794a"></i>sube más de 10 % <i style="background:#64748b"></i>estable <i style="background:#c2410c"></i>cae más de 10 % · borde: zona · tamaño: toneladas en 12 meses · ubicación aproximada</span></div>
+      <section class="card"><div class="tbar"><h3>¿Dónde está la actividad y hacia dónde va?</h3><span class="tz-leg"><i style="background:#16794a"></i>sube más de 10 % <i style="background:#64748b"></i>estable <i style="background:#c2410c"></i>cae más de 10 % · borde: zona · tamaño: toneladas en 12 meses · ${(()=>{const n=st.C.filter(o=>o.geoOf).length;return n>=st.C.length?"ubicación oficial (Subpesca)":`${t0(n)} de ${t0(st.C.length)} caletas con ubicación oficial; el resto, aproximada`})()}</span></div>
         <div class="tz-maps">${mapPanel(st,/^II\s+REGI/i,"Región de Antofagasta",sel)}${mapPanel(st,/^IV\s+REGI/i,"Región de Coquimbo",sel)}</div>
         <div class="pr-int"><b>Lectura del mapa</b><ul>${[...st.C].filter(o=>o.t12>0).sort((a,b)=>b.t12-a.t12).slice(0,3).map(o=>`<li>${esc(o.n)} (${esc(ZLAB[o.z])}) desembarcó ${tn(o.t12)} t en los últimos 12 meses, ${vp(o.var)} frente a los 12 anteriores.</li>`).join("")}<li>${t0(st.C.filter(o=>o.var!=null&&o.var<-10&&o.tP>=5).length)} caletas bajan más de 10 % y ${t0(st.C.filter(o=>o.var!=null&&o.var>10&&o.tP>=5).length)} suben más de 10 % (con al menos 5 t el año anterior).</li></ul></div></section>
       <section class="card"><h3>Lo más importante ahora</h3>${al.length?`<ul class="tz-al">${al.slice(0,5).map(x=>`<li>${x}</li>`).join("")}</ul>`:`<p class="cs">Sin cambios relevantes en los últimos 12 meses.</p>`}<p class="cs">Más alertas en Panorama → Estado y alertas.</p></section>
@@ -9313,13 +9314,13 @@ function pkDom(svg,pts,o){try{if(!svg)return;const s=pkStr(pts,o);if(s)svg.inser
       <p class="cs">${t0(R.length)} registros · suma de gasto ejecutado y montos adjudicados: <b>${mm(tot)}</b>.</p>${IP.edit!=null?form():""}
       <div class="tbl"><table class="pr-t ip-t2"><thead><tr><th>Caleta / comuna</th><th>Año</th><th>Fondo</th><th>Proyecto o línea</th><th>Organización</th><th class="n">Monto</th><th>Tipo de cifra</th><th>Estado</th><th>Fuente</th>${isAdm()?"<th></th>":""}</tr></thead><tbody>
       ${R.sort((a,b)=>(b.anio||0)-(a.anio||0)||b.monto-a.monto).map(r=>`<tr><td>${r.o?`<button type="button" class="lnk" data-exc="${r.o.i}">${esc(r.o.n)}</button>`:`<span class="cs">${r.niv==="com"?"Comuna de "+esc(r.com):"Región de "+esc(r.reg)}</span>`}<div class="cs">${esc(r.com||"")}${r.com&&r.reg?", ":""}${esc(r.reg||"")}</div></td><td>${r.anio||"—"}</td><td>${fonChip(r.f)}</td><td style="white-space:normal">${esc(r.proy)}${r.bip?`<div class="cs">BIP ${esc(r.bip)}</div>`:""}<div class="cs">${esc(r.prog||"")}</div>${r.nota?`<div class="cs">${esc(r.nota)}</div>`:""}</td><td style="white-space:normal">${esc(r.org||"—")}</td><td class="n"><b>${mm(r.monto)}</b>${r.asig?`<div class="cs">asignado ${mm(r.asig)}</div>`:""}</td><td class="cs">${esc(CIF[r.cifra]||r.cifra)}</td><td class="cs" style="white-space:normal">${esc(r.est||"")}</td><td>${r.url?`<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.src||"Fuente")} ↗</a>`:esc(r.src||"")}<div class="cs">${esc(r.fdato||"")}${r.adm?" · administración":""}</div></td>${isAdm()?`<td><button type="button" class="btn small ghost" data-ipedit="${esc(r.id)}">Editar</button></td>`:""}</tr>`).join("")}</tbody></table></div>${note}</section>`}
-  function form(){const r=IP.edit&&IP.edit!==""?all().find(x=>x.id===IP.edit)||{}:{f:"indgore",cifra:"adj",anio:new Date().getFullYear(),reg:"Antofagasta"};const cals=(window.__tzStats?window.__tzStats().C:[]).map(o=>o.n).sort();
+  function form(){const r=IP.edit&&IP.edit!==""?all().find(x=>x.id===IP.edit)||{}:{f:"indgore",cifra:"adj",anio:new Date().getFullYear(),reg:"Antofagasta",...(IP.pref||{})};const cals=(window.__tzStats?window.__tzStats().C:[]).map(o=>o.n).sort();
     const I=(k,l,t,v,x)=>`<label>${l}<input data-ipk="${k}" type="${t||"text"}" value="${esc(v==null?"":String(v))}" ${x||""}></label>`;
     return`<form class="ip-form" id="ipForm"><div class="ip-fg"><label>Fondo<select data-ipk="f">${Object.keys(FON).map(k=>`<option value="${k}" ${r.f===k?"selected":""}>${esc(FON[k][0])}</option>`).join("")}</select></label><label>Tipo de cifra<select data-ipk="cifra">${Object.entries(CIF).map(([k,l])=>`<option value="${k}" ${r.cifra===k?"selected":""}>${esc(l)}</option>`).join("")}</select></label>
       <label>Caleta<select data-ipk="cal"><option value="">(sin caleta: comuna o región)</option>${cals.map(c=>`<option ${norm(r.cal||"")===norm(c)?"selected":""}>${esc(c)}</option>`).join("")}</select></label>${I("com","Comuna","text",r.com)}<label>Región<select data-ipk="reg">${["Antofagasta","Coquimbo"].map(x=>`<option ${r.reg===x?"selected":""}>${x}</option>`).join("")}</select></label>${I("anio","Año","number",r.anio,'min="2000" max="2100"')}
       ${I("monto","Monto ($)","number",r.monto,'min="0" step="1"')}${I("asig","Asignado ($, opcional)","number",r.asig||"",'min="0" step="1"')}${I("proy","Proyecto o línea","text",r.proy)}${I("org","Organización beneficiaria","text",r.org)}${I("prog","Programa o instrumento","text",r.prog)}${I("src","Institución o fuente","text",r.src)}${I("est","Estado","text",r.est)}${I("bip","Código BIP","text",r.bip)}${I("url","Enlace a la fuente oficial","url",r.url)}${I("fdato","Fecha del dato","text",r.fdato)}${I("nota","Nota","text",r.nota)}</div>
       <div class="ip-fb"><button type="submit" class="btn small" ${IP.busy?"disabled":""}>Guardar</button><button type="button" class="btn small ghost" data-ipcancel>Cancelar</button>${IP.edit?`<button type="button" class="btn small ghost ip-del" data-ipdel="${esc(IP.edit)}">${r.seed?"Ocultar registro":"Eliminar"}</button>`:""}<span class="cs">Los registros quedan guardados en la base de la plataforma.</span></div></form>`}
-  async function save(id,val){if(!window.__CXS)return;IP.busy=true;try{const d=await window.__CXS.save("inv:"+id,val,null);if(window.__CX)window.__CX.d=d||{};IP.edit=null}catch(e){alert("No se pudo guardar: "+(e.message||e))}IP.busy=false;draw()}
+  async function save(id,val){if(!window.__CXS)return;IP.busy=true;try{const d=await window.__CXS.save("inv:"+id,val,null);if(window.__CX)window.__CX.d=d||{};IP.edit=null;IP.pref=null}catch(e){alert("No se pudo guardar: "+(e.message||e))}IP.busy=false;draw()}
   document.addEventListener("submit",ev=>{if(ev.target.id!=="ipForm")return;ev.preventDefault();const o={};ev.target.querySelectorAll("[data-ipk]").forEach(e=>o[e.dataset.ipk]=e.value.trim());o.anio=+o.anio||null;o.monto=+o.monto||0;o.asig=+o.asig||0;
     if(!o.proy||!o.monto){alert("Completa al menos el proyecto y el monto.");return}const id=IP.edit||("a"+Date.now().toString(36));save(id,pack(o))});
   document.addEventListener("click",ev=>{const t=ev.target.closest&&ev.target.closest("[data-ipcal],[data-ipedit],[data-ipcancel],[data-ipdel],[data-ipall],[data-iprow]");if(!t||!S.R)return;
@@ -9327,7 +9328,7 @@ function pkDom(svg,pts,o){try{if(!svg)return;const s=pkStr(pts,o);if(s)svg.inser
     if(t.dataset.iprow!=null){if(ev.target.closest("a,button"))return;const i=+t.dataset.iprow;IP.open.has(i)?IP.open.delete(i):IP.open.add(i);draw();return}
     if(t.dataset.ipcal!=null){const i=+t.dataset.ipcal;if(S.tab!=="ipc"){IP.open.add(i);goView("ipcal");setTimeout(()=>{const e=document.querySelector(`[data-iprow="${i}"]`);if(e)e.scrollIntoView({behavior:"smooth",block:"center"})},300)}else{IP.open.has(i)?IP.open.delete(i):IP.open.add(i);draw()}return}
     if(t.dataset.ipedit!=null){IP.edit=t.dataset.ipedit;if(S.tab!=="ipc")goView("ipcal");else draw();setTimeout(()=>{const f=document.getElementById("ipForm");if(f)f.scrollIntoView({behavior:"smooth",block:"center"})},200);return}
-    if(t.dataset.ipcancel!=null){IP.edit=null;draw();return}
+    if(t.dataset.ipcancel!=null){IP.edit=null;IP.pref=null;draw();return}
     if(t.dataset.ipdel!=null){const id=t.dataset.ipdel,r=all().find(x=>x.id===id);if(!confirm(r&&r.seed?"¿Ocultar este registro de la base oficial? Podrás volver a mostrarlo editando la base.":"¿Eliminar este registro? No se puede deshacer."))return;save(id,r&&r.seed?{del:1}:null)}});
   document.addEventListener("change",ev=>{const id=ev.target.id;if(id==="ipF")IP.f=ev.target.value;else if(id==="ipR")IP.reg=ev.target.value;else if(id==="ipY")IP.anio=ev.target.value;else if(id==="ipT")IP.cif=ev.target.value;else return;draw()});
   let qT=null;document.addEventListener("input",ev=>{if(ev.target.id!=="ipQ")return;IP.q=ev.target.value;clearTimeout(qT);qT=setTimeout(()=>{draw();const e=document.getElementById("ipQ");if(e){e.focus();e.setSelectionRange(e.value.length,e.value.length)}},350)});
@@ -9337,6 +9338,7 @@ function pkDom(svg,pts,o){try{if(!svg)return;const s=pkStr(pts,o);if(s)svg.inser
   /* resumen para otras vistas (ficha del pescador, ficha de caleta) */
   window.__ipCal=name=>{const L=all().filter(r=>r.cal&&norm(r.cal)===norm(name));return{inv:L.filter(sumable).reduce((s,r)=>s+r.monto,0),n:L.length,ref:L.filter(r=>r.cifra==="total").reduce((s,r)=>s+r.monto,0)}};
   window.__ipMM=mm;
+  window.__ipNew=o=>{IP.edit="";IP.pref=o||null;if(S.tab!=="ipc")goView("ipcal");else draw();setTimeout(()=>{const f=document.getElementById("ipForm");if(f)f.scrollIntoView({behavior:"smooth",block:"center"})},300)};
   document.addEventListener("toggle",ev=>{if(ev.target.classList&&ev.target.classList.contains("ip-cr"))IP.crOpen=ev.target.open},true);
   const PANES={ipu:pano,ipc:porCal};
   function draw(){const f=PANES[S.tab];if(f)try{f()}catch(e){console.error(e)}}
@@ -9345,7 +9347,7 @@ function pkDom(svg,pts,o){try{if(!svg)return;const s=pkStr(pts,o);if(s)svg.inser
 })();
 
 </script>
-<style id="rnCss">.rn-in{padding:6px 8px;border-radius:7px;border:1px solid var(--line,#d6dbe1);background:var(--surface,#fff);color:inherit;font:inherit;min-width:220px;width:100%}.rn-chk{flex-direction:row!important;align-items:center;gap:6px!important}.rn-pg{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:8px}#rnQ{padding:8px 10px;border-radius:8px;border:1px solid var(--line,#d6dbe1);background:var(--surface,#fff);color:inherit;font:inherit}</style>
+<style id="rnCss">.rn-in{padding:6px 8px;border-radius:7px;border:1px solid var(--line,#d6dbe1);background:var(--surface,#fff);color:inherit;font:inherit;min-width:220px;width:100%}.rn-chk{flex-direction:row!important;align-items:center;gap:6px!important}.rn-pg{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:8px}.rn-sug{font-size:11.5px;margin-top:3px;color:#0e7490}.rn-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:rgba(14,116,144,.07);border-radius:8px;padding:8px 10px;margin:8px 0;font-size:13px}#rnQ{padding:8px 10px;border-radius:8px;border:1px solid var(--line,#d6dbe1);background:var(--surface,#fff);color:inherit;font:inherit}</style>
 <script>
 /* ================= Administración: completar nombres de pescadores (RPA sin nombre) ================= */
 (()=>{
@@ -9364,9 +9366,21 @@ function pkDom(svg,pts,o){try{if(!svg)return;const s=pkStr(pts,o);if(s)svg.inser
     box.innerHTML=`<div class="tbar"><h3>Pescadores sin nombre en la base</h3><span class="cs">${t0(pend.length)} pendientes de ${t0(all.length)}</span></div>
       <p class="cs">Estos RPA aparecen en los desembarques sin nombre del pescador. Completa el nombre (puedes revisarlo en el registro público de Sernapesca con el enlace de cada fila). El nombre queda guardado en la plataforma y se usa en todas las vistas; la base de datos original no se modifica.</p>
       <div class="mv-ctl"><label>Buscar<input id="rnQ" type="search" value="${esc(RN.q)}" placeholder="RPA o caleta"></label><label class="rn-chk"><input type="checkbox" id="rnP" ${RN.soloPend?"checked":""}> Solo pendientes</label></div>
-      <div class="tbl"><table class="pr-t"><thead><tr><th>RPA</th><th>Caleta donde más desembarca</th><th class="n">Desembarque total</th><th>Último desembarque</th><th>Nombre del pescador</th><th></th></tr></thead><tbody>
-      ${V.map(r=>`<tr><td><a href="${esc(url+r.rpa)}" target="_blank" rel="noopener">${esc(r.rpa)} ↗</a></td><td>${r.cal>=0?esc(m.C[r.cal][0]):"—"}</td><td class="n">${tt(r.t/1000)} t</td><td>${ymTxt(r.last)}</td><td><input class="rn-in" data-rni="${r.i}" type="text" value="${r.done?esc(r.nom):""}" placeholder="Nombres y apellidos" maxlength="120"></td><td style="white-space:nowrap"><button type="button" class="btn small" data-rns="${r.i}" ${RN.busy?"disabled":""}>Guardar</button>${r.done?` <button type="button" class="btn small ghost" data-rnd="${r.i}">Quitar</button>`:""}</td></tr>`).join("")||`<tr><td colspan="6" class="cs">${all.length?"No hay coincidencias.":"Todos los RPA tienen nombre."}</td></tr>`}</tbody></table></div>
+      ${sugBar(all)}<div class="tbl"><table class="pr-t"><thead><tr><th>RPA</th><th>Caleta donde más desembarca</th><th class="n">Desembarque total</th><th>Último desembarque</th><th>Nombre del pescador</th><th></th></tr></thead><tbody>
+      ${V.map(r=>`<tr><td><a href="${esc(url+r.rpa)}" target="_blank" rel="noopener">${esc(r.rpa)} ↗</a></td><td>${r.cal>=0?esc(m.C[r.cal][0]):"—"}</td><td class="n">${tt(r.t/1000)} t</td><td>${ymTxt(r.last)}</td><td><input class="rn-in" data-rni="${r.i}" type="text" value="${r.done?esc(r.nom):""}" placeholder="Nombres y apellidos" maxlength="120">${(()=>{const g=sug(r.rpa);return g&&!r.done?`<div class="rn-sug">Sernapesca: <b>${esc(g)}</b> <button type="button" class="btn small ghost" data-rnu="${r.i}" data-rnv="${esc(g)}">Usar</button></div>`:""})()}</td><td style="white-space:nowrap"><button type="button" class="btn small" data-rns="${r.i}" ${RN.busy?"disabled":""}>Guardar</button>${r.done?` <button type="button" class="btn small ghost" data-rnd="${r.i}">Quitar</button>`:""}</td></tr>`).join("")||`<tr><td colspan="6" class="cs">${all.length?"No hay coincidencias.":"Todos los RPA tienen nombre."}</td></tr>`}</tbody></table></div>
       ${L.length>per?`<div class="rn-pg"><button type="button" class="btn small ghost" data-rnp="-1" ${pg?"":"disabled"}>← Anteriores</button><span class="cs">${t0(pg*per+1)}–${t0(Math.min(L.length,pg*per+per))} de ${t0(L.length)}</span><button type="button" class="btn small ghost" data-rnp="1" ${pg*per+per<L.length?"":"disabled"}>Siguientes →</button></div>`:""}`}
+  /* sugerencias de nombre desde el registro público de Sernapesca (solo versión web) */
+  const cap=v=>String(v||"").trim().replace(/\s+/g," ").split(" ").map(w=>w?w[0].toLocaleUpperCase("es")+w.slice(1).toLocaleLowerCase("es"):w).join(" ");
+  const sug=rpa=>{try{if(typeof RPAS==="undefined"||!RPAS.ok)return"";const d=rpaGet(rpa);const n=d&&!d.error&&d.nombre?String(d.nombre).trim():"";return n&&!sinNombre(n)&&n.length>=5?cap(n):""}catch(e){return""}};
+  function sugBar(all){if(typeof RPAS==="undefined"||!RPAS.ok)return`<p class="cs">La búsqueda automática de nombres en Sernapesca funciona en la versión web de la plataforma (Vercel).</p>`;
+    const pend=all.filter(r=>!r.done),con=pend.filter(r=>sug(r.rpa)),sin=pend.filter(r=>{const d=rpaGet(r.rpa);return!d||(!d.error&&d.nombre==null)});
+    return`<div class="rn-bar"><span>${t0(con.length)} sugerencias de nombre desde Sernapesca${RPAS.prog?` · consultando ${t0(RPAS.prog.done)} de ${t0(RPAS.prog.tot)}…`:""}</span>${sin.length&&!RPAS.prog?`<button type="button" class="btn small" id="rnBus">Buscar nombres en Sernapesca (${t0(sin.length)})</button>`:""}${con.length?`<button type="button" class="btn small" id="rnAll">Revisar y aceptar ${t0(con.length)} sugerencias</button>`:""}</div>`}
+  document.addEventListener("click",async ev=>{const id=ev.target.id;
+    if(id==="rnBus"){const all=rows().filter(r=>!r.done),l=all.filter(r=>{const d=rpaGet(r.rpa);return!d||(!d.error&&d.nombre==null)}).map(r=>r.rpa);l.forEach(n=>{try{RPAS.m.delete(String(n))}catch(e){}});RPAS.prog={done:0,tot:l.length};rpaWant(l,{stale:true});card();return}
+    if(id==="rnAll"){const L=rows().filter(r=>!r.done&&sug(r.rpa));if(!L.length)return;const ej=L.slice(0,5).map(r=>r.rpa+" → "+sug(r.rpa)).join("\n");if(!confirm(`Se guardarán ${L.length} nombres tal como aparecen en el registro de Sernapesca. Ejemplos:\n${ej}\n\n¿Continuar?`))return;
+      RN.busy=true;card();try{let d;if(typeof api==="function"&&!(typeof ART==="function"&&ART())){const r=await api("complementos",{method:"PUT",body:{items:L.map(r=>({key:"rpa:"+r.rpa,valor:sug(r.rpa)}))}});d=r.items}else{for(const r of L)d=await window.__CXS.save("rpa:"+r.rpa,sug(r.rpa),null)}if(window.__CX)window.__CX.d=d||{};aplicar();toast&&toast(`${L.length} nombres guardados.`)}catch(e){alert("No se pudo guardar: "+(e.message||e))}RN.busy=false;card();return}
+    const u=ev.target.closest&&ev.target.closest("[data-rnu]");if(u){const inp=document.querySelector(`[data-rni="${u.dataset.rnu}"]`);if(inp){inp.value=u.dataset.rnv;inp.focus()}}});
+  if(typeof rpaRefresh==="function"){const _rr=rpaRefresh;rpaRefresh=function(){_rr.apply(this,arguments);setTimeout(()=>{try{if(S.tab==="admin")card()}catch(e){}},400)}}
   async function save(i,val){const p=S.R.m.P[i];RN.busy=true;card();try{const d=await window.__CXS.save("rpa:"+p[0],val||null,null);if(window.__CX)window.__CX.d=d||{};aplicar();toast&&toast(val?"Nombre guardado.":"Nombre quitado.")}catch(e){alert("No se pudo guardar: "+(e.message||e))}RN.busy=false;card()}
   document.addEventListener("click",ev=>{const t=ev.target.closest&&ev.target.closest("[data-rns],[data-rnd],[data-rnp]");if(!t)return;
     if(t.dataset.rns!=null){const i=+t.dataset.rns,inp=document.querySelector(`[data-rni="${i}"]`),v=inp?inp.value.trim().replace(/\s+/g," "):"";if(v.length<3){alert("Escribe el nombre completo.");return}save(i,v.split(" ").map(w=>w?w[0].toLocaleUpperCase("es")+w.slice(1).toLocaleLowerCase("es"):w).join(" "))}
@@ -9378,6 +9392,158 @@ function pkDom(svg,pts,o){try{if(!svg)return;const s=pkStr(pts,o);if(s)svg.inser
   {const _st=setTab;setTab=function(t){_st(t);if(t==="admin")setTimeout(()=>{try{card()}catch(e){}},300)}}
   /* al cargar la plataforma, aplica los nombres guardados */
   setTimeout(()=>{if(S.R&&window.__CXS)ensure()},2500);
+})();
+
+</script>
+<style id="uxCss">
+.q-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:8px}
+.q-it{border:1px solid var(--line,#d6dbe1);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;font-size:13px}
+.q-h{display:flex;align-items:center;gap:7px}.q-dot{width:10px;height:10px;border-radius:50%}.q-st{margin-left:auto;font-size:11.5px;font-weight:700}
+.q-v{font-size:18px;font-weight:800}.q-a{margin-top:4px}
+.fu-est{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.fu-e{font-size:11.5px;border-radius:6px;padding:2px 7px}.fu-e.ok{background:rgba(21,128,61,.1);color:#15803d}.fu-e.no{background:rgba(185,28,28,.08);color:#b91c1c}
+.fu-new td{background:rgba(245,158,11,.07)}.fu-b{display:inline-block;font-size:10.5px;font-weight:700;background:#f59e0b;color:#fff;border-radius:4px;padding:1px 5px}
+.ger-h .tz-hh{align-items:flex-start}.ger-act{display:flex;flex-direction:column;align-items:flex-end;gap:6px}.ger-pref{display:flex;align-items:center;gap:6px}
+.ger-k{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:12px}
+.ger-k>div{background:rgba(127,127,127,.06);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:3px}.ger-k span{font-size:12px;opacity:.75}.ger-k b{font-size:26px}.ger-k small{font-size:12px}
+.ger-al{list-style:none;padding:0;display:grid;gap:8px;margin:6px 0}.ger-al li{padding:9px 12px;border-radius:8px;border-left:4px solid #94a3b8;background:rgba(127,127,127,.06);font-size:14px}
+.ger-al .ger-bad{border-color:#b91c1c;background:rgba(185,28,28,.06)}.ger-al .ger-warn{border-color:#d97706;background:rgba(217,119,6,.07)}.ger-al .ger-ok{border-color:#15803d;background:rgba(21,128,61,.06)}
+.gs-g{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;opacity:.6;padding:6px 12px 2px}
+.glo-ov{position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:200;display:flex;align-items:flex-start;justify-content:center;padding:6vh 16px}.glo-ov[hidden]{display:none}
+.glo-b{background:var(--surface,#fff);color:inherit;border-radius:14px;max-width:720px;width:100%;max-height:84vh;overflow:auto;padding:16px 18px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+#gloQ{width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--line,#d6dbe1);margin:8px 0;font:inherit;background:var(--surface,#fff);color:inherit}
+.glo-l dt{font-weight:800;margin-top:10px}.glo-l dd{margin:2px 0 0;font-size:13.5px;line-height:1.45}
+@media (max-width:640px){.ger-act{align-items:flex-start}.ger-k b{font-size:22px}}
+</style>
+<script>
+/* ================= Administración: calidad de los datos y monitor de fuentes oficiales ================= */
+(()=>{
+  const Q={fu:null,fuLoad:false,fuBusy:false,fuErr:"",all:false};
+  const MES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  const ymT=k=>k<0?"—":MES[k%12]+"-"+(S.R.y0+Math.floor(k/12));
+  const sinNombre=n=>{n=String(n||"").trim();return!n||/^sin nombre/i.test(n)||/^\d+$/.test(n)||/^s\/n$/i.test(n)||/desconocid/i.test(n)};
+  const web=()=>typeof api==="function"&&typeof RPAS!=="undefined"&&RPAS.ok;
+  const st=(ok,warn)=>ok?["ok","#15803d","Al día"]:warn?["warn","#d97706","Revisar"]:["bad","#b91c1c","Pendiente"];
+  function calidad(){const R=S.R,m=R.m,L=lastFullYM(),nK=m.cats.length,first=new Int32Array(nK).fill(1e9),last=new Int32Array(nK).fill(-1),rows=new Int32Array(nK);
+    for(let i=0;i<R.n;i++){const k=R.k[i];rows[k]++;if(R.ym[i]<first[k])first[k]=R.ym[i];if(R.ym[i]>last[k])last[k]=R.ym[i]}
+    const d=(window.__CX&&window.__CX.d)||{},act=new Set(),actOrg=new Set();for(let i=0;i<R.n;i++){const dd=L-R.ym[i];if(dd>=0&&dd<12){act.add(R.p[i]);if(m.P[R.p[i]][3])actOrg.add(R.p[i])}}
+    const sinN=m.P.filter(p=>sinNombre(p[1])&&!(d["rpa:"+p[0]]&&d["rpa:"+p[0]].v)).length;
+    const bc=window.__bc,tz=window.__tzStats&&window.__tzStats();let of=0,ap=0,no=0;const apL=[];(tz?tz.C:[]).forEach(o=>{if(o.geoOf)of++;else if(isFinite(o.lat)&&o.lat){ap++;apL.push(o.n)}else{no++;apL.push(o.n)}});
+    return{cats:m.cats.map((c,k)=>({c,first:first[k],last:last[k],rows:rows[k],ok:last[k]>=L-2})),L,sinN,nP:m.P.length,act:act.size,actOrg:actOrg.size,of,ap,no,apL,nC:m.C.length,geoReady:!!(bc&&bc.GEOD&&bc.GEOD.d)}}
+  function cardQ(pane){let box=document.getElementById("qBox");if(!box){box=document.createElement("section");box.id="qBox";box.className="card";pane.insertBefore(box,pane.firstChild)}
+    const q=calidad(),fu=Q.fu,nNov=fu&&fu.items?fu.items.filter(x=>x.nuevo).length:0;
+    const it=(s,t,v,d,a)=>`<div class="q-it q-${s[0]}"><div class="q-h"><span class="q-dot" style="background:${s[1]}"></span><b>${t}</b><span class="q-st" style="color:${s[1]}">${s[2]}</span></div><div class="q-v">${v}</div><div class="cs">${d}</div>${a?`<div class="q-a">${a}</div>`:""}</div>`;
+    const oldC=q.cats.filter(c=>!c.ok&&c.rows);
+    box.innerHTML=`<div class="tbar"><h3>Calidad de los datos</h3><span class="cs">Último mes completo de datos: ${ymT(q.L)}</span></div>
+      <div class="q-g">
+      ${it(st(!oldC.length,oldC.length&&oldC.length<q.cats.length),"Vigencia de las bases",`${q.cats.filter(c=>c.rows).length} categorías`,q.cats.filter(c=>c.rows).map(c=>`${esc(c.c)}: ${ymT(c.first)} a <b>${ymT(c.last)}</b> (${t0(c.rows)} registros)`).join("<br>"),oldC.length?`Actualiza «${oldC.map(c=>esc(c.c)).join("», «")}» desde el menú de usuario → Actualizar datos.`:"")}
+      ${it(st(!q.sinN,q.sinN<50),"Pescadores sin nombre",`${t0(q.sinN)} RPA`,`de ${t0(q.nP)} pescadores en la base.`,q.sinN?`<button type="button" class="btn small ghost" data-qgo="rpaNm">Completar nombres ↓</button>`:"")}
+      ${it(st(q.of>=q.nC,q.of>=q.nC*.7),"Ubicación de caletas",`${t0(q.of)} de ${t0(q.nC)} oficiales`,`${q.geoReady?"Coordenadas del dato o del Geoportal de Subpesca.":"El Geoportal de Subpesca se consulta en la versión web."} ${t0(q.ap)} aproximadas${q.no?` y ${t0(q.no)} sin ubicación`:""}.${q.apL.length?` <span title="${esc(q.apL.join(", "))}">Ver lista</span>`:""}`,q.apL.length?`<span class="cs">Complétalas en Caletas → Ficha por caleta → «Ubicación» (aparece como dato faltante para el administrador).</span>`:"")}
+      ${it(st(q.act&&q.actOrg/q.act>=.5,q.act&&q.actOrg/q.act>=.2),"Organización de los pescadores",`${q.act?t0(q.actOrg/q.act*100):0} % informada`,`${t0(q.actOrg)} de ${t0(q.act)} pescadores activos en 12 meses tienen organización en la base.`,"")}
+      ${it(st(fu&&fu.revisado&&!nNov,fu&&fu.revisado),"Fuentes oficiales",fu&&fu.revisado?`${t0(nNov)} novedades`:web()?"Sin revisar":"Solo versión web",fu&&fu.revisado?`Última revisión: ${new Date(fu.revisado).toLocaleString("es-CL",{timeZone:"America/Santiago",day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"})} (${esc(fu.por||"")}).`:"INDESPA, Obras Portuarias del MOP y gobiernos regionales.",web()?`<button type="button" class="btn small ghost" data-qgo="fuBox">Ver monitor ↓</button>`:"")}
+      </div>`}
+  async function fuLoad(force){if(!web()||Q.fuLoad)return;Q.fuLoad=true;try{Q.fu=await api("fuentes");Q.fuErr=Q.fu&&Q.fu.falta?"Falta crear la tabla de vistas en Supabase.":""}catch(e){Q.fuErr=e.message||"No se pudo leer el monitor."}draw()}
+  function cardF(pane){if(!web())return;let box=document.getElementById("fuBox");if(!box){box=document.createElement("section");box.id="fuBox";box.className="card";const q=document.getElementById("qBox");if(q)q.after(box);else pane.insertBefore(box,pane.firstChild)}
+    const fu=Q.fu||{},items=fu.items||[],L=Q.all?items:items.filter(x=>!x.ok),est=Object.values(fu.estado||{});
+    box.innerHTML=`<div class="tbar"><h3>Novedades en fuentes oficiales</h3><div><button type="button" class="btn small" id="fuRev" ${Q.fuBusy?"disabled":""}>${Q.fuBusy?"Revisando…":"Revisar ahora"}</button></div></div>
+      <p class="cs">Cada día la plataforma revisa las páginas públicas de INDESPA, la Dirección de Obras Portuarias del MOP, MOP Antofagasta y los gobiernos regionales de Antofagasta y Coquimbo, y anota los enlaces nuevos sobre pesca artesanal o caletas de estas regiones. Nada se agrega solo: revisa cada novedad y, si corresponde, agrégala a Inversión pública.${fu.revisado?` Última revisión: <b>${new Date(fu.revisado).toLocaleString("es-CL",{timeZone:"America/Santiago"})}</b>.`:""}</p>
+      ${Q.fuErr?`<p class="warnbox">${esc(Q.fuErr)}</p>`:""}
+      ${est.length?`<div class="fu-est">${est.map(e=>`<span class="fu-e ${e.ok?"ok":"no"}" title="${esc(e.error||"")}">${e.ok?"✓":"✕"} ${esc(e.n)}${e.ok?` · ${t0(e.encontrados)} enlaces, ${t0(e.nuevos)} nuevos`:" · sin respuesta"}</span>`).join("")}</div>`:""}
+      <label class="rn-chk cs"><input type="checkbox" id="fuAll" ${Q.all?"checked":""}> Mostrar también las ya revisadas</label>
+      ${L.length?`<div class="tbl"><table class="pr-t"><thead><tr><th>Detectado</th><th>Fuente</th><th>Título</th><th></th></tr></thead><tbody>${L.slice(0,60).map(x=>`<tr class="${x.nuevo?"fu-new":""}"><td class="cs">${esc(x.visto||"")}${x.f?`<div>publicado ${esc(x.f)}</div>`:""}</td><td class="cs">${esc(x.src)}</td><td style="white-space:normal">${x.nuevo?'<span class="fu-b">Nuevo</span> ':""}<a href="${esc(x.u)}" target="_blank" rel="noopener">${esc(x.t)} ↗</a>${x.x?`<div class="cs">${esc(x.x.slice(0,220))}</div>`:""}</td><td style="white-space:nowrap"><button type="button" class="btn small ghost" data-fuadd="${esc(x.u)}">Agregar a inversión</button> <button type="button" class="btn small ghost" data-fuok="${esc(x.u)}" data-v="${x.ok?0:1}">${x.ok?"Marcar pendiente":"Revisado"}</button></td></tr>`).join("")}</tbody></table></div>`:`<p class="cs">${fu.revisado?"No hay novedades pendientes.":"Aún no hay revisiones. Presiona «Revisar ahora»."}</p>`}`}
+  document.addEventListener("click",async ev=>{const t=ev.target;
+    const g=t.closest&&t.closest("[data-qgo]");if(g){const e=document.getElementById(g.dataset.qgo);if(e)e.scrollIntoView({behavior:"smooth"});return}
+    if(t.id==="fuRev"){Q.fuBusy=true;draw();try{Q.fu=await api("fuentes",{method:"POST",body:{accion:"revisar"}});Q.fuErr=""}catch(e){Q.fuErr=e.message||"No se pudo revisar."}Q.fuBusy=false;draw();return}
+    const ok=t.closest&&t.closest("[data-fuok]");if(ok){try{Q.fu=await api("fuentes",{method:"POST",body:{accion:"marcar",u:ok.dataset.fuok,ok:ok.dataset.v==="1"}})}catch(e){alert(e.message||e)}draw();return}
+    const ad=t.closest&&t.closest("[data-fuadd]");if(ad){const x=(Q.fu.items||[]).find(i=>i.u===ad.dataset.fuadd)||{};if(window.__ipNew)window.__ipNew({url:x.u,src:x.src,proy:x.t,fdato:x.f||x.visto,anio:+(String(x.f||x.visto||"").slice(0,4))||new Date().getFullYear()});return}});
+  document.addEventListener("change",ev=>{if(ev.target.id==="fuAll"){Q.all=ev.target.checked;draw()}});
+  function draw(){const pane=document.querySelector('[data-pane="admin"]');if(!pane||S.tab!=="admin"||!S.R||!(S.perm&&S.perm.admin))return;try{cardQ(pane)}catch(e){console.error(e)}try{cardF(pane)}catch(e){console.error(e)}fuLoad()}
+  {const _r=render;render=function(){const out=_r.apply(this,arguments);draw();return out}}
+  {const _st=setTab;setTab=function(t){_st(t);if(t==="admin")setTimeout(draw,350)}}
+})();
+
+</script>
+<script>
+/* ================= Simplicidad: resumen gerencial, buscador único, impresión de fichas y glosario ================= */
+(()=>{
+  const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:v}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
+  const tn=v=>v>=100?t0(v):v>=10?t1(v):t2(v);
+  const vp=v=>v==null?"—":(v>0?"+":v<0?"−":"")+t0(Math.abs(v))+" %";
+  const vcls=v=>v==null?"":v>10?"tz-up":v<-10?"tz-dn":"";
+  const MES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  const ymT=k=>MES[k%12]+"-"+(S.R.y0+Math.floor(k/12));
+  const zSel=()=>{const s=S.f&&S.f.reg;if(!s||s.size!==1)return null;return(S.R.regKey||[])[[...s][0]]||null};
+  /* ---------- Resumen gerencial ---------- */
+  function ger(){const p=document.querySelector('[data-pane="ger"]');if(!p||S.tab!=="ger"||!S.R)return;const st=window.__tzStats&&window.__tzStats();if(!st)return;const sel=zSel();
+    const C=st.C.filter(o=>!sel||o.z===sel),t12=C.reduce((s,o)=>s+o.t12,0),tP=C.reduce((s,o)=>s+o.tP,0),v=tP>0?(t12/tP-1)*100:null;
+    const Z=[...st.Z.values()].filter(z=>!sel||z.k===sel),np=Z.reduce((s,z)=>s+z.np,0),nm=Z.reduce((s,z)=>s+z.nm,0),act=C.filter(o=>o.t12>0).length,val=C.reduce((s,o)=>s+o.val,0);
+    let inv=0;try{if(window.__ipCal)C.forEach(o=>{inv+=window.__ipCal(o.n).inv})}catch(e){}
+    const mm=window.__ipMM||(x=>"$"+t0(x));
+    const al=[];C.filter(o=>o.tP>=20&&o.var!=null&&o.var<=-30).sort((a,b)=>(a.t12-a.tP)-(b.t12-b.tP)).slice(0,2).forEach(o=>al.push(["bad",`<b>${esc(o.n)}</b> cayó ${t0(-o.var)} % en 12 meses (${tn(o.t12)} t frente a ${tn(o.tP)} t).`,o.i]));
+    C.filter(o=>o.t12>=20&&o.top&&o.top.sh>=90).sort((a,b)=>b.np-a.np).slice(0,1).forEach(o=>al.push(["warn",`<b>${esc(o.n)}</b> depende en ${t0(o.top.sh)} % de ${esc(o.top.n)} (${t0(o.np)} pescadores).`,o.i]));
+    C.filter(o=>o.tP>=20&&o.var!=null&&o.var>=40).sort((a,b)=>(b.t12-b.tP)-(a.t12-a.tP)).slice(0,1).forEach(o=>al.push(["ok",`<b>${esc(o.n)}</b> subió ${t0(o.var)} % en 12 meses.`,o.i]));
+    const pref=LS.get("inicio.vista","panorama");
+    p.innerHTML=`<section class="card ger-h"><div class="tz-hh"><div><span class="tz-zn">Resumen gerencial</span><h2>${sel?esc(ZLAB[sel]):"Pesca artesanal · Antofagasta y Coquimbo"}</h2><p class="cs">Últimos 12 meses: ${ymT(st.L-11)} a ${ymT(st.L)}, frente a los 12 anteriores.</p></div>
+      <div class="ger-act"><button type="button" class="btn small ghost ux-print">Imprimir o PDF</button><label class="cs ger-pref"><input type="checkbox" id="gerPref" ${pref==="gerencial"?"checked":""}> Abrir la plataforma en esta pantalla</label></div></div>
+      <div class="ger-k">
+        <div><span>Desembarque</span><b>${tn(t12)} t</b><small class="${vcls(v)}">${vp(v)} frente a 12 meses antes</small></div>
+        <div><span>Pescadores activos</span><b>${t0(np)}</b><small>${np?t0(nm/np*100):0} % mujeres</small></div>
+        <div><span>Caletas con actividad</span><b>${t0(act)} de ${t0(C.length)}</b><small>en 12 meses</small></div>
+        ${st.hasP?`<div><span>Valor estimado</span><b>${mm(val)}</b><small>precios de playa</small></div>`:""}
+        <div><span>Inversión pública registrada</span><b>${mm(inv)}</b><small>en estas caletas</small></div></div></section>
+     <section class="card"><h3>Tres alertas</h3>${al.length?`<ul class="ger-al">${al.slice(0,3).map(a=>`<li class="ger-${a[0]}">${a[1]} <button type="button" class="lnk" data-exc="${a[2]}">Ver ficha</button></li>`).join("")}</ul>`:`<p class="cs">Sin cambios fuertes en los últimos 12 meses.</p>`}</section>
+     <section class="card"><h3>Por zona</h3><div class="tbl"><table class="pr-t"><thead><tr><th>Zona</th><th class="n">Desembarque 12 meses</th><th class="n">Variación</th><th class="n">Pescadores</th><th class="n">Caletas activas</th><th>Recurso principal</th></tr></thead><tbody>${Z.map(z=>`<tr><td><button type="button" class="lnk" data-zgo="${(S.R.regKey||[]).indexOf(z.k)}">${esc(ZLAB[z.k])}</button></td><td class="n">${tn(z.t12)} t</td><td class="n ${vcls(z.var)}">${vp(z.var)}</td><td class="n">${t0(z.np)}</td><td class="n">${t0(z.calAct)} de ${t0(z.cal)}</td><td>${z.top?`${esc(z.top.n)} <span class="cs">${t0(z.top.sh)} %</span>`:"—"}</td></tr>`).join("")}</tbody></table></div><p class="cs">Más detalle en Panorama, Caletas, Especies y Pescadores.</p></section>`}
+  document.addEventListener("change",ev=>{if(ev.target.id==="gerPref")LS.set("inicio.vista",ev.target.checked?"gerencial":"panorama")});
+  /* abrir en la pantalla elegida al ingresar */
+  let started=false;function inicio(){if(started||!S.R)return;started=true;let s=null;try{s=sessionStorage.getItem("inicio.ok")}catch(e){}if(s)return;try{sessionStorage.setItem("inicio.ok","1")}catch(e){}if(LS.get("inicio.vista","panorama")==="gerencial")setTimeout(()=>{try{goView("gerencial")}catch(e){}},300)}
+  /* ---------- Impresión de fichas (Resumen gerencial, Panorama, Ranking por zona, Ficha por especie, ECMPO, Inversión pública) ---------- */
+  const PRN={ger:"Resumen gerencial",pano:"Panorama",terr:"Caletas por zona",efi:"Ficha por especie",ecm:"ECMPO",ipu:"Inversión pública",ipc:"Inversión pública por caleta"};
+  function printPane(tab){const p=document.querySelector(`[data-pane="${tab}"]`);if(!p)return;const w=window.open("","_blank");if(!w){alert("Permite las ventanas emergentes para imprimir.");return}
+    const css=[...document.querySelectorAll("style")].map(s=>s.outerHTML).join(""),b=p.cloneNode(true);b.hidden=false;b.querySelectorAll(".ux-print,.ger-pref,.pf-pick,.mv-ctl,.mv-seg,button.btn,input,select,#mvMapBox .mv-mapc").forEach(e=>e.remove());
+    const z=zSel();w.document.write(`<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${esc(PRN[tab]||"Ficha")}</title>${css}<style>body{background:#fff;padding:14px}section.card{break-inside:avoid;box-shadow:none;border:1px solid #ddd;margin-bottom:10px}@page{margin:12mm}</style></head><body><p style="font-size:11px;color:#555;margin:0 0 8px">Plataforma de Gestión Borde Costero · AAPP Norte · ${esc(PRN[tab]||"")}${z?" · "+esc(ZLAB[z]):""} · ${new Date().toLocaleDateString("es-CL")}</p>${b.outerHTML}</body></html>`);w.document.close();setTimeout(()=>{w.focus();w.print()},450)}
+  document.addEventListener("click",ev=>{if(ev.target.closest&&ev.target.closest(".ux-print"))printPane(S.tab)});
+  function addPrint(){const tab=S.tab;if(!PRN[tab]||tab==="ger")return;const p=document.querySelector(`[data-pane="${tab}"]`);if(!p||p.querySelector(".ux-print"))return;const h=p.querySelector(".tz-hh")||p.querySelector(".tbar");if(!h)return;const b=document.createElement("button");b.type="button";b.className="btn small ghost ux-print";b.textContent="Imprimir o PDF";h.appendChild(b)}
+  /* ---------- Buscador único: caletas, especies, organizaciones y pescadores ---------- */
+  const fs=document.getElementById("fs"),fl=document.getElementById("fsList");
+  if(fs){fs.placeholder="Buscar caleta, especie, pescador u organización";fs.setAttribute("aria-label","Buscar caleta, especie, pescador u organización");
+    fs.addEventListener("input",()=>{const w=norm(fs.value).split(/\s+/).filter(Boolean);if(!w.length||!S.R||!fl)return;const m=S.R.m,hit=s=>{const h=norm(s);return w.every(x=>h.includes(x))};
+      const cal=m.C.map((c,i)=>({i,c})).filter(x=>hit(x.c[0]+" "+x.c[1])).slice(0,4),esp=m.E.map((e,i)=>({i,e})).filter(x=>hit(x.e[1])).slice(0,4),org=(m.orgs||[]).map((o,i)=>({i,o})).filter(x=>x.o&&hit(x.o)).slice(0,3);
+      if(!cal.length&&!esp.length&&!org.length)return;
+      const g=(t,h)=>`<div class="gs-g">${t}</div>${h}`;
+      const html=(cal.length?g("Caletas",cal.map(x=>`<button type="button" data-gsc="${x.i}"><span>⚓ ${esc(x.c[0])}<small>${esc(x.c[1])}</small></span><span class="t">ficha</span></button>`).join("")):"")+(esp.length?g("Especies",esp.map(x=>`<button type="button" data-gse="${x.i}"><span>🐟 ${esc(x.e[1])}<small>${esc(x.e[2]||"")}</small></span><span class="t">ficha</span></button>`).join("")):"")+(org.length?g("Organizaciones",org.map(x=>`<button type="button" data-gso="${x.i}"><span>👥 ${esc(x.o)}</span><span class="t">ver</span></button>`).join("")):"");
+      fl.hidden=false;const hasP=fl.querySelector("button[data-i]");fl.innerHTML=html+(hasP?g("Pescadores",fl.innerHTML):"")});
+    if(fl)fl.addEventListener("click",ev=>{const b=ev.target.closest("[data-gsc],[data-gse],[data-gso]");if(!b)return;ev.stopImmediatePropagation();fl.hidden=true;fs.value="";
+      if(b.dataset.gsc!=null){const i=+b.dataset.gsc;goView("ficha");let n=0;const tr=()=>{const s=document.getElementById("igCal");if(s){s.value=String(i);s.dispatchEvent(new Event("change",{bubbles:true}));return}if(++n<30)setTimeout(tr,150)};setTimeout(tr,100)}
+      else if(b.dataset.gse!=null){if(window.efOpen)window.efOpen(+b.dataset.gse)}
+      else if(b.dataset.gso!=null)goView("orgs")},true)}
+  /* ---------- Glosario ---------- */
+  const GLO=[["AMERB","Área de Manejo y Explotación de Recursos Bentónicos: sector del fondo marino entregado a una organización de pescadores para explotar recursos como loco, lapa o algas, con un plan de manejo y seguimiento."],
+    ["Plan de manejo","Instrumento aprobado por Subpesca que regula la extracción de uno o más recursos en una zona (por ejemplo, algas pardas), con cuotas y reglas acordadas con los pescadores."],
+    ["ECMPO","Espacio Costero Marino de Pueblos Originarios (Ley 20.249): espacio entregado a una comunidad o asociación indígena para resguardar su uso consuetudinario del mar. Mientras se tramita, se suspenden las solicitudes de concesiones marítimas y de acuicultura sobre esa área."],
+    ["RPA","Registro Pesquero Artesanal de Sernapesca. Cada pescador tiene un número de RPA y categorías inscritas (pescador, buzo, recolector de orilla, armador)."],
+    ["Caleta base","Caleta donde el pescador está inscrito en el RPA. Puede ser distinta de la caleta donde desembarca."],
+    ["Recolector de orilla","Categoría del RPA para quienes extraen recursos desde la orilla, principalmente algas como el huiro."],
+    ["Veda","Período en que está prohibido extraer una especie para proteger su reproducción. Hay especies con veda todo el año, cuya extracción solo se permite por excepción (por ejemplo, planes de manejo)."],
+    ["Desembarque","Cantidad de recurso que se declara al llegar a la caleta. En la plataforma se expresa en toneladas."],
+    ["Pescador activo","Persona con al menos un desembarque registrado en el período indicado (por defecto, los últimos 12 meses)."],
+    ["Zona de análisis","Agrupación de caletas de la plataforma: Asuntos Públicos Norte, Caletas aledañas, Asociación de Industriales de Mejillones, Otras caletas Antofagasta, Minera Los Pelambres y Otras caletas Coquimbo."],
+    ["Índice de vulnerabilidad","Indicador de 0 a 100 que combina dependencia de una especie (40 %), caída de 12 meses (35 %) y tendencia de 5 años (25 %)."],
+    ["Valor estimado","Toneladas multiplicadas por el precio de playa por kilo cargado en Administración. Es una referencia, no el ingreso real."],
+    ["Gasto ejecutado","Monto que el MOP efectivamente pagó en un año en una iniciativa de inversión."],
+    ["Monto adjudicado","Monto aprobado para un proyecto en un concurso (por ejemplo, de INDESPA)."],
+    ["Costo total (referencial)","Valor total informado de una obra. No se suma al gasto anual para no contar dos veces la misma inversión."],
+    ["FNDR","Fondo Nacional de Desarrollo Regional, administrado por cada Gobierno Regional y aprobado por su Consejo Regional."],
+    ["INDESPA","Instituto de Desarrollo Sustentable de la Pesca Artesanal y de la Acuicultura de Pequeña Escala: entrega fondos concursables y programas de fomento."],
+    ["DOP","Dirección de Obras Portuarias del MOP: construye y conserva la infraestructura de las caletas (muelles, rampas, explanadas, defensas)."],
+    ["Código BIP","Identificador de una iniciativa en el Banco Integrado de Proyectos del Estado."]];
+  function glo(){let d=document.getElementById("gloDlg");if(!d){d=document.createElement("div");d.id="gloDlg";d.className="glo-ov";d.innerHTML=`<div class="glo-b" role="dialog" aria-modal="true" aria-labelledby="gloT"><div class="tbar"><h3 id="gloT">Glosario</h3><button type="button" class="btn small ghost" id="gloX">Cerrar</button></div><input id="gloQ" type="search" placeholder="Buscar término"><dl class="glo-l"></dl></div>`;document.body.appendChild(d);
+      d.addEventListener("click",e=>{if(e.target===d||e.target.id==="gloX")d.hidden=true});d.querySelector("#gloQ").addEventListener("input",e=>fill(e.target.value))}
+    const fill=q=>{const w=norm(q||"");d.querySelector(".glo-l").innerHTML=GLO.filter(g=>!w||norm(g[0]+" "+g[1]).includes(w)).map(g=>`<dt>${esc(g[0])}</dt><dd>${esc(g[1])}</dd>`).join("")||'<p class="cs">Sin resultados.</p>'};fill("");d.hidden=false;setTimeout(()=>d.querySelector("#gloQ").focus(),50)}
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"){const d=document.getElementById("gloDlg");if(d&&!d.hidden)d.hidden=true}});
+  {const tr=document.querySelector(".top-r");if(tr&&!document.getElementById("gloBtn")){const b=document.createElement("button");b.type="button";b.id="gloBtn";b.className="btn small";b.textContent="Glosario";b.title="Términos usados en la plataforma";b.addEventListener("click",glo);const f=document.getElementById("btnFilters");tr.insertBefore(b,f||tr.firstChild)}}
+  /* ---------- enganche ---------- */
+  const draw=()=>{try{if(S.tab==="ger")ger();addPrint()}catch(e){console.error(e)}};
+  {const _r=render;render=function(){const out=_r.apply(this,arguments);draw();inicio();return out}}
+  {const _st=setTab;setTab=function(t){_st(t);if(t==="ger"){["#fab","#period","#aside","#chips","#ctx","#btnFilters"].forEach(s=>{const e=document.querySelector(s);if(e)e.hidden=true});const l=document.querySelector(".layout");if(l)l.style.gridTemplateColumns="minmax(0,1fr)"}setTimeout(draw,60)}}
 })();
 
 </script>

@@ -93,6 +93,15 @@
     },
     "api/territorio.js": {
       "maxDuration": 60
+    },
+    "api/fuentes.js": {
+      "maxDuration": 60
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/fuentes?cron=1",
+      "schedule": "17 11 * * *"
+    }
+  ]
 }
