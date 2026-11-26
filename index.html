@@ -6894,22 +6894,27 @@ Si el aviso abarca toda la costa de la región de Antofagasta, usa "Toda la regi
   function lineaTiempo(i,man,av){const c=S.R.m.C[i],st=igStats(),o=st.C[i],L=st.L,ev=[],h=todayISO();
     (MN.avisos||[]).filter(a=>avisoAfecta(a,c)).forEach(a=>{const d=a.datos;if(d.desde)ev.push({f:d.desde,t:`${AV(d.categoria)[2]} ${d.titulo||AV(d.categoria)[1]}${d.hasta?" (hasta el "+fmtF(d.hasta)+")":""}`,k:"mar"})});
     const vc=vedasCal(i);vc.now.forEach(x=>{if(x.hasta)ev.push({f:isoD(x.hasta),t:`Termina la veda de ${x.n}`,k:"veda"})});vc.next.forEach(x=>{if(x.desde)ev.push({f:isoD(x.desde),t:`Comienza la veda de ${x.n}`,k:"veda"})});
-    if(man){man.am.forEach(a=>{if(a.fdec)ev.push({f:String(a.fdec).slice(0,10),t:`Decreto de la AMERB ${a.n||""}`,k:"man"});if(a.fing)ev.push({f:String(a.fing).slice(0,10),t:`Solicitud de la AMERB ${a.n||""}`,k:"man"})});
-      man.pl.forEach(p=>{if(p.fEst)ev.push({f:String(p.fEst).slice(0,10),t:`Se establece el ${p.n||"plan de manejo"}`,k:"man"});if(p.fApr)ev.push({f:String(p.fApr).slice(0,10),t:`Se aprueba el ${p.n||"plan de manejo"}`,k:"man"})});
-      man.ec.forEach(e=>{if(e.fdec)ev.push({f:String(e.fdec).slice(0,10),t:`Decreto del ECMPO ${e.n||""}`,k:"man"});if(e.fing)ev.push({f:String(e.fing).slice(0,10),t:`Solicitud del ECMPO ${e.n||""}`,k:"man"})})}
+    if(man){man.am.forEach(a=>{if(a.fdec)ev.push({f:String(a.fdec).slice(0,10),t:`Decreto de la AMERB ${a.n||""}`,k:"amerb",st:"dec"});if(a.fing)ev.push({f:String(a.fing).slice(0,10),t:`Solicitud de la AMERB ${a.n||""}`,k:"amerb",st:"sol"})});
+      man.pl.forEach(p=>{if(p.fEst)ev.push({f:String(p.fEst).slice(0,10),t:`Se establece el ${p.n||"plan de manejo"}`,k:"plan",st:"sol"});if(p.fApr)ev.push({f:String(p.fApr).slice(0,10),t:`Se aprueba el ${p.n||"plan de manejo"}`,k:"plan",st:"dec"})});
+      man.ec.forEach(e=>{if(e.fdec)ev.push({f:String(e.fdec).slice(0,10),t:`Decreto del ECMPO ${e.n||""}`,k:"ecmpo",st:"dec"});if(e.fing)ev.push({f:String(e.fing).slice(0,10),t:`Solicitud del ECMPO ${e.n||""}`,k:"ecmpo",st:"sol"})})}
     /* los cambios del desembarque se ven en el gráfico mensual; aquí solo hechos de gestión */
     ev.sort((a,b)=>b.f.localeCompare(a.f));const fut=ev.filter(e=>e.f>h),pas=ev.filter(e=>e.f<=h).slice(0,18);
-    const CAT={veda:["Vedas","#d08a00","🚫"],mar:["Avisos del mar y sanitarios","#c62828","🌊"],man:["AMERB, planes de manejo y ECMPO","#2a78b6","🗺️"]};
+    const CAT={veda:["Vedas","#d08a00","🚫"],mar:["Avisos del mar y sanitarios","#c62828","🌊"],amerb:["AMERB","#2a78b6","🗺️"],plan:["Planes de manejo","#0f766e","📋"],ecmpo:["ECMPO","#7c3aed","🪶"]};
+    const STC={dec:["#15803d","#15803d",8,"Decreto o aprobación"],sol:["#fde68a","#d97706",6,"Solicitud o inicio"]},GD=(window.__bc&&window.__bc.GEOD&&window.__bc.GEOD.d)||null,upd=GD&&GD.obtenido?new Date(GD.obtenido):null,updTxt=upd?upd.toLocaleDateString("es-CL",{day:"2-digit",month:"2-digit",year:"numeric",timeZone:"America/Santiago"})+" "+upd.toLocaleTimeString("es-CL",{hour:"2-digit",minute:"2-digit",timeZone:"America/Santiago"}):"";
+    const lastOf=k=>{const l=ev.filter(e=>e.k===k).map(e=>e.f).sort();return l.length?l[l.length-1]:""};
     if(!ev.length)return`<p class="cs">Sin hechos registrados para esta caleta.</p>`;
     /* vista general: carriles por tipo sobre un eje de años */
-    const y0=Math.min(S.R.y0,...ev.map(e=>+e.f.slice(0,4))),y1=Math.max(new Date().getFullYear()+1,...ev.map(e=>+e.f.slice(0,4)+1)),W=860,lanes=Object.keys(CAT).filter(k=>ev.some(e=>e.k===k)),H=28+lanes.length*34,l=200,r=W-14;
+    const y0=Math.min(S.R.y0,...ev.map(e=>+e.f.slice(0,4))),y1=Math.max(new Date().getFullYear()+1,...ev.map(e=>+e.f.slice(0,4)+1)),W=860,lanes=Object.keys(CAT).filter(k=>ev.some(e=>e.k===k)),H=28+lanes.length*40,l=200,r=W-14;
     const tx=f=>{const d=new Date(f+"T12:00:00");return l+((d.getFullYear()+d.getMonth()/12+d.getDate()/365)-y0)/(y1-y0)*(r-l)};
     let g=`<svg class="ig-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Línea de tiempo de la caleta">`;for(let y=y0;y<=y1;y++){const x=l+(y-y0)/(y1-y0)*(r-l);g+=`<line x1="${x}" x2="${x}" y1="6" y2="${H-18}" class="gl"/><text x="${x}" y="${H-4}" text-anchor="middle">${y}</text>`}
     const xh=tx(h);g+=`<line x1="${xh}" x2="${xh}" y1="4" y2="${H-18}" stroke="#111827" stroke-width="1.5" stroke-dasharray="3 2"/><text x="${xh+4}" y="12" style="font-size:10px;font-weight:700">hoy</text>`;
-    lanes.forEach((k,li)=>{const y=20+li*34;g+=`<text x="${l-10}" y="${y+4}" text-anchor="end" style="font-weight:700;fill:${CAT[k][1]}">${CAT[k][2]} ${esc(CAT[k][0])}</text><line x1="${l}" x2="${r}" y1="${y}" y2="${y}" stroke="${CAT[k][1]}" stroke-opacity=".25" stroke-width="6" stroke-linecap="round"/>`;
-      ev.filter(e=>e.k===k).forEach(e=>{g+=`<circle cx="${tx(e.f)}" cy="${y}" r="6" fill="${e.f>h?"#fff":CAT[k][1]}" stroke="${CAT[k][1]}" stroke-width="2"><title>${esc(fmtF(e.f))}: ${esc(e.t)}</title></circle>`})});g+=`</svg>`;
-    const li=e=>`<li><span class="ig-tf">${esc(fmtF(e.f))}</span><span class="ig-tcat" style="--c:${CAT[e.k][1]}">${CAT[e.k][2]} ${esc(CAT[e.k][0])}</span><span>${esc(e.t)}</span></li>`;
-    return`${g}<p class="cs">Círculos llenos: hechos ocurridos; círculos vacíos: próximos. Pasa el cursor sobre cada punto para ver el detalle.</p>
+    lanes.forEach((k,li)=>{const y=20+li*40,man=k==="amerb"||k==="plan"||k==="ecmpo";g+=`<text x="${l-10}" y="${y+(man&&updTxt?1:4)}" text-anchor="end" style="font-weight:700;fill:${CAT[k][1]}">${CAT[k][2]} ${esc(CAT[k][0])}</text>${man&&updTxt?`<text x="${l-10}" y="${y+13}" text-anchor="end" style="font-size:9.5px;fill:#64748b">revisado ${esc(updTxt.slice(0,10))}</text>`:""}<line x1="${l}" x2="${r}" y1="${y}" y2="${y}" stroke="${CAT[k][1]}" stroke-opacity=".25" stroke-width="6" stroke-linecap="round"/>`;
+      ev.filter(e=>e.k===k).sort((a,b)=>(a.st==="dec")-(b.st==="dec")).forEach(e=>{const sc=e.st?STC[e.st]:null;g+=sc?`<circle cx="${tx(e.f)}" cy="${y}" r="${sc[2]}" style="fill:${e.f>h?"#fff":sc[0]};stroke:${sc[1]}" stroke-width="${e.st==="sol"?2.5:2}" ${e.st==="sol"?'stroke-dasharray="3 2"':""}><title>${esc(fmtF(e.f))}: ${esc(e.t)} (${esc(sc[3].toLowerCase())})</title></circle>`:`<circle cx="${tx(e.f)}" cy="${y}" r="6" fill="${e.f>h?"#fff":CAT[k][1]}" stroke="${CAT[k][1]}" stroke-width="2"><title>${esc(fmtF(e.f))}: ${esc(e.t)}</title></circle>`})});g+=`</svg>`;
+    const li=e=>`<li><span class="ig-tf">${esc(fmtF(e.f))}</span><span class="ig-tcat" style="--c:${CAT[e.k][1]}">${CAT[e.k][2]} ${esc(CAT[e.k][0])}</span><span>${e.st?`<span class="tl-st tl-${e.st}">${e.st==="dec"?(e.k==="plan"?"Aprobación":"Decreto"):(e.k==="plan"?"Inicio":"Solicitud")}</span> `:""}${esc(e.t)}</span></li>`;
+    const hasMan=lanes.some(k=>k==="amerb"||k==="plan"||k==="ecmpo");
+    return`${g}<div class="tl-leg">${hasMan?`<span><i class="tl-dot tl-dec"></i>Decreto (AMERB, ECMPO) o aprobación (plan de manejo)</span><span><i class="tl-dot tl-sol"></i>Solicitud (AMERB, ECMPO) o inicio del plan de manejo</span>`:""}<span><i class="tl-dot" style="background:#fff;border:2px solid #64748b"></i>Próximo</span></div>
+      ${hasMan?`<p class="cs tl-upd">AMERB, planes de manejo y ECMPO: ${esc((GD&&GD.fuente)||"Geoportal de Subpesca")}${upd?`, revisado por última vez el <b>${esc(updTxt)}</b> (se vuelve a consultar todos los días)`:""}. Último hito registrado: ${["amerb","plan","ecmpo"].filter(k=>lanes.includes(k)).map(k=>`${CAT[k][0]} ${esc(fmtF(lastOf(k)))}`).join(" · ")}.</p>`:""}
+      <p class="cs">Pasa el cursor sobre cada punto para ver el detalle.</p>
       <div class="ig-tl2">${fut.length?`<div><h4>Próximo</h4><ul>${fut.reverse().map(li).join("")}</ul></div>`:""}<div><h4>Ocurrido</h4><ul>${pas.map(li).join("")||'<li class="cs">Sin hechos registrados.</li>'}</ul></div></div>`}
 
   function fichaHtml(i){const R=S.R,m=R.m,c=m.C[i],st=igStats(),o=st.C[i],e=estadoCal(i),z=calZone(c),g=bcGeo(),gp=g?g.geoOf(c):null,offC=CXV("cal:"+c[0]+":registro"),off=gp&&gp[3]?gp[3]:offC,man=WEBna()?null:manejoCal(i),rc=rcaCal(i),vc=vedasCal(i);
@@ -9116,5 +9121,13 @@ function pkDom(svg,pts,o){try{if(!svg)return;const s=pkStr(pts,o);if(s)svg.inser
 })();
 
 </script>
+<style id="tlCss">
+.tl-leg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;margin:6px 0}
+.tl-dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px;vertical-align:-2px}
+.tl-dot.tl-dec{background:#15803d;border:2px solid #15803d}.tl-dot.tl-sol{background:#fde68a;border:2px dashed #d97706;width:10px;height:10px}
+.tl-st{display:inline-block;font-size:10.5px;font-weight:700;border-radius:5px;padding:1px 6px;margin-right:2px}
+.tl-st.tl-dec{background:#15803d;color:#fff}.tl-st.tl-sol{background:#fde68a;color:#92400e;border:1px dashed #d97706}
+.tl-upd{background:rgba(42,120,182,.07);border-left:3px solid #2a78b6;padding:6px 10px;border-radius:6px}
+</style>
 </body>
 </html>
